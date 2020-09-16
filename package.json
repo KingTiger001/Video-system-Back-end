@@ -8,6 +8,7 @@
     "start": "next start -p 7030"
   },
   "dependencies": {
+    "dayjs": "^1.8.35",
     "next": "9.5.3",
     "next-i18next": "^6.0.2",
     "react": "16.13.1",
