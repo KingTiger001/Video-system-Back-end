@@ -25,18 +25,6 @@
   @extend .sectionSubtitle
   text-align: center
 
-.header
-  background: #F8FBFF
-  padding: 50px 0
-  .container
-    display: flex
-    justify-content: space-between
-
-.headerButtons
-  display: grid
-  grid-gap: 8px
-  grid-template-columns: repeat(2, auto)
-
 .logo
   height: 60px
 
@@ -54,6 +42,36 @@
   font-size: 13px
   line-height: 20px
   text-align: center
+
+// header
+.header
+  background: #F8FBFF
+  padding: 50px 0
+  .container
+    align-items: center
+    display: flex
+    justify-content: space-between
+
+.headerContent
+  display: grid
+  grid-gap: 50px
+  grid-template-columns: repeat(2, auto)
+
+.headerMenu
+  align-items: center
+  display: grid
+  grid-gap: 40px
+  grid-template-columns: repeat(3, auto)
+  a
+    color: $textColorOne
+    cursor: pointer
+    font-size: 14px
+    font-weight: 500
+
+.headerButtons
+  display: grid
+  grid-gap: 8px
+  grid-template-columns: repeat(2, auto)
 
 
 // Section engage
@@ -174,6 +192,7 @@
 .advantagesSection
   margin-bottom: 220px
   position: relative
+  overflow-x: hidden
   z-index: 3
   .container
     align-items: flex-start
@@ -224,10 +243,11 @@
 
 // Section steps
 .stepsSection
-  padding-bottom: 200px
+  position: relative
   .container
     display: grid
     grid-template-columns: repeat(2, 50%)
+    padding-bottom: 400px
 
 .stepsVisual
   display: flex
@@ -276,6 +296,14 @@
   line-height: 32px
   grid-column: 2
 
+.stepsWave
+  background: #F8FBFF
+  bottom: -1px
+  left: 0
+  position: absolute
+  width: 100%
+  z-index: 3
+
 
 // Section plans
 .plansSection
@@ -302,16 +330,24 @@
   grid-template-columns: repeat(3, 1fr)
   margin-top: 70px
 
-.planContent
-  .creditCardNotRequired
-    margin-top: 20px
-  &.planRecommended
+.planRecommended
+  .planContent
     border-radius: 0 0 8px 8px
-    .planRecommendedLabel
-      display: block
+    .planPrice
+      p
+        color: $secondaryColor
+
+.planPremium
+  .planContent
     .planPrice
       p
         color: $primaryColor
+
+.planContent
+  a
+    margin: auto
+  .creditCardNotRequired
+    margin-top: 20px
 
 .planContent
   background: #fff
@@ -320,7 +356,7 @@
 
 .planRecommendedLabel
   align-items: center
-  background: $primaryColor
+  background: $secondaryColor
   border-radius: 8px 8px 0 0
   color: #fff
   display: flex
@@ -377,11 +413,8 @@
     font-size: 18px
 
 
-// Footer
-.footer
-  padding: 120px 0
-
-.newsletter
+// Section try it
+.tryItSection
   align-items: center
   background: $primaryColor
   color: #fff
@@ -390,3 +423,42 @@
   padding: 80px 0
   .sectionTitle, .sectionSubtitle
     color: #fff
+  a
+    margin-top: 40px
+
+
+// Footer
+.footer
+  padding: 120px 0
+  .container
+    display: grid
+    gap: 45px 30px
+    grid-template-columns: repeat(3, 1fr)
+
+.footerLinksTitle
+  color: $textColorTwo
+  font-size: 18px
+  font-weight: 600
+  margin-bottom: 30px
+
+.footerLinks
+  display: grid
+  gap: 25px
+  grid-template-columns: repeat(2, auto)
+
+.footerLinksItem
+  color: #959EAD
+  font-size: 16px
+  text-decoration: none
+
+.footerSocials
+  align-items: center
+  display: grid
+  grid-gap: 30px
+  grid-template-columns: repeat(4, 25px)
+  margin-bottom: 35px
+
+.copyright
+  color: $textColorTwo
+  font-size: 16px
+  font-weight: 500

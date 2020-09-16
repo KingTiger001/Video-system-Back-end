@@ -2,10 +2,9 @@
 
 .button
   align-items: center
-  background: $primaryColor
-  border: 2px solid $primaryColor
+  border-style: solid
+  border-width: 2px
   border-radius: 8px
-  color: #fff
   cursor: pointer
   display: flex
   height: 48px
@@ -16,6 +15,29 @@
     font-size: 14px
     font-weight: 600
     letter-spacing: 0.2px
+  &.greyColor
+    background: #5A7184
+    color: #fff
+  &.primaryColor
+    background: $primaryColor
+    color: #fff
+  &.secondaryColor
+    background: $secondaryColor
+    color: #fff
+  &.whiteColor
+    background: #fff
+    color: $primaryColor
   &.outline
     background: transparent
-    color: $primaryColor
+    &.greyColor
+      border-color: #5A7184
+      color: #5A7184
+    &.primaryColor
+      border-color: $primaryColor
+      color: $primaryColor
+    &.secondaryColor
+      border-color: $secondaryColor
+      color: $secondaryColor
+    &.whiteColor
+      border-color: #fff
+      color: #fff

@@ -9,7 +9,9 @@ import '../styles/_globals.sass'
 function MyApp({ Component, pageProps }) {
   const head = (
     <Head>
+      <title>FOMO</title>
       <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"></link>
+      {/* <link rel="icon" href="/favicon.ico" /> */}
       <meta name="robots" content="noindex, nofollow"></meta>
     </Head>
   )

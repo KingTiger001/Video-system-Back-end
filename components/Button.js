@@ -2,12 +2,12 @@ import { Link } from '../i18n'
 
 import styles from './Button.module.sass'
 
-const Button = ({ children, href, style, type = 'button', width }) => {
+const Button = ({ color = 'primary', children, href, style, type = 'button', width }) => {
   switch (type) {
     case 'button':
       return (
         <button
-          className={`${styles.button} ${style ? styles[style] : ''}`}
+          className={`${styles.button} ${styles[`${color}Color`]} ${style ? styles[style] : ''}`}
           style={{
             ...(width && { width })
           }}
@@ -20,7 +20,7 @@ const Button = ({ children, href, style, type = 'button', width }) => {
       return (
         <Link href={href}>
           <a
-            className={`${styles.button} ${style && styles[style]}`}
+            className={`${styles.button} ${styles[`${color}Color`]} ${style && styles[style]}`}
             style={{
               ...(width && { width })
             }}
