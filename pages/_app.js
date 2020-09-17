@@ -1,18 +1,15 @@
-import App from 'next/app'
 import Head from 'next/head'
 
-import { appWithTranslation } from '../i18n'
-
-import '../styles/_common.sass'
+import '../styles/fonts.css'
+import '../styles/_globals.sass'
 import '../styles/_globals.sass'
 
 function MyApp({ Component, pageProps }) {
   const head = (
     <Head>
-      <title>FOMO</title>
-      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"></link>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
       {/* <link rel="icon" href="/favicon.ico" /> */}
-      <meta name="robots" content="noindex, nofollow"></meta>
+      <meta name="robots" content="noindex, nofollow" />
     </Head>
   )
 
@@ -24,9 +21,4 @@ function MyApp({ Component, pageProps }) {
   )
 }
 
-MyApp.getInitialProps = async (appContext) => {
-  const appProps = await App.getInitialProps(appContext)
-  return { ...appProps }
-}
-
-export default appWithTranslation(MyApp)
+export default MyApp

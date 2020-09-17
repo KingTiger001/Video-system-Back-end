@@ -4,13 +4,14 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 7030",
-    "build": "next build",
-    "start": "next start -p 7030"
+    "build:production": "env-cmd -f config/env/.env.production next build",
+    "build:staging": "NODE_ENV=production next build",
+    "start": "NODE_ENV=production next start -p 7030"
   },
   "dependencies": {
     "dayjs": "^1.8.35",
+    "env-cmd": "^10.1.0",
     "next": "9.5.3",
-    "next-i18next": "^6.0.2",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-scroll": "^1.8.1",

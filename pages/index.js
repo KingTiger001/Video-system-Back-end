@@ -1,18 +1,17 @@
 import dayjs from 'dayjs'
 import Head from 'next/head'
+import Link from 'next/link'
 import { Link as LinkScroll, Element as ElementScroll } from 'react-scroll'
-
-
-import { Link, withTranslation } from '../i18n'
 
 import Button from '../components/Button'
 
 import styles from '../styles/pages/index.module.sass'
 
-const Index = ({ t }) => {
+const Index = () => {
   return (
-    <div>
+    <div className={styles.homepage}>
       <Head>
+        <title>FOMO</title>
       </Head>
 
       <header className={styles.header}>
@@ -56,14 +55,14 @@ const Index = ({ t }) => {
                 type="link"
                 width={120}
               >
-                {t('landing:buttonLogin')}
+                Log in
               </Button>
               <Button
                 href="/"
                 type="link"
                 width={120}
               >
-                {t('landing:buttonTryItFree')}
+                Try it free
               </Button>
             </div>
           </div>
@@ -73,15 +72,15 @@ const Index = ({ t }) => {
       <main className={styles.main}>
         <section className={styles.engageSection}>
           <div className={styles.container}>
-            <h1 className={styles.engageTitle}>{t('landing:engageTitle')}</h1>
-            <h2 className={styles.engageSubtitle}>{t('landing:engageSubtitle')}</h2>
+            <h1 className={styles.engageTitle}>Engage your leads through a video message</h1>
+            <h2 className={styles.engageSubtitle}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.Olor sit amet, consectetur adipiscing eli.</h2>
             <div className={styles.engageButtons}>
               <Button
                 href="/"
                 type="link"
                 width={200}
               >
-                {t('landing:buttonStartTrial')}
+                Start 7 Days Free Trial
               </Button>
               <Button
                 href="/"
@@ -89,10 +88,10 @@ const Index = ({ t }) => {
                 type="link"
                 width={200}
               >
-                {t('landing:buttonDemo')}
+                Watch our demo
               </Button>
             </div>
-            <p className={styles.creditCardNotRequired}>{t('common:creditCardNotRequired')}</p>
+            <p className={styles.creditCardNotRequired}>No credit card required</p>
           </div>
           <div className={styles.engageVisual}>
             <div className={styles.engageScreenshot}>
@@ -106,7 +105,7 @@ const Index = ({ t }) => {
               />
               <div className={styles.engageScreenshotHidden}>
                 <img
-                  src="/assets/home/screenshot.png"
+                  src="/assets/home/screenshot.jpg"
                   alt="Screenshot dashboard FOMO"
                 />
               </div>
@@ -121,26 +120,34 @@ const Index = ({ t }) => {
         <ElementScroll name="solution">
           <section className={styles.solutionSection}>
             <div className={styles.container}>
-              <h1 className={styles.sectionTitleCenter}>{t('landing:solutionTitle')}</h1>
-              <h2 className={styles.sectionSubtitleCenter}>{t('landing:solutionSubtitle')}</h2>
+              <h1 className={styles.sectionTitleCenter}>Solution made for you</h1>
+              <h2 className={styles.sectionSubtitleCenter}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor,  adipiscing elit sed.</h2>
               <div className={styles.solutionGrid}>
                 <div className={styles.solutionItem}>
-                  <div className={styles.icon}></div>
+                  <div className={styles.icon}>
+                    <img src="/assets/common/iconPlus.svg" />
+                  </div>
                   <p className={styles.solutionItemTitle}>Text</p>
                   <p className={styles.solutionItemText}>Lorem ipsum dolor sit amet, consectetur adipiscing.</p>
                 </div>
                 <div className={styles.solutionItem}>
-                  <div className={styles.icon}></div>
+                  <div className={styles.icon}>
+                    <img src="/assets/common/iconPlus.svg" />
+                  </div>
                   <p className={styles.solutionItemTitle}>Text</p>
                   <p className={styles.solutionItemText}>Lorem ipsum dolor sit amet, consectetur adipiscing.</p>
                 </div>
                 <div className={styles.solutionItem}>
-                  <div className={styles.icon}></div>
+                  <div className={styles.icon}>
+                    <img src="/assets/common/iconPlus.svg" />
+                  </div>
                   <p className={styles.solutionItemTitle}>Text</p>
                   <p className={styles.solutionItemText}>Lorem ipsum dolor sit amet, consectetur adipiscing.</p>
                 </div>
                 <div className={styles.solutionItem}>
-                  <div className={styles.icon}></div>
+                  <div className={styles.icon}>
+                    <img src="/assets/common/iconPlus.svg" />
+                  </div>
                   <p className={styles.solutionItemTitle}>Text</p>
                   <p className={styles.solutionItemText}>Lorem ipsum dolor sit amet, consectetur adipiscing.</p>
                 </div>
@@ -149,47 +156,53 @@ const Index = ({ t }) => {
                 href="/"
                 type="link"
               >
-                {t('landing:buttonStartTrial')}
+                Start 7 Days Free Trial
               </Button>
             </div>
           </section>
         </ElementScroll>
 
-
         <ElementScroll name="product">
-          <section className={styles.advantagesSection}>
+          <section className={styles.productSection}>
             <div className={styles.container}>
-              <h1 className={styles.advantagesTitle}>{t('landing:advantagesTitle')}</h1>
-              <h2 className={styles.advantagesSubtitle}>{t('landing:advantagesSubtitle')}</h2>
-              <ul className={styles.advantagesList}>
-                <li className={styles.advantagesItem}>
-                  <div className={styles.icon}></div>
-                  <p>{t('landing:advantageOne')}</p>
+              <h1 className={styles.productTitle}>Product & advantages</h1>
+              <h2 className={styles.productSubtitle}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </h2>
+              <ul className={styles.productList}>
+                <li className={styles.productItem}>
+                  <div className={styles.icon}>
+                    <img src="/assets/common/iconPeople.svg" />
+                  </div>
+                  <p>Connect with new people</p>
                 </li>
-                <li className={styles.advantagesItem}>
-                  <div className={styles.icon}></div>
-                  <p>{t('landing:advantageTwo')}</p>
+                <li className={styles.productItem}>
+                  <div className={styles.icon}>
+                    <img src="/assets/common/iconChart.svg" />
+                  </div>
+                  <p>Increase chance to engage</p>
                 </li>
-                <li className={styles.advantagesItem}>
-                  <div className={styles.icon}></div>
-                  <p>{t('landing:advantageThree')}</p>
+                <li className={styles.productItem}>
+                  <div className={styles.icon}>
+                    <img src="/assets/common/iconSDCard.svg" />
+                  </div>
+                  <p>Unlimited storage</p>
+                  <div className={styles.premiumLabel}>premium</div>
                 </li>
               </ul>
               <Button
                 href="/"
                 type="link"
               >
-                {t('landing:buttonStartTrial')}
+                Start 7 Days Free Trial
               </Button>
-              <div className={styles.advantagesVisual}>
+              <div className={styles.productVisual}>
                 <img
-                  src="/assets/home/advantagesOval.svg"
-                  className={styles.advantagesVisualOval}
+                  src="/assets/home/productOval.svg"
+                  className={styles.productVisualOval}
                 />
                 <img
-                  src="/assets/home/screenshot.png"
+                  src="/assets/home/screenshot.jpg"
                   alt="Screenshot dashboard FOMO"
-                  className={styles.advantagesScreenshot}
+                  className={styles.productScreenshot}
                 />
               </div>
             </div>
@@ -199,15 +212,16 @@ const Index = ({ t }) => {
         <section className={styles.stepsSection}>
           <div className={styles.container}>
             <div className={styles.stepsVisual}>
+              <img src="/assets/home/stepsVisual.svg" />
               <Button
                 href="/"
                 type="link"
               >
-                {t('landing:buttonStartTrial')}
+                Start 7 Days Free Trial
               </Button>
             </div>
             <div>
-              <h1 className={styles.sectionTitle}>{t('landing:stepsTitle')}</h1>
+              <h1 className={styles.sectionTitle}>Create a pitch in 3 steps</h1>
               <ul className={styles.stepsList}>
                 <li className={styles.stepsItem}>
                   <div className={styles.stepsItemNumber}>
@@ -239,12 +253,11 @@ const Index = ({ t }) => {
           />
         </section>
 
-
         <ElementScroll name="pricing">
           <section className={styles.plansSection}>
             <div className={styles.container}>
-              <h1 className={styles.plansTitle}>{t('landing:plansTitle')}</h1>
-              <h2 className={styles.plansSubtitle}>{t('landing:plansSubtitle')}</h2>
+              <h1 className={styles.plansTitle}>Choose the plan that’s right for your business</h1>
+              <h2 className={styles.plansSubtitle}>Get started for free, try out our platform  for an unlimited period of time. Explore our monthly and yearly plans and pick the one that best suits your needs.</h2>
               <ul className={styles.plansList}>
                 <li>
                   <div className={styles.planContent}>
@@ -256,15 +269,15 @@ const Index = ({ t }) => {
                     <p className={styles.planText}>All the basics for businesses that are just getting started.</p>
                     <ul className={styles.planDetails}>
                       <li className={styles.planDetailsItem}>
-                        <img src="/assets/home/planCheck.svg" />
+                        <img src="/assets/home/planBasic.svg" />
                         <p>Single project use</p>
                       </li>
                       <li className={styles.planDetailsItem}>
-                        <img src="/assets/home/planCheck.svg" />
+                        <img src="/assets/home/planBasic.svg" />
                         <p>Basic dashboard</p>
                       </li>
                       <li className={styles.planDetailsItem}>
-                        <img src="/assets/home/planCheck.svg" />
+                        <img src="/assets/home/planBasic.svg" />
                         <p>All components included</p>
                       </li>
                     </ul>
@@ -275,9 +288,9 @@ const Index = ({ t }) => {
                       type="link"
                       width={160}
                     >
-                      {t('landing:buttonTryItFree')}
+                      Try it free
                     </Button>
-                    <p className={styles.creditCardNotRequired}>{t('common:creditCardNotRequired')}</p>
+                    <p className={styles.creditCardNotRequired}>No credit card required</p>
                   </div>
                 </li>
                 <li className={styles.planRecommended}>
@@ -291,19 +304,19 @@ const Index = ({ t }) => {
                     <p className={styles.planText}>Better for growing businesses that want more customers.</p>
                     <ul className={styles.planDetails}>
                       <li className={styles.planDetailsItem}>
-                        <img src="/assets/home/planCheck.svg" />
+                        <img src="/assets/home/planRecommended.svg" />
                         <p>Unlimited project use</p>
                       </li>
                       <li className={styles.planDetailsItem}>
-                        <img src="/assets/home/planCheck.svg" />
+                        <img src="/assets/home/planRecommended.svg" />
                         <p>Advanced dashboard</p>
                       </li>
                       <li className={styles.planDetailsItem}>
-                        <img src="/assets/home/planCheck.svg" />
+                        <img src="/assets/home/planRecommended.svg" />
                         <p>All components included</p>
                       </li>
                       <li className={styles.planDetailsItem}>
-                        <img src="/assets/home/planCheck.svg" />
+                        <img src="/assets/home/planRecommended.svg" />
                         <p>Advanced insight</p>
                       </li>
                     </ul>
@@ -312,9 +325,9 @@ const Index = ({ t }) => {
                       href="/"
                       type="link"
                     >
-                      {t('landing:buttonTryItFree')}
+                      Try it free
                     </Button>
-                    <p className={styles.creditCardNotRequired}>{t('common:creditCardNotRequired')}</p>
+                    <p className={styles.creditCardNotRequired}>No credit card required</p>
                   </div>
                 </li>
                 <li className={styles.planPremium}>
@@ -327,19 +340,19 @@ const Index = ({ t }) => {
                     <p className={styles.planText}>Advanced features for pros who need more customization.</p>
                     <ul className={styles.planDetails}>
                       <li className={styles.planDetailsItem}>
-                        <img src="/assets/home/planCheck.svg" />
+                        <img src="/assets/home/planPremium.svg" />
                         <p>Single project use</p>
                       </li>
                       <li className={styles.planDetailsItem}>
-                        <img src="/assets/home/planCheck.svg" />
+                        <img src="/assets/home/planPremium.svg" />
                         <p>Basic dashboard</p>
                       </li>
                       <li className={styles.planDetailsItem}>
-                        <img src="/assets/home/planCheck.svg" />
+                        <img src="/assets/home/planPremium.svg" />
                         <p>Mutlivariate components</p>
                       </li>
                       <li className={styles.planDetailsItem}>
-                        <img src="/assets/home/planCheck.svg" />
+                        <img src="/assets/home/planPremium.svg" />
                         <p>Phone Support</p>
                       </li>
                     </ul>
@@ -350,9 +363,9 @@ const Index = ({ t }) => {
                       type="link"
                       width={160}
                     >
-                      {t('landing:buttonTryItFree')}
+                      Try it free
                     </Button>
-                    <p className={styles.creditCardNotRequired}>{t('common:creditCardNotRequired')}</p>
+                    <p className={styles.creditCardNotRequired}>No credit card required</p>
                   </div>
                 </li>
                 
@@ -362,8 +375,8 @@ const Index = ({ t }) => {
         </ElementScroll>
 
         <section className={styles.tryItSection}>
-          <h1 className={styles.sectionTitle}>{t('landing:tryItTitle')}</h1>
-          <h2 className={styles.sectionSubtitle}>{t('landing:tryItSubtitle')}</h2>
+          <h1 className={styles.sectionTitle}>Try it free</h1>
+          <h2 className={styles.sectionSubtitle}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.</h2>
           <Button
             color="white"
             style="outline"
@@ -371,8 +384,17 @@ const Index = ({ t }) => {
             type="link"
             width={160}
           >
-            {t('landing:buttonTryItFree')}
+            Try it free
           </Button>
+          <p className={styles.creditCardNotRequired}>No credit card required</p>
+          <img
+            src="/assets/home/tryItOval.svg"
+            className={styles.tryItOval}
+          />
+          <img
+            src="/assets/home/tryItSquare.svg"
+            className={styles.tryItSquare}
+          />
         </section>
       </main>
 
@@ -416,16 +438,32 @@ const Index = ({ t }) => {
           <div>
             <ul className={styles.footerSocials}>
               <li>
-                <img src="/assets/home/socials-facebook.svg" />
+                <Link href="/">
+                  <a>
+                    <img src="/assets/socials/facebook.svg" />
+                  </a>
+                </Link>
               </li>
               <li>
-                <img src="/assets/home/socials-youtube.svg" />
+                <Link href="/">
+                  <a>
+                    <img src="/assets/socials/youtube.svg" />
+                  </a>
+                </Link>
               </li>
               <li>
-                <img src="/assets/home/socials-twitter.svg" />
+                <Link href="/">
+                  <a>
+                    <img src="/assets/socials/twitter.svg" />
+                  </a>
+                </Link>
               </li>
               <li>
-                <img src="/assets/home/socials-linkedin.svg" />
+                <Link href="/">
+                  <a>
+                    <img src="/assets/socials/linkedin.svg" />
+                  </a>
+                </Link>
               </li>
             </ul>
             <p className={styles.copyright}>Copyright © {dayjs().format('YYYY')}.</p>
@@ -436,8 +474,4 @@ const Index = ({ t }) => {
   )
 }
 
-Index.getInitialProps = async () => ({
-  namespacesRequired: ['common', 'landing'],
-})
-
-export default withTranslation()(Index)
+export default Index

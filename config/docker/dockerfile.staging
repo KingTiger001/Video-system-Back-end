@@ -1,0 +1,17 @@
+FROM node:alpine
+
+ENV APP_ROOT /src
+ENV PORT 7030
+
+RUN mkdir ${APP_ROOT}
+WORKDIR ${APP_ROOT}
+ADD . ${APP_ROOT}
+
+RUN yarn
+RUN yarn build:staging
+
+ENV HOST 0.0.0.0
+EXPOSE 7030
+
+#Start main app
+CMD ["yarn", "start"]

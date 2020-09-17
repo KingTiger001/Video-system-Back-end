@@ -1,12 +1,17 @@
 @import '../_variables.sass'
   
+.homepage
+  overflow-x: hidden
+
 .container
   margin: 0 auto
   max-width: 1170px
 
 .sectionTitle
   color: $textColorOne
+  font-family: 'hk_groteskbold'
   font-size: 48px
+  letter-spacing: 0.2px
   line-height: 56px
   margin-bottom: 16px
 
@@ -36,6 +41,8 @@
   height: 60px
   justify-content: center
   width: 60px
+  img
+    width: 24px
 
 .creditCardNotRequired
   color: $textColorTwo
@@ -73,6 +80,15 @@
   grid-gap: 8px
   grid-template-columns: repeat(2, auto)
 
+.premiumLabel
+  background: rgba($primaryColor, 0.2)
+  border-radius: 2px
+  color: $primaryColor
+  font-size: 13px
+  font-weight: 600
+  padding: 5px 12px
+  text-transform: uppercase
+
 
 // Section engage
 .engageSection
@@ -82,6 +98,7 @@
 
 .engageTitle
   color: $textColorOne
+  font-family: 'hk_groteskbold'
   font-size: 56px
   line-height: 56px
   margin: auto
@@ -188,11 +205,10 @@
   text-align: center
 
 
-// Section advantages
-.advantagesSection
+// Section product
+.productSection
   margin-bottom: 220px
   position: relative
-  overflow-x: hidden
   z-index: 3
   .container
     align-items: flex-start
@@ -200,21 +216,21 @@
     flex-direction: column
     position: relative
 
-.advantagesTitle
+.productTitle
   @extend .sectionTitle
   max-width: 400px
 
-.advantagesSubtitle
+.productSubtitle
   @extend .sectionSubtitle
   max-width: 400px
 
-.advantagesList
+.productList
   display: grid
   grid-gap: 20px
   margin-bottom: 70px
   margin-top: 50px
 
-.advantagesItem
+.productItem
   align-items: center
   display: grid
   grid-gap: 15px
@@ -223,20 +239,24 @@
     color: $textColorOne
     font-size: 24px
     font-wieght: 500
+  .premiumLabel
+    grid-column: 3
 
-.advantagesVisual
+.productVisual
   height: 100%
   left: 68%
   position: absolute
   top: 0
 
-.advantagesVisualOval
+.productVisualOval
   position: absolute
   top: -150px
   left: -250px
 
-.advantagesScreenshot
+.productScreenshot
   height: 100%
+  border-radius: 8px
+  box-shadow: 0 10px 36px 0 rgba(0,0,0,0.05)
   position: relative
   z-index: 2
 
@@ -250,8 +270,12 @@
     padding-bottom: 400px
 
 .stepsVisual
+  align-items: center
   display: flex
-  justify-content: center
+  flex-direction: column
+  img
+    flex: 1
+    max-width: 80%
 
 .stepsList
   display: grid
@@ -372,8 +396,8 @@
   margin-bottom: 30px
   p
     color: $textColorOne
+    font-family: 'hk_groteskbold'
     font-size: 45px
-    font-weight: 600
     margin-right: 10px
   span
     color: $textColorTwo
@@ -381,8 +405,10 @@
 
 .planTitle
   color: $textColorOne
+  font-family: 'hk_groteskbold'
   font-size: 26px
   font-weight: 600
+  letter-spacing: 0.2px
   margin-bottom: 15px
 
 .planText
@@ -421,11 +447,24 @@
   display: flex
   flex-direction: column
   padding: 80px 0
+  position: relative
   .sectionTitle, .sectionSubtitle
     color: #fff
   a
     margin-top: 40px
+  .creditCardNotRequired
+    color: #fff
+    margin-top: 10px
 
+.tryItOval
+  bottom: 0
+  position: absolute
+  right: 0
+
+.tryItSquare
+  left: 0
+  position: absolute
+  top: 0
 
 // Footer
 .footer
