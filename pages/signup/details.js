@@ -103,7 +103,10 @@ const SignupDetails = ({ user }) => {
           />
         </div>
         { error && <p className={styles.error}>{error}</p> }
-        <Button width="100%">
+        <Button
+          loading={loading}
+          width="100%"
+        >
           Let's begin
         </Button>
       </form>

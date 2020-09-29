@@ -2,12 +2,12 @@ import Link from 'next/link'
 
 import styles from '../styles/components/Button.module.sass'
 
-const Button = ({ color = 'primary', children, href, onClick, style, type = 'button', width }) => {
+const Button = ({ color = 'primary', children, href, loading, onClick, style, type = 'button', width }) => {
   switch (type) {
     case 'button':
       return (
         <button
-          className={`${styles.button} ${styles[`${color}Color`]} ${style ? styles[style] : ''}`}
+          className={`${styles.button} ${styles[`${color}Color`]} ${style ? styles[style] : ''} ${loading && styles.loading}`}
           style={{
             ...(width && { width })
           }}
