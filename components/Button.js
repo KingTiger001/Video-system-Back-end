@@ -1,8 +1,8 @@
 import Link from 'next/link'
 
-import styles from './Button.module.sass'
+import styles from '../styles/components/Button.module.sass'
 
-const Button = ({ color = 'primary', children, href, style, type = 'button', width }) => {
+const Button = ({ color = 'primary', children, href, onClick, style, type = 'button', width }) => {
   switch (type) {
     case 'button':
       return (
@@ -11,12 +11,12 @@ const Button = ({ color = 'primary', children, href, style, type = 'button', wid
           style={{
             ...(width && { width })
           }}
+          onClick={onClick}
         >
           <span>{ children }</span>
         </button>
       )
     case 'link':
-
       return (
         <Link href={href}>
           <a

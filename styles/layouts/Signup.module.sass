@@ -1,0 +1,107 @@
+@import '../_common.sass'
+@import '../_variables.sass'
+  
+.layout
+  display: flex
+  min-height: 100vh
+
+.content
+  display: grid
+  grid-gap: 130px
+  grid-template-columns: 1fr 360px
+  margin: auto
+  max-width: 1045px
+  width: 100%
+
+.onboarding
+  align-items: center
+  display: grid
+  grid-gap: 130px
+  grid-template-columns: 1fr 1px
+  & > div
+    display: grid
+    justify-self: center
+    justify-items: center
+  &:after
+    background: rgba(95,89,247,0.2)
+    content: ""
+    display: block
+    height: 100%
+    max-height: 300px
+    width: 1px
+
+.onboardingTitle
+  color: $textColorOne
+  font-size: 30px
+  font-weight: 700
+  letter-spacing: 0.2px
+  line-height: 36px
+  margin-bottom: 16px
+  text-align: center
+
+.onboardingSubtitle
+  color: $textColorTwo
+  letter-spacing: 0.2px
+  font-size: 16px
+  font-weight: 400
+  line-height: 20px
+  margin-bottom: 40px
+  text-align: center
+
+.logo
+  margin-bottom: 90px
+  width: 300px
+
+.title
+  color: $textColorOne
+  font-size: 30px
+  font-weight: 700
+  letter-spacing: 0.2px
+  line-height: 36px
+  margin-bottom: 4px
+  text-align: center
+
+.subtitle
+  color: $textColorTwo
+  letter-spacing: 0.2px
+  font-size: 16px
+  font-weight: 400
+  line-height: 20px
+  margin-bottom: 40px
+  text-align: center
+
+.error
+  @extend .error
+  margin: 20px 0
+  text-align: center
+
+.link
+  color: $textColorOne
+  display: block
+  font-size: 16px
+  letter-spacing: 0.2px
+  line-height: 20px
+  margin-top: 40px
+  text-align: center
+  &:hover
+    text-decoration: underline
+
+.switchLogin
+  color: $textColorOne
+  font-size: 16px
+  letter-spacing: 0.2px
+  line-height: 20px
+  margin-bottom: 40px
+  margin-top: 30px
+  text-align: center
+  a
+    color: $secondaryColor
+    font-weight: 700
+    &:hover
+      text-decoration: underline
+
+.termsOfService
+  color: $textColorTwo
+  font-size: 12px
+  margin-top: 16px
+  text-align: center

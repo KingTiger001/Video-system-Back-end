@@ -1,3 +1,5 @@
+@import './_variables.sass'
+  
 *, *:before, *:after
   box-sizing: border-box
   margin: 0
@@ -41,4 +43,19 @@ input:focus,
 button:focus,
 select:focus
   outline: none
-  
+
+input::placeholder,
+textarea::placeholder
+  color: $textColorTwo
+
+a
+  text-decoration: none
+
+form
+  & > div
+    margin-bottom: 20px
+
+.page
+  display: flex
+  flex-direction: column
+  min-height: 100vh

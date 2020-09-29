@@ -50,7 +50,7 @@ const Index = () => {
             </nav>
             <div className={styles.headerButtons}>
               <Button
-                href="/"
+                href="/login"
                 style="outline"
                 type="link"
                 width={120}
@@ -58,7 +58,7 @@ const Index = () => {
                 Log in
               </Button>
               <Button
-                href="/"
+                href="/signup"
                 type="link"
                 width={120}
               >
@@ -76,7 +76,7 @@ const Index = () => {
             <h2 className={styles.engageSubtitle}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.Olor sit amet, consectetur adipiscing eli.</h2>
             <div className={styles.engageButtons}>
               <Button
-                href="/"
+                href="/signup"
                 type="link"
                 width={200}
               >
@@ -153,7 +153,7 @@ const Index = () => {
                 </div>
               </div>
               <Button
-                href="/"
+                href="/signup"
                 type="link"
               >
                 Start 7 Days Free Trial
@@ -189,7 +189,7 @@ const Index = () => {
                 </li>
               </ul>
               <Button
-                href="/"
+                href="/signup"
                 type="link"
               >
                 Start 7 Days Free Trial
@@ -214,7 +214,7 @@ const Index = () => {
             <div className={styles.stepsVisual}>
               <img src="/assets/home/stepsVisual.svg" />
               <Button
-                href="/"
+                href="/signup"
                 type="link"
               >
                 Start 7 Days Free Trial
@@ -283,7 +283,7 @@ const Index = () => {
                     </ul>
                     <Button
                       color="grey"
-                      href="/"
+                      href="/signup"
                       style="outline"
                       type="link"
                       width={160}

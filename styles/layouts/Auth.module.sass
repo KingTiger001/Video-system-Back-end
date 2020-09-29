@@ -1,0 +1,67 @@
+@import '../_common.sass'
+@import '../_variables.sass'
+  
+.layout
+  display: flex
+  flex-direction: column
+  min-height: 100vh
+
+.content
+  margin: auto
+  width: 360px
+
+.logo
+  display: block
+  margin: 0 auto 40px auto
+
+.title
+  color: $textColorOne
+  font-size: 30px
+  font-weight: 700
+  letter-spacing: 0.2px
+  line-height: 36px
+  margin-bottom: 4px
+  text-align: center
+
+.subtitle
+  color: $textColorTwo
+  letter-spacing: 0.2px
+  font-size: 16px
+  font-weight: 400
+  line-height: 20px
+  margin-bottom: 40px
+  text-align: center
+
+.error
+  @extend .error
+  margin: 20px 0
+  text-align: center
+
+.success
+  @extend .success
+  margin: 20px 0
+  text-align: center
+
+.link
+  color: $textColorOne
+  display: block
+  font-size: 16px
+  letter-spacing: 0.2px
+  line-height: 20px
+  margin-top: 40px
+  text-align: center
+  &:hover
+    text-decoration: underline
+
+.switchSignup
+  color: $textColorOne
+  font-size: 16px
+  letter-spacing: 0.2px
+  line-height: 20px
+  margin-top: 30px
+  text-align: center
+  a
+    color: $secondaryColor
+    font-weight: 700
+    &:hover
+      text-decoration: underline
