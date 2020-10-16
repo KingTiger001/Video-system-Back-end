@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 7031",
+    "dev": "env-cmd -f config/env/.env.development next dev -p 7031",
     "build:production": "env-cmd -f config/env/.env.production next build",
-    "build:staging": "NODE_ENV=production next build",
+    "build:staging": "env-cmd -f config/env/.env.staging next build",
     "start": "NODE_ENV=production next start -p 7031"
   },
   "dependencies": {
@@ -17,9 +17,12 @@
     "js-cookie": "^2.2.1",
     "jwt-decode": "^3.0.0-beta.2",
     "next": "9.5.3",
-    "react": "16.13.1",
-    "react-dom": "16.13.1",
+    "prop-types": "^15.7.2",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
     "react-scroll": "^1.8.1",
-    "sass": "^1.26.10"
+    "react-video-recorder": "^3.17.1",
+    "sass": "^1.26.10",
+    "styled-components": "^5.2.0"
   }
 }

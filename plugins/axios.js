@@ -2,8 +2,7 @@ import axios from 'axios'
 import jscookie from 'js-cookie'
 
 const instance = axios.create({
-  baseURL: 'http://localhost:7030/v1',
-  // baseURL: process.env.API_URL,
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
 })
 
 if (jscookie.get('token')) {

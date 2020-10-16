@@ -8,6 +8,8 @@ import withAuthServerSideProps from '../hocs/withAuthServerSideProps'
 
 import Button from '../components/Button'
 
+import styles from '../styles/pages/dashboard.module.sass'
+
 const Dashboard = ({ user }) => {
   const router = useRouter()
 
@@ -17,7 +19,7 @@ const Dashboard = ({ user }) => {
   }
 
   return (
-    <div className="dashboard">
+    <div className={styles.dashboard}>
       <Head>
         <title>Dashboard | FOMO</title>
       </Head>
@@ -29,10 +31,16 @@ const Dashboard = ({ user }) => {
       </Link>
       <h1>Hello {user.firstName} 👋</h1>
       <Button
+        href="/editing"
+        type="link"
+      >
+        Create a video
+      </Button>
+      <p
         onClick={logout}
       >
         Log out
-      </Button>
+      </p>
     </div>
   )
 }
