@@ -1,12 +1,15 @@
 import axios from 'axios'
 import jscookie from 'js-cookie'
 
-const instance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+const mainAPI = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API,
+})
+const videosAPI = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_VIDEOS_API,
 })
 
 if (jscookie.get('token')) {
-  instance.defaults.headers.common.Authorization = `Bearer ${jscookie.get('token')}`
+  mainAPI.defaults.headers.common.Authorization = `Bearer ${jscookie.get('token')}`
 }
 
-export default instance
+export { mainAPI, videosAPI }

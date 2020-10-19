@@ -1,14 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
-import dayjs from 'dayjs'
 import Link from 'next/link'
 
-import duration from 'dayjs/plugin/duration'
-dayjs.extend(duration)
-
+import { videosAPI } from '../plugins/axios'
+import dayjs from '../plugins/dayjs'
 import { useVideoResize } from '../hooks'
 
 import Button from '../components/Button'
-import VideoRecorder from '../components/VideoRecorder'
+import ImportButton from '../components/ImportButton'
+import VideoRecorder from '../components/VideoRecorder/index'
 
 import styles from '../styles/components/Editing.module.sass'
 
@@ -16,7 +15,7 @@ const Editing = () => {
   const videoRef = useRef()
   const { width: videoWidth } = useVideoResize({ ref: videoRef, autoWidth: true })
   const [tool, setTool] = useState(0)
-  const [displayVideoRecorder, showVideoRecorder] = useState(false)
+  const [displayVideoRecorder, showVideoRecorder] = useState(true)
   
   const [time, setTime] = useState(0)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -101,6 +100,18 @@ const Editing = () => {
     const ms = t.milliseconds()
     return `${m < 10 ? `0${m}` : m}:${s < 10 ? `0${s}` : s}:${ms.toString().substring(0, 1)}`
   }
+  
+  const importVideo = async (e) => {
+    try {
+      const formData = new FormData()
+      formData.append('file', e.target.files[0])
+      formData.append('folder', 'videos')
+      const { data } = await videosAPI.post('/', formData)
+      console.log('DATA:', data)
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   return (
     <div className={styles.editing}>
@@ -161,8 +172,15 @@ const Editing = () => {
                 showEndScreen()
               }}
             >
-              <img src="/assets/editing/toolLogo.svg" />
+              <img src="/assets/editing/toolElement.svg" />
               <p className={styles.toolName}>End Screen</p>
+            </li>
+            <li
+              className={`${styles.tool} ${tool === 4 ? styles.toolSelected : ''}`}
+              onClick={() => selectTool(4)}
+            >
+              <img src="/assets/editing/toolLogo.svg" />
+              <p className={styles.toolName}>Logo</p>
             </li>
           </ul>
 
@@ -179,9 +197,9 @@ const Editing = () => {
                   <Button onClick={() => showVideoRecorder(true)}>
                     Start recording
                   </Button>
-                  <Button style="outline">
+                  <ImportButton onChange={importVideo}>
                     Import video
-                  </Button>
+                  </ImportButton>
                 </div>
               }
               { tool === 2 &&
@@ -333,6 +351,11 @@ const Editing = () => {
                     />
                   </div>
                 
+                </div>
+              }
+              { tool === 4 &&
+                <div>
+                  <p className={styles.toolDetailsName}>Logo</p>
                 </div>
               }
             </div>

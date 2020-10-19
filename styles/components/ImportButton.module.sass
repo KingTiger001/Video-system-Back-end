@@ -1,0 +1,15 @@
+@import './Button.module.sass'
+@import '../_variables.sass'
+
+.input
+  height: 0px
+  overflow: hidden
+  opacity: 0
+  position: absolute
+  width: 0px
+  z-index: -1
+
+.label
+  @extend .button
+  border-color: $primaryColor
+  color: $primaryColor

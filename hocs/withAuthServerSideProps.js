@@ -3,7 +3,7 @@
 import cookie from 'cookie'
 import jwtDecode from 'jwt-decode'
 
-import axios from '../plugins/axios'
+import { mainAPI } from '../plugins/axios'
 
 const withAuthServerSideProps = (serverSidePropsFunc) => {
   return async (ctx) => {
@@ -11,10 +11,10 @@ const withAuthServerSideProps = (serverSidePropsFunc) => {
     if (cookies.token) {
       // TODO: check expiration token
       // console.log(jwtDecode(cookies.token))
-      axios.defaults.headers.common.Authorization = `Bearer ${cookies.token}`
+      mainAPI.defaults.headers.common.Authorization = `Bearer ${cookies.token}`
       try {
         let user
-        const { data } = await axios.get('/users/me')
+        const { data } = await mainAPI.get('/users/me')
         user = data
         if ((!user.firstName || !user.lastName) && !ctx.req.url.includes('details')) {
           ctx.res.writeHead(302, { Location: '/signup/details' });
