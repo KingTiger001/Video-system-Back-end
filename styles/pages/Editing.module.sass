@@ -3,9 +3,9 @@
 .editing
   background: #F3F7F9
   display: grid
-  grid-template-rows: max-content 1fr max-content
+  grid-template-rows: max-content minmax(0, 1fr) max-content
   grid-gap: 20px
-  min-height: 100vh
+  height: 100vh
 
 
 // HEADER
@@ -60,6 +60,7 @@
 .sidebar
   display: flex
   grid-template-columns: 90px 270px
+  overflow-y: hidden
 
 .tools
   background: #fff
@@ -101,9 +102,10 @@
 .toolDetails
   background: #fff
   border-radius: 8px
-  padding: 20px
   width: 270px
   margin-left: 4px
+  & > div
+    height: 100%
 
 .toolDetailsSection
   margin-bottom: 15px
@@ -114,6 +116,8 @@
   font-weight: 700
   line-height: 13px
   margin-bottom: 25px
+  padding: 20px
+  padding-bottom: 0
 
 .toolDetailsLabel
   color: $textColorTwo
@@ -148,9 +152,10 @@
       opacity: 1
 
 .toolRecord
+  align-content: center
   display: grid
   justify-items: center
-  padding-top: 90px
+  padding: 0 20px
   .toolRecordImage
     height: 36px
     margin-bottom: 5px
@@ -170,6 +175,49 @@
   button, label
     margin-top: 10px
     width: 150px
+
+.toolVideos
+  display: grid
+  grid-auto-rows: max-content
+  padding-bottom: 20px
+  
+.videosList
+  display: grid
+  grid-gap: 12px
+  overflow: auto
+  padding: 0 20px
+
+.videosItem
+  border: 1px solid rgba(90,113,132,0.2)
+  border-radius: 2px
+  display: grid
+  grid-gap: 4px
+  padding: 10px
+
+.videosItemName
+  color: $textColorOne
+  font-size: 14px
+  font-weight: 500
+
+.videosItemStatus
+  color: $textColorTwo
+  font-size: 12px
+  &.waiting
+    color: $textColorTwo
+    font-style: italic
+  &.processing
+    color: #fbc531
+    font-style: italic
+
+.videosItemDelete
+  align-self: center
+  cursor: pointer
+  grid-column: 2
+  grid-row-start: 1
+  grid-row-end: 3
+  height: 20px
+  justify-self: flex-end
+  width: 20px
 
 .player
   display: grid

@@ -1,24 +1,39 @@
 import { useEffect, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import Link from 'next/link'
 
-import { videosAPI } from '../plugins/axios'
+// import withAuth from '../hocs/withAuth'
+import withAuthServerSideProps from '../hocs/withAuthServerSideProps'
+
+import { useDebounce, useVideoResize } from '../hooks'
+
+import { mainAPI } from '../plugins/axios'
 import dayjs from '../plugins/dayjs'
-import { useVideoResize } from '../hooks'
 
 import Button from '../components/Button'
 import ImportButton from '../components/ImportButton'
+import PopupDeleteVideo from '../components/Popups/PopupDeleteVideo'
+import PopupUploadVideo from '../components/Popups/PopupUploadVideo'
 import VideoRecorder from '../components/VideoRecorder/index'
 
-import styles from '../styles/components/Editing.module.sass'
+import styles from '../styles/pages/Editing.module.sass'
 
-const Editing = () => {
-  const videoRef = useRef()
-  const { width: videoWidth } = useVideoResize({ ref: videoRef, autoWidth: true })
+const Editing = ({ user, initialVideos }) => {
+  const dispatch = useDispatch()
+  const showPopup = (popupProps) => dispatch({ type: 'SHOW_POPUP', ...popupProps })
+
+  const playerRef = useRef()
+  const { width: playerWidth } = useVideoResize({ ref: playerRef, autoWidth: true })
   const [tool, setTool] = useState(0)
-  const [displayVideoRecorder, showVideoRecorder] = useState(true)
+  const [file, setFile] = useState('x')
+  const [displayVideoRecorder, showVideoRecorder] = useState(false)
   
   const [time, setTime] = useState(0)
   const [isPlaying, setIsPlaying] = useState(false)
+  
+  const [playerVideo, setPlayerVideo] = useState({})
+
+  const popup = useSelector(state => state.popup)
 
   useEffect(() => {
     let interval = null;
@@ -32,9 +47,6 @@ const Editing = () => {
     return () => clearInterval(interval);
   }, [isPlaying, time]);
 
-  const toggle = () => {
-    setIsPlaying(!isPlaying)
-  }
   
   const [helloScreen, setHelloScreen] = useState({
     background: '#000',
@@ -81,6 +93,27 @@ const Editing = () => {
     show: false,
   })
 
+  const [videos, setVideos] = useState(initialVideos)
+
+  const updateProcessingVideos = async () => {
+    const processingVideos = videos.filter(video => video.status === 'processing' || video.status === 'waiting')
+    if (processingVideos.length > 0) {
+      const newVideosPromise = await Promise.all(processingVideos.map(video => mainAPI(`/videos/${video._id}`)))
+      const newVideos = newVideosPromise.flat().map(video => video.data)
+      setVideos(videos.map(video => {
+        const videoProcessingFound = newVideos.find(newVideo => newVideo._id === video._id)
+        return videoProcessingFound || video
+      }))
+    }
+  }
+
+  useDebounce(updateProcessingVideos, 3000, [videos])
+
+  const getVideos = async () => {
+    const { data } = await mainAPI('/users/me/videos')
+    setVideos(data)
+  }
+
   const selectTool = (clickedTool) => tool === clickedTool ? setTool(0) : setTool(clickedTool)
 
   const showHelloScreen = () => {
@@ -93,6 +126,15 @@ const Editing = () => {
     setEndScreen({ ...endScreen, show: true })
   }
 
+  const showVideo = () => {
+    setHelloScreen({ ...helloScreen, show: false })
+    setEndScreen({ ...endScreen, show: false })
+  }
+
+  const playPause = () => {
+    setIsPlaying(!isPlaying)
+  }
+
   const displayTime = () => {
     const t = dayjs.duration(time)
     const m = t.minutes()
@@ -100,22 +142,43 @@ const Editing = () => {
     const ms = t.milliseconds()
     return `${m < 10 ? `0${m}` : m}:${s < 10 ? `0${s}` : s}:${ms.toString().substring(0, 1)}`
   }
-  
-  const importVideo = async (e) => {
-    try {
-      const formData = new FormData()
-      formData.append('file', e.target.files[0])
-      formData.append('folder', 'videos')
-      const { data } = await videosAPI.post('/', formData)
-      console.log('DATA:', data)
-    } catch (err) {
-      console.log(err)
-    }
+
+  const secondsToMs = (d) => {
+    d = Number(d);
+    const m = Math.floor(d % 3600 / 60);
+    const s = Math.floor(d % 3600 % 60);
+
+    const mDisplay = m > 0 ? `${m}m` : '';
+    const sDisplay = s > 0 ? `${s}s` : '';
+    return `${mDisplay}${sDisplay}`; 
   }
 
   return (
     <div className={styles.editing}>
-      { displayVideoRecorder && <VideoRecorder onClose={() => showVideoRecorder(false)}/> }
+      { displayVideoRecorder &&
+        <VideoRecorder
+          onClose={() => showVideoRecorder(false)}
+          onDone={(file) => {
+            showPopup({ display: 'UPLOAD_VIDEO' })
+            setFile(file)
+          }}
+        />
+      }
+      { popup.display === 'UPLOAD_VIDEO' && 
+        <PopupUploadVideo
+          file={file}
+          onClose={() => setFile(false)}
+          onDone={() => {
+            getVideos()
+            setTool(2)
+          }}
+        />
+      }
+      { popup.display === 'DELETE_VIDEO' && 
+        <PopupDeleteVideo
+          onDone={getVideos}
+        />
+      }
 
       <div className={styles.header}>
         <Link href="/dashboard">
@@ -134,13 +197,10 @@ const Editing = () => {
             color="white"
             textColor="dark"
           >
-            Video settings
-          </Button>
-          <Button
-            color="white"
-            textColor="dark"
-          >
             Save my video
+          </Button>
+          <Button>
+            Share
           </Button>
         </div>
       </div>
@@ -159,6 +219,16 @@ const Editing = () => {
               className={`${styles.tool} ${tool === 2 ? styles.toolSelected : ''}`}
               onClick={() => {
                 selectTool(2)
+                showVideo()
+              }}
+            >
+              <img src="/assets/editing/toolVideos.svg" />
+              <p className={styles.toolName}>Videos</p>
+            </li>
+            <li
+              className={`${styles.tool} ${tool === 3 ? styles.toolSelected : ''}`}
+              onClick={() => {
+                selectTool(3)
                 showHelloScreen()
               }}
             >
@@ -166,9 +236,9 @@ const Editing = () => {
               <p className={styles.toolName}>Hello Screen</p>
             </li>
             <li
-              className={`${styles.tool} ${tool === 3 ? styles.toolSelected : ''}`}
+              className={`${styles.tool} ${tool === 4 ? styles.toolSelected : ''}`}
               onClick={() => {
-                selectTool(3)
+                selectTool(4)
                 showEndScreen()
               }}
             >
@@ -176,8 +246,8 @@ const Editing = () => {
               <p className={styles.toolName}>End Screen</p>
             </li>
             <li
-              className={`${styles.tool} ${tool === 4 ? styles.toolSelected : ''}`}
-              onClick={() => selectTool(4)}
+              className={`${styles.tool} ${tool === 5 ? styles.toolSelected : ''}`}
+              onClick={() => selectTool(5)}
             >
               <img src="/assets/editing/toolLogo.svg" />
               <p className={styles.toolName}>Logo</p>
@@ -197,12 +267,45 @@ const Editing = () => {
                   <Button onClick={() => showVideoRecorder(true)}>
                     Start recording
                   </Button>
-                  <ImportButton onChange={importVideo}>
+                  <ImportButton onChange={(e) => {
+                    setFile(e.target.files[0])
+                    showPopup({ display: 'UPLOAD_VIDEO' })
+                    e.target.value = null
+                  }}>
                     Import video
                   </ImportButton>
                 </div>
               }
               { tool === 2 &&
+                <div className={styles.toolVideos}>
+                  <p className={styles.toolDetailsName}>Videos</p>
+                  <div className={styles.videosList}>
+                    {
+                      videos.map(video => 
+                        <div
+                          key={video._id}
+                          className={styles.videosItem}
+                          onClick={() => setPlayerVideo(video)}
+                        >
+                          <p className={styles.videosItemName}>{video.name}</p>
+                          { video.status === 'done'
+                            ?
+                            <p className={`${styles.videosItemStatus}`}>{secondsToMs(video.metadata.duration)} - {Math.round(video.metadata.size / 1000000)} mb</p>
+                            :
+                            <p className={`${styles.videosItemStatus} ${styles[video.status]}`}>{video.status}... {video.status === 'processing' && video.statusProgress ? `${video.statusProgress || 0}%` : ''}</p>
+                          }
+                          <img
+                            onClick={() => showPopup({ display: 'DELETE_VIDEO', data: video })}
+                            className={styles.videosItemDelete}
+                            src="/assets/editing/delete.svg"
+                          />
+                        </div>
+                      )
+                    }
+                  </div>
+                </div>
+              }
+              { tool === 3 &&
                 <div>
                   <p className={styles.toolDetailsName}>Hello Screen</p>
                   <div className={styles.toolDetailsSection}>
@@ -270,7 +373,7 @@ const Editing = () => {
                   </div>
                 </div>
               }
-              { tool === 3 &&
+              { tool === 4 &&
                 <div>
                   <p className={styles.toolDetailsName}>End Screen</p>
                   <div className={styles.toolDetailsSection}>
@@ -353,7 +456,7 @@ const Editing = () => {
                 
                 </div>
               }
-              { tool === 4 &&
+              { tool === 5 &&
                 <div>
                   <p className={styles.toolDetailsName}>Logo</p>
                 </div>
@@ -364,10 +467,21 @@ const Editing = () => {
 
         <div className={styles.player}>
           <div
-            ref={videoRef}
+            ref={playerRef}
             className={styles.video}
-            style={{ width: videoWidth }}
+            style={{ width: playerWidth }}
           >
+            { !helloScreen.show && !endScreen.show && playerVideo.url &&
+              <video
+                key={playerVideo._id}
+                controls
+                height="100%"
+                width="100%"
+              >
+                <source src={playerVideo.url} type="video/mp4" />
+                Sorry, your browser doesn't support embedded videos.
+              </video>
+            }
             { helloScreen.show && 
               <div
                 className={styles.helloScreen}
@@ -426,7 +540,7 @@ const Editing = () => {
           </div>
           <div className={styles.controls}>
             <img
-              onClick={toggle}
+              onClick={playPause}
               src={isPlaying ? '/assets/editing/pause.svg' : '/assets/editing/play.svg'}
             />
             <p className={styles.time}>{displayTime()}</p>
@@ -452,3 +566,9 @@ const Editing = () => {
 }
 
 export default Editing
+export const getServerSideProps = withAuthServerSideProps(async (ctx, user) => {
+  const { data: initialVideos } = await mainAPI('/users/me/videos')
+  return {
+    initialVideos
+  }
+});

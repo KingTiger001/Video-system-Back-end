@@ -1,0 +1,55 @@
+@import '../../_variables.sass'
+  
+.popup
+  display: flex
+  height: 100%
+  left: 0
+  position: fixed
+  top: 0
+  width: 100%
+  z-index: 9
+
+.background
+  background: rgba(#eee, 0.7)
+  height: 100%
+  left: 0
+  position: absolute
+  top: 0
+  width: 100%
+  z-index: 1
+
+.content
+  background: #fff
+  border-radius: 8px
+  margin: auto
+  max-width: 600px
+  padding: 30px
+  position: relative
+  width: 100%
+  z-index: 2
+  & > p
+    font-size: 16px
+
+.contentHeader
+  align-items: center
+  display: grid
+  grid-gap: 12px
+  grid-template-columns: 1fr 28px
+  margin-bottom: 24px
+  img
+    cursor: pointer
+    height: 28px
+    width: 28px
+
+.actions
+  display: grid
+  grid-auto-flow: column
+  grid-gap: 12px
+  margin-top: 16px
+
+.title
+  color: $textColorOne
+  font-size: 28px
+  font-weight: 700
+  letter-spacing: 0.2px
+  line-height: 34px

@@ -1,16 +1,21 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import Recorder from 'react-video-recorder'
 
 import { useVideoResize } from '../../hooks'
-
 
 import Actions from './Actions'
 
 import styles from '../../styles/components/VideoRecorder/index.module.sass'
 
-const VideoRecorder = ({ onClose }) => {
-  const ref = useRef();
+const VideoRecorder = ({ onClose, onDone }) => {
+  const ref = useRef()
+  const [videoBlob, setVideoBlob] = useState(null)
   const { height } = useVideoResize({ ref, autoHeight: true })
+
+  const onSave = () => {
+    onClose()
+    onDone(new File([videoBlob], 'record.webm'))
+  }
 
   return (
     <div className={styles.videoRecorder}>
@@ -21,13 +26,16 @@ const VideoRecorder = ({ onClose }) => {
         style={{ height }}
       >
         <Recorder
-          isFlipped={false}
-          isOnInitially={true}
-          onRecordingComplete={videoBlob => {
-            // Do something with the video...
-            console.log('videoBlob', videoBlob)
+          constraints={{
+            audio: true,
+            video: {
+              width: 1280,
+              height: 720,
+            },
           }}
-          renderActions={(props) => Actions({ ...props, onClose })}
+          isOnInitially={true}
+          onRecordingComplete={videoBlob => setVideoBlob(videoBlob)}
+          renderActions={(props) => Actions({ ...props, onClose, onSave })}
           timeLimit={90000}
         />
       </div>

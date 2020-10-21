@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 export const useVideoResize = ({ autoHeight, autoWidth, ref }) => {
   const getDimensions = () => ({
@@ -26,3 +26,17 @@ export const useVideoResize = ({ autoHeight, autoWidth, ref }) => {
 
   return dimensions;
 };
+
+export const useDebounce = (effect, delay , deps) => {
+  const callback = useCallback(effect, deps);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      callback();
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [callback, delay]);
+}

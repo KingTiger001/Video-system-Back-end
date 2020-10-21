@@ -1,0 +1,42 @@
+@import '../../_variables.sass'
+
+.form
+  display: grid
+  grid-gap: 16px
+
+.cancel
+  color: $textColorTwo
+  cursor: pointer
+  font-size: 14px
+  letter-spacing: 0.2px
+  justify-self: center
+
+.progress
+  display: grid
+  grid-gap: 16px
+  justify-items: center 
+  .progressBar
+    background: rgba(90,113,132,0.2)
+    border-radius: 4px
+    overflow: hidden
+    height: 20px
+    width: 100%
+    span
+      background: $primaryColor
+      border-radius: 4px
+      display: block
+      height: 20px
+  .progressNumber
+    color: $primaryColor
+    font-size: 24px
+    font-weight: 700
+
+.finish
+  display: grid
+  grid-gap: 16px
+  p
+    color: $textColorTwo
+    font-size: 16px
+    font-weight: 500
+    justify-self: center
+    letter-spacing: 0.2px

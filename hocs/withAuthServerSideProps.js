@@ -1,5 +1,3 @@
-// import { CURRENT_USER } from '../operations/queries/users'
-// import { initializeApollo } from '../config/apollo/client'
 import cookie from 'cookie'
 import jwtDecode from 'jwt-decode'
 

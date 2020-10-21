@@ -29,7 +29,9 @@ const Actions = ({
   onStopReplaying,
   onConfirm,
 
+  // custom props
   onClose,
+  onSave,
 }) => {
   const renderActions = () => {
     if (
@@ -43,19 +45,20 @@ const Actions = ({
 
     if (isReplayingVideo) {
       return (
-        <button
-          type='button'
-          onClick={onStopReplaying}
-          data-qa='start-replaying'
-        >
-          Use another video
-        </button>
+        <div className={`${styles.buttons} ${styles.end}`}>
+          <button onClick={onStopReplaying}>
+            Restart
+          </button>
+          <button onClick={onSave}>
+            Save & continue
+          </button>
+        </div>
       )
     }
 
     if (isRecording) {
       return (
-        <div className={styles.recording}>
+        <div className={styles.buttons}>
           <button onClick={onStopRecording}>
             <span />
             Stop recording
@@ -66,7 +69,7 @@ const Actions = ({
 
     if (isCameraOn && streamIsReady) {
       return (
-        <div className={styles.recording}>
+        <div className={styles.buttons}>
           <button onClick={onStartRecording}>
             <span />
             Start recording
@@ -76,7 +79,7 @@ const Actions = ({
     }
 
     return (
-      <button type='button' onClick={onTurnOnCamera} data-qa='turn-on-camera'>
+      <button type='button' onClick={onTurnOnCamera}>
         Turn my camera ON
       </button>
     )
@@ -99,7 +102,7 @@ const Actions = ({
           }}
           className={styles.close}
         >
-          <img src="/assets/common/close-w.svg" />
+          <img src="/assets/common/closeW.svg" />
         </div>
       }
       {renderActions()}
