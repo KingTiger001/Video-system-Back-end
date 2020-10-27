@@ -4,14 +4,14 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 
-import { mainAPI } from '../plugins/axios'
+import { mainAPI } from '@/plugins/axios'
 
-import withAuth from '../hocs/withAuth'
-import withAuthServerSideProps from '../hocs/withAuthServerSideProps'
+import withAuth from '@/hocs/withAuth'
+import withAuthServerSideProps from '@/hocs/withAuthServerSideProps'
 
-import AuthLayout from '../layouts/AuthLayout'
-import Button from '../components/Button'
-import Input from '../components/Input'
+import AuthLayout from '@/layouts/AuthLayout'
+import Button from '@/components/Button'
+import Input from '@/components/Input'
 
 import styles from '../styles/layouts/Auth.module.sass'
 

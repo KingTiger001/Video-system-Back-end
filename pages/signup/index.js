@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 
-import axios from '../../plugins/axios'
+import { mainAPI } from '../../plugins/axios'
 
 import withAuth from '../../hocs/withAuth'
 import withAuthServerSideProps from '../../hocs/withAuthServerSideProps'
@@ -33,12 +33,12 @@ const Signup = () => {
         if (password !== passwordCheck) {
           return setError('Password doesn\'t match')
         }
-        const { data: { jwt, user } } = await axios.post('/auth/signup', {
+        const { data: { jwt, user } } = await mainAPI.post('/auth/signup', {
           email,
           password,
         })
         jscookie.set('token', jwt, { expires: 30 })
-        axios.defaults.headers.common.Authorization = `Bearer ${jwt}`
+        mainAPI.defaults.headers.common.Authorization = `Bearer ${jwt}`
         router.push('/signup/details')
       } catch (err) {
         const code = err.response && err.response.data

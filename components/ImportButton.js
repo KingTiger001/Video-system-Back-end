@@ -1,4 +1,4 @@
-import styles from '../styles/components/ImportButton.module.sass'
+import styles from '@/styles/components/ImportButton.module.sass'
 
 const ImportButton = ({ children, onChange }) => {
   return (

@@ -1,11 +1,11 @@
 import { useRef, useState } from 'react'
 import Recorder from 'react-video-recorder'
 
-import { useVideoResize } from '../../hooks'
+import { useVideoResize } from 'hooks'
 
 import Actions from './Actions'
 
-import styles from '../../styles/components/VideoRecorder/index.module.sass'
+import styles from '@/styles/components/VideoRecorder/index.module.sass'
 
 const VideoRecorder = ({ onClose, onDone }) => {
   const ref = useRef()

@@ -3,12 +3,12 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
-import withAuth from '../hocs/withAuth'
-import withAuthServerSideProps from '../hocs/withAuthServerSideProps'
+import withAuth from '@/hocs/withAuth'
+import withAuthServerSideProps from '@/hocs/withAuthServerSideProps'
 
-import Button from '../components/Button'
+import Button from '@/components/Button'
 
-import styles from '../styles/pages/dashboard.module.sass'
+import styles from '@/styles/pages/dashboard.module.sass'
 
 const Dashboard = ({ user }) => {
   const router = useRouter()
@@ -31,10 +31,10 @@ const Dashboard = ({ user }) => {
       </Link>
       <h1>Hello {user.firstName} 👋</h1>
       <Button
-        href="/editing"
+        href="/campaign"
         type="link"
       >
-        Create a video
+        Create a new campaign
       </Button>
       <p
         onClick={logout}

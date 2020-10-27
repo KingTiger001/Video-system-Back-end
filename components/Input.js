@@ -1,4 +1,4 @@
-import styles from '../styles/components/Input.module.sass'
+import styles from '@/styles/components/Input.module.sass'
 
 const Input = ({ ...props }) => {
   return (

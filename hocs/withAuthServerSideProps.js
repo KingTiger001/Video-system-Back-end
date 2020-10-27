@@ -1,7 +1,7 @@
 import cookie from 'cookie'
 import jwtDecode from 'jwt-decode'
 
-import { mainAPI } from '../plugins/axios'
+import { mainAPI } from '@/plugins/axios'
 
 const withAuthServerSideProps = (serverSidePropsFunc) => {
   return async (ctx) => {

@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { mainAPI, videosAPI } from '../../plugins/axios'
+import { mainAPI, videosAPI } from '@/plugins/axios'
 
 import Button from '../Button'
 import Input from '../Input'
 import Popup from './Popup'
 
-import styles from '../../styles/components/Popups/PopupUploadVideo.module.sass'
+import styles from '@/styles/components/Popups/PopupUploadVideo.module.sass'
 
 const PopupUploadVideo = ({ file, onClose, onDone }) => {
   const dispatch = useDispatch()

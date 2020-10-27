@@ -2,13 +2,13 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { useState } from 'react'
 
-import axios from '../plugins/axios'
+import axios from '@/plugins/axios'
 
-import AuthLayout from '../layouts/AuthLayout'
-import Button from '../components/Button'
-import Input from '../components/Input'
+import AuthLayout from '@/layouts/AuthLayout'
+import Button from '@/components/Button'
+import Input from '@/components/Input'
 
-import styles from '../styles/layouts/Auth.module.sass'
+import styles from '@/styles/layouts/Auth.module.sass'
 
 const Login = () => {
   const [email, setEmail] = useState('')

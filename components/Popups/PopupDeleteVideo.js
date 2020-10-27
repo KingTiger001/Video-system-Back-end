@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { mainAPI, videosAPI } from '../../plugins/axios'
+import { mainAPI, videosAPI } from '@/plugins/axios'
 
 import Button from '../Button'
 import Popup from './Popup'
 
-import styles from '../../styles/components/Popups/Popup.module.sass'
+import styles from '@/styles/components/Popups/Popup.module.sass'
 
 const PopupDeleteVideo = ({ onDone }) => {
   const dispatch = useDispatch()

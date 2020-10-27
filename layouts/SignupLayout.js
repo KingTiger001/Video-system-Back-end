@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import styles from '../styles/layouts/Signup.module.sass'
+import styles from '@/styles/layouts/Signup.module.sass'
 
 export default function SignupLayout ({ children }) {
   return (

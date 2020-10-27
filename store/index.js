@@ -1,36 +1,23 @@
 import { useMemo } from 'react'
-import { createStore, applyMiddleware } from 'redux'
+import {
+  applyMiddleware,
+  createStore,
+  combineReducers,
+} from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
+
+// Reducers
+import campaign from './reducers/campaign'
+import popup from './reducers/popup'
 
 let store
 
-const initialState = {
-  popup: {},
-}
-
-const reducer = (state = initialState, action) => {
-  switch (action.type) {
-    case 'SHOW_POPUP':
-      return {
-        ...state,
-        popup: {
-          display: action.display,
-          data: action.data,
-        }
-      }
-    case 'HIDE_POPUP':
-      return {
-        ...state,
-        popup: {},
-      }
-    default:
-      return state
-  }
-}
-
-function initStore(preloadedState = initialState) {
+function initStore(preloadedState = {}) {
   return createStore(
-    reducer,
+    combineReducers({
+      campaign,
+      popup,
+    }),
     preloadedState,
     composeWithDevTools(applyMiddleware())
   )

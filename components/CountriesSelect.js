@@ -1,7 +1,7 @@
 import { countries } from 'countries-list'
 import { useEffect, useRef, useState } from 'react'
 
-import styles from '../styles/components/CountriesSelect.module.sass'
+import styles from '@/styles/components/CountriesSelect.module.sass'
 
 const CountriesSelect = ({ onChange, ...props }) => {
   const [countrySelected, setCountry] = useState('')

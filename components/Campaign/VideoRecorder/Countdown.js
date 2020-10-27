@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 
-import dayjs from '../../plugins/dayjs'
+import dayjs from '@/plugins/dayjs'
 
-import styles from '../../styles/components/VideoRecorder/Countdown.module.sass'
+import styles from '@/styles/components/VideoRecorder/Countdown.module.sass'
 
 const Timer = ({ countdownTime }) => {
   const [time, setTime] = useState(countdownTime)

@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import styles from '../styles/layouts/Auth.module.sass'
+import styles from '@/styles/layouts/Auth.module.sass'
 
 export default function AuthLayout ({ children }) {
   return (

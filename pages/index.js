@@ -3,9 +3,9 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { Link as LinkScroll, Element as ElementScroll } from 'react-scroll'
 
-import Button from '../components/Button'
+import Button from '@/components/Button'
 
-import styles from '../styles/pages/index.module.sass'
+import styles from '@/styles/pages/index.module.sass'
 
 const Index = () => {
   return (

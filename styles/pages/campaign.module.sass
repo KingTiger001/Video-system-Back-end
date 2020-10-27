@@ -104,52 +104,59 @@
   border-radius: 8px
   width: 270px
   margin-left: 4px
+  overflow: auto
   & > div
     height: 100%
 
-.toolDetailsSection
+.toolSection
   margin-bottom: 15px
 
-.toolDetailsName
+.toolName
   color: $textColorOne
   font-size: 18px
   font-weight: 700
   line-height: 13px
-  margin-bottom: 25px
-  padding: 20px
-  padding-bottom: 0
+  margin-bottom: 20px
 
-.toolDetailsLabel
+.toolLabel
   color: $textColorTwo
   display: block
   font-size: 14px
   line-height: 13px
   margin-bottom: 8px
 
-.toolDetailsInput
+.toolInput
   border: 1px solid rgba(90,113,132,0.2)
   border-radius: 8px
   height: 35px
   display: block
   padding: 0 10px
   width: 100%
+  &:focus
+    & ~ img
+      display: block
 
-.toolDetailsBackgrounds
+.toolInputGrid
   display: grid
   grid-gap: 10px
-  grid-template-columns: repeat(6, 30px)
-  justify-content: space-between
-  li
-    background: red
-    border-radius: 50%
+  grid-template-columns: repeat(2, 1fr)
+
+.toolInputWithOptions
+  position: relative
+  .toolInput
+    padding-right: 40px
+  &:hover
+    img
+      display: block
+  & > img
     cursor: pointer
-    height: 30px
-    opacity: 0.5
-    width: 30px
-    &:hover
-      opacity: 1
-    &.selected
-      opacity: 1
+    display: none
+    height: 20px
+    position: absolute
+    right: 10px
+    top: 50%
+    transform: translateY(-50%)
+    width: 20px
 
 .toolRecord
   align-content: center
@@ -179,12 +186,13 @@
 .toolVideos
   display: grid
   grid-auto-rows: max-content
-  padding-bottom: 20px
+  padding: 20px 0
+  .toolName
+    padding: 0 20px
   
 .videosList
   display: grid
   grid-gap: 12px
-  overflow: auto
   padding: 0 20px
 
 .videosItem
@@ -219,6 +227,30 @@
   justify-self: flex-end
   width: 20px
 
+.toolHelloScreen, .toolEndScreen
+  padding: 20px
+  button
+    margin-bottom: 10px
+    width: 100%
+
+.toolDetailsAdd
+  align-items: center
+  cursor: pointer
+  display: grid
+  grid-gap: 5px
+  grid-template-columns: 20px 1fr
+  p
+    color: $textColorTwo
+    font-size: 14px
+    font-weight: 500
+    line-height: 13px
+
+.colorPicker
+  border: 1px solid rgba(90,113,132,0.2)
+  border-radius: 8px !important
+  box-shadow: none !important
+  width: 100% !important
+
 .player
   display: grid
   grid-gap: 8px
@@ -245,9 +277,20 @@
   grid-gap: 10px
   grid-auto-rows: max-content
   height: 100%
-  justify-content: center
-  justify-items: center
   width: 100%
+
+.endScreen
+  position: relative
+  & > a
+    margin: auto
+  .endScreenFooter
+    display: grid
+    grid-gap: 20px
+    grid-auto-flow: column
+    position: absolute
+    left: 50%
+    transform: translateX(-50%)
+    bottom: 20px
 
 // FOOTER
 .footer
