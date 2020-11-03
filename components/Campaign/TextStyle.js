@@ -11,7 +11,7 @@ const TextStyle = ({
     fontSize: true,
     fontWeight: true,
     letterSpacing: true,
-    lineHeight: true,
+    lineHeight: false,
     textAlign: true,
   },
   initialValues = {},

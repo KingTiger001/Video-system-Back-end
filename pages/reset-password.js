@@ -2,7 +2,7 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
-import axios from '@/plugins/axios'
+import { mainAPI } from '@/plugins/axios'
 
 import AuthLayout from '@/layouts/AuthLayout'
 import Button from '@/components/Button'
@@ -22,7 +22,7 @@ const Login = () => {
   useEffect(() => {
     const checkToken = async () => {
       if (router.query.token) {
-        const { data: isValid } = await axios.get(`/auth/password/${router.query.token}`)
+        const { data: isValid } = await mainAPI.get(`/auth/password/${router.query.token}`)
         setIsValid(isValid)
       }
     }
@@ -38,7 +38,7 @@ const Login = () => {
         if (password !== passwordCheck) {
           return setError('Password doesn\'t match')
         }
-        await axios.post(`/auth/password/${router.query.token}`, {
+        await mainAPI.post(`/auth/password/${router.query.token}`, {
           password,
           passwordCheck,
         })

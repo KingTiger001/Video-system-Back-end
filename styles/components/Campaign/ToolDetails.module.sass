@@ -1,0 +1,204 @@
+@import '../../_variables.sass'
+  
+.toolDetails
+  background: #fff
+  border-radius: 8px
+  width: 270px
+  margin-left: 4px
+  overflow: auto
+  & > div
+    height: 100%
+
+.toolSection
+  margin-bottom: 15px
+
+.toolName
+  color: $textColorOne
+  font-size: 18px
+  font-weight: 700
+  line-height: 13px
+  margin-bottom: 20px
+
+.toolLabel
+  color: $textColorTwo
+  display: block
+  font-size: 14px
+  line-height: 13px
+  margin-bottom: 8px
+
+.toolInput
+  border: 1px solid rgba(90,113,132,0.2)
+  border-radius: 8px
+  height: 35px
+  display: block
+  padding: 0 10px
+  width: 100%
+  &:focus
+    & ~ img
+      display: block
+
+.toolInputGrid
+  display: grid
+  grid-gap: 10px
+  grid-template-columns: repeat(2, 1fr)
+
+.toolInputWithOptions
+  position: relative
+  .toolInput
+    padding-right: 40px
+  &:hover
+    img
+      display: block
+  & > img
+    cursor: pointer
+    display: none
+    height: 20px
+    position: absolute
+    right: 10px
+    top: 50%
+    transform: translateY(-50%)
+    width: 20px
+
+.toolRecord
+  align-content: center
+  display: grid
+  justify-items: center
+  padding: 0 20px
+  .toolRecordImage
+    height: 36px
+    margin-bottom: 5px
+    width: 36px
+  .toolRecordName
+    color: $textColorOne
+    font-size: 25px
+    font-weight: 600
+    line-height: 25px
+    margin-bottom: 15px
+  .toolRecordText
+    color: $textColorTwo
+    font-size: 13px
+    line-height: 18px
+    margin-bottom: 20px
+    text-align: center
+  button, label
+    margin-top: 10px
+    width: 150px
+
+.toolVideos
+  display: grid
+  grid-auto-rows: max-content
+  padding: 20px 0
+  .toolName
+    padding: 0 20px
+  
+.videosList
+  display: grid
+  grid-gap: 12px
+  padding: 0 20px
+
+.videosItem
+  border: 1px solid rgba(90, 113, 132, 0.2)
+  border-radius: 2px
+  display: grid
+  grid-gap: 4px
+  padding: 10px
+
+.videosItemName
+  color: $textColorOne
+  font-size: 14px
+  font-weight: 500
+
+.videosItemStatus
+  color: $textColorTwo
+  font-size: 12px
+  &.waiting
+    color: $textColorTwo
+    font-style: italic
+  &.processing
+    color: #fbc531
+    font-style: italic
+
+.videosItemDelete
+  align-self: center
+  cursor: pointer
+  grid-column: 2
+  grid-row-start: 1
+  grid-row-end: 3
+  height: 20px
+  justify-self: flex-end
+  width: 20px
+
+.toolHelloScreen, .toolEndScreen
+  padding: 20px
+  button
+    margin-bottom: 10px
+    width: 100%
+
+.toolHelloScreenCancel
+  color: $textColorTwo
+  cursor: pointer
+  font-size: 14px
+  letter-spacing: 0.2px
+  text-align: center
+
+.toolDetailsAdd
+  align-items: center
+  cursor: pointer
+  display: grid
+  grid-gap: 5px
+  grid-template-columns: 20px 1fr
+  p
+    color: $textColorTwo
+    font-size: 14px
+    font-weight: 500
+    line-height: 13px
+
+.colorPicker
+  border: 1px solid rgba(90,113,132,0.2)
+  border-radius: 8px !important
+  box-shadow: none !important
+  width: 100% !important
+
+.helloScreenList
+  display: grid
+  grid-gap: 12px
+  margin-bottom: 20px
+
+.helloScreenItem
+  align-items: center
+  border: 1px solid rgba(90, 113, 132, 0.2)
+  border-radius: 2px
+  display: grid
+  grid-template-columns: 1fr repeat(2, 20px)
+  grid-gap: 4px
+  padding: 10px
+  img
+    cursor: pointer
+    width: 20px
+
+.toolLogo
+  padding: 20px
+
+.logo
+  border: 1px solid rgba(90, 113, 132, 0.2)
+  border-radius: 4px
+  height: 100px
+  margin-bottom: 20px
+  overflow: hidden
+  width: 100px
+  img
+    width: 100%
+
+.placement
+  background: #F3F7F9
+  border-radius: 8px
+  height: 130px
+  position: relative
+  width: 100%
+  .placementPosition
+    background: darken(#F3F7F9, 5%)
+    border-radius: 4px
+    height: 30px
+    width: 30px
+    &.selected
+      background: $primaryColor

@@ -2,17 +2,17 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 
-import axios from '../../plugins/axios'
+import { mainAPI } from '@/plugins/axios'
 
-import withAuth from '../../hocs/withAuth'
-import withAuthServerSideProps from '../../hocs/withAuthServerSideProps'
+import withAuth from '@/hocs/withAuth'
+import withAuthServerSideProps from '@/hocs/withAuthServerSideProps'
 
-import SignupLayout from '../../layouts/SignupLayout'
-import Button from '../../components/Button'
-import CountriesSelect from '../../components/CountriesSelect'
-import Input from '../../components/Input'
+import SignupLayout from '@/layouts/SignupLayout'
+import Button from '@/components/Button'
+import CountriesSelect from '@/components/CountriesSelect'
+import Input from '@/components/Input'
 
-import styles from '../../styles/layouts/Signup.module.sass'
+import styles from '@/styles/layouts/Signup.module.sass'
 
 const SignupDetails = ({ user }) => {
   const [company, setCompany] = useState('')
@@ -36,7 +36,7 @@ const SignupDetails = ({ user }) => {
       setLoading(true)
       try {
         await checkFormInputs()
-        await axios.patch('/users/me', {
+        await mainAPI.patch('/users/me', {
           data: {
             company,
             country,

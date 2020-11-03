@@ -5,7 +5,7 @@ import { useVideoResize } from 'hooks'
 
 import Actions from './Actions'
 
-import styles from '@/styles/components/VideoRecorder/index.module.sass'
+import styles from '@/styles/components/Campaign/VideoRecorder/index.module.sass'
 
 const VideoRecorder = ({ onClose, onDone }) => {
   const ref = useRef()

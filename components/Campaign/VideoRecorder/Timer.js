@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 import dayjs from '@/plugins/dayjs'
 
-import styles from '@/styles/components/VideoRecorder/Timer.module.sass'
+import styles from '@/styles/components/Campaign/VideoRecorder/Timer.module.sass'
 
 const Timer = ({
   isRecording,

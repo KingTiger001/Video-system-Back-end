@@ -1,0 +1,38 @@
+@import '../../_variables.sass'
+
+.tools
+  background: #fff
+  border-radius: 8px
+  display: grid
+  grid-auto-rows: max-content
+  grid-gap: 10px
+  padding: 10px 0
+  width: 90px
+
+.tool
+  align-items: center
+  cursor: pointer
+  display: grid
+  grid-gap: 4px
+  height: 60px
+  justify-items: center
+  position: relative
+  user-select: none
+  img
+    align-self: flex-end
+  p
+    align-self: flex-start
+    color: $textColorOne
+    font-size: 12px
+    font-weight: 500
+
+.toolSelected
+  background: rgba(232, 231, 254, 0.3)
+  &:before
+    background: $primaryColor
+    content: ''
+    height: 100%
+    left: 0
+    position: absolute
+    top: 0
+    width: 2px

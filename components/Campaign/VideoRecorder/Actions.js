@@ -1,7 +1,7 @@
 import Countdown from './Countdown'
 import Timer from './Timer'
 
-import styles from '@/styles/components/VideoRecorder/Actions.module.sass'
+import styles from '@/styles/components/Campaign/VideoRecorder/Actions.module.sass'
 
 const Actions = ({
   isVideoInputSupported,

@@ -2,7 +2,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { useState } from 'react'
 
-import axios from '@/plugins/axios'
+import { mainAPI } from '@/plugins/axios'
 
 import AuthLayout from '@/layouts/AuthLayout'
 import Button from '@/components/Button'
@@ -22,7 +22,7 @@ const Login = () => {
       setError('')
       setLoading(true)
       try {
-        await axios.post('/auth/password', { email })
+        await mainAPI.post('/auth/password', { email })
         setEmail(null)
         setSuccess('You\'ll receive an email soon with a confirmation link.')
         setTimeout(() => {

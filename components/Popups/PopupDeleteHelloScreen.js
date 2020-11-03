@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { mainAPI, mediaAPI } from '@/plugins/axios'
+import { mainAPI } from '@/plugins/axios'
 
 import Button from '../Button'
 import Popup from './Popup'
 
 import styles from '@/styles/components/Popups/Popup.module.sass'
 
-const PopupDeleteVideo = ({ onDone }) => {
+const PopupDeleteHelloScreen = ({ onDone }) => {
   const dispatch = useDispatch()
   const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
 
@@ -16,17 +16,13 @@ const PopupDeleteVideo = ({ onDone }) => {
 
   const popup = useSelector(state => state.popup)
 
-  const deleteVideo = async (e) => {
+  const deleteHelloScreen = async (e) => {
     e.preventDefault()
     if (!loading) {
       try {
         setLoading(true)
-        if (popup.data.url) {
-          await mediaAPI.post('/delete', { url: popup.data.url })
-        }
-        await mainAPI.delete(`/videos/${popup.data._id}`)
+        await mainAPI.delete(`/helloScreens/${popup.data._id}`)
         onDone()
-        hidePopup()
       } catch (err) {
         console.log(err)
       } finally {
@@ -37,9 +33,9 @@ const PopupDeleteVideo = ({ onDone }) => {
 
   return (
     <Popup
-      title="Delete a video"
+      title="Delete a hello screen"
     >
-      <p>Are you sure you want to delete this video?</p>
+      <p>Are you sure you want to delete this hello screen?</p>
       <div className={styles.actions}>
         <Button
           style="outline"
@@ -48,7 +44,7 @@ const PopupDeleteVideo = ({ onDone }) => {
           Cancel
         </Button>
         <Button
-          onClick={deleteVideo}
+          onClick={deleteHelloScreen}
           loading={loading}
         >
           Confirm
@@ -58,5 +54,4 @@ const PopupDeleteVideo = ({ onDone }) => {
   )
 }
 
-
-export default PopupDeleteVideo
+export default PopupDeleteHelloScreen

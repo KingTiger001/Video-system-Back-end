@@ -1,11 +1,13 @@
 import Head from 'next/head'  
 import { Provider } from 'react-redux'
+import { ToastContainer } from 'react-toastify'
 
-import { useStore } from '../store'
+import { useStore } from '@/store'
 
-import '../styles/fonts.css'
-import '../styles/_globals.sass'
-import '../styles/_globals.sass'
+import 'react-toastify/dist/ReactToastify.min.css'
+import '@/styles/fonts.css'
+import '@/styles/_globals.sass'
+import '@/styles/_globals.sass'
 
 function MyApp({ Component, pageProps }) {
   const store = useStore(pageProps.initialReduxState)
@@ -23,6 +25,16 @@ function MyApp({ Component, pageProps }) {
       <div className="page">
         {head}
         <Component {...pageProps} />
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={true}
+          newestOnTop={false}
+          closeOnClick={true}
+          rtl={false}
+          pauseOnHover={false}
+          draggable={true}
+        />
       </div>
     </Provider>
   )

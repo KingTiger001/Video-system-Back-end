@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { mainAPI } from '@/plugins/axios'
 
@@ -9,9 +9,10 @@ import Popup from './Popup'
 
 import styles from '@/styles/components/Popups/PopupCreateHelloScreen.module.sass'
 
-const PopupCreateHelloScreen = ({ helloScreen, onDone }) => {
+const PopupCreateHelloScreen = ({ onDone }) => {
   const dispatch = useDispatch()
   const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
+  const popup = useSelector(state => state.popup)
 
   const [isLoading, setIsLoading] = useState(false)
   const [helloScreenName, setHelloScreenName] = useState(null)
@@ -21,12 +22,13 @@ const PopupCreateHelloScreen = ({ helloScreen, onDone }) => {
     if (!isLoading) {
       try {
         setIsLoading(true)
+        delete popup.data._id
         await mainAPI.post('/helloScreens', {
-          ...helloScreen,
+          ...popup.data,
           name: helloScreenName,
+
         })
         onDone()
-        hidePopup()
       } catch (err) {
         console.log(err)
       } finally {
@@ -37,7 +39,7 @@ const PopupCreateHelloScreen = ({ helloScreen, onDone }) => {
 
   return (
     <Popup
-      title="Create a hello screen template"
+      title="New hello screen template"
     >
       <form
         className={styles.form}
@@ -51,7 +53,7 @@ const PopupCreateHelloScreen = ({ helloScreen, onDone }) => {
         />
         <Button>Create</Button>
         <p
-          onClick={() => hidePopup}
+          onClick={hidePopup}
           className={styles.cancel}
         >
           Cancel

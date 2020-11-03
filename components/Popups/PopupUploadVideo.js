@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
-import { mainAPI, videosAPI } from '@/plugins/axios'
+import { mainAPI, mediaAPI } from '@/plugins/axios'
 
 import Button from '../Button'
 import Input from '../Input'
@@ -9,9 +9,10 @@ import Popup from './Popup'
 
 import styles from '@/styles/components/Popups/PopupUploadVideo.module.sass'
 
-const PopupUploadVideo = ({ file, onClose, onDone }) => {
+const PopupUploadVideo = ({ onDone }) => {
   const dispatch = useDispatch()
   const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
+  const popup = useSelector(state => state.popup)
 
   const [isFinished, setIsFinished] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
@@ -30,11 +31,11 @@ const PopupUploadVideo = ({ file, onClose, onDone }) => {
 
       // upload for encoding
       const formData = new FormData()
-      formData.append('file', file)
+      formData.append('file', popup.data)
       formData.append('folder', 'videos')
       formData.append('videoId', video._id)
-      await videosAPI.post(
-        '/',
+      await mediaAPI.post(
+        '/videos',
         formData,
         {
           onUploadProgress: function (progressEvent) {
@@ -60,7 +61,6 @@ const PopupUploadVideo = ({ file, onClose, onDone }) => {
   return (
     <Popup
       allowBackdropClose={false}
-      onClose={onClose}
       showCloseIcon={false}
       title="Upload a video"
     >
@@ -98,12 +98,7 @@ const PopupUploadVideo = ({ file, onClose, onDone }) => {
       { !isUploading && isFinished &&
         <div className={styles.finish}>
           <p>You video has been uploaded</p>
-          <Button
-            onClick={() => {
-              onClose()
-              hidePopup()
-            }}
-          >
+          <Button onClick={hidePopup}>
             Ok
           </Button>
         </div>
