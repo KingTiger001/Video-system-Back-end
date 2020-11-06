@@ -3,7 +3,7 @@ const defaultHelloScreen = {
   title: {
     color: '#fff',
     displayOptions: false,
-    fontSize: 35,
+    fontSize: 50,
     fontWeight: 700,
     letterSpacing: 0,
     lineHeight: 1,
@@ -13,7 +13,7 @@ const defaultHelloScreen = {
   subtitle: {
     color: '#fff',
     displayOptions: false,
-    fontSize: 20,
+    fontSize: 35,
     fontWeight: 400,
     letterSpacing: 0,
     lineHeight: 1,
@@ -22,56 +22,61 @@ const defaultHelloScreen = {
   },
 }
 
+const defaultEndScreen = {
+  background: '#000',
+  title: {
+    color: '#fff',
+    displayOptions: false,
+    fontSize: 50,
+    fontWeight: 700,
+    letterSpacing: 0,
+    lineHeight: 1,
+    textAlign: 'center',
+    value: '',
+  },
+  subtitle: {
+    color: '#fff',
+    displayOptions: false,
+    fontSize: 35,
+    fontWeight: 400,
+    letterSpacing: 0,
+    lineHeight: 1,
+    textAlign: 'center',
+    value: '',
+  },
+  button: {
+    value: '',
+    href: '',
+  },
+  email: {
+    color: '#fff',
+    displayOptions: false,
+    fontSize: 16,
+    fontWeight: 400,
+    value: '',
+  },
+  phone: {
+    color: '#fff',
+    displayOptions: false,
+    fontSize: 16,
+    fontWeight: 400,
+    value: '',
+  },
+}
+
 const initialState = {
   displayElement: 'video',
-  endScreen: {
-    background: '#000',
-    title: {
-      color: '#fff',
-      displayOptions: false,
-      fontSize: 35,
-      fontWeight: 700,
-      letterSpacing: 0,
-      lineHeight: 1,
-      textAlign: 'center',
-      value: '',
-    },
-    subtitle: {
-      color: '#fff',
-      displayOptions: false,
-      fontSize: 20,
-      fontWeight: 400,
-      letterSpacing: 0,
-      lineHeight: 1,
-      textAlign: 'center',
-      value: '',
-    },
-    button: {
-      value: '',
-      href: '',
-    },
-    email: {
-      color: '#fff',
-      displayOptions: false,
-      fontSize: 16,
-      fontWeight: 400,
-      value: '',
-    },
-    phone: {
-      color: '#fff',
-      displayOptions: false,
-      fontSize: 16,
-      fontWeight: 400,
-      value: '',
-    },
-  },
-  helloScreen: defaultHelloScreen,
+  endScreen: {},
+  helloScreen: {},
   helloScreenList: [],
   isPlaying: false,
   logo: {
-    placement: 'bottom-left',
+    placement: 'top-left',
     value: '',
+    size: 50,
   },
+  name: '',
+  previewHelloScreen: {},
   tool: 0,
   time: 0,
   videos: [],
@@ -79,6 +84,11 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case 'ADD_HELLO_SCREEN':
+      return {
+        ...state,
+        helloScreen: defaultHelloScreen,
+      }
     case 'CHANGE_END_SCREEN':
       return {
         ...state,
@@ -95,12 +105,15 @@ const reducer = (state = initialState, action) => {
           ...action.data
         },
       }
-    case 'DISPLAY_ELEMENT':
+    case 'CHANGE_LOGO':
       return {
         ...state,
-        displayElement: action.data,
+        logo: {
+          ...state.logo,
+          ...action.data
+        },
       }
-    case 'SHOW_ELEMENT':
+    case 'DISPLAY_ELEMENT':
       return {
         ...state,
         displayElement: action.data,
@@ -118,25 +131,35 @@ const reducer = (state = initialState, action) => {
     case 'RESET_HELLO_SCREEN':
       return {
         ...state,
-        helloScreen: defaultHelloScreen,
+        helloScreen: {},
       }
-    case 'SELECT_TOOL':
+    case 'SET_CAMPAIGN':
       return {
         ...state,
-        tool: action.data,
+        endScreen: action.data.endScreen || defaultEndScreen,
+        helloScreen: action.data.helloScreen || {},
+        logo: action.data.logo || initialState.logo,
+        name: action.data.name,
       }
     case 'SET_HELLO_SCREEN_LIST':
       return {
         ...state,
         helloScreenList: action.data,
       }
-    case 'SET_LOGO':
+    case 'SET_PREVIEW_HELLO_SCREEN':
       return {
         ...state,
-        logo: {
-          ...state.logo,
-          ...action.data
-        },
+        previewHelloScreen: action.data,
+      }
+    case 'SELECT_TOOL':
+      return {
+        ...state,
+        tool: action.data,
+      }
+    case 'SET_NAME':
+      return {
+        ...state,
+        name: action.data,
       }
     case 'SET_TIME':
       return {

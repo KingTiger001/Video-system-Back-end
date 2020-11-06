@@ -7,7 +7,13 @@ const Logo = () => {
 
   return logo.value
     ?
-      <div className={`${styles.logo} ${styles[logo.placement]}`}>
+      <div
+        className={`${styles.logo} ${styles[logo.placement]}`}
+        style={{
+          height: logo.size,
+          width: logo.size,
+        }}
+      >
         <img src={logo.value} />
       </div>
     :

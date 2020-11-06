@@ -1,6 +1,8 @@
+import { useRouter } from 'next/router'
 import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Link from 'next/link'
+import { toast } from 'react-toastify'
 
 // import withAuth from '../hocs/withAuth'
 import withAuthServerSideProps from '@/hocs/withAuthServerSideProps'
@@ -23,11 +25,16 @@ import ToolDetails from '@/components/Campaign/ToolDetails'
 import styles from '@/styles/pages/campaign.module.sass'
 
 const Campaign = ({ user }) => {
+  const router = useRouter()
+
   const dispatch = useDispatch()
   const popup = useSelector(state => state.popup)
+  const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
   
+  const campaign = useSelector(state => state.campaign)
   const logo = useSelector(state => state.campaign.logo)
   const displayElement = useSelector(state => state.campaign.displayElement)
+  const name = useSelector(state => state.campaign.name)
   const isPlaying = useSelector(state => state.campaign.isPlaying)
   const time = useSelector(state => state.campaign.time)
 
@@ -38,7 +45,7 @@ const Campaign = ({ user }) => {
   useEffect(() => {
     if (user.logo && !logo.value) {
       dispatch({
-        type: 'SET_LOGO',
+        type: 'CHANGE_LOGO',
         data: {
           value: user.logo
         }
@@ -60,6 +67,11 @@ const Campaign = ({ user }) => {
     }
     return () => clearInterval(interval);
   }, [isPlaying, time])
+
+  const saveCampaign = async () => {
+    await mainAPI.patch(`/campaigns/${router.query.campaignId}`, campaign)
+    toast.success('Campaign saved.')
+  }
 
   const getVideos = async () => {
     const { data } = await mainAPI('/users/me/videos')
@@ -87,12 +99,16 @@ const Campaign = ({ user }) => {
               type: 'SELECT_TOOL',
               value: 2,
             })
+            hidePopup()
           }}
         />
       }
       { popup.display === 'DELETE_VIDEO' && 
         <PopupDeleteVideo
-          onDone={getVideos}
+          onDone={() => {
+            getVideos()
+            hidePopup()
+          }}
         />
       }
 
@@ -105,12 +121,15 @@ const Campaign = ({ user }) => {
         </Link>
         <div className={styles.headerVideoTitle}>
           <input
+            onChange={(e) => dispatch({ type: 'SET_NAME', data: e.target.value })}
             placeholder="Campaign name"
+            value={name}
           />
         </div>
         <div className={styles.headerActions}>
           <Button
             color="white"
+            onClick={saveCampaign}
             textColor="dark"
           >
             Save my campaign
@@ -176,20 +195,30 @@ const Campaign = ({ user }) => {
 }
 
 export default Campaign
-export const getServerSideProps = withAuthServerSideProps(async (ctx, user) => {
+export const getServerSideProps = withAuthServerSideProps(async ({ params }, user) => {
   const reduxStore = initializeStore()
   const { dispatch } = reduxStore
 
-  const { data: initialVideos } = await mainAPI('/users/me/videos')
-  const { data: initialHelloScreenList } = await mainAPI('/users/me/helloScreens')
+  const { data: campaign } = await mainAPI.get(`/campaigns/${params.campaignId}`)
+  const { data: videos } = await mainAPI.get('/users/me/videos')
+  const { data: endScreens } = await mainAPI.get('/users/me/endScreens')
+  const { data: helloScreenList } = await mainAPI.get('/users/me/helloScreens')
 
   dispatch({
+    type: 'SET_CAMPAIGN',
+    data: campaign,
+  })
+  dispatch({
     type: 'SET_VIDEOS',
-    data: initialVideos,
+    data: videos,
+  })
+  dispatch({
+    type: 'CHANGE_END_SCREEN',
+    data: endScreens[0],
   })
   dispatch({
     type: 'SET_HELLO_SCREEN_LIST',
-    data: initialHelloScreenList
+    data: helloScreenList
   })
 
   return {

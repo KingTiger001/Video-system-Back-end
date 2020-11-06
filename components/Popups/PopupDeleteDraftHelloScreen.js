@@ -5,12 +5,12 @@ import Popup from './Popup'
 
 import styles from '@/styles/components/Popups/Popup.module.sass'
 
-const PopupCancelHelloScreen = ({ onConfirm }) => {
+const PopupDeleteDraftHelloScreen = ({ onConfirm }) => {
   const dispatch = useDispatch()
   const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
 
   return (
-    <Popup title="Cancel">
+    <Popup title="Delete hello screen draft">
       <p>Are you sure ? All of your modifications will be deleted.</p>
       <div className={styles.actions}>
         <Button
@@ -30,4 +30,4 @@ const PopupCancelHelloScreen = ({ onConfirm }) => {
 }
 
 
-export default PopupCancelHelloScreen
+export default PopupDeleteDraftHelloScreen

@@ -51,7 +51,7 @@ const TextStyle = ({
           <label>Size</label>
           <InputNumber
             initialValue={fontSize}
-            onChange={(value) => setFontSize(parseInt(value || 1, 10))}
+            onChange={(value) => setFontSize(value ? parseInt(value, 10) : '')}
           />
         </div>
       }

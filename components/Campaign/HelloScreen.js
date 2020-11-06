@@ -5,16 +5,20 @@ import styles from '@/styles/components/Campaign/HelloScreen.module.sass'
 
 const HelloScreen = () => {
   const helloScreen = useSelector(state => state.campaign.helloScreen)
+  const previewHelloScreen = useSelector(state => state.campaign.previewHelloScreen)
 
   const ref = useRef()
   
+  const [hs, setHS] = useState({})
   const [titleResponsiveFontSize, setTitleResponsiveFontSize] = useState(0)
   const [subtitleResponsiveFontSize, setSubtitleResponsiveFontSize] = useState(0)
 
+  useEffect(() => setHS(Object.keys(previewHelloScreen).length > 0 ? previewHelloScreen : helloScreen), [helloScreen, previewHelloScreen])
+
   useEffect(() => {
     const handleResize = () => {
-      setTitleResponsiveFontSize(ref.current.offsetWidth * (helloScreen.title.fontSize / 1000))
-      setSubtitleResponsiveFontSize(ref.current.offsetWidth * (helloScreen.subtitle.fontSize / 1000))
+      setTitleResponsiveFontSize(ref.current.offsetWidth * (hs.title.fontSize / 1000))
+      setSubtitleResponsiveFontSize(ref.current.offsetWidth * (hs.subtitle.fontSize / 1000))
     }
     if (ref.current) {
       handleResize()
@@ -23,46 +27,45 @@ const HelloScreen = () => {
     return () => {
       window.removeEventListener('resize', handleResize)
     }
-  }, [ref, helloScreen])
+  }, [ref, hs])
 
-  return (
+  return Object.keys(hs).length > 0 &&
     <div
       className={styles.helloScreen}
-      style={{ background: helloScreen.background }}
+      style={{ background: hs.background }}
       ref={ref}
     >
-      { helloScreen.title.value &&
+      { hs.title.value &&
         <p
           style={{
-            color: helloScreen.title.color,
+            color: hs.title.color,
             fontSize: titleResponsiveFontSize,
-            fontWeight: helloScreen.title.fontWeight,
-            letterSpacing: helloScreen.title.letterSpacing,
-            // lineHeight: helloScreen.title.lineHeight,
-            textAlign: helloScreen.title.textAlign,
-            ...(helloScreen.title.letterSpacing > 0 && { paddingLeft: helloScreen.title.letterSpacing }),
+            fontWeight: hs.title.fontWeight,
+            letterSpacing: hs.title.letterSpacing,
+            // lineHeight: hs.title.lineHeight,
+            textAlign: hs.title.textAlign,
+            ...(hs.title.letterSpacing > 0 && { paddingLeft: hs.title.letterSpacing }),
           }}
         >
-          {helloScreen.title.value}
+          {hs.title.value}
         </p>
       }
-      { helloScreen.subtitle.value &&
+      { hs.subtitle.value &&
         <p
           style={{
-            color: helloScreen.subtitle.color,
+            color: hs.subtitle.color,
             fontSize: subtitleResponsiveFontSize,
-            fontWeight: helloScreen.subtitle.fontWeight,
-            letterSpacing: helloScreen.subtitle.letterSpacing,
+            fontWeight: hs.subtitle.fontWeight,
+            letterSpacing: hs.subtitle.letterSpacing,
             // lineHeight: helloScreen.subtitle.lineHeight,
-            textAlign: helloScreen.subtitle.textAlign,
-            ...(helloScreen.subtitle.letterSpacing > 0 && { paddingLeft: helloScreen.subtitle.letterSpacing }),
+            textAlign: hs.subtitle.textAlign,
+            ...(hs.subtitle.letterSpacing > 0 && { paddingLeft: hs.subtitle.letterSpacing }),
           }}
         >
-          {helloScreen.subtitle.value}
+          {hs.subtitle.value}
         </p>
       }
     </div>
-  )
 }
 
 

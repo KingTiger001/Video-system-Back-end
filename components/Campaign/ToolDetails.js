@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { useState } from 'react'
 import { ChromePicker } from 'react-color'
@@ -9,30 +10,44 @@ import { mainAPI, mediaAPI } from '@/plugins/axios'
 
 import Button from '@/components/Button'
 import ImportButton from '@/components/Campaign/ImportButton'
-import PopupCancelHelloScreen from '@/components/Popups/PopupCancelHelloScreen'
+import InputNumber from '@/components/InputNumber'
 import PopupCreateHelloScreen from '@/components/Popups/PopupCreateHelloScreen'
 import PopupDeleteHelloScreen from '@/components/Popups/PopupDeleteHelloScreen'
+import PopupDeleteDraftHelloScreen from '@/components/Popups/PopupDeleteDraftHelloScreen'
 import TextStyle from '@/components/Campaign/TextStyle'
 import VideoRecorder from '@/components/Campaign/VideoRecorder/index'
 
 import styles from '@/styles/components/Campaign/ToolDetails.module.sass'
 
 const ToolDetails = () => {
+  const router = useRouter()
+
   const dispatch = useDispatch()
   const popup = useSelector(state => state.popup)
   const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
   const showPopup = (popupProps) => dispatch({ type: 'SHOW_POPUP', ...popupProps })
   
-  const logo = useSelector(state => state.campaign.logo)
   const videos = useSelector(state => state.campaign.videos)
   const tool = useSelector(state => state.campaign.tool)
   
+  const campaign = useSelector(state => state.campaign)
+  const endScreen = useSelector(state => state.campaign.endScreen)
   const helloScreen = useSelector(state => state.campaign.helloScreen)
   const helloScreenList = useSelector(state => state.campaign.helloScreenList)
-  const endScreen = useSelector(state => state.campaign.endScreen)
+  const logo = useSelector(state => state.campaign.logo)
 
   const [displayVideoRecorder, showVideoRecorder] = useState(false)
   const [displayFormHelloScreen, showFormHelloScreen] = useState(false)
+
+  const secondsToMs = (d) => {
+    d = Number(d);
+    const m = Math.floor(d % 3600 / 60);
+    const s = Math.floor(d % 3600 % 60);
+
+    const mDisplay = m > 0 ? `${m}m` : '';
+    const sDisplay = s > 0 ? `${s}s` : '';
+    return `${mDisplay}${sDisplay}`; 
+  }
 
   const updateProcessingVideos = async () => {
     const processingVideos = videos.filter(video => video.status === 'processing' || video.status === 'waiting')
@@ -48,6 +63,9 @@ const ToolDetails = () => {
       })
     }
   }
+
+  useDebounce(updateProcessingVideos, 3000, [videos])
+
   const uploadLogo = async (file) => {
     const formData = new FormData()
     formData.append('file', file)
@@ -56,7 +74,7 @@ const ToolDetails = () => {
     formData.append('width', 300)
     const { data: url } = await mediaAPI.post('/images', formData)
     dispatch({
-      type: 'SET_LOGO',
+      type: 'CHANGE_LOGO',
       data: {
         value: url
       }
@@ -68,16 +86,24 @@ const ToolDetails = () => {
     })
   }
 
-  useDebounce(updateProcessingVideos, 3000, [videos])
+  const saveCampaign = async () => await mainAPI.patch(`/campaigns/${router.query.campaignId}`, campaign)
 
-  const secondsToMs = (d) => {
-    d = Number(d);
-    const m = Math.floor(d % 3600 / 60);
-    const s = Math.floor(d % 3600 % 60);
+  const saveHelloScreen = async () => {
+    saveCampaign()
+    toast.success('Hello screen saved.')
+  }
 
-    const mDisplay = m > 0 ? `${m}m` : '';
-    const sDisplay = s > 0 ? `${s}s` : '';
-    return `${mDisplay}${sDisplay}`; 
+  const createOrSaveEndScreen = async () => {
+    endScreen._id
+      ?
+        await mainAPI.patch(`/endScreens/${endScreen._id}`, endScreen)
+      :
+        await mainAPI.post('/endScreens', {
+          ...endScreen,
+          name: 'default',
+        })
+    saveCampaign()
+    toast.success('End screen saved.')
   }
 
   const getHelloScreenList = async () => {
@@ -100,11 +126,10 @@ const ToolDetails = () => {
           })}
         />
       }
-      { popup.display === 'CANCEL_HELLO_SCREEN' && 
-        <PopupCancelHelloScreen
+      { popup.display === 'DELETE_DRAFT_HELLO_SCREEN' && 
+        <PopupDeleteDraftHelloScreen
           onConfirm={() => {
             dispatch({ type: 'RESET_HELLO_SCREEN' })
-            showFormHelloScreen(false)
             hidePopup()
           }}
         />
@@ -189,7 +214,7 @@ const ToolDetails = () => {
           <p className={styles.toolName}>Hello Screen</p>
           { displayFormHelloScreen
             ?
-            <form>
+            <div>
               <div className={styles.toolSection}>
                 <label className={styles.toolLabel}>Background</label>
                 <ChromePicker
@@ -294,7 +319,7 @@ const ToolDetails = () => {
                   />
                 }
               </div>
-              <Button>Save</Button>
+              <Button onClick={saveHelloScreen}>Save</Button>
               <Button
                 onClick={() => showPopup({
                   display: 'CREATE_HELLO_SCREEN',
@@ -306,51 +331,107 @@ const ToolDetails = () => {
                 Save as template
               </Button>
               <p
-                onClick={() => showPopup({ display: 'CANCEL_HELLO_SCREEN' })}
-                className={styles.toolHelloScreenCancel}
+                onClick={() => showFormHelloScreen(false)}
+                className={styles.helloScreenBack}
               >
-                Cancel
+                Back
               </p>
-            </form>
+            </div>
             :
             <div className={styles.toolSection}>
               {
+                Object.keys(helloScreen).length > 0 &&
+                <div className={styles.helloScreenDraft}>
+                  <div className={styles.helloScreenItem}>
+                    <p
+                      onClick={() => {
+                        dispatch({ type: 'DISPLAY_ELEMENT', data: 'helloScreen' })
+                        dispatch({
+                          type: 'SET_PREVIEW_HELLO_SCREEN',
+                          data: {},
+                        })
+                      }}
+                    >
+                      Draft
+                    </p>
+                    <img
+                      src="/assets/campaign/select.svg"
+                      onClick={() => {
+                        dispatch({ type: 'DISPLAY_ELEMENT', data: 'helloScreen' })
+                        dispatch({
+                          type: 'SET_PREVIEW_HELLO_SCREEN',
+                          data: {},
+                        })
+                        showFormHelloScreen(true)
+                      }}
+                    />
+                    <img
+                      src="/assets/campaign/delete.svg"
+                      onClick={() => showPopup({ display: 'DELETE_DRAFT_HELLO_SCREEN' })}
+                    />
+                  </div>
+                </div>
+              }
+              {
                 helloScreenList.length > 0 &&
-
-                <div className={styles.helloScreenList}>
-                  { 
-                    helloScreenList.map((hs) => (
-                      <div
-                        key={hs._id}
-                        className={styles.helloScreenItem}
-                      >
-                        <p>{hs.name}</p>
-                        <img
-                          src="/assets/campaign/select.svg"
-                          onClick={() => {
-                            dispatch({ type: 'DISPLAY_ELEMENT', data: 'helloScreen' })
-                            dispatch({
-                              type: 'CHANGE_HELLO_SCREEN',
+                <div className={styles.helloScreenTemplates}>
+                  <p>Templates</p>
+                  <div className={styles.helloScreenList}>
+                    { 
+                      helloScreenList.map((hs) => (
+                        <div
+                          key={hs._id}
+                          className={styles.helloScreenItem}
+                        >
+                          <p
+                            onClick={() => {
+                              dispatch({ type: 'DISPLAY_ELEMENT', data: 'helloScreen' })
+                              dispatch({
+                                type: 'SET_PREVIEW_HELLO_SCREEN',
+                                data: hs,
+                              })
+                            }}
+                          >
+                            {hs.name}
+                          </p>
+                          <img
+                            src="/assets/campaign/select.svg"
+                            onClick={() => {
+                              dispatch({ type: 'DISPLAY_ELEMENT', data: 'helloScreen' })
+                              dispatch({
+                                type: 'CHANGE_HELLO_SCREEN',
+                                data: hs,
+                              })
+                              dispatch({
+                                type: 'SET_PREVIEW_HELLO_SCREEN',
+                                data: {},
+                              })
+                              showFormHelloScreen(true)
+                            }}
+                          />
+                          <img
+                            src="/assets/campaign/delete.svg"
+                            onClick={() => showPopup({
+                              display: 'DELETE_HELLO_SCREEN',
                               data: hs,
-                            })
-                            showFormHelloScreen(true)
-                          }}
-                        />
-                        <img
-                          src="/assets/campaign/delete.svg"
-                          onClick={() => showPopup({
-                            display: 'DELETE_HELLO_SCREEN',
-                            data: hs,
-                          })}
-                        />
-                      </div>
-                    ))
-                  }
+                            })}
+                          />
+                        </div>
+                      ))
+                    }
+                  </div>
                 </div>
               }
               <div
-                className={styles.toolDetailsAdd}
-                onClick={() => showFormHelloScreen(true)}
+                className={styles.helloScreenAdd}
+                onClick={() => {
+                  dispatch({ type: 'ADD_HELLO_SCREEN' })
+                  dispatch({
+                    type: 'SET_PREVIEW_HELLO_SCREEN',
+                    data: {},
+                  })
+                  showFormHelloScreen(true)
+                }}
               >
                 <img src="/assets/campaign/add.svg" />
                 <p>Add hello screen</p>
@@ -364,7 +445,7 @@ const ToolDetails = () => {
       { tool === 4 &&
         <div className={styles.toolEndScreen}>
           <p className={styles.toolName}>End Screen</p>
-          <form>
+          <div>
             <div className={styles.toolSection}>
               <label className={styles.toolLabel}>Background</label>
               <ChromePicker
@@ -569,7 +650,7 @@ const ToolDetails = () => {
                   value={endScreen.phone.value}
                 />
                 <img
-                  onClick={(e) => dispatch({
+                  onClick={() => dispatch({
                     type: 'CHANGE_END_SCREEN',
                     data: {
                       phone: {
@@ -602,8 +683,8 @@ const ToolDetails = () => {
                 />
               }
             </div>
-            <Button>Save</Button>
-          </form>
+            <Button onClick={createOrSaveEndScreen}>Save</Button>
+          </div>
         </div>
       }
 
@@ -625,24 +706,58 @@ const ToolDetails = () => {
           </div>
           <div className={styles.toolSection}>
             <label className={styles.toolLabel}>Size</label>
-            <input
+            <InputNumber
+              initialValue={logo.size}
               className={styles.toolInput}
-              // onChange={(e) => dispatch({
-              //   type: 'CHANGE_END_SCREEN',
-              //   data: {
-              //     phone: {
-              //       ...endScreen.phone,
-              //       value: e.target.value,
-              //     }
-              //   },
-              // })}
-              // value={endScreen.phone.value}
+              onChange={(value) => dispatch({
+                type: 'CHANGE_LOGO',
+                data: {
+                  size: parseInt(value, 10),
+                },
+              })}
             />
           </div>
-          {/* <div className={styles.toolSection}>
+          <div className={styles.toolSection}>
             <label className={styles.toolLabel}>Placement</label>
-            <div className={styles.placement}></div>
-          </div> */}
+            <div className={styles.placement}>
+              <div
+                className={`${logo.placement === 'top-left' ? styles.selected : ''}`}
+                onClick={() => dispatch({
+                  type: 'CHANGE_LOGO',
+                  data: {
+                    placement: 'top-left'
+                  }
+                })}
+              />
+              <div 
+                className={`${logo.placement === 'top-right' ? styles.selected : ''}`}
+                onClick={() => dispatch({
+                  type: 'CHANGE_LOGO',
+                  data: {
+                    placement: 'top-right'
+                  }
+                })}
+              />
+              <div 
+                className={`${logo.placement === 'bottom-left' ? styles.selected : ''}`}
+                onClick={() => dispatch({
+                  type: 'CHANGE_LOGO',
+                  data: {
+                    placement: 'bottom-left'
+                  }
+                })}
+              />
+              <div 
+                className={`${logo.placement === 'bottom-right' ? styles.selected : ''}`}
+                onClick={() => dispatch({
+                  type: 'CHANGE_LOGO',
+                  data: {
+                    placement: 'bottom-right'
+                  }
+                })}
+              />
+            </div>
+          </div>
         </div>
       }
     </div>
