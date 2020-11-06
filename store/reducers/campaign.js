@@ -65,7 +65,7 @@ const defaultEndScreen = {
 }
 
 const initialState = {
-  displayElement: 'video',
+  duration: 110000,
   endScreen: {},
   helloScreen: {},
   helloScreenList: [],
@@ -76,9 +76,13 @@ const initialState = {
     size: 50,
   },
   name: '',
+  preview: {
+    show: false,
+    element: 'video',
+  },
   previewHelloScreen: {},
+  progression: 0,
   tool: 0,
-  time: 0,
   videos: [],
 }
 
@@ -113,10 +117,20 @@ const reducer = (state = initialState, action) => {
           ...action.data
         },
       }
-    case 'DISPLAY_ELEMENT':
+    case 'SHOW_PREVIEW':
       return {
         ...state,
-        displayElement: action.data,
+        preview: {
+          show: true,
+          ...action.data
+        },
+      }
+    case 'HIDE_PREVIEW':
+      return {
+        ...state,
+        preview: {
+          show: false,
+        },
       }
     case 'PLAY':
       return {
@@ -161,10 +175,10 @@ const reducer = (state = initialState, action) => {
         ...state,
         name: action.data,
       }
-    case 'SET_TIME':
+    case 'SET_PROGRESSION':
       return {
         ...state,
-        time: action.data,
+        progression: action.data,
       }
     case 'SET_VIDEOS':
       return {

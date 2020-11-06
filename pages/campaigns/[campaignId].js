@@ -19,6 +19,7 @@ import HelloScreen from '@/components/Campaign/HelloScreen'
 import Logo from '@/components/Campaign/Logo'
 import PopupDeleteVideo from '@/components/Popups/PopupDeleteVideo'
 import PopupUploadVideo from '@/components/Popups/PopupUploadVideo'
+import Timeline from '@/components/Campaign/Timeline'
 import Tools from '@/components/Campaign/Tools'
 import ToolDetails from '@/components/Campaign/ToolDetails'
 
@@ -32,11 +33,12 @@ const Campaign = ({ user }) => {
   const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
   
   const campaign = useSelector(state => state.campaign)
+  const duration = useSelector(state => state.campaign.duration)
   const logo = useSelector(state => state.campaign.logo)
-  const displayElement = useSelector(state => state.campaign.displayElement)
   const name = useSelector(state => state.campaign.name)
   const isPlaying = useSelector(state => state.campaign.isPlaying)
-  const time = useSelector(state => state.campaign.time)
+  const preview = useSelector(state => state.campaign.preview)
+  const progression = useSelector(state => state.campaign.progression)
 
   const playerRef = useRef()
   const { width: playerWidth } = useVideoResize({ ref: playerRef, autoWidth: true })
@@ -58,15 +60,22 @@ const Campaign = ({ user }) => {
     if (isPlaying) {
       interval = setInterval(() => {
         dispatch({
-          type: 'SET_TIME',
-          data: time + 100,
+          type: 'SET_PROGRESSION',
+          data: progression + 50,
         });
-      }, 100);
-    } else if (!isPlaying && time !== 0) {
+      }, 50);
+    } else if (!isPlaying && progression !== 0) {
       clearInterval(interval);
     }
+    if (progression >= duration) {
+      dispatch({ type: 'PAUSE' });
+      dispatch({
+        type: 'SET_PROGRESSION',
+        data: 0,
+      });
+    }
     return () => clearInterval(interval);
-  }, [isPlaying, time])
+  }, [isPlaying, progression])
 
   const saveCampaign = async () => {
     await mainAPI.patch(`/campaigns/${router.query.campaignId}`, campaign)
@@ -81,8 +90,8 @@ const Campaign = ({ user }) => {
     })
   }
 
-  const displayTime = () => {
-    const t = dayjs.duration(time)
+  const displayProgression = () => {
+    const t = dayjs.duration(progression)
     const m = t.minutes()
     const s = t.seconds()
     const ms = t.milliseconds()
@@ -152,43 +161,37 @@ const Campaign = ({ user }) => {
             className={styles.video}
             style={{ width: playerWidth }}
           >
-            { displayElement === 'video' &&
-              <video
-                // key={playerVideo._id}
-                controls
-                height="100%"
-                width="100%"
-              >
-                {/* <source src={playerVideo.url} type="video/mp4" /> */}
-                Sorry, your browser doesn't support embedded videos.
-              </video>
+            { preview.show && 
+              <div>
+                { preview.element === 'video' &&
+                  <video
+                    // key={playerVideo._id}
+                    controls
+                    height="100%"
+                    width="100%"
+                  >
+                    {/* <source src={playerVideo.url} type="video/mp4" /> */}
+                    Sorry, your browser doesn't support embedded videos.
+                  </video>
+                }
+                { preview.element === 'helloScreen' && <HelloScreen />}
+                { preview.element === 'endScreen' && <EndScreen /> }
+                { preview.element === 'logo' && <Logo /> }
+              </div>
             }
-            { displayElement === 'helloScreen' && <HelloScreen />}
-            { displayElement === 'endScreen' && <EndScreen /> }
-            <Logo />
           </div>
           <div className={styles.controls}>
             <img
-              // onClick={playPause}
+              onClick={() => dispatch({ type: isPlaying ? 'PAUSE' : 'PLAY' })}
               src={isPlaying ? '/assets/campaign/pause.svg' : '/assets/campaign/play.svg'}
             />
-            <p className={styles.time}>{displayTime()}</p>
+            <p className={styles.progression}>{displayProgression()}</p>
           </div>
         </div>
       </div>
 
       <div className={styles.footer}>
-        <div className={styles.timeline}>
-          <div className={styles.helloScreen}>
-            <p>Hello Screen</p>
-          </div>
-          <div className={styles.videoRecorded}>
-            <p>Video recorded</p>
-          </div>
-          <div className={styles.endScreen}>
-            <p>End Screen + CTA</p>
-          </div>
-        </div>
+        <Timeline />
       </div>
     </div>
   )
