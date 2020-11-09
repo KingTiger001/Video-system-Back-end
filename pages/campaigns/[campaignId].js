@@ -93,9 +93,8 @@ const Campaign = ({ user }) => {
             getVideos()
             dispatch({
               type: 'SELECT_TOOL',
-              value: 2,
+              data: 2,
             })
-            hidePopup()
           }}
         />
       }
