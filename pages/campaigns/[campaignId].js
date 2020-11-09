@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Link from 'next/link'
 import { toast } from 'react-toastify'
@@ -27,10 +27,17 @@ const Campaign = ({ user }) => {
   const dispatch = useDispatch()
   const popup = useSelector(state => state.popup)
   const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
+
+  const ref = useRef()
   
   const campaign = useSelector(state => state.campaign)
+  const duration = useSelector(state => state.campaign.duration)
+  const helloScreen = useSelector(state => state.campaign.helloScreen)
   const logo = useSelector(state => state.campaign.logo)
   const name = useSelector(state => state.campaign.name)
+  const preview = useSelector(state => state.campaign.preview)
+  const timelineDraggable = useSelector(state => state.campaign.timelineDraggable)
+  const videoRef = useSelector(state => state.campaign.videoRef)
 
   // mounted
   useEffect(() => {
@@ -57,8 +64,29 @@ const Campaign = ({ user }) => {
     })
   }
 
+  const seekTo = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    const position = e.clientX - rect.left
+    const progression = position / ref.current.offsetWidth * duration
+    dispatch({ type: 'SET_PROGRESSION', data: progression })
+    if (videoRef.current) {
+      const currentTime = (progression - helloScreen.duration) / 1000
+      videoRef.current.currentTime = currentTime > 0 ? currentTime : 0 
+    }
+    if (preview.show) {
+      dispatch({ type: 'HIDE_PREVIEW' })
+      dispatch({ type: 'SELECT_TOOL', data: 0 })
+    }
+  }
+
+
   return (
-    <div className={styles.editing}>
+    <div
+      className={styles.editing}
+      onMouseUp={(e) => dispatch({ type: 'TIMELINE_DRAGGABLE', data: false })}
+      onMouseMove={(e) => timelineDraggable && seekTo(e)}
+      ref={ref}
+    >
       { popup.display === 'UPLOAD_VIDEO' && 
         <PopupUploadVideo
           onDone={() => {

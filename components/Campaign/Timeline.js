@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 
 import styles from '@/styles/components/Campaign/Timeline.module.sass'
 
@@ -11,12 +11,11 @@ const Timeline = () => {
   const helloScreen = useSelector(state => state.campaign.helloScreen)
   const preview = useSelector(state => state.campaign.preview)
   const progression = useSelector(state => state.campaign.progression)
+  const timelineDraggable = useSelector(state => state.campaign.timelineDraggable)
   const video = useSelector(state => state.campaign.video)
   const videoRef = useSelector(state => state.campaign.videoRef)
 
   const ref = useRef()
-
-  const [isDraggable, setIsDraggable] = useState(false)
 
   const seekTo = (e) => {
     const rect = e.currentTarget.getBoundingClientRect()
@@ -37,9 +36,9 @@ const Timeline = () => {
     <div
       className={styles.timeline}
       onClick={(e) => seekTo(e)}
-      onMouseDown={(e) => setIsDraggable(true)}
-      onMouseUp={(e) => setIsDraggable(false)}
-      onMouseMove={(e) => isDraggable && seekTo(e)}
+      onMouseDown={(e) => dispatch({ type: 'TIMELINE_DRAGGABLE', data: true })}
+      onMouseUp={(e) => dispatch({ type: 'TIMELINE_DRAGGABLE', data: false })}
+      onMouseMove={(e) => timelineDraggable && seekTo(e)}
       ref={ref}
       style={{
         gridTemplateColumns: `${helloScreen.duration ? `${(helloScreen.duration / duration) * 100}%` : ''} ${Object.keys(video).length > 0 ? '1fr' : ''} ${endScreen.duration ? `${(endScreen.duration / duration) * 100}%` : ''}`

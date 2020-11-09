@@ -89,6 +89,7 @@ const initialState = {
   previewHelloScreen: {},
   previewVideo: '',
   progression: 0,
+  timelineDraggable: false,
   tool: 0,
   video: {},
   videoList: [],
@@ -226,6 +227,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         videoSeeking: action.data,
+      }
+    case 'TIMELINE_DRAGGABLE':
+      return {
+        ...state,
+        timelineDraggable: action.data,
       }
     default:
       return state

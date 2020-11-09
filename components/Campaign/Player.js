@@ -29,6 +29,7 @@ const Player = () => {
   const { width: playerWidth } = useVideoResize({ ref: playerRef, autoWidth: true })
 
   useEffect(() => {
+    console.log(videoRef)
     if (videoRef.current) {
       dispatch({ type: 'SET_VIDEO_REF', data: videoRef })
     }
@@ -43,14 +44,19 @@ const Player = () => {
       videoRef.current.removeEventListener('seeking', handleSeeking)
       videoRef.current.removeEventListener('playing', handlePlaying)
     }
-  }, [videoRef])
+  }, [videoRef, video])
 
   useEffect(() => {
     let interval = null;
+    // console.log(progression)
+    // console.log(duration)
+    // console.log(helloScreen.duration)
+    // console.log(videoSeeking)
     if (
       ((progression > helloScreen.duration) && (progression < (duration - endScreen.duration)) && videoSeeking)
       || (!isPlaying && progression !== 0)
     ) {
+      // console.log('test')
       clearInterval(interval);
     } else if (isPlaying) {
       interval = setInterval(() => {
@@ -117,18 +123,20 @@ const Player = () => {
         }
         { !preview.show &&
           <div>
-            <video
-              ref={videoRef}
-              key={video._id}
-              height="100%"
-              width="100%"
-              style={{
-                display: progression > (helloScreen.duration || 0) && progression < duration - (endScreen.duration || 0) ? 'block' : 'none'
-              }}
-            >
-              { video.url && <source src={video.url} type="video/mp4" /> }
-              Sorry, your browser doesn't support embedded videos.
-            </video>
+            { video.url && 
+              <video
+                ref={videoRef}
+                key={video.url}
+                height="100%"
+                width="100%"
+                style={{
+                  display: progression > (helloScreen.duration || 0) && progression < duration - (endScreen.duration || 0) ? 'block' : 'none'
+                }}
+              >
+                { video.url && <source src={video.url} type="video/mp4" /> }
+                Sorry, your browser doesn't support embedded videos.
+              </video>
+            }
             {progression <= helloScreen.duration && <HelloScreen />}
             {progression >= duration - endScreen.duration && <EndScreen />}
             <Logo />
