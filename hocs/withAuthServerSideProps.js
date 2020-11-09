@@ -33,12 +33,12 @@ const withAuthServerSideProps = (serverSidePropsFunc) => {
           },
         }
       } catch (err) {
-        // ctx.res.writeHead(302, { Location: '/' });
-        // return ctx.res.end()
+        ctx.res.writeHead(302, { Location: '/' });
+        return ctx.res.end()
       }
     } else if (!ctx.req.url.includes('login') && !ctx.req.url.includes('signup')) {
-      // ctx.res.writeHead(302, { Location: '/' });
-      // return ctx.res.end()
+      ctx.res.writeHead(302, { Location: '/' });
+      return ctx.res.end()
     } else {
       return { props: {} };
     }
