@@ -30,9 +30,8 @@ const PopupCreateHelloScreen = ({ onDone }) => {
         })
         onDone()
       } catch (err) {
-        console.log(err)
-      } finally {
         setIsLoading(false)
+        console.log(err)
       }
     }
   }

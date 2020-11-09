@@ -359,7 +359,7 @@ const ToolDetails = () => {
             :
             <div className={styles.toolSection}>
               {
-                Object.keys(helloScreen).length > 0 &&
+                Object.keys(helloScreen).length > 1 &&
                 <div className={styles.helloScreenDraft}>
                   <div className={styles.helloScreenItem}>
                     <p

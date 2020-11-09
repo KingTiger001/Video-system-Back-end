@@ -24,9 +24,8 @@ const PopupDeleteCampaign = ({ onDone }) => {
         await mainAPI.delete(`/campaigns/${popup.data._id}`)
         onDone()
       } catch (err) {
-        console.log(err)
-      } finally {
         setLoading(false)
+        console.log(err)
       }
     }
   }

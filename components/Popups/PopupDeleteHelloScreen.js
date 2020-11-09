@@ -24,9 +24,8 @@ const PopupDeleteHelloScreen = ({ onDone }) => {
         await mainAPI.delete(`/helloScreens/${popup.data._id}`)
         onDone()
       } catch (err) {
-        console.log(err)
-      } finally {
         setLoading(false)
+        console.log(err)
       }
     }
   }

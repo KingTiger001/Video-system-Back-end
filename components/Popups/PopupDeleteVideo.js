@@ -27,9 +27,8 @@ const PopupDeleteVideo = ({ onDone }) => {
         await mainAPI.delete(`/videos/${popup.data._id}`)
         onDone()
       } catch (err) {
-        console.log(err)
-      } finally {
         setLoading(false)
+        console.log(err)
       }
     }
   }
