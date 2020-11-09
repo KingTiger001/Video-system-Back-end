@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Link from 'next/link'
 import { toast } from 'react-toastify'
@@ -7,21 +7,17 @@ import { toast } from 'react-toastify'
 // import withAuth from '../hocs/withAuth'
 import withAuthServerSideProps from '@/hocs/withAuthServerSideProps'
 
-import { useVideoResize } from '@/hooks'
 import { initializeStore } from '@/store'
 
 import { mainAPI } from '@/plugins/axios'
-import dayjs from '@/plugins/dayjs'
 
 import Button from '@/components/Button'
-import EndScreen from '@/components/Campaign/EndScreen'
-import HelloScreen from '@/components/Campaign/HelloScreen'
-import Logo from '@/components/Campaign/Logo'
 import PopupDeleteVideo from '@/components/Popups/PopupDeleteVideo'
 import PopupUploadVideo from '@/components/Popups/PopupUploadVideo'
 import Timeline from '@/components/Campaign/Timeline'
 import Tools from '@/components/Campaign/Tools'
 import ToolDetails from '@/components/Campaign/ToolDetails'
+import Player from '@/components/Campaign/Player'
 
 import styles from '@/styles/pages/campaign.module.sass'
 
@@ -33,15 +29,8 @@ const Campaign = ({ user }) => {
   const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
   
   const campaign = useSelector(state => state.campaign)
-  const duration = useSelector(state => state.campaign.duration)
   const logo = useSelector(state => state.campaign.logo)
   const name = useSelector(state => state.campaign.name)
-  const isPlaying = useSelector(state => state.campaign.isPlaying)
-  const preview = useSelector(state => state.campaign.preview)
-  const progression = useSelector(state => state.campaign.progression)
-
-  const playerRef = useRef()
-  const { width: playerWidth } = useVideoResize({ ref: playerRef, autoWidth: true })
 
   // mounted
   useEffect(() => {
@@ -55,28 +44,6 @@ const Campaign = ({ user }) => {
     }
   }, [])
 
-  useEffect(() => {
-    let interval = null;
-    if (isPlaying) {
-      interval = setInterval(() => {
-        dispatch({
-          type: 'SET_PROGRESSION',
-          data: progression + 50,
-        });
-      }, 50);
-    } else if (!isPlaying && progression !== 0) {
-      clearInterval(interval);
-    }
-    if (progression >= duration) {
-      dispatch({ type: 'PAUSE' });
-      dispatch({
-        type: 'SET_PROGRESSION',
-        data: 0,
-      });
-    }
-    return () => clearInterval(interval);
-  }, [isPlaying, progression])
-
   const saveCampaign = async () => {
     await mainAPI.patch(`/campaigns/${router.query.campaignId}`, campaign)
     toast.success('Campaign saved.')
@@ -85,17 +52,9 @@ const Campaign = ({ user }) => {
   const getVideos = async () => {
     const { data } = await mainAPI('/users/me/videos')
     dispatch({
-      type: 'SET_VIDEOS',
+      type: 'SET_VIDEO_LIST',
       data,
     })
-  }
-
-  const displayProgression = () => {
-    const t = dayjs.duration(progression)
-    const m = t.minutes()
-    const s = t.seconds()
-    const ms = t.milliseconds()
-    return `${m < 10 ? `0${m}` : m}:${s < 10 ? `0${s}` : s}:${ms.toString().substring(0, 1)}`
   }
 
   return (
@@ -155,39 +114,7 @@ const Campaign = ({ user }) => {
           <ToolDetails />
         </div>
 
-        <div className={styles.player}>
-          <div
-            ref={playerRef}
-            className={styles.video}
-            style={{ width: playerWidth }}
-          >
-            { preview.show && 
-              <div>
-                { preview.element === 'video' &&
-                  <video
-                    // key={playerVideo._id}
-                    controls
-                    height="100%"
-                    width="100%"
-                  >
-                    {/* <source src={playerVideo.url} type="video/mp4" /> */}
-                    Sorry, your browser doesn't support embedded videos.
-                  </video>
-                }
-                { preview.element === 'helloScreen' && <HelloScreen />}
-                { preview.element === 'endScreen' && <EndScreen /> }
-                { preview.element === 'logo' && <Logo /> }
-              </div>
-            }
-          </div>
-          <div className={styles.controls}>
-            <img
-              onClick={() => dispatch({ type: isPlaying ? 'PAUSE' : 'PLAY' })}
-              src={isPlaying ? '/assets/campaign/pause.svg' : '/assets/campaign/play.svg'}
-            />
-            <p className={styles.progression}>{displayProgression()}</p>
-          </div>
-        </div>
+        <Player />
       </div>
 
       <div className={styles.footer}>
@@ -207,22 +134,29 @@ export const getServerSideProps = withAuthServerSideProps(async ({ params }, use
   const { data: endScreens } = await mainAPI.get('/users/me/endScreens')
   const { data: helloScreenList } = await mainAPI.get('/users/me/helloScreens')
 
-  dispatch({
-    type: 'SET_CAMPAIGN',
-    data: campaign,
-  })
-  dispatch({
-    type: 'SET_VIDEOS',
-    data: videos,
-  })
-  dispatch({
-    type: 'CHANGE_END_SCREEN',
-    data: endScreens[0],
-  })
-  dispatch({
-    type: 'SET_HELLO_SCREEN_LIST',
-    data: helloScreenList
-  })
+  try {
+    dispatch({
+      type: 'CHANGE_END_SCREEN',
+      data: endScreens[0],
+    })
+    dispatch({
+      type: 'SET_VIDEO_LIST',
+      data: videos,
+    })
+    dispatch({
+      type: 'SET_HELLO_SCREEN_LIST',
+      data: helloScreenList
+    })
+    dispatch({
+      type: 'SET_CAMPAIGN',
+      data: campaign,
+    })
+    dispatch({
+      type: 'SET_DURATION',
+    })
+  } catch (err) {
+    console.log(err)
+  }
 
   return {
     initialReduxState: reduxStore.getState()

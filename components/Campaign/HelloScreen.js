@@ -29,7 +29,7 @@ const HelloScreen = () => {
     }
   }, [ref, hs])
 
-  return Object.keys(hs).length > 0 &&
+  return Object.keys(hs).length > 1 &&
     <div
       className={styles.helloScreen}
       style={{ background: hs.background }}

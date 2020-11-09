@@ -27,7 +27,7 @@ const ToolDetails = () => {
   const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
   const showPopup = (popupProps) => dispatch({ type: 'SHOW_POPUP', ...popupProps })
   
-  const videos = useSelector(state => state.campaign.videos)
+  const videoList = useSelector(state => state.campaign.videoList)
   const tool = useSelector(state => state.campaign.tool)
   
   const campaign = useSelector(state => state.campaign)
@@ -35,6 +35,7 @@ const ToolDetails = () => {
   const helloScreen = useSelector(state => state.campaign.helloScreen)
   const helloScreenList = useSelector(state => state.campaign.helloScreenList)
   const logo = useSelector(state => state.campaign.logo)
+  const video = useSelector(state => state.campaign.video)
 
   const [displayVideoRecorder, showVideoRecorder] = useState(false)
   const [displayFormHelloScreen, showFormHelloScreen] = useState(false)
@@ -50,13 +51,13 @@ const ToolDetails = () => {
   }
 
   const updateProcessingVideos = async () => {
-    const processingVideos = videos.filter(video => video.status === 'processing' || video.status === 'waiting')
+    const processingVideos = videoList.filter(video => video.status === 'processing' || video.status === 'waiting')
     if (processingVideos.length > 0) {
       const newVideosPromise = await Promise.all(processingVideos.map(video => mainAPI(`/videos/${video._id}`)))
       const newVideos = newVideosPromise.flat().map(video => video.data)
       dispatch({
-        type: 'SET_VIDEOS',
-        data: videos.map(video => {
+        type: 'SET_VIDEO_LIST',
+        data: videoList.map(video => {
           const videoProcessingFound = newVideos.find(newVideo => newVideo._id === video._id)
           return videoProcessingFound || video
         }),
@@ -64,7 +65,7 @@ const ToolDetails = () => {
     }
   }
 
-  useDebounce(updateProcessingVideos, 3000, [videos])
+  useDebounce(updateProcessingVideos, 3000, [videoList])
 
   const uploadLogo = async (file) => {
     const formData = new FormData()
@@ -86,11 +87,19 @@ const ToolDetails = () => {
     })
   }
 
-  const saveCampaign = async () => await mainAPI.patch(`/campaigns/${router.query.campaignId}`, campaign)
+  const saveCampaign = async () => await mainAPI.patch(`/campaigns/${router.query.campaignId}`, {
+    ...campaign,
+    video: video._id,
+  })
 
   const saveHelloScreen = async () => {
     saveCampaign()
     toast.success('Hello screen saved.')
+  }
+
+  const saveLogo = async () => {
+    saveCampaign()
+    toast.success('Logo saved.')
   }
 
   const createOrSaveEndScreen = async () => {
@@ -183,13 +192,17 @@ const ToolDetails = () => {
           <p className={styles.toolName}>Videos</p>
           <div className={styles.videosList}>
             {
-              videos.map(video => 
+              videoList.map(video => 
                 <div
                   key={video._id}
                   className={styles.videosItem}
-                  // onClick={() => setPlayerVideo(video)}
                 >
-                  <p className={styles.videosItemName}>{video.name}</p>
+                  <p
+                    className={styles.videosItemName}
+                    onClick={() => dispatch({ type: 'SET_PREVIEW_VIDEO', data: video.url })}
+                  >
+                    {video.name}
+                  </p>
                   { video.status === 'done'
                     ?
                     <p className={`${styles.videosItemStatus}`}>{secondsToMs(video.metadata.duration)} - {Math.round(video.metadata.size / 1000000)} mb</p>
@@ -197,8 +210,14 @@ const ToolDetails = () => {
                     <p className={`${styles.videosItemStatus} ${styles[video.status]}`}>{video.status}... {video.status === 'processing' && video.statusProgress ? `${video.statusProgress || 0}%` : ''}</p>
                   }
                   <img
+                    onClick={() => {
+                      dispatch({ type: 'SET_VIDEO', data: video })
+                      dispatch({ type: 'SET_PROGRESSION', data: 0 })
+                    }}
+                    src="/assets/campaign/select.svg"
+                  />
+                  <img
                     onClick={() => showPopup({ display: 'DELETE_VIDEO', data: video })}
-                    className={styles.videosItemDelete}
                     src="/assets/campaign/delete.svg"
                   />
                 </div>
@@ -345,7 +364,6 @@ const ToolDetails = () => {
                   <div className={styles.helloScreenItem}>
                     <p
                       onClick={() => {
-                        dispatch({ type: 'DISPLAY_ELEMENT', data: 'helloScreen' })
                         dispatch({
                           type: 'SET_PREVIEW_HELLO_SCREEN',
                           data: {},
@@ -357,7 +375,6 @@ const ToolDetails = () => {
                     <img
                       src="/assets/campaign/select.svg"
                       onClick={() => {
-                        dispatch({ type: 'DISPLAY_ELEMENT', data: 'helloScreen' })
                         dispatch({
                           type: 'SET_PREVIEW_HELLO_SCREEN',
                           data: {},
@@ -758,6 +775,7 @@ const ToolDetails = () => {
               />
             </div>
           </div>
+          <Button onClick={saveLogo}>Save</Button>
         </div>
       }
     </div>

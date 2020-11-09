@@ -99,18 +99,26 @@
 .videosItem
   border: 1px solid rgba(90, 113, 132, 0.2)
   border-radius: 2px
+  grid-template-columns: 1fr repeat(2, 20px)
   display: grid
   grid-gap: 4px
   padding: 10px
+  img
+    cursor: pointer
+    grid-row-start: 1
+    grid-row-end: 3
+    width: 20px
 
 .videosItemName
   color: $textColorOne
   font-size: 14px
   font-weight: 500
+  grid-column: 1
 
 .videosItemStatus
   color: $textColorTwo
   font-size: 12px
+  grid-column: 1
   &.waiting
     color: $textColorTwo
     font-style: italic
@@ -190,6 +198,8 @@
 
 .toolLogo
   padding: 20px
+  button
+    width: 100%
 
 .logo
   border: 1px solid rgba(90, 113, 132, 0.2)

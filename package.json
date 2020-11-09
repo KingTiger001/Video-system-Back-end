@@ -17,7 +17,7 @@
     "fitty": "^2.3.2",
     "js-cookie": "^2.2.1",
     "jwt-decode": "^3.0.0-beta.2",
-    "next": "9.5.3",
+    "next": "^10.0.1",
     "prop-types": "^15.7.2",
     "react": "^16.14.0",
     "react-color": "^2.18.1",

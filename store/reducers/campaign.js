@@ -1,5 +1,6 @@
 const defaultHelloScreen = {
   background: '#000',
+  duration: 10000,
   title: {
     color: '#fff',
     displayOptions: false,
@@ -24,6 +25,7 @@ const defaultHelloScreen = {
 
 const defaultEndScreen = {
   background: '#000',
+  duration: 10000,
   title: {
     color: '#fff',
     displayOptions: false,
@@ -66,8 +68,12 @@ const defaultEndScreen = {
 
 const initialState = {
   duration: 110000,
-  endScreen: {},
-  helloScreen: {},
+  endScreen: {
+    duration: 0,
+  },
+  helloScreen: {
+    duration: 0,
+  },
   helloScreenList: [],
   isPlaying: false,
   logo: {
@@ -81,9 +87,13 @@ const initialState = {
     element: 'video',
   },
   previewHelloScreen: {},
+  previewVideo: '',
   progression: 0,
   tool: 0,
-  videos: [],
+  video: {},
+  videoList: [],
+  videoRef: '',
+  videoSeeking: false,
 }
 
 const reducer = (state = initialState, action) => {
@@ -97,6 +107,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         endScreen: {
+          duration: 10000,
           ...state.endScreen,
           ...action.data
         },
@@ -105,6 +116,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         helloScreen: {
+          duration: 10000,
           ...state.helloScreen,
           ...action.data
         },
@@ -145,15 +157,24 @@ const reducer = (state = initialState, action) => {
     case 'RESET_HELLO_SCREEN':
       return {
         ...state,
-        helloScreen: {},
+        helloScreen: {
+          duration: 0,
+        },
       }
     case 'SET_CAMPAIGN':
       return {
         ...state,
         endScreen: action.data.endScreen || defaultEndScreen,
-        helloScreen: action.data.helloScreen || {},
+        helloScreen: action.data.helloScreen || { duration: 0 },
         logo: action.data.logo || initialState.logo,
         name: action.data.name,
+        video: action.data.video || {},
+      }
+    case 'SET_DURATION':
+      const { endScreen, helloScreen, video } = state
+      return {
+        ...state,
+        duration: (helloScreen && Object.keys(helloScreen).length > 1 ? helloScreen.duration : 0) + (Object.keys(video).length > 0 ? video.metadata.duration * 1000 : 0) + (endScreen && Object.keys(endScreen).length > 1 ? endScreen.duration : 0),
       }
     case 'SET_HELLO_SCREEN_LIST':
       return {
@@ -164,6 +185,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         previewHelloScreen: action.data,
+      }
+    case 'SET_PREVIEW_VIDEO':
+      return {
+        ...state,
+        previewVideo: action.data,
       }
     case 'SELECT_TOOL':
       return {
@@ -180,10 +206,26 @@ const reducer = (state = initialState, action) => {
         ...state,
         progression: action.data,
       }
-    case 'SET_VIDEOS':
+    case 'SET_VIDEO':
       return {
         ...state,
-        videos: action.data,
+        duration: state.helloScreen.duration + (action.data.metadata.duration * 1000) + state.endScreen.duration,
+        video: action.data,
+      }
+    case 'SET_VIDEO_LIST':
+      return {
+        ...state,
+        videoList: action.data,
+      }
+    case 'SET_VIDEO_REF':
+      return {
+        ...state,
+        videoRef: action.data,
+      }
+    case 'SET_VIDEO_SEEKING':
+      return {
+        ...state,
+        videoSeeking: action.data,
       }
     default:
       return state
