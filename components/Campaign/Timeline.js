@@ -22,9 +22,9 @@ const Timeline = () => {
     const position = e.clientX - rect.left
     const progression = position / ref.current.offsetWidth * duration
     dispatch({ type: 'SET_PROGRESSION', data: progression })
-    if (videoRef.current) {
+    if (Object.keys(videoRef).length > 0) {
       const currentTime = (progression - (helloScreen.duration || 0)) / 1000
-      videoRef.current.currentTime = currentTime > 0 ? currentTime : 0 
+      videoRef.currentTime = currentTime > 0 ? currentTime : 0 
     }
     if (preview.show) {
       dispatch({ type: 'HIDE_PREVIEW' })

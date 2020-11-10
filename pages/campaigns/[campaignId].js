@@ -69,9 +69,9 @@ const Campaign = ({ user }) => {
     const position = e.clientX - rect.left
     const progression = position / ref.current.offsetWidth * duration
     dispatch({ type: 'SET_PROGRESSION', data: progression })
-    if (videoRef.current) {
+    if (Object.keys(videoRef).length > 0) {
       const currentTime = (progression - helloScreen.duration) / 1000
-      videoRef.current.currentTime = currentTime > 0 ? currentTime : 0 
+      videoRef.currentTime = currentTime > 0 ? currentTime : 0 
     }
     if (preview.show) {
       dispatch({ type: 'HIDE_PREVIEW' })
@@ -83,7 +83,7 @@ const Campaign = ({ user }) => {
   return (
     <div
       className={styles.editing}
-      onMouseUp={(e) => dispatch({ type: 'TIMELINE_DRAGGABLE', data: false })}
+      onMouseUp={() => dispatch({ type: 'TIMELINE_DRAGGABLE', data: false })}
       onMouseMove={(e) => timelineDraggable && seekTo(e)}
       ref={ref}
     >

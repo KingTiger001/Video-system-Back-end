@@ -93,7 +93,7 @@ const initialState = {
   tool: 0,
   video: {},
   videoList: [],
-  videoRef: '',
+  videoRef: {},
   videoSeeking: false,
 }
 

@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 
 import { useVideoResize } from '@/hooks'
 
@@ -23,40 +23,36 @@ const Player = () => {
   const progression = useSelector(state => state.campaign.progression)
   const video = useSelector(state => state.campaign.video)
   const videoSeeking = useSelector(state => state.campaign.videoSeeking)
+  const videoRef = useSelector(state => state.campaign.videoRef)
   
   const playerRef = useRef()
-  const videoRef = useRef()
   const { width: playerWidth } = useVideoResize({ ref: playerRef, autoWidth: true })
 
-  useEffect(() => {
-    console.log(videoRef)
-    if (videoRef.current) {
-      dispatch({ type: 'SET_VIDEO_REF', data: videoRef })
-    }
-
+  const videoRefCb = useCallback(node => {
     const handleSeeking = () => dispatch({ type: 'SET_VIDEO_SEEKING', data: true })
     const handlePlaying = () => dispatch({ type: 'SET_VIDEO_SEEKING', data: false })
+    
+    if (node !== null) {
+      dispatch({ type: 'SET_VIDEO_REF', data: node })
 
-    videoRef.current.addEventListener('seeking', handleSeeking)
-    videoRef.current.addEventListener('playing', handlePlaying)
-
-    return () => {
-      videoRef.current.removeEventListener('seeking', handleSeeking)
-      videoRef.current.removeEventListener('playing', handlePlaying)
+      if (Object.keys(videoRef).length > 0) {
+        videoRef.addEventListener('playing', handlePlaying)
+        videoRef.addEventListener('seeking', handleSeeking)
+      }
+    } else {
+      if (Object.keys(videoRef).length > 0) {
+        videoRef.removeEventListener('seeking', handleSeeking)
+        videoRef.removeEventListener('playing', handlePlaying)
+      }
     }
-  }, [videoRef, video])
+  }, [video, videoRef]);
 
   useEffect(() => {
     let interval = null;
-    // console.log(progression)
-    // console.log(duration)
-    // console.log(helloScreen.duration)
-    // console.log(videoSeeking)
     if (
       ((progression > helloScreen.duration) && (progression < (duration - endScreen.duration)) && videoSeeking)
       || (!isPlaying && progression !== 0)
     ) {
-      // console.log('test')
       clearInterval(interval);
     } else if (isPlaying) {
       interval = setInterval(() => {
@@ -79,11 +75,11 @@ const Player = () => {
         data: 0,
       });
     }
-    if (videoRef.current && (progression <= helloScreen.duration || progression >= duration - endScreen.duration)) {
-      videoRef.current.pause()
-      videoRef.current.currenTime = 0
-    } else if (videoRef.current && videoRef.current.paused && progression > helloScreen.duration && isPlaying) {
-      videoRef.current.play()
+    if (Object.keys(videoRef).length > 0 && (progression <= helloScreen.duration || progression >= duration - endScreen.duration)) {
+      videoRef.pause()
+      videoRef.currenTime = 0
+    } else if (Object.keys(videoRef).length > 0 && videoRef.paused && progression > helloScreen.duration && isPlaying) {
+      videoRef.play()
     }
     return () => clearInterval(interval);
   }, [isPlaying, progression, videoSeeking])
@@ -122,21 +118,17 @@ const Player = () => {
           </div>
         }
         { !preview.show &&
-          <div>
-            { video.url && 
-              <video
-                ref={videoRef}
-                key={video.url}
-                height="100%"
-                width="100%"
-                style={{
-                  display: progression > (helloScreen.duration || 0) && progression < duration - (endScreen.duration || 0) ? 'block' : 'none'
-                }}
-              >
-                { video.url && <source src={video.url} type="video/mp4" /> }
-                Sorry, your browser doesn't support embedded videos.
-              </video>
-            }
+          <div> 
+            <video
+              ref={videoRefCb}
+              key={video.url}
+              src={video.url}
+              height="100%"
+              width="100%"
+              style={{
+                display: progression > (helloScreen.duration || 0) && progression < duration - (endScreen.duration || 0) ? 'block' : 'none'
+              }}
+            />
             {progression <= helloScreen.duration && <HelloScreen />}
             {progression >= duration - endScreen.duration && <EndScreen />}
             <Logo />
@@ -147,8 +139,9 @@ const Player = () => {
         <img
           onClick={() => {
             dispatch({ type: isPlaying ? 'PAUSE' : 'PLAY' })
+            dispatch({ type: 'SELECT_TOOL', data: 0 })
             if (progression > (helloScreen.duration || 0) && progression < duration - (endScreen.duration || 0)) {
-              isPlaying ? videoRef.current.pause() : videoRef.current.play()
+              isPlaying ? videoRef.pause() : videoRef.play()
             }
           }}
           src={isPlaying ? '/assets/campaign/pause.svg' : '/assets/campaign/play.svg'}
