@@ -19,9 +19,7 @@ import VideoRecorder from '@/components/Campaign/VideoRecorder/index'
 
 import styles from '@/styles/components/Campaign/ToolDetails.module.sass'
 
-const ToolDetails = () => {
-  const router = useRouter()
-
+const ToolDetails = ({ saveCampaign }) => {
   const dispatch = useDispatch()
   const popup = useSelector(state => state.popup)
   const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
@@ -30,12 +28,10 @@ const ToolDetails = () => {
   const videoList = useSelector(state => state.campaign.videoList)
   const tool = useSelector(state => state.campaign.tool)
   
-  const campaign = useSelector(state => state.campaign)
   const endScreen = useSelector(state => state.campaign.endScreen)
   const helloScreen = useSelector(state => state.campaign.helloScreen)
   const helloScreenList = useSelector(state => state.campaign.helloScreenList)
   const logo = useSelector(state => state.campaign.logo)
-  const video = useSelector(state => state.campaign.video)
 
   const [displayVideoRecorder, showVideoRecorder] = useState(false)
   const [displayFormHelloScreen, showFormHelloScreen] = useState(false)
@@ -87,18 +83,13 @@ const ToolDetails = () => {
     })
   }
 
-  const saveCampaign = async () => await mainAPI.patch(`/campaigns/${router.query.campaignId}`, {
-    ...campaign,
-    video: video._id,
-  })
-
   const saveHelloScreen = async () => {
-    saveCampaign()
+    await saveCampaign()
     toast.success('Hello screen saved.')
   }
 
   const saveLogo = async () => {
-    saveCampaign()
+    await saveCampaign()
     toast.success('Logo saved.')
   }
 
@@ -207,7 +198,7 @@ const ToolDetails = () => {
                     ?
                     <p className={`${styles.videosItemStatus}`}>{secondsToMs(video.metadata.duration)} - {Math.round(video.metadata.size / 1000000)} mb</p>
                     :
-                    <p className={`${styles.videosItemStatus} ${styles[video.status]}`}>{video.status}... {video.status === 'processing' && video.statusProgress ? `${video.statusProgress || 0}%` : ''}</p>
+                    <p className={`${styles.videosItemStatus} ${styles[video.status]}`}>{video.status}... {video.status === 'processing' && video.statusProgress > 0 ? `${video.statusProgress || 0}%` : ''}</p>
                   }
                   <img
                     onClick={() => {
@@ -447,6 +438,7 @@ const ToolDetails = () => {
                     type: 'SET_PREVIEW_HELLO_SCREEN',
                     data: {},
                   })
+                  dispatch({ type: 'SET_DURATION' })
                   showFormHelloScreen(true)
                 }}
               >
