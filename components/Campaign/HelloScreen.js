@@ -22,10 +22,12 @@ const HelloScreen = () => {
     }
     if (ref.current) {
       handleResize()
+      window.addEventListener('resize', handleResize)
     }
-    window.addEventListener('resize', handleResize)
     return () => {
-      window.removeEventListener('resize', handleResize)
+      if (ref.current) {
+        window.removeEventListener('resize', handleResize)
+      }
     }
   }, [ref, hs])
 
