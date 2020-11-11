@@ -67,7 +67,7 @@ const defaultEndScreen = {
 }
 
 const initialState = {
-  duration: 110000,
+  duration: 0,
   endScreen: {
     duration: 0,
   },
@@ -79,7 +79,7 @@ const initialState = {
   logo: {
     placement: 'top-left',
     value: '',
-    size: 50,
+    size: 60,
   },
   name: '',
   preview: {
