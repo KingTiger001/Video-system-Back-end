@@ -38,6 +38,8 @@ const Player = () => {
       if (Object.keys(videoRef).length > 0) {
         videoRef.addEventListener('playing', handlePlaying)
         videoRef.addEventListener('seeking', handleSeeking)
+        const currentTime = (progression - helloScreen.duration) / 1000
+        videoRef.currentTime = currentTime > 0 ? currentTime : 0 
       }
     } else {
       if (Object.keys(videoRef).length > 0) {
@@ -140,6 +142,7 @@ const Player = () => {
           onClick={() => {
             dispatch({ type: isPlaying ? 'PAUSE' : 'PLAY' })
             dispatch({ type: 'SELECT_TOOL', data: 0 })
+            dispatch({ type: 'HIDE_PREVIEW' })
             if (progression > (helloScreen.duration || 0) && progression < duration - (endScreen.duration || 0)) {
               isPlaying ? videoRef.pause() : videoRef.play()
             }
