@@ -30,13 +30,14 @@ const Campaign = ({ user }) => {
 
   const ref = useRef()
   
-  const campaign = useSelector(state => state.campaign)
   const duration = useSelector(state => state.campaign.duration)
+  const endScreen = useSelector(state => state.campaign.endScreen)
   const helloScreen = useSelector(state => state.campaign.helloScreen)
   const logo = useSelector(state => state.campaign.logo)
   const name = useSelector(state => state.campaign.name)
   const preview = useSelector(state => state.campaign.preview)
   const timelineDraggable = useSelector(state => state.campaign.timelineDraggable)
+  const video = useSelector(state => state.campaign.video)
   const videoRef = useSelector(state => state.campaign.videoRef)
 
   // mounted
@@ -52,8 +53,14 @@ const Campaign = ({ user }) => {
   }, [])
 
   const saveCampaign = async () => {
-    await mainAPI.patch(`/campaigns/${router.query.campaignId}`, campaign)
-    toast.success('Campaign saved.')
+    await mainAPI.patch(`/campaigns/${router.query.campaignId}`, {
+      duration,
+      endScreen,
+      helloScreen,
+      logo,
+      name,
+      ...(Object.keys(video).length > 0 && { video: video._id }),
+    })
   }
 
   const getVideos = async () => {
@@ -137,8 +144,8 @@ const Campaign = ({ user }) => {
 
       <div className={styles.main}>
         <div className={styles.sidebar}>
-          <Tools />
-          <ToolDetails />
+          <Tools/>
+          <ToolDetails saveCampaign={saveCampaign}/>
         </div>
 
         <Player />
@@ -162,10 +169,12 @@ export const getServerSideProps = withAuthServerSideProps(async ({ params }, use
   const { data: helloScreenList } = await mainAPI.get('/users/me/helloScreens')
 
   try {
-    dispatch({
-      type: 'CHANGE_END_SCREEN',
-      data: endScreens[0],
-    })
+    if (endScreens.length > 0) {
+      dispatch({
+        type: 'CHANGE_END_SCREEN',
+        data: endScreens[0],
+      })
+    }
     dispatch({
       type: 'SET_VIDEO_LIST',
       data: videos,
