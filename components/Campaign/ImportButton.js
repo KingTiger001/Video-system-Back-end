@@ -8,7 +8,7 @@ const ImportButton = ({ children, onChange }) => {
     >
       <input
         id="import"
-        accept="video/*"
+        accept="video/mp4,video/x-m4v,video/*"
         className={styles.input}
         type="file"
         onChange={onChange}
