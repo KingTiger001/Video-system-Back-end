@@ -6,10 +6,14 @@ const Tools = () => {
   const dispatch = useDispatch()
   const isPlaying = useSelector(state => state.campaign.isPlaying)
   const tool = useSelector(state => state.campaign.tool)
+  const videoRef = useSelector(state => state.campaign.videoRef)
   
   const selectTool = (clickedTool, element) => {
     dispatch({ type: 'SELECT_TOOL', data: tool === clickedTool ? 0 : clickedTool })
-    isPlaying ? dispatch({ type: 'PAUSE' }) : ''
+    if (isPlaying) {
+      dispatch({ type: 'PAUSE' })
+      videoRef.pause()
+    }
     tool === clickedTool ? dispatch({ type: 'HIDE_PREVIEW' }) : dispatch({ type: 'SHOW_PREVIEW', data: { element } })
   }
 
