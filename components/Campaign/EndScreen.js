@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
+import Button from '@/components/Button'
+
 import styles from '@/styles/components/Campaign/EndScreen.module.sass'
 
 const EndScreen = () => {
