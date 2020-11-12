@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { useState } from 'react'
 import { ChromePicker } from 'react-color'
@@ -11,10 +10,10 @@ import { mainAPI, mediaAPI } from '@/plugins/axios'
 import Button from '@/components/Button'
 import ImportButton from '@/components/Campaign/ImportButton'
 import InputNumber from '@/components/InputNumber'
+import InputStyle from '@/components/Campaign/InputStyle'
 import PopupCreateHelloScreen from '@/components/Popups/PopupCreateHelloScreen'
 import PopupDeleteHelloScreen from '@/components/Popups/PopupDeleteHelloScreen'
 import PopupDeleteDraftHelloScreen from '@/components/Popups/PopupDeleteDraftHelloScreen'
-import TextStyle from '@/components/Campaign/TextStyle'
 import VideoRecorder from '@/components/Campaign/VideoRecorder/index'
 
 import styles from '@/styles/components/Campaign/ToolDetails.module.sass'
@@ -241,93 +240,19 @@ const ToolDetails = ({ saveCampaign }) => {
               </div>
               <div className={styles.toolSection}>
                 <label className={styles.toolLabel}>Title</label>
-                <div className={styles.toolInputWithOptions}>
-                  <input
-                    className={styles.toolInput}
-                    onChange={(e) => dispatch({
-                      type: 'CHANGE_HELLO_SCREEN',
-                      data: {
-                        title: {
-                          ...helloScreen.title,
-                          value: e.target.value,
-                        }
-                      },
-                    })}
-                    value={helloScreen.title.value}
-                  />
-                  <img
-                    onClick={(e) => dispatch({
-                      type: 'CHANGE_HELLO_SCREEN',
-                      data: {
-                        title: {
-                          ...helloScreen.title,
-                          displayOptions: !helloScreen.title.displayOptions,
-                        }
-                      },
-                    })}
-                    src="/assets/campaign/options.svg"
-                    style={{ display: helloScreen.title.displayOptions ? 'block' : ''}}
-                  />
-                </div>
-                { helloScreen.title.displayOptions &&
-                  <TextStyle
-                    initialValues={helloScreen.title}
-                    onChange={(textStyle) => dispatch({
-                      type: 'CHANGE_HELLO_SCREEN',
-                      data: {
-                        title: {
-                          ...helloScreen.title,
-                          ...textStyle,
-                        }
-                      },
-                    })}
-                  />
-                }
+                <InputStyle
+                  dispatchType="CHANGE_HELLO_SCREEN"
+                  object={helloScreen}
+                  property="title"
+                />
               </div>
               <div className={styles.toolSection}>
-                <label className={styles.toolLabel}>Subtitle</label>
-                <div className={styles.toolInputWithOptions}>
-                  <input
-                    className={styles.toolInput}
-                    onChange={(e) => dispatch({
-                      type: 'CHANGE_HELLO_SCREEN',
-                      data: {
-                        subtitle: {
-                          ...helloScreen.subtitle,
-                          value: e.target.value,
-                        }
-                      },
-                    })}
-                    value={helloScreen.subtitle.value}
-                  />
-                  <img
-                    onClick={(e) => dispatch({
-                      type: 'CHANGE_HELLO_SCREEN',
-                      data: {
-                        subtitle: {
-                          ...helloScreen.subtitle,
-                          displayOptions: !helloScreen.subtitle.displayOptions,
-                        }
-                      },
-                    })}
-                    src="/assets/campaign/options.svg"
-                    style={{ display: helloScreen.subtitle.displayOptions ? 'block' : ''}}
-                  />
-                </div>
-                { helloScreen.subtitle.displayOptions &&
-                  <TextStyle
-                    initialValues={helloScreen.subtitle}
-                    onChange={(textStyle) => dispatch({
-                      type: 'CHANGE_HELLO_SCREEN',
-                      data: {
-                        subtitle: {
-                          ...helloScreen.subtitle,
-                          ...textStyle,
-                        }
-                      },
-                    })}
-                  />
-                }
+                <label className={styles.toolLabel}>Text</label>
+                <InputStyle
+                  dispatchType="CHANGE_HELLO_SCREEN"
+                  object={helloScreen}
+                  property="subtitle"
+                />
               </div>
               <Button onClick={saveHelloScreen}>Save</Button>
               <Button
@@ -471,93 +396,19 @@ const ToolDetails = ({ saveCampaign }) => {
             </div>
             <div className={styles.toolSection}>
               <label className={styles.toolLabel}>Title</label>
-              <div className={styles.toolInputWithOptions}>
-                <input
-                  className={styles.toolInput}
-                  onChange={(e) => dispatch({
-                    type: 'CHANGE_END_SCREEN',
-                    data: {
-                      title: {
-                        ...endScreen.title,
-                        value: e.target.value
-                      }
-                    },
-                  })}
-                  value={endScreen.title.value}
-                />
-                <img
-                  onClick={(e) => dispatch({
-                    type: 'CHANGE_END_SCREEN',
-                    data: {
-                      title: {
-                        ...endScreen.title,
-                        displayOptions: !endScreen.title.displayOptions,
-                      }
-                    },
-                  })}
-                  src="/assets/campaign/options.svg"
-                  style={{ display: endScreen.title.displayOptions ? 'block' : ''}}
-                />
-              </div>
-              { endScreen.title.displayOptions &&
-                <TextStyle
-                  initialValues={endScreen.title}
-                  onChange={(textStyle) => dispatch({
-                    type: 'CHANGE_END_SCREEN',
-                    data: {
-                      title: {
-                        ...endScreen.title,
-                        ...textStyle,
-                      }
-                    },
-                  })}
-                />
-              }
+              <InputStyle
+                dispatchType="CHANGE_END_SCREEN"
+                object={endScreen}
+                property="title"
+              />
             </div>
             <div className={styles.toolSection}>
-              <label className={styles.toolLabel}>Subtitle</label>
-              <div className={styles.toolInputWithOptions}>
-                <input
-                  className={styles.toolInput}
-                  onChange={(e) => dispatch({
-                    type: 'CHANGE_END_SCREEN',
-                    data: {
-                      subtitle: {
-                        ...endScreen.subtitle,
-                        value: e.target.value,
-                      }
-                    },
-                  })}
-                  value={endScreen.subtitle.value}
-                />
-                <img
-                  onClick={(e) => dispatch({
-                    type: 'CHANGE_END_SCREEN',
-                    data: {
-                      subtitle: {
-                        ...endScreen.subtitle,
-                        displayOptions: !endScreen.subtitle.displayOptions,
-                      }
-                    },
-                  })}
-                  src="/assets/campaign/options.svg"
-                  style={{ display: endScreen.subtitle.displayOptions ? 'block' : ''}}
-                />
-              </div>
-              { endScreen.subtitle.displayOptions &&
-                <TextStyle
-                  initialValues={endScreen.subtitle}
-                  onChange={(textStyle) => dispatch({
-                    type: 'CHANGE_END_SCREEN',
-                    data: {
-                      subtitle: {
-                        ...endScreen.subtitle,
-                        ...textStyle,
-                      }
-                    },
-                  })}
-                />
-              }
+              <label className={styles.toolLabel}>Text</label>
+              <InputStyle
+                dispatchType="CHANGE_END_SCREEN"
+                object={endScreen}
+                property="subtitle"
+              />
             </div>
             <div className={styles.toolSection}>
               <label className={styles.toolLabel}>Button</label>
@@ -594,103 +445,19 @@ const ToolDetails = ({ saveCampaign }) => {
             </div>
             <div className={styles.toolSection}>
               <label className={styles.toolLabel}>Email</label>
-              <div className={styles.toolInputWithOptions}>
-                <input
-                  className={styles.toolInput}
-                  onChange={(e) => dispatch({
-                    type: 'CHANGE_END_SCREEN',
-                    data: {
-                      email: {
-                        ...endScreen.email,
-                        value: e.target.value,
-                      }
-                    },
-                  })}
-                  value={endScreen.email.value}
-                />
-                <img
-                  onClick={(e) => dispatch({
-                    type: 'CHANGE_END_SCREEN',
-                    data: {
-                      email: {
-                        ...endScreen.email,
-                        displayOptions: !endScreen.email.displayOptions,
-                      }
-                    },
-                  })}
-                  src="/assets/campaign/options.svg"
-                  style={{ display: endScreen.email.displayOptions ? 'block' : ''}}
-                />
-              </div>
-              { endScreen.email.displayOptions &&
-                <TextStyle
-                  features={{
-                    color: true,
-                    fontSize: true,
-                    fontWeight: true,
-                  }}
-                  initialValues={endScreen.email}
-                  onChange={(textStyle) => dispatch({
-                    type: 'CHANGE_END_SCREEN',
-                    data: {
-                      email: {
-                        ...endScreen.email,
-                        ...textStyle,
-                      }
-                    },
-                  })}
-                />
-              }
+              <InputStyle
+                dispatchType="CHANGE_END_SCREEN"
+                object={endScreen}
+                property="email"
+              />
             </div>
             <div className={styles.toolSection}>
               <label className={styles.toolLabel}>Phone</label>
-              <div className={styles.toolInputWithOptions}>
-                <input
-                  className={styles.toolInput}
-                  onChange={(e) => dispatch({
-                    type: 'CHANGE_END_SCREEN',
-                    data: {
-                      phone: {
-                        ...endScreen.phone,
-                        value: e.target.value,
-                      }
-                    },
-                  })}
-                  value={endScreen.phone.value}
-                />
-                <img
-                  onClick={() => dispatch({
-                    type: 'CHANGE_END_SCREEN',
-                    data: {
-                      phone: {
-                        ...endScreen.phone,
-                        displayOptions: !endScreen.phone.displayOptions,
-                      }
-                    },
-                  })}
-                  src="/assets/campaign/options.svg"
-                  style={{ display: endScreen.phone.displayOptions ? 'block' : ''}}
-                />
-              </div>
-              { endScreen.phone.displayOptions &&
-                <TextStyle
-                  features={{
-                    color: true,
-                    fontSize: true,
-                    fontWeight: true,
-                  }}
-                  initialValues={endScreen.phone}
-                  onChange={(textStyle) => dispatch({
-                    type: 'CHANGE_END_SCREEN',
-                    data: {
-                      phone: {
-                        ...endScreen.phone,
-                        ...textStyle,
-                      }
-                    },
-                  })}
-                />
-              }
+              <InputStyle
+                dispatchType="CHANGE_END_SCREEN"
+                object={endScreen}
+                property="phone"
+              />
             </div>
             <Button onClick={createOrSaveEndScreen}>Save</Button>
           </div>
