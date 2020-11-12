@@ -52,10 +52,10 @@ const Player = () => {
   useEffect(() => {
     let interval = null;
     if (
-      ((progression > helloScreen.duration) && (progression < (duration - endScreen.duration)) && videoSeeking)
+      ((progression > helloScreen.duration) && (progression < (duration - endScreen.duration)) && videoSeeking && videoRef.currentTime !== 0)
       || (!isPlaying && progression !== 0)
     ) {
-      clearInterval(interval);
+      clearInterval(interval)
     } else if (isPlaying) {
       interval = setInterval(() => {
         dispatch({
@@ -65,7 +65,7 @@ const Player = () => {
       }, 50);
     }
     if (progression >= duration) {
-      dispatch({ type: 'PAUSE' });
+      dispatch({ type: 'PAUSE' })
       dispatch({
         type: 'SET_PROGRESSION',
         data: 0,
@@ -77,10 +77,14 @@ const Player = () => {
         data: 0,
       });
     }
-    if (Object.keys(videoRef).length > 0 && (progression <= helloScreen.duration || progression >= duration - endScreen.duration)) {
-      videoRef.pause()
+
+    if (videoRef.ended && !videoRef.paused) {
       videoRef.currenTime = 0
-    } else if (Object.keys(videoRef).length > 0 && videoRef.paused && progression > helloScreen.duration && isPlaying) {
+      videoRef.pause()
+    } else if (Object.keys(videoRef).length > 0 && !videoRef.paused && (progression < helloScreen.duration || progression > duration - endScreen.duration)) {
+      videoRef.currenTime = 0
+      videoRef.pause()
+    } else if (Object.keys(videoRef).length > 0 && videoRef.paused && progression > helloScreen.duration && progression < duration - endScreen.duration && isPlaying) {
       videoRef.play()
     }
     return () => clearInterval(interval);
@@ -119,31 +123,29 @@ const Player = () => {
             { preview.element === 'logo' && <Logo /> }
           </div>
         }
-        { !preview.show &&
-          <div> 
-            <video
-              ref={videoRefCb}
-              key={video.url}
-              src={video.url}
-              height="100%"
-              width="100%"
-              style={{
-                display: progression > (helloScreen.duration || 0) && progression < duration - (endScreen.duration || 0) ? 'block' : 'none'
-              }}
-            />
-            {progression <= helloScreen.duration && <HelloScreen />}
-            {progression >= duration - endScreen.duration && <EndScreen />}
-            <Logo />
-          </div>
-        }
+        <div style={{ display: preview.show ? 'none' : 'block' }}> 
+          <video
+            ref={videoRefCb}
+            key={video.url}
+            src={video.url}
+            height="100%"
+            width="100%"
+            style={{
+              display: progression > (helloScreen.duration || 0) && progression < duration - (endScreen.duration || 0) ? 'block' : 'none'
+            }}
+          />
+          {progression <= helloScreen.duration && <HelloScreen />}
+          {progression >= duration - endScreen.duration && <EndScreen />}
+          <Logo />
+        </div>
       </div>
       <div className={styles.controls}>
         <img
-          onClick={() => {
-            dispatch({ type: isPlaying ? 'PAUSE' : 'PLAY' })
+          onClick={async () => {
             dispatch({ type: 'SELECT_TOOL', data: 0 })
-            dispatch({ type: 'HIDE_PREVIEW' })
-            if (progression > (helloScreen.duration || 0) && progression < duration - (endScreen.duration || 0)) {
+            dispatch({ type: 'HIDE_PREVIEW' }) 
+            dispatch({ type: isPlaying ? 'PAUSE' : 'PLAY' })
+            if (progression > helloScreen.duration && progression < duration - endScreen.duration) {
               isPlaying ? videoRef.pause() : videoRef.play()
             }
           }}
