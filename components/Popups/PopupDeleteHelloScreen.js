@@ -37,7 +37,7 @@ const PopupDeleteHelloScreen = ({ onDone }) => {
       <p>Are you sure you want to delete this hello screen?</p>
       <div className={styles.actions}>
         <Button
-          style="outline"
+          outline={true}
           onClick={hidePopup}
         >
           Cancel

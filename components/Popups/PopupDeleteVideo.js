@@ -40,7 +40,7 @@ const PopupDeleteVideo = ({ onDone }) => {
       <p>Are you sure you want to delete this video?</p>
       <div className={styles.actions}>
         <Button
-          style="outline"
+          outline={true}
           onClick={hidePopup}
         >
           Cancel

@@ -71,6 +71,7 @@ const initialState = {
   endScreen: {
     duration: 0,
   },
+  hasChanges: false,
   helloScreen: {
     duration: 0,
   },
@@ -130,6 +131,11 @@ const reducer = (state = initialState, action) => {
           ...action.data
         },
       }
+    case 'HAS_CHANGES':
+      return {
+        ...state,
+        hasChanges: action.data,
+      }
     case 'SHOW_PREVIEW':
       return {
         ...state,
@@ -182,6 +188,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         helloScreenList: action.data,
       }
+    case 'SET_NAME':
+      return {
+        ...state,
+        name: action.data,
+      }
     case 'SET_PREVIEW_HELLO_SCREEN':
       return {
         ...state,
@@ -192,20 +203,15 @@ const reducer = (state = initialState, action) => {
         ...state,
         previewVideo: action.data,
       }
-    case 'SELECT_TOOL':
-      return {
-        ...state,
-        tool: action.data,
-      }
-    case 'SET_NAME':
-      return {
-        ...state,
-        name: action.data,
-      }
     case 'SET_PROGRESSION':
       return {
         ...state,
         progression: action.data,
+      }
+    case 'SELECT_TOOL':
+      return {
+        ...state,
+        tool: action.data,
       }
     case 'SET_VIDEO':
       return {

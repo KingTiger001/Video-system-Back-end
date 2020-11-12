@@ -8,19 +8,21 @@ const Button = ({
   href, 
   loading, 
   onClick, 
-  style, 
+  outline = false,
+  style,
   target, 
   textColor, 
-  type = 'button', 
+  type = 'button',
   width,
 }) => {
   switch (type) {
     case 'button':
       return (
         <button
-          className={`${styles.button} ${styles[`${color}Color`]} ${style ? styles[style] : ''} ${loading ? styles.loading : ''} ${textColor ? styles[`${textColor}TextColor`] : ''}`}
+          className={`${styles.button} ${styles[`${color}Color`]} ${outline ? styles.outline : ''} ${loading ? styles.loading : ''} ${textColor ? styles[`${textColor}TextColor`] : ''}`}
           style={{
-            ...(width && { width })
+            ...(width && { width }),
+            ...style,
           }}
           onClick={onClick}
         >
@@ -32,7 +34,8 @@ const Button = ({
         <div
           className={`${styles.button} ${styles[`${color}Color`]} ${style ? styles[style] : ''} ${loading ? styles.loading : ''} ${textColor ? styles[`${textColor}TextColor`] : ''}`}
           style={{
-            ...(width && { width })
+            ...(width && { width }),
+            ...style,
           }}
           onClick={onClick}
         >
@@ -47,7 +50,8 @@ const Button = ({
           <a
             className={`${styles.button} ${styles[`${color}Color`]} ${style && styles[style]}`}
             style={{
-              ...(width && { width })
+              ...(width && { width }),
+              ...style,
             }}
             target={target}
           >

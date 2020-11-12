@@ -32,6 +32,7 @@ const Campaign = ({ user }) => {
   
   const duration = useSelector(state => state.campaign.duration)
   const endScreen = useSelector(state => state.campaign.endScreen)
+  const hasChanges = useSelector(state => state.campaign.hasChanges)
   const helloScreen = useSelector(state => state.campaign.helloScreen)
   const logo = useSelector(state => state.campaign.logo)
   const name = useSelector(state => state.campaign.name)
@@ -52,6 +53,17 @@ const Campaign = ({ user }) => {
     }
   }, [])
 
+  useEffect(() => {
+    if (hasChanges) {
+      window.onbeforeunload = confirmExit;
+      function confirmExit() {
+        return 'show warning'
+      }
+    } else {
+      window.onbeforeunload = null
+    }
+  }, [hasChanges])
+
   const saveCampaign = async () => {
     await mainAPI.patch(`/campaigns/${router.query.campaignId}`, {
       duration,
@@ -60,6 +72,10 @@ const Campaign = ({ user }) => {
       logo,
       name,
       ...(Object.keys(video).length > 0 && { video: video._id }),
+    })
+    dispatch({
+      type: 'HAS_CHANGES',
+      data: false
     })
   }
 
@@ -131,7 +147,11 @@ const Campaign = ({ user }) => {
         <div className={styles.headerActions}>
           <Button
             color="white"
-            onClick={saveCampaign}
+            onClick={() => {
+              saveCampaign()
+              toast.success('Campaign saved.')
+            }}
+            style={{ opacity: hasChanges ? 1 : 0.5 }}
             textColor="dark"
           >
             Save my campaign

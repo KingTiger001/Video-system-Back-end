@@ -260,7 +260,7 @@ const ToolDetails = ({ saveCampaign }) => {
                   display: 'CREATE_HELLO_SCREEN',
                   data: helloScreen,
                 })}
-                style="outline"
+                outline={true}
                 type="div"
               >
                 Save as template
@@ -411,7 +411,7 @@ const ToolDetails = ({ saveCampaign }) => {
               />
             </div>
             <div className={styles.toolSection}>
-              <label className={styles.toolLabel}>Button</label>
+              <label className={styles.toolLabel}>Link Button</label>
               <div className={styles.toolInputGrid}>
                 <input
                   className={styles.toolInput}

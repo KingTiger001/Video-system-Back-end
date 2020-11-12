@@ -115,7 +115,7 @@ const Dashboard = ({ initialCampaigns, user }) => {
                     <div className={styles.campaignsEmpty}>
                       <p>No campaign found.</p>
                       <Button onClick={createCampaign}>
-                        Create a new campaign
+                        Create a video campaign
                       </Button>
                     </div>
               }

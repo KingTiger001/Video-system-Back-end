@@ -51,7 +51,7 @@ const Index = () => {
             <div className={styles.headerButtons}>
               <Button
                 href="/login"
-                style="outline"
+                outline={true}
                 type="link"
                 width={120}
               >
@@ -84,7 +84,7 @@ const Index = () => {
               </Button>
               <Button
                 href="/"
-                style="outline"
+                outline={true}
                 type="link"
                 width={200}
               >
@@ -284,7 +284,7 @@ const Index = () => {
                     <Button
                       color="grey"
                       href="/signup"
-                      style="outline"
+                      outline={true}
                       type="link"
                       width={160}
                     >
@@ -359,7 +359,7 @@ const Index = () => {
                     <Button
                       color="grey"
                       href="/"
-                      style="outline"
+                      outline={true}
                       type="link"
                       width={160}
                     >
@@ -379,7 +379,7 @@ const Index = () => {
           <h2 className={styles.sectionSubtitle}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.</h2>
           <Button
             color="white"
-            style="outline"
+            outline={true}
             href="/"
             type="link"
             width={160}

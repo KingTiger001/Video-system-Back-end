@@ -13,15 +13,21 @@ const InputStyle = ({ dispatchType, object, property }) => {
       <div className={styles.inputStyleInput}>
         <input
           className={toolDetailsStyles.toolInput}
-          onChange={(e) => dispatch({
-            type: dispatchType,
-            data: {
-              [property]: {
-                ...object[property],
-                value: e.target.value,
-              }
-            },
-          })}
+          onChange={(e) => {
+            dispatch({
+              type: dispatchType,
+              data: {
+                [property]: {
+                  ...object[property],
+                  value: e.target.value,
+                }
+              },
+            })
+            dispatch({
+              type: 'HAS_CHANGES',
+              data: true,
+            })
+          }}
           value={object[property].value}
         />
         <img
@@ -41,15 +47,21 @@ const InputStyle = ({ dispatchType, object, property }) => {
       { object[property].displayOptions &&
         <TextStyle
           initialValues={object[property]}
-          onChange={(textStyle) => dispatch({
-            type: dispatchType,
-            data: {
-              [property]: {
-                ...object[property],
-                ...textStyle,
-              }
-            },
-          })}
+          onChange={(textStyle) => {
+            dispatch({
+              type: dispatchType,
+              data: {
+                [property]: {
+                  ...object[property],
+                  ...textStyle,
+                }
+              },
+            })
+            dispatch({
+              type: 'HAS_CHANGES',
+              data: true,
+            })
+          }}
         />
       }
     </div>

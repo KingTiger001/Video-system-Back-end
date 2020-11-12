@@ -14,7 +14,7 @@ const PopupDeleteDraftHelloScreen = ({ onConfirm }) => {
       <p>Are you sure ? All of your modifications will be deleted.</p>
       <div className={styles.actions}>
         <Button
-          style="outline"
+          outline={true}
           onClick={hidePopup}
         >
           No
