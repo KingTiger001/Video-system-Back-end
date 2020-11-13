@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="10px" height="10px" viewBox="0 0 10 10" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>54C2CA8D-DBF2-4BCF-9E01-F82301E87AF3</title>
+    <defs>
+        <path d="M0.5,7.625 L0.5,9.5 L2.375,9.5 L7.905,3.97 L6.03,2.095 L0.5,7.625 L0.5,7.625 Z M9.355,2.52 C9.55,2.325 9.55,2.01 9.355,1.815 L8.185,0.645 C7.99,0.45 7.675,0.45 7.48,0.645 L6.565,1.56 L8.44,3.435 L9.355,2.52 L9.355,2.52 Z" id="path-1"></path>
+        <rect id="path-3" x="0" y="0" width="25" height="25"></rect>
+    </defs>
+    <g id="ALL" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="_VIDEO-EDIT-MENU-FERMÉ" transform="translate(-328.000000, -55.000000)">
+            <g id="Group-8" transform="translate(20.000000, 20.000000)">
+                <g id="ic_apps-copy" transform="translate(308.000000, 35.000000)">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <g id="Mask"></g>
+                    <g id="🎨-Color" mask="url(#mask-2)">
+                        <g transform="translate(-7.500000, -7.500000)">
+                            <mask id="mask-4" fill="white">
+                                <use xlink:href="#path-3"></use>
+                            </mask>
+                            <use id="Black" stroke="none" fill="#000000" fill-rule="evenodd" xlink:href="#path-3"></use>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

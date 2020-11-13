@@ -140,14 +140,16 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         preview: {
+          ...state.preview,
           show: true,
-          ...action.data
+          ...action.data,
         },
       }
     case 'HIDE_PREVIEW':
       return {
         ...state,
         preview: {
+          ...state.preview,
           show: false,
         },
       }

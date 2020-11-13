@@ -32,7 +32,7 @@ const Button = ({
     case 'div':
       return (
         <div
-          className={`${styles.button} ${styles[`${color}Color`]} ${style ? styles[style] : ''} ${loading ? styles.loading : ''} ${textColor ? styles[`${textColor}TextColor`] : ''}`}
+          className={`${styles.button} ${styles[`${color}Color`]} ${outline ? styles.outline : ''} ${loading ? styles.loading : ''} ${textColor ? styles[`${textColor}TextColor`] : ''}`}
           style={{
             ...(width && { width }),
             ...style,
@@ -48,7 +48,7 @@ const Button = ({
           href={href}
         >
           <a
-            className={`${styles.button} ${styles[`${color}Color`]} ${style && styles[style]}`}
+            className={`${styles.button} ${styles[`${color}Color`]} ${outline ? styles.outline : ''}`}
             style={{
               ...(width && { width }),
               ...style,

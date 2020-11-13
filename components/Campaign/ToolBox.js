@@ -16,9 +16,9 @@ import PopupDeleteHelloScreen from '@/components/Popups/PopupDeleteHelloScreen'
 import PopupDeleteDraftHelloScreen from '@/components/Popups/PopupDeleteDraftHelloScreen'
 import VideoRecorder from '@/components/Campaign/VideoRecorder/index'
 
-import styles from '@/styles/components/Campaign/ToolDetails.module.sass'
+import styles from '@/styles/components/Campaign/ToolBox.module.sass'
 
-const ToolDetails = ({ saveCampaign }) => {
+const ToolBox = ({ saveCampaign }) => {
   const dispatch = useDispatch()
   const popup = useSelector(state => state.popup)
   const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
@@ -31,6 +31,7 @@ const ToolDetails = ({ saveCampaign }) => {
   const helloScreen = useSelector(state => state.campaign.helloScreen)
   const helloScreenList = useSelector(state => state.campaign.helloScreenList)
   const logo = useSelector(state => state.campaign.logo)
+  const preview = useSelector(state => state.campaign.preview)
 
   const [displayVideoRecorder, showVideoRecorder] = useState(false)
   const [displayFormHelloScreen, showFormHelloScreen] = useState(false)
@@ -62,6 +63,42 @@ const ToolDetails = ({ saveCampaign }) => {
 
   useDebounce(updateProcessingVideos, 3000, [videoList])
 
+  const closeToolbox = () => {
+    dispatch({ type: 'SELECT_TOOL', data: 0 })
+    setTimeout(() => dispatch({ type: 'HIDE_PREVIEW' }), 0)
+  }
+
+  const getHelloScreenList = async () => {
+    const { data } = await mainAPI.get('/users/me/helloScreens')
+    dispatch({
+      type: 'SET_HELLO_SCREEN_LIST',
+      data,
+    })
+  }
+
+  const saveHelloScreen = async () => {
+    await saveCampaign()
+    toast.success('Hello screen saved.')
+  }
+
+  const createOrSaveEndScreen = async () => {
+    endScreen._id
+      ?
+        await mainAPI.patch(`/endScreens/${endScreen._id}`, endScreen)
+      :
+        await mainAPI.post('/endScreens', {
+          ...endScreen,
+          name: 'default',
+        })
+    saveCampaign()
+    toast.success('End screen saved.')
+  }
+
+  const saveLogo = async () => {
+    await saveCampaign()
+    toast.success('Logo saved.')
+  }
+
   const uploadLogo = async (file) => {
     const formData = new FormData()
     formData.append('file', file)
@@ -82,40 +119,11 @@ const ToolDetails = ({ saveCampaign }) => {
     })
   }
 
-  const saveHelloScreen = async () => {
-    await saveCampaign()
-    toast.success('Hello screen saved.')
-  }
-
-  const saveLogo = async () => {
-    await saveCampaign()
-    toast.success('Logo saved.')
-  }
-
-  const createOrSaveEndScreen = async () => {
-    endScreen._id
-      ?
-        await mainAPI.patch(`/endScreens/${endScreen._id}`, endScreen)
-      :
-        await mainAPI.post('/endScreens', {
-          ...endScreen,
-          name: 'default',
-        })
-    saveCampaign()
-    toast.success('End screen saved.')
-  }
-
-  const getHelloScreenList = async () => {
-    const { data } = await mainAPI.get('/users/me/helloScreens')
-    dispatch({
-      type: 'SET_HELLO_SCREEN_LIST',
-      data,
-    })
-  }
-
   return (
     tool !== 0 &&
-    <div className={styles.toolDetails}>
+    <div
+      className={styles.toolBox}
+    >
       { displayVideoRecorder &&
         <VideoRecorder
           onClose={() => showVideoRecorder(false)}
@@ -152,9 +160,22 @@ const ToolDetails = ({ saveCampaign }) => {
         />
       }
 
+      <img
+        className={styles.close}
+        onClick={closeToolbox}
+        src="/assets/common/close.svg"
+      />
+
       {/* RECORD TOOL */}
       { tool === 1 &&
-        <div className={styles.toolRecord}>
+        <div
+          className={styles.toolRecord}
+          onClick={() => {
+            if (!preview.show) {
+              dispatch({ type: 'SHOW_PREVIEW' })
+            }
+          }}
+        >
           <img
             className={styles.toolRecordImage}
             src="/assets/campaign/record.svg"
@@ -178,7 +199,14 @@ const ToolDetails = ({ saveCampaign }) => {
 
       {/* VIDEOS TOOL */}
       { tool === 2 &&
-        <div className={styles.toolVideos}>
+        <div
+          className={styles.toolVideos}
+          onClick={() => {
+            if (!preview.show) {
+              dispatch({ type: 'SHOW_PREVIEW' })
+            }
+          }}
+        >
           <p className={styles.toolName}>Videos</p>
           <div className={styles.videosList}>
             {
@@ -219,7 +247,14 @@ const ToolDetails = ({ saveCampaign }) => {
 
       {/* HELLO SCREEN TOOL */}
       { tool === 3 &&
-        <div className={styles.toolHelloScreen}>
+        <div
+          className={styles.toolHelloScreen}
+          onClick={() => {
+            if (!preview.show) {
+              dispatch({ type: 'SHOW_PREVIEW' })
+            }
+          }}
+        >
           <p className={styles.toolName}>Hello Screen</p>
           { displayFormHelloScreen
             ?
@@ -254,7 +289,7 @@ const ToolDetails = ({ saveCampaign }) => {
                   property="subtitle"
                 />
               </div>
-              <Button onClick={saveHelloScreen}>Save</Button>
+              <Button onClick={saveHelloScreen}>Save draft</Button>
               <Button
                 onClick={() => showPopup({
                   display: 'CREATE_HELLO_SCREEN',
@@ -275,35 +310,52 @@ const ToolDetails = ({ saveCampaign }) => {
             :
             <div className={styles.toolSection}>
               {
-                Object.keys(helloScreen).length > 1 &&
-                <div className={styles.helloScreenDraft}>
-                  <div className={styles.helloScreenItem}>
-                    <p
-                      onClick={() => {
-                        dispatch({
-                          type: 'SET_PREVIEW_HELLO_SCREEN',
-                          data: {},
-                        })
-                      }}
-                    >
-                      Draft
-                    </p>
-                    <img
-                      src="/assets/campaign/select.svg"
-                      onClick={() => {
-                        dispatch({
-                          type: 'SET_PREVIEW_HELLO_SCREEN',
-                          data: {},
-                        })
-                        showFormHelloScreen(true)
-                      }}
-                    />
-                    <img
-                      src="/assets/campaign/delete.svg"
-                      onClick={() => showPopup({ display: 'DELETE_DRAFT_HELLO_SCREEN' })}
-                    />
+                Object.keys(helloScreen).length > 1 
+                  ?
+                  <div className={styles.helloScreenDraft}>
+                    <div className={styles.helloScreenItem}>
+                      <p
+                        onClick={() => {
+                          dispatch({
+                            type: 'SET_PREVIEW_HELLO_SCREEN',
+                            data: {},
+                          })
+                        }}
+                      >
+                        Draft
+                      </p>
+                      <img
+                        src="/assets/campaign/select.svg"
+                        onClick={() => {
+                          dispatch({
+                            type: 'SET_PREVIEW_HELLO_SCREEN',
+                            data: {},
+                          })
+                          showFormHelloScreen(true)
+                        }}
+                      />
+                      <img
+                        src="/assets/campaign/delete.svg"
+                        onClick={() => showPopup({ display: 'DELETE_DRAFT_HELLO_SCREEN' })}
+                      />
+                    </div>
                   </div>
-                </div>
+                  :
+                  <div
+                    className={styles.helloScreenAdd}
+                    onClick={() => {
+                      dispatch({ type: 'ADD_HELLO_SCREEN' })
+                      dispatch({
+                        type: 'SET_PREVIEW_HELLO_SCREEN',
+                        data: {},
+                      })
+                      dispatch({ type: 'SET_DURATION' })
+                      showFormHelloScreen(true)
+                    }}
+                  >
+                    <img src="/assets/campaign/add.svg" />
+                    <p>Add hello screen</p>
+                  </div>  
               }
               {
                 helloScreenList.length > 0 &&
@@ -355,21 +407,6 @@ const ToolDetails = ({ saveCampaign }) => {
                   </div>
                 </div>
               }
-              <div
-                className={styles.helloScreenAdd}
-                onClick={() => {
-                  dispatch({ type: 'ADD_HELLO_SCREEN' })
-                  dispatch({
-                    type: 'SET_PREVIEW_HELLO_SCREEN',
-                    data: {},
-                  })
-                  dispatch({ type: 'SET_DURATION' })
-                  showFormHelloScreen(true)
-                }}
-              >
-                <img src="/assets/campaign/add.svg" />
-                <p>Add hello screen</p>
-              </div>
             </div>
           }
         </div>
@@ -377,7 +414,14 @@ const ToolDetails = ({ saveCampaign }) => {
 
       {/* END SCREEN TOOL */}
       { tool === 4 &&
-        <div className={styles.toolEndScreen}>
+        <div
+          className={styles.toolEndScreen}
+          onClick={() => {
+            if (!preview.show) {
+              dispatch({ type: 'SHOW_PREVIEW' })
+            }
+          }}
+        >
           <p className={styles.toolName}>End Screen</p>
           <div>
             <div className={styles.toolSection}>
@@ -438,7 +482,7 @@ const ToolDetails = ({ saveCampaign }) => {
                       }
                     },
                   })}
-                  placeholder="Link"
+                  placeholder="Copy link"
                   value={endScreen.button.href}
                 />
               </div>
@@ -466,7 +510,14 @@ const ToolDetails = ({ saveCampaign }) => {
 
       {/* LOGO TOOL */}
       { tool === 5 &&
-        <div className={styles.toolLogo}>
+        <div
+          className={styles.toolLogo}
+          onClick={() => {
+            if (!preview.show) {
+              dispatch({ type: 'SHOW_PREVIEW' })
+            }
+          }}
+        >
           <p className={styles.toolName}>Logo</p>
           <div className={styles.toolSection}>
           { logo.value && 
@@ -542,4 +593,4 @@ const ToolDetails = ({ saveCampaign }) => {
   )
 }
 
-export default ToolDetails
+export default ToolBox

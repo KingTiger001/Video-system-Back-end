@@ -1,13 +1,21 @@
 @import '../../_variables.sass'
   
-.toolDetails
+.toolBox
   background: #fff
   border-radius: 8px
   width: 270px
   margin-left: 4px
   overflow: auto
+  position: relative
   & > div
     min-height: 100%
+
+.close
+  cursor: pointer
+  position: absolute
+  right: 20px
+  top: 20px
+  width: 20px
 
 .toolSection
   margin-bottom: 15px
@@ -16,7 +24,6 @@
   color: $textColorOne
   font-size: 18px
   font-weight: 700
-  line-height: 13px
   margin-bottom: 20px
 
 .toolLabel

@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Link from 'next/link'
 import { toast } from 'react-toastify'
@@ -16,7 +16,7 @@ import PopupDeleteVideo from '@/components/Popups/PopupDeleteVideo'
 import PopupUploadVideo from '@/components/Popups/PopupUploadVideo'
 import Timeline from '@/components/Campaign/Timeline'
 import Tools from '@/components/Campaign/Tools'
-import ToolDetails from '@/components/Campaign/ToolDetails'
+import ToolBox from '@/components/Campaign/ToolBox'
 import Player from '@/components/Campaign/Player'
 
 import styles from '@/styles/pages/campaign.module.sass'
@@ -41,6 +41,8 @@ const Campaign = ({ user }) => {
   const video = useSelector(state => state.campaign.video)
   const videoRef = useSelector(state => state.campaign.videoRef)
 
+  const [inputNameWidth, setInputNameWidth] = useState(0)
+
   // mounted
   useEffect(() => {
     if (user.logo && !logo.value) {
@@ -51,18 +53,19 @@ const Campaign = ({ user }) => {
         }
       })
     }
+    setInputNameWidth((name.length + 1) * 16)
   }, [])
 
-  useEffect(() => {
-    if (hasChanges) {
-      window.onbeforeunload = confirmExit;
-      function confirmExit() {
-        return 'show warning'
-      }
-    } else {
-      window.onbeforeunload = null
-    }
-  }, [hasChanges])
+  // useEffect(() => {
+  //   if (hasChanges) {
+  //     window.onbeforeunload = confirmExit;
+  //     function confirmExit() {
+  //       return 'show warning'
+  //     }
+  //   } else {
+  //     window.onbeforeunload = null
+  //   }
+  // }, [hasChanges])
 
   const saveCampaign = async () => {
     await mainAPI.patch(`/campaigns/${router.query.campaignId}`, {
@@ -98,10 +101,8 @@ const Campaign = ({ user }) => {
     }
     if (preview.show) {
       dispatch({ type: 'HIDE_PREVIEW' })
-      dispatch({ type: 'SELECT_TOOL', data: 0 })
     }
   }
-
 
   return (
     <div
@@ -133,15 +134,22 @@ const Campaign = ({ user }) => {
       <div className={styles.header}>
         <Link href="/dashboard">
           <a className={styles.headerMenu}>
-            <img src="/assets/campaign/menu.svg" />
+            <img src="/assets/common/back.svg" />
             <p>Back</p>
           </a>
         </Link>
         <div className={styles.headerVideoTitle}>
           <input
-            onChange={(e) => dispatch({ type: 'SET_NAME', data: e.target.value })}
+            onChange={(e) => {
+              dispatch({ type: 'SET_NAME', data: e.target.value })
+              setInputNameWidth((e.target.value.length + 1) * 16)
+            }}
             placeholder="Campaign name"
+            style={{ width: inputNameWidth }}
             value={name}
+          />
+          <img
+            src="/assets/campaign/edit.svg"
           />
         </div>
         <div className={styles.headerActions}>
@@ -151,7 +159,6 @@ const Campaign = ({ user }) => {
               saveCampaign()
               toast.success('Campaign saved.')
             }}
-            style={{ opacity: hasChanges ? 1 : 0.5 }}
             textColor="dark"
           >
             Save my campaign
@@ -165,7 +172,7 @@ const Campaign = ({ user }) => {
       <div className={styles.main}>
         <div className={styles.sidebar}>
           <Tools/>
-          <ToolDetails saveCampaign={saveCampaign}/>
+          <ToolBox saveCampaign={saveCampaign}/>
         </div>
 
         <Player />

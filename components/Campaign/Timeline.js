@@ -28,7 +28,6 @@ const Timeline = () => {
     }
     if (preview.show) {
       dispatch({ type: 'HIDE_PREVIEW' })
-      dispatch({ type: 'SELECT_TOOL', data: 0 })
     }
   }
 
