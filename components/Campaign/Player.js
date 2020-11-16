@@ -1,5 +1,5 @@
-import { useDispatch, useSelector } from 'react-redux'
 import { useCallback, useEffect, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { useVideoResize } from '@/hooks'
 
@@ -19,6 +19,8 @@ const Player = () => {
   const helloScreen = useSelector(state => state.campaign.helloScreen)
   const isPlaying = useSelector(state => state.campaign.isPlaying)
   const preview = useSelector(state => state.campaign.preview)
+  const previewEndScreen = useSelector(state => state.campaign.previewEndScreen)
+  const previewHelloScreen = useSelector(state => state.campaign.previewHelloScreen)
   const previewVideo = useSelector(state => state.campaign.previewVideo)
   const progression = useSelector(state => state.campaign.progression)
   const video = useSelector(state => state.campaign.video)
@@ -118,9 +120,9 @@ const Player = () => {
                 Sorry, your browser doesn't support embedded videos.
               </video>
             }
-            { preview.element === 'helloScreen' && <HelloScreen />}
-            { preview.element === 'endScreen' && <EndScreen /> }
-            { preview.element === 'logo' && <Logo /> }
+            { preview.element === 'helloScreen' && <HelloScreen data={Object.keys(previewHelloScreen).length > 0 ? previewHelloScreen : helloScreen} />}
+            { preview.element === 'endScreen' && <EndScreen data={Object.keys(previewEndScreen).length > 0 ? previewEndScreen : endScreen} /> }
+            { preview.element === 'logo' && <Logo data={logo} /> }
           </div>
         }
         <div style={{ display: preview.show ? 'none' : 'block' }}> 
@@ -131,25 +133,24 @@ const Player = () => {
             height="100%"
             width="100%"
             style={{
-              display: progression > (helloScreen.duration || 0) && progression < duration - (endScreen.duration || 0) ? 'block' : 'none'
+              display: progression > helloScreen.duration && progression < duration - endScreen.duration ? 'block' : 'none'
             }}
           />
-          {progression <= helloScreen.duration && <HelloScreen />}
-          {progression >= duration - endScreen.duration && <EndScreen />}
-          <Logo />
+          {progression < helloScreen.duration && <HelloScreen data={helloScreen} />}
+          {progression >= duration - endScreen.duration && <EndScreen data={endScreen} />}
+          <Logo data={logo} />
         </div>
       </div>
       <div className={styles.controls}>
         <img
           onClick={async () => {
-            dispatch({ type: 'SELECT_TOOL', data: 0 })
             dispatch({ type: 'HIDE_PREVIEW' }) 
             dispatch({ type: isPlaying ? 'PAUSE' : 'PLAY' })
             if (progression > helloScreen.duration && progression < duration - endScreen.duration) {
               isPlaying ? videoRef.pause() : videoRef.play()
             }
           }}
-          src={isPlaying ? '/assets/campaign/pause.svg' : '/assets/campaign/play.svg'}
+          src={isPlaying ? '/assets/video/pause.svg' : '/assets/video/play.svg'}
         />
         <p className={styles.progression}>{displayProgression()}</p>
       </div>

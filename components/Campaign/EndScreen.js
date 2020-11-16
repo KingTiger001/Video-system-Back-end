@@ -1,15 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
 
 import Button from '@/components/Button'
 
 import styles from '@/styles/components/Campaign/EndScreen.module.sass'
 
-const EndScreen = () => {
+const EndScreen = ({ data = {} }) => {
   const ref = useRef()
 
-  const endScreen = useSelector(state => state.campaign.endScreen)
-  
   const [titleResponsiveFontSize, setTitleResponsiveFontSize] = useState(0)
   const [subtitleResponsiveFontSize, setSubtitleResponsiveFontSize] = useState(0)
   const [emailResponsiveFontSize, setEmailResponsiveFontSize] = useState(0)
@@ -17,10 +14,8 @@ const EndScreen = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      setTitleResponsiveFontSize(ref.current.offsetWidth * (endScreen.title.fontSize / 1000))
-      setSubtitleResponsiveFontSize(ref.current.offsetWidth * (endScreen.subtitle.fontSize / 1000))
-      setEmailResponsiveFontSize(ref.current.offsetWidth * (endScreen.email.fontSize / 1000))
-      setPhoneResponsiveFontSize(ref.current.offsetWidth * (endScreen.phone.fontSize / 1000))
+      setTitleResponsiveFontSize(ref.current.offsetWidth * (data.title.fontSize / 1000))
+      setSubtitleResponsiveFontSize(ref.current.offsetWidth * (data.subtitle.fontSize / 1000))
     }
     if (ref.current) {
       handleResize()
@@ -31,81 +26,80 @@ const EndScreen = () => {
         window.removeEventListener('resize', handleResize)
       }
     }
-  }, [ref, endScreen])
+  }, [ref, data])
 
-  return (
+  return Object.keys(data).length > 1 &&
     <div
       className={styles.endScreen}
       ref={ref}
-      style={{ background: endScreen.background }}
+      style={{ background: data.background }}
     >
-      { endScreen.title.value &&
+      { data.title.value &&
         <p
           style={{
-            color: endScreen.title.color,
+            color: data.title.color,
             fontSize: titleResponsiveFontSize,
-            fontWeight: endScreen.title.fontWeight,
-            letterSpacing: endScreen.title.letterSpacing,
-            // lineHeight: endScreen.title.lineHeight,
-            textAlign: endScreen.title.textAlign,
-            ...(endScreen.title.letterSpacing > 0 && { paddingLeft: endScreen.title.letterSpacing }),
+            fontWeight: data.title.fontWeight,
+            letterSpacing: data.title.letterSpacing,
+            // lineHeight: data.title.lineHeight,
+            textAlign: data.title.textAlign,
+            ...(data.title.letterSpacing > 0 && { paddingLeft: data.title.letterSpacing }),
           }}
         >
-          {endScreen.title.value}
+          {data.title.value}
         </p>
       }
-      { endScreen.subtitle.value &&
+      { data.subtitle.value &&
         <p
           style={{
-            color: endScreen.subtitle.color,
+            color: data.subtitle.color,
             fontSize: subtitleResponsiveFontSize,
-            fontWeight: endScreen.subtitle.fontWeight,
-            letterSpacing: endScreen.subtitle.letterSpacing,
-            // lineHeight: endScreen.subtitle.lineHeight,
-            textAlign: endScreen.subtitle.textAlign,
-            ...(endScreen.subtitle.letterSpacing > 0 && { paddingLeft: endScreen.subtitle.letterSpacing }),
+            fontWeight: data.subtitle.fontWeight,
+            letterSpacing: data.subtitle.letterSpacing,
+            // lineHeight: data.subtitle.lineHeight,
+            textAlign: data.subtitle.textAlign,
+            ...(data.subtitle.letterSpacing > 0 && { paddingLeft: data.subtitle.letterSpacing }),
           }}
         >
-          {endScreen.subtitle.value}
+          {data.subtitle.value}
         </p>
       }
-      { endScreen.button.value &&
+      { data.button.value &&
         <Button
           target="blank"
           type="link"
-          href={endScreen.button.href}
+          href={data.button.href}
           color="white"
         >
-          {endScreen.button.value}
+          {data.button.value}
         </Button>
       }
       <div className={styles.endScreenFooter}>
-        { endScreen.email.value &&
+        { data.email.value &&
           <a
-            href={`mailto:${endScreen.email.value}`}
+            href={`mailto:${data.email.value}`}
             style={{
-              color: endScreen.email.color,
+              color: data.email.color,
               fontSize: emailResponsiveFontSize,
-              fontWeight: endScreen.email.fontWeight,
+              fontWeight: data.email.fontWeight,
             }}
           >
-            {endScreen.email.value}
+            {data.email.value}
           </a>
         }
-        { endScreen.phone.value &&
+        { data.phone.value &&
           <p
             style={{
-              color: endScreen.phone.color,
+              color: data.phone.color,
               fontSize: phoneResponsiveFontSize,
-              fontWeight: endScreen.phone.fontWeight,
+              fontWeight: data.phone.fontWeight,
             }}
           >
-            {endScreen.phone.value}
+            {data.phone.value}
           </p>
         }
       </div>
     </div>
-  )
 }
 
 

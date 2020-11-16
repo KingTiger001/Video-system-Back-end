@@ -71,6 +71,7 @@ const initialState = {
   endScreen: {
     duration: 0,
   },
+  endScreenList: [],
   hasChanges: false,
   helloScreen: {
     duration: 0,
@@ -87,6 +88,7 @@ const initialState = {
     show: false,
     element: 'video',
   },
+  previewEndScreen: {},
   previewHelloScreen: {},
   previewVideo: '',
   progression: 0,
@@ -100,6 +102,11 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case 'ADD_END_SCREEN':
+      return {
+        ...state,
+        endScreen: defaultEndScreen,
+      }
     case 'ADD_HELLO_SCREEN':
       return {
         ...state,
@@ -163,6 +170,13 @@ const reducer = (state = initialState, action) => {
         ...state,
         isPlaying: false,
       }
+    case 'RESET_END_SCREEN':
+      return {
+        ...state,
+        endScreen: {
+          duration: 0,
+        },
+      }
     case 'RESET_HELLO_SCREEN':
       return {
         ...state,
@@ -173,7 +187,7 @@ const reducer = (state = initialState, action) => {
     case 'SET_CAMPAIGN':
       return {
         ...state,
-        endScreen: action.data.endScreen || defaultEndScreen,
+        endScreen: action.data.endScreen || { duration: 0 },
         helloScreen: action.data.helloScreen || { duration: 0 },
         logo: action.data.logo || initialState.logo,
         name: action.data.name,
@@ -194,6 +208,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         name: action.data,
+      }
+    case 'SET_PREVIEW_END_SCREEN':
+      return {
+        ...state,
+        previewEndScreen: action.data,
       }
     case 'SET_PREVIEW_HELLO_SCREEN':
       return {

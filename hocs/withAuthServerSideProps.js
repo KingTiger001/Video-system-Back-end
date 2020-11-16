@@ -33,6 +33,7 @@ const withAuthServerSideProps = (serverSidePropsFunc) => {
           },
         }
       } catch (err) {
+        console.log(err)
         ctx.res.writeHead(302, { Location: '/' });
         return ctx.res.end()
       }

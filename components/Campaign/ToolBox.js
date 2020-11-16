@@ -28,12 +28,14 @@ const ToolBox = ({ saveCampaign }) => {
   const tool = useSelector(state => state.campaign.tool)
   
   const endScreen = useSelector(state => state.campaign.endScreen)
+  const endScreenList = useSelector(state => state.campaign.endScreenList)
   const helloScreen = useSelector(state => state.campaign.helloScreen)
   const helloScreenList = useSelector(state => state.campaign.helloScreenList)
   const logo = useSelector(state => state.campaign.logo)
   const preview = useSelector(state => state.campaign.preview)
 
   const [displayVideoRecorder, showVideoRecorder] = useState(false)
+  const [displayFormEndScreen, showFormEndScreen] = useState(false)
   const [displayFormHelloScreen, showFormHelloScreen] = useState(false)
 
   const secondsToMs = (d) => {
@@ -68,6 +70,14 @@ const ToolBox = ({ saveCampaign }) => {
     setTimeout(() => dispatch({ type: 'HIDE_PREVIEW' }), 0)
   }
 
+  const getEndScreenList = async () => {
+    const { data } = await mainAPI.get('/users/me/endScreens')
+    dispatch({
+      type: 'SET_END_SCREEN_LIST',
+      data,
+    })
+  }
+
   const getHelloScreenList = async () => {
     const { data } = await mainAPI.get('/users/me/helloScreens')
     dispatch({
@@ -76,22 +86,14 @@ const ToolBox = ({ saveCampaign }) => {
     })
   }
 
+  const saveEndScreen = async () => {
+    await saveCampaign()
+    toast.success('End screen saved.')
+  }
+
   const saveHelloScreen = async () => {
     await saveCampaign()
     toast.success('Hello screen saved.')
-  }
-
-  const createOrSaveEndScreen = async () => {
-    endScreen._id
-      ?
-        await mainAPI.patch(`/endScreens/${endScreen._id}`, endScreen)
-      :
-        await mainAPI.post('/endScreens', {
-          ...endScreen,
-          name: 'default',
-        })
-    saveCampaign()
-    toast.success('End screen saved.')
   }
 
   const saveLogo = async () => {
@@ -121,9 +123,7 @@ const ToolBox = ({ saveCampaign }) => {
 
   return (
     tool !== 0 &&
-    <div
-      className={styles.toolBox}
-    >
+    <div className={styles.toolBox}>
       { displayVideoRecorder &&
         <VideoRecorder
           onClose={() => showVideoRecorder(false)}
@@ -131,6 +131,32 @@ const ToolBox = ({ saveCampaign }) => {
             display: 'UPLOAD_VIDEO',
             data: file,
           })}
+        />
+      }
+      { popup.display === 'DELETE_DRAFT_END_SCREEN' && 
+        <PopupDeleteDraftEndScreen
+          onConfirm={() => {
+            dispatch({ type: 'RESET_END_SCREEN' })
+            hidePopup()
+          }}
+        />
+      }
+      { popup.display === 'CREATE_END_SCREEN' && 
+        <PopupCreateEndScreen
+          onDone={() => {
+            getEndScreenList()
+            toast.success('A new hello screen template has been created.')
+            hidePopup()
+          }}
+        />
+      }
+      { popup.display === 'DELETE_END_SCREEN' && 
+        <PopupDeleteEndScreen
+          onDone={() => {
+            getEndScreenList()
+            toast.success('Template deleted.')
+            hidePopup()
+          }}
         />
       }
       { popup.display === 'DELETE_DRAFT_HELLO_SCREEN' && 
@@ -423,88 +449,209 @@ const ToolBox = ({ saveCampaign }) => {
           }}
         >
           <p className={styles.toolName}>End Screen</p>
-          <div>
-            <div className={styles.toolSection}>
-              <label className={styles.toolLabel}>Background</label>
-              <ChromePicker
-                className={styles.colorPicker}
-                disableAlpha={true}
-                color={endScreen.background}
-                onChange={(color) => dispatch({
-                  type: 'CHANGE_END_SCREEN',
-                  data: {
-                    background: color.hex,
-                  },
-                })}
-              />
-            </div>
-            <div className={styles.toolSection}>
-              <label className={styles.toolLabel}>Title</label>
-              <InputStyle
-                dispatchType="CHANGE_END_SCREEN"
-                object={endScreen}
-                property="title"
-              />
-            </div>
-            <div className={styles.toolSection}>
-              <label className={styles.toolLabel}>Text</label>
-              <InputStyle
-                dispatchType="CHANGE_END_SCREEN"
-                object={endScreen}
-                property="subtitle"
-              />
-            </div>
-            <div className={styles.toolSection}>
-              <label className={styles.toolLabel}>Link Button</label>
-              <div className={styles.toolInputGrid}>
-                <input
-                  className={styles.toolInput}
-                  onChange={(e) => dispatch({
-                    type: 'CHANGE_END_SCREEN',
-                    data: {
-                      button: {
-                        ...endScreen.button,
-                        value: e.target.value,
-                      }
-                    },
+            { displayFormEndScreen
+              ?
+              <div>
+                <div className={styles.toolSection}>
+                  <label className={styles.toolLabel}>Background</label>
+                  <ChromePicker
+                    className={styles.colorPicker}
+                    disableAlpha={true}
+                    color={endScreen.background}
+                    onChange={(color) => dispatch({
+                      type: 'CHANGE_END_SCREEN',
+                      data: {
+                        background: color.hex,
+                      },
+                    })}
+                  />
+                </div>
+                <div className={styles.toolSection}>
+                  <label className={styles.toolLabel}>Title</label>
+                  <InputStyle
+                    dispatchType="CHANGE_END_SCREEN"
+                    object={endScreen}
+                    property="title"
+                  />
+                </div>
+                <div className={styles.toolSection}>
+                  <label className={styles.toolLabel}>Text</label>
+                  <InputStyle
+                    dispatchType="CHANGE_END_SCREEN"
+                    object={endScreen}
+                    property="subtitle"
+                  />
+                </div>
+                <div className={styles.toolSection}>
+                  <label className={styles.toolLabel}>Link Button</label>
+                  <div className={styles.toolInputGrid}>
+                    <input
+                      className={styles.toolInput}
+                      onChange={(e) => dispatch({
+                        type: 'CHANGE_END_SCREEN',
+                        data: {
+                          button: {
+                            ...endScreen.button,
+                            value: e.target.value,
+                          }
+                        },
+                      })}
+                      placeholder="Text"
+                      value={endScreen.button.value}
+                    />
+                    <input
+                      className={styles.toolInput}
+                      onChange={(e) => dispatch({
+                        type: 'CHANGE_END_SCREEN',
+                        data: {
+                          button: {
+                            ...endScreen.button,
+                            href: e.target.value,
+                          }
+                        },
+                      })}
+                      placeholder="Copy link"
+                      value={endScreen.button.href}
+                    />
+                  </div>
+                </div>
+                <div className={styles.toolSection}>
+                  <label className={styles.toolLabel}>Email</label>
+                  <InputStyle
+                    dispatchType="CHANGE_END_SCREEN"
+                    object={endScreen}
+                    property="email"
+                  />
+                </div>
+                <div className={styles.toolSection}>
+                  <label className={styles.toolLabel}>Phone</label>
+                  <InputStyle
+                    dispatchType="CHANGE_END_SCREEN"
+                    object={endScreen}
+                    property="phone"
+                  />
+                </div>
+                <Button onClick={saveEndScreen}>Save draft</Button>
+                <Button
+                  onClick={() => showPopup({
+                    display: 'CREATE_END_SCREEN',
+                    data: endScreen,
                   })}
-                  placeholder="Text"
-                  value={endScreen.button.value}
-                />
-                <input
-                  className={styles.toolInput}
-                  onChange={(e) => dispatch({
-                    type: 'CHANGE_END_SCREEN',
-                    data: {
-                      button: {
-                        ...endScreen.button,
-                        href: e.target.value,
-                      }
-                    },
-                  })}
-                  placeholder="Copy link"
-                  value={endScreen.button.href}
-                />
+                  outline={true}
+                  type="div"
+                >
+                  Save as template
+                </Button>
+                <p
+                  onClick={() => showFormEndScreen(false)}
+                  className={styles.endScreenBack}
+                >
+                  Back
+                </p>
               </div>
+              :
+              <div className={styles.toolSection}>
+              {
+                Object.keys(endScreen).length > 1 
+                  ?
+                  <div className={styles.endScreenDraft}>
+                    <div className={styles.endScreenItem}>
+                      <p
+                        onClick={() => {
+                          dispatch({
+                            type: 'SET_PREVIEW_END_SCREEN',
+                            data: {},
+                          })
+                        }}
+                      >
+                        Draft
+                      </p>
+                      <img
+                        src="/assets/campaign/select.svg"
+                        onClick={() => {
+                          dispatch({
+                            type: 'SET_PREVIEW_END_SCREEN',
+                            data: {},
+                          })
+                          showFormEndScreen(true)
+                        }}
+                      />
+                      <img
+                        src="/assets/campaign/delete.svg"
+                        onClick={() => showPopup({ display: 'DELETE_DRAFT_END_SCREEN' })}
+                      />
+                    </div>
+                  </div>
+                  :
+                  <div
+                    className={styles.endScreenAdd}
+                    onClick={() => {
+                      dispatch({ type: 'ADD_END_SCREEN' })
+                      dispatch({
+                        type: 'SET_PREVIEW_END_SCREEN',
+                        data: {},
+                      })
+                      dispatch({ type: 'SET_DURATION' })
+                      showFormEndScreen(true)
+                    }}
+                  >
+                    <img src="/assets/campaign/add.svg" />
+                    <p>Add end screen</p>
+                  </div>  
+              }
+              {
+                endScreenList.length > 0 &&
+                <div className={styles.endScreenTemplates}>
+                  <p>Templates</p>
+                  <div className={styles.endScreenList}>
+                    { 
+                      endScreenList.map((es) => (
+                        <div
+                          key={es._id}
+                          className={styles.endScreenItem}
+                        >
+                          <p
+                            onClick={() => {
+                              dispatch({ type: 'DISPLAY_ELEMENT', data: 'endScreen' })
+                              dispatch({
+                                type: 'SET_PREVIEW_END_SCREEN',
+                                data: es,
+                              })
+                            }}
+                          >
+                            {es.name}
+                          </p>
+                          <img
+                            src="/assets/campaign/select.svg"
+                            onClick={() => {
+                              dispatch({ type: 'DISPLAY_ELEMENT', data: 'endScreen' })
+                              dispatch({
+                                type: 'CHANGE_END_SCREEN',
+                                data: es,
+                              })
+                              dispatch({
+                                type: 'SET_PREVIEW_END_SCREEN',
+                                data: {},
+                              })
+                              showFormEndScreen(true)
+                            }}
+                          />
+                          <img
+                            src="/assets/campaign/delete.svg"
+                            onClick={() => showPopup({
+                              display: 'DELETE_END_SCREEN',
+                              data: es,
+                            })}
+                          />
+                        </div>
+                      ))
+                    }
+                  </div>
+                </div>
+              }
             </div>
-            <div className={styles.toolSection}>
-              <label className={styles.toolLabel}>Email</label>
-              <InputStyle
-                dispatchType="CHANGE_END_SCREEN"
-                object={endScreen}
-                property="email"
-              />
-            </div>
-            <div className={styles.toolSection}>
-              <label className={styles.toolLabel}>Phone</label>
-              <InputStyle
-                dispatchType="CHANGE_END_SCREEN"
-                object={endScreen}
-                property="phone"
-              />
-            </div>
-            <Button onClick={createOrSaveEndScreen}>Save</Button>
-          </div>
+        
+          }
         </div>
       }
 

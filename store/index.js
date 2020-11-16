@@ -9,6 +9,7 @@ import { composeWithDevTools } from 'redux-devtools-extension'
 // Reducers
 import campaign from './reducers/campaign'
 import popup from './reducers/popup'
+import videoPlayer from './reducers/videoPlayer'
 
 let store
 
@@ -17,6 +18,7 @@ function initStore(preloadedState = {}) {
     combineReducers({
       campaign,
       popup,
+      videoPlayer,
     }),
     preloadedState,
     composeWithDevTools(applyMiddleware())

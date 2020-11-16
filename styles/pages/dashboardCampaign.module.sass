@@ -1,0 +1,72 @@
+@import '../_variables'
+
+.dashboardCampaign
+  background: #F3F7F9
+  display: grid
+  grid-template-rows: max-content minmax(0, 1fr) max-content
+  grid-gap: 20px
+  height: 100vh
+
+// HEADER
+.header
+  display: grid
+  grid-gap: 30px
+  grid-template-columns: max-content 1fr max-content
+  padding: 0px 20px
+  padding-top: 20px
+
+.headerMenu
+  background: #fff
+  border-radius: 8px
+  cursor: pointer
+  display: grid
+  height: 80px
+  justify-items: center
+  width: 90px
+  img
+    align-self: flex-end
+  p
+    align-self: flex-start
+    color: $textColorOne
+    font-size: 12px
+    font-weight: 500
+
+.headerVideoTitle
+  input
+    background: transparent
+    border: 0
+    color: $textColorOne
+    font-size: 30px
+    font-weight: 700
+    height: 100%
+    width: max-content
+    &::placeholder
+      color: rgba($textColorTwo, 0.2)
+  img
+    width: 16px
+
+.headerActions
+  display: grid
+  grid-gap: 10px
+  grid-template-columns: repeat(2, 1fr)
+
+  
+// MAIN
+.main
+  display: grid
+  grid-gap: 20px
+  grid-template-columns: auto 1fr
+  padding: 0px 20px
+
+.sidebar
+  display: flex
+  grid-template-columns: 90px 270px
+  overflow-y: hidden
+
+
+// FOOTER
+.footer
+  background: #fff
+  height: 150px
+  padding: 0px 20px
+  z-index: 3

@@ -10,7 +10,7 @@ import Input from '@/components/Input'
 
 import styles from '@/styles/layouts/Auth.module.sass'
 
-const Login = () => {
+const ForgotPassword = () => {
   const [email, setEmail] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -76,4 +76,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default ForgotPassword

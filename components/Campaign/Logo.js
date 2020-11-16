@@ -1,20 +1,16 @@
-import { useSelector } from 'react-redux'
-
 import styles from '@/styles/components/Campaign/Logo.module.sass'
 
-const Logo = () => {
-  const logo = useSelector(state => state.campaign.logo)
-
-  return logo.value
+const Logo = ({ data = {} }) => {
+  return data.value
     ?
       <div
-        className={`${styles.logo} ${styles[logo.placement]}`}
+        className={`${styles.logo} ${styles[data.placement]}`}
         style={{
-          height: logo.size,
-          width: logo.size,
+          height: data.size,
+          width: data.size,
         }}
       >
-        <img src={logo.value} />
+        <img src={data.value} />
       </div>
     :
       null

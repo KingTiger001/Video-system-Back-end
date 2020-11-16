@@ -1,0 +1,106 @@
+@import '../_variables.sass'
+  
+.videoPlayer
+  background: #000
+  border-radius: 8px
+  overflow: hidden
+  user-select: none
+  width: 100%
+
+.player
+  border: 8px solid #333
+  border-bottom: 0
+  border-radius: 8px 8px 0 0
+  overflow: hidden
+  position: relative
+  width: 100%
+
+.controls
+  background: #333
+  display: grid
+  gap: 6px 16px
+  grid-template-columns: auto auto auto 1fr
+  padding: 0 16px
+  padding-bottom: 8px
+
+.playPause
+  align-self: center
+  cursor: pointer
+  height: 20px
+
+.timeline
+  align-content: center
+  display: grid
+  cursor: pointer
+  grid-column-start: 1
+  grid-column-end: 5
+  grid-row: 1
+  height: 18px
+  position: relative
+  &:hover
+    .timelineDuration
+      height: 6px
+    .timelineProgression
+      &:after
+        height: 14px
+        width: 14px
+.timelineDuration
+  background: rgba(#fff, 0.3)
+  border-radius: 8px
+  height: 4px
+  position: absolute
+  bottom: 4px
+  transition: all .1s ease-out
+  width: 100%
+.timelineProgression
+  background: $primaryColor
+  border-radius: 8px 0 0 8px
+  height: 100%
+  left: 0
+  position: absolute
+  top: 0
+  &:after
+    background: $primaryColor
+    border-radius: 50%
+    content: ''
+    height: 0px
+    position: absolute
+    left: calc(100% - 7px)
+    top: 50%
+    transform: translateY(-50%)
+    width: 0px
+
+.volume
+  align-self: center
+  display: grid
+  grid-gap: 8px
+  grid-template-columns: 24px auto
+.volumeIcon
+  cursor: pointer
+  img
+    display: block
+.volumeBar
+  cursor: pointer
+  height: 100%
+  position: relative
+  width: 80px
+.volumeTotal
+  background: rgba(#fff, 0.3)
+  border-radius: 8px
+  height: 4px
+  position: absolute
+  top: 50%
+  transform: translateY(-50%)
+  width: 100%
+.volumeAmount
+  background: #fff
+  border-radius: 8px
+  height: 100%
+  left: 0
+  position: absolute
+  top: 0
+
+.progression
+  align-self: center
+  color: #fff
+    

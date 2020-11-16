@@ -187,7 +187,57 @@
 .toolEndScreen
   padding: 20px
   button
+    margin-bottom: 10px
     width: 100%
+
+.endScreenDraft
+  margin-bottom: 20px
+
+.endScreenList
+  display: grid
+  grid-gap: 12px
+  margin-bottom: 20px
+
+.endScreenTemplates
+  & > p
+    color: $textColorOne
+    font-size: 14px
+    font-weight: 500
+    margin-bottom: 8px
+
+.endScreenItem
+  align-items: center
+  border: 1px solid rgba(90, 113, 132, 0.2)
+  border-radius: 2px
+  display: grid
+  grid-template-columns: 1fr repeat(2, 20px)
+  grid-gap: 4px
+  padding: 10px
+  img
+    cursor: pointer
+    width: 20px
+  p
+    cursor: pointer
+
+.endScreenAdd
+  align-items: center
+  cursor: pointer
+  display: grid
+  grid-gap: 5px
+  grid-template-columns: 20px 1fr
+  p
+    color: $textColorTwo
+    font-size: 14px
+    font-weight: 500
+    line-height: 13px
+
+.endScreenBack
+  color: $textColorTwo
+  cursor: pointer
+  font-size: 14px
+  letter-spacing: 0.2px
+  margin-top: 20px
+  text-align: center
 
 .toolLogo
   padding: 20px
