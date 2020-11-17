@@ -42,6 +42,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         volume: action.data,
       }
+    case 'videoPlayer/SET_VOLUME_MUTED':
+      return {
+        ...state,
+        volumeMuted: action.data,
+      }
     case 'videoPlayer/SET_VIDEO_SEEKING':
       return {
         ...state,

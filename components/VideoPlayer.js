@@ -24,7 +24,7 @@ const VideoPlayer = ({ data }) => {
   const videoSeeking = useSelector(state => state.videoPlayer.videoSeeking)
   const volume = useSelector(state => state.videoPlayer.volume)
   const volumeDraggable = useSelector(state => state.videoPlayer.volumeDraggable)
-  const volumeMuted = useSelector(state => state.videoPlayer.volumeDraggable)
+  const volumeMuted = useSelector(state => state.videoPlayer.volumeMuted)
 
   const playerRef = useRef()
   const timelineRef = useRef()
@@ -116,14 +116,37 @@ const VideoPlayer = ({ data }) => {
     const rect = volumeRef.current.getBoundingClientRect()
     const position = e.clientX - rect.left
     const volume = position / volumeRef.current.offsetWidth
-    dispatch({ type: 'videoPlayer/SET_VOLUME', data: volume })
+    const volumeFormatted = volume < 0 ? 0 : volume > 1 ? 1 : volume
+    dispatch({ type: 'videoPlayer/SET_VOLUME', data: volumeFormatted })
     if (Object.keys(videoRef).length > 0) {
-      videoRef.volume = volume < 0 ? 0 : volume > 1 ? 1 : volume
+      videoRef.volume = volumeFormatted
+    }
+  }
+
+  const toggleMute = () => {
+    if (volume > 0 && !volumeMuted) {
+      dispatch({ type: 'videoPlayer/SET_VOLUME_MUTED', data: true })
+      videoRef.volume = 0
+    } else if (volume <= 0 && !volumeMuted) {
+      dispatch({ type: 'videoPlayer/SET_VOLUME', data: 100 })
+    } else if (volumeMuted) {
+      dispatch({ type: 'videoPlayer/SET_VOLUME_MUTED', data: false })
+      videoRef.volume = volume
     }
   }
 
   return (
-    <div className={styles.videoPlayer}>
+    <div
+      className={styles.videoPlayer}
+      onMouseUp={() => {
+        dispatch({ type: 'videoPlayer/TIMELINE_DRAGGABLE', data: false })
+        dispatch({ type: 'videoPlayer/VOLUME_DRAGGABLE', data: false })
+      }}
+      onMouseMove={(e) => {
+        timelineDraggable && seekTo(e)
+        volumeDraggable && setVolume(e)
+      }}
+    >
       <div
         className={styles.player}
         onClick={async () => {
@@ -131,14 +154,6 @@ const VideoPlayer = ({ data }) => {
           if (progression > helloScreen.duration && progression < duration - endScreen.duration) {
             isPlaying ? videoRef.pause() : videoRef.play()
           }
-        }}
-        onMouseUp={() => {
-          dispatch({ type: 'videoPlayer/TIMELINE_DRAGGABLE', data: false })
-          dispatch({ type: 'videoPlayer/VOLUME_DRAGGABLE', data: false })
-        }}
-        onMouseMove={(e) => {
-          timelineDraggable && seekTo(e)
-          volumeDraggable && setVolume(e)
         }}
         ref={playerRef}
         style={{ height }}
@@ -185,25 +200,27 @@ const VideoPlayer = ({ data }) => {
           }}
           src={isPlaying ? '/assets/video/pause.svg' : '/assets/video/play.svg'}
         />
-        <div
-          className={styles.volume}
-          onMouseDown={(e) => dispatch({ type: 'videoPlayer/VOLUME_DRAGGABLE', data: true })}
-          onMouseUp={(e) => dispatch({ type: 'videoPlayer/VOLUME_DRAGGABLE', data: false })}
-          onMouseMove={(e) => volumeDraggable && setVolume(e)}
-        >
-          <div className={styles.volumeIcon}>
-            <img src="/assets/video/volumeHigh.svg" />
-            {/* <img src="/assets/video/volumeLow.svg" />
-            <img src="/assets/video/volumeOff.svg" /> */}
+        <div className={styles.volume}>
+          <div
+            className={styles.volumeIcon}
+            onClick={toggleMute}
+          >
+            {volume > 0.2 && !volumeMuted && <img src="/assets/video/volumeHigh.svg" />}
+            {volume <= 0.2 && volume > 0 && !volumeMuted && <img src="/assets/video/volumeLow.svg" />}
+            {(volume <= 0 || volumeMuted) && <img src="/assets/video/volumeOff.svg" />}
           </div>
           <div
             className={styles.volumeBar}
+            onClick={(e) => setVolume(e)}
+            onMouseDown={(e) => dispatch({ type: 'videoPlayer/VOLUME_DRAGGABLE', data: true })}
+            onMouseUp={(e) => dispatch({ type: 'videoPlayer/VOLUME_DRAGGABLE', data: false })}
+            onMouseMove={(e) => volumeDraggable && setVolume(e)}
             ref={volumeRef}
           >
             <div className={styles.volumeTotal}>
               <div
                 className={styles.volumeAmount}
-                style={{ width: `${volume * 100}%` }}
+                style={{ width: `${volumeMuted ? 0 : volume * 100}%` }}
               />
             </div>
           </div>
