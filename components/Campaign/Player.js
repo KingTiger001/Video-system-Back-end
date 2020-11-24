@@ -18,6 +18,7 @@ const Player = () => {
   const duration = useSelector(state => state.campaign.duration)
   const helloScreen = useSelector(state => state.campaign.helloScreen)
   const isPlaying = useSelector(state => state.campaign.isPlaying)
+  const logo = useSelector(state => state.campaign.logo)
   const preview = useSelector(state => state.campaign.preview)
   const previewEndScreen = useSelector(state => state.campaign.previewEndScreen)
   const previewHelloScreen = useSelector(state => state.campaign.previewHelloScreen)

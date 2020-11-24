@@ -11,7 +11,7 @@ import Logo from '@/components/Campaign/Logo'
 
 import styles from '@/styles/components/VideoPlayer.module.sass'
 
-const VideoPlayer = ({ data }) => {
+const VideoPlayer = ({ data = {} }) => {
   const dispatch = useDispatch()
 
   const { endScreen, helloScreen, logo, video } = data
@@ -198,7 +198,7 @@ const VideoPlayer = ({ data }) => {
               isPlaying ? videoRef.pause() : videoRef.play()
             }
           }}
-          src={isPlaying ? '/assets/video/pause.svg' : '/assets/video/play.svg'}
+          src={isPlaying ? '/assets/video/pauseW.svg' : '/assets/video/playW.svg'}
         />
         <div className={styles.volume}>
           <div

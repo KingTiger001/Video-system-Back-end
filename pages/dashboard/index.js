@@ -28,7 +28,7 @@ const Dashboard = ({ initialCampaigns, user }) => {
 
   const createCampaign = async () => {
     const { data: campaign } = await mainAPI.post('/campaigns')
-    router.push(`/campaigns/${campaign._id}`)
+    router.push(`/dashboard/campaigns/${campaign._id}`)
   }
 
   const getCampaigns = async () => {
