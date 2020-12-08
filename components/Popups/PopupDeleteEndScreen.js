@@ -8,7 +8,7 @@ import Popup from './Popup'
 
 import styles from '@/styles/components/Popups/Popup.module.sass'
 
-const PopupDeleteHelloScreen = ({ onDone }) => {
+const PopupDeleteEndScreen = ({ onDone }) => {
   const dispatch = useDispatch()
   const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
 
@@ -16,12 +16,12 @@ const PopupDeleteHelloScreen = ({ onDone }) => {
 
   const popup = useSelector(state => state.popup)
 
-  const deleteHelloScreen = async (e) => {
+  const deleteEndScreen = async (e) => {
     e.preventDefault()
     if (!loading) {
       try {
         setLoading(true)
-        await mainAPI.delete(`/helloScreens/${popup.data._id}`)
+        await mainAPI.delete(`/endScreens/${popup.data._id}`)
         onDone()
       } catch (err) {
         setLoading(false)
@@ -32,9 +32,9 @@ const PopupDeleteHelloScreen = ({ onDone }) => {
 
   return (
     <Popup
-      title="Delete a hello screen"
+      title="Delete a end screen"
     >
-      <p>Are you sure you want to delete this hello screen?</p>
+      <p>Are you sure you want to delete this end screen?</p>
       <div className={styles.actions}>
         <Button
           outline={true}
@@ -43,7 +43,7 @@ const PopupDeleteHelloScreen = ({ onDone }) => {
           Cancel
         </Button>
         <Button
-          onClick={deleteHelloScreen}
+          onClick={deleteEndScreen}
           loading={loading}
         >
           Confirm
@@ -53,4 +53,4 @@ const PopupDeleteHelloScreen = ({ onDone }) => {
   )
 }
 
-export default PopupDeleteHelloScreen
+export default PopupDeleteEndScreen

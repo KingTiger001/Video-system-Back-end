@@ -20,14 +20,41 @@
 .toolSection
   margin-bottom: 15px
 
-.toolName
+.toolTitle
   color: $textColorOne
   font-size: 18px
+  font-weight: 900
+  margin-bottom: 24px
+  position: relative
+  &:after
+    background: $primaryColor
+    content: ''
+    height: 2px
+    left: 0
+    top: calc(100% + 5px)
+    position: absolute
+    width: 55px
+
+.toolSubtitle
+  align-items: center
+  color: $textColorOne
+  display: grid
+  font-size: 16px
   font-weight: 700
-  margin-bottom: 20px
+  grid-gap: 8px
+  grid-template-columns: 4px 1fr
+  line-height: 16px
+  margin-bottom: 16px
+  &:before
+    background: $primaryColor
+    border-radius: 50%
+    content: ''
+    height: 4px
+    width: 4px
+    
 
 .toolLabel
-  color: $textColorTwo
+  color: $textColorThree
   display: block
   font-size: 14px
   line-height: 13px
@@ -49,6 +76,68 @@
   grid-gap: 10px
   grid-template-columns: repeat(2, 1fr)
 
+.toolLibrary
+  display: grid
+  grid-gap: 12px
+  margin-bottom: 20px
+
+.toolLibraryItem
+  align-items: center
+  background: #F7F8FB
+  border-radius: 4px
+  display: grid
+  gap: 2px 4px
+  grid-template-columns: 1fr repeat(2, 25px)
+  padding: 12px
+  img
+    cursor: pointer
+    width: 20px
+
+.toolLibraryItemName
+  font-size: 12px
+  font-weight: 500
+
+.toolLibraryItemEdit
+  cursor: pointer
+  display: grid
+  justify-items: center
+  img
+    height: 16px
+    margin-bottom: 2px
+  p
+    color: $secondaryColor
+    font-size: 8px
+    font-weight: 500
+
+.toolLibraryItemDelete
+  cursor: pointer
+  display: grid
+  justify-items: center
+  img
+    height: 16px
+    margin-bottom: 2px
+  p
+    color: #D83B3B
+    font-size: 8px
+    font-weight: 500
+
+.toolLibraryEmptyText
+  color: #B3BAC5
+  font-size: 12px
+  font-weight: 500
+  line-height: 18px
+  letter-spacing: 0.2px
+
+.toolDraftItem
+  @extend .toolLibraryItem
+  background: #F0EEFC
+  margin-bottom: 32px
+
+.toolDraftItemName
+  @extend .toolLibraryItemName
+  color: $primaryColor
+
+// Tool "Record"
 .toolRecord
   align-content: center
   display: grid
@@ -65,7 +154,7 @@
     line-height: 25px
     margin-bottom: 15px
   .toolRecordText
-    color: $textColorTwo
+    color: $textColorThree
     font-size: 13px
     line-height: 18px
     margin-bottom: 20px
@@ -74,6 +163,7 @@
     margin-top: 10px
     width: 150px
 
+// Tool "Add video"
 .toolVideos
   display: grid
   grid-auto-rows: max-content
@@ -108,12 +198,12 @@
   grid-row: 1
 
 .videosItemStatus
-  color: $textColorTwo
+  color: $textColorThree
   font-size: 12px
   grid-column: 1
   grid-row: 2
   &.waiting
-    color: $textColorTwo
+    color: $textColorThree
     font-style: italic
   &.processing
     color: #fbc531
@@ -129,40 +219,12 @@
   justify-self: flex-end
   width: 20px
 
+// Tool "First Screen"
 .toolHelloScreen
   padding: 20px
   button
     margin-bottom: 10px
     width: 100%
-
-.helloScreenDraft
-  margin-bottom: 20px
-
-.helloScreenList
-  display: grid
-  grid-gap: 12px
-  margin-bottom: 20px
-
-.helloScreenTemplates
-  & > p
-    color: $textColorOne
-    font-size: 14px
-    font-weight: 500
-    margin-bottom: 8px
-
-.helloScreenItem
-  align-items: center
-  border: 1px solid rgba(90, 113, 132, 0.2)
-  border-radius: 2px
-  display: grid
-  grid-template-columns: 1fr repeat(2, 20px)
-  grid-gap: 4px
-  padding: 10px
-  img
-    cursor: pointer
-    width: 20px
-  p
-    cursor: pointer
 
 .helloScreenAdd
   align-items: center
@@ -170,20 +232,21 @@
   display: grid
   grid-gap: 5px
   grid-template-columns: 20px 1fr
+  margin-bottom: 32px
   p
-    color: $textColorTwo
+    color: $textColorThree
     font-size: 14px
     font-weight: 500
     line-height: 13px
 
 .helloScreenBack
-  color: $textColorTwo
+  color: $textColorThree
   cursor: pointer
-  font-size: 14px
+  font-size: 11px
   letter-spacing: 0.2px
-  margin-top: 20px
-  text-align: center
+  margin-bottom: 6px
 
+// Tool "End Screen"
 .toolEndScreen
   padding: 20px
   button
@@ -226,13 +289,13 @@
   grid-gap: 5px
   grid-template-columns: 20px 1fr
   p
-    color: $textColorTwo
+    color: $textColorThree
     font-size: 14px
     font-weight: 500
     line-height: 13px
 
 .endScreenBack
-  color: $textColorTwo
+  color: $textColorThree
   cursor: pointer
   font-size: 14px
   letter-spacing: 0.2px

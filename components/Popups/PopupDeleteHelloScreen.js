@@ -8,7 +8,7 @@ import Popup from './Popup'
 
 import styles from '@/styles/components/Popups/Popup.module.sass'
 
-const PopupDeleteEndScreen = ({ onDone }) => {
+const PopupDeleteHelloScreen = ({ onDone }) => {
   const dispatch = useDispatch()
   const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
 
@@ -16,12 +16,12 @@ const PopupDeleteEndScreen = ({ onDone }) => {
 
   const popup = useSelector(state => state.popup)
 
-  const deleteEndScreen = async (e) => {
+  const deleteHelloScreen = async (e) => {
     e.preventDefault()
     if (!loading) {
       try {
         setLoading(true)
-        await mainAPI.delete(`/endScreens/${popup.data._id}`)
+        await mainAPI.delete(`/helloScreens/${popup.data._id}`)
         onDone()
       } catch (err) {
         setLoading(false)
@@ -32,9 +32,9 @@ const PopupDeleteEndScreen = ({ onDone }) => {
 
   return (
     <Popup
-      title="Delete a end screen"
+      title="Delete a frist screen"
     >
-      <p>Are you sure you want to delete this end screen?</p>
+      <p>Are you sure you want to delete this first screen?</p>
       <div className={styles.actions}>
         <Button
           outline={true}
@@ -43,7 +43,7 @@ const PopupDeleteEndScreen = ({ onDone }) => {
           Cancel
         </Button>
         <Button
-          onClick={deleteEndScreen}
+          onClick={deleteHelloScreen}
           loading={loading}
         >
           Confirm
@@ -53,4 +53,4 @@ const PopupDeleteEndScreen = ({ onDone }) => {
   )
 }
 
-export default PopupDeleteEndScreen
+export default PopupDeleteHelloScreen

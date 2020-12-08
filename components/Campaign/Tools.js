@@ -34,20 +34,20 @@ const Tools = () => {
         }}
       >
         <img src="/assets/campaign/toolVideos.svg" />
-        <p>Videos</p>
+        <p>Add video</p>
       </li>
       <li
         className={`${styles.tool} ${tool === 3 ? styles.toolSelected : ''}`}
         onClick={() => selectTool(3, 'helloScreen')}
       >
-        <img src="/assets/campaign/toolElement.svg" />
-        <p>Hello Screen</p>
+        <img src="/assets/campaign/toolFirstScreen.svg" />
+        <p>First Screen</p>
       </li>
       <li
         className={`${styles.tool} ${tool === 4 ? styles.toolSelected : ''}`}
         onClick={() => selectTool(4, 'endScreen')}
       >
-        <img src="/assets/campaign/toolElement.svg" />
+        <img src="/assets/campaign/toolEndScreen.svg" />
         <p>End Screen</p>
       </li>
       <li
@@ -55,7 +55,7 @@ const Tools = () => {
         onClick={() => selectTool(5, 'logo')}
       >
         <img src="/assets/campaign/toolLogo.svg" />
-        <p>Logo</p>
+        <p>Add logo</p>
       </li>
     </ul>
   )

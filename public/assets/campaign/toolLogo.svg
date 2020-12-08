@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>343FD518-5FC7-4BD8-B9AA-DBE19340DF01</title>
-    <g id="ALL" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="_VIDEO-EDIT-MENU-FERMÉ" transform="translate(-53.000000, -280.000000)">
-            <g id="SidebarVideo/Closed" transform="translate(20.000000, 120.000000)">
-                <g id="Outlined-/-Editor-/-insert_photo" transform="translate(33.000000, 160.000000)">
-                    <polygon id="Path" points="0 0 24 0 24 24 0 24"></polygon>
-                    <path d="M19,5 L19,19 L5,19 L5,5 L19,5 L19,5 Z M19,3 L5,3 C3.9,3 3,3.9 3,5 L3,19 C3,20.1 3.9,21 5,21 L19,21 C20.1,21 21,20.1 21,19 L21,5 C21,3.9 20.1,3 19,3 Z M14.14,11.86 L11.14,15.73 L9,13.14 L6,17 L18,17 L14.14,11.86 Z" id="🔹-Icon-Color" fill="#1D1D1D"></path>
+    <title>7D4BAE06-4ED1-45C3-A512-B4D100436B1F</title>
+    <g id="V2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="_VIDEO/-FIRST-SCREEN-/-CREATE" transform="translate(-53.000000, -460.000000)">
+            <g id="SidebarVideo/Record" transform="translate(20.000000, 120.000000)">
+                <g id="Group-3-Copy" transform="translate(0.000000, 330.000000)">
+                    <g id="Group-8" transform="translate(33.000000, 10.000000)">
+                        <polygon id="Path" points="0 0 24 0 24 24 0 24"></polygon>
+                        <path d="M21,3 L3,3 C1.9,3 1,3.9 1,5 L1,19 C1,20.1 1.9,21 3,21 L21,21 C22.1,21 23,20.1 23,19 L23,5 C23,3.9 22.1,3 21,3 Z M20,5 C20.55,5 21,5.45 21,6 L21,18 C21,18.55 20.55,19 20,19 L4,19 C3.45,19 3,18.55 3,18 L3,6 C3,5.45 3.45,5 4,5 L20,5 Z M14.8533333,11 L10.8533333,16.270428 L8,12.7431907 L4,18 L20,18 L14.8533333,11 Z" id="🔹Icon-Color" fill="#1D1D1D"></path>
+                    </g>
                 </g>
             </g>
         </g>

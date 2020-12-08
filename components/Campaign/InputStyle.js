@@ -40,7 +40,7 @@ const InputStyle = ({ dispatchType, object, property }) => {
               }
             },
           })}
-          src="/assets/campaign/edit.svg"
+          src="/assets/campaign/pen.svg"
           style={{ display: object[property].displayOptions ? 'block' : '' }}
         />
       </div>

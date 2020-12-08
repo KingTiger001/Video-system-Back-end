@@ -1,6 +1,7 @@
 const defaultHelloScreen = {
   background: '#000',
   duration: 10000,
+  name: 'Draft',
   title: {
     color: '#fff',
     displayOptions: false,
@@ -26,6 +27,7 @@ const defaultHelloScreen = {
 const defaultEndScreen = {
   background: '#000',
   duration: 10000,
+  name: 'Draft',
   title: {
     color: '#fff',
     displayOptions: false,

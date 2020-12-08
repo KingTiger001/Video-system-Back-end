@@ -149,7 +149,7 @@ const Campaign = ({ user }) => {
             value={name}
           />
           <img
-            src="/assets/campaign/edit.svg"
+            src="/assets/campaign/pen.svg"
           />
         </div>
         <div className={styles.headerActions}>

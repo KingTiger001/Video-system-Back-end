@@ -10,7 +10,7 @@ const PopupDeleteDraftHelloScreen = ({ onConfirm }) => {
   const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
 
   return (
-    <Popup title="Delete hello screen draft">
+    <Popup title="Delete first screen">
       <p>Are you sure ? All of your modifications will be deleted.</p>
       <div className={styles.actions}>
         <Button
