@@ -6,6 +6,7 @@ import { toast } from 'react-toastify'
 import { mainAPI } from '@/plugins/axios'
 
 import Button from '@/components/Button'
+import InputNumber from '@/components/InputNumber'
 import InputStyle from '@/components/Campaign/InputStyle'
 import PopupDeleteEndScreen from '@/components/Popups/PopupDeleteEndScreen'
 import PopupDeleteDraftEndScreen from '@/components/Popups/PopupDeleteDraftEndScreen'
@@ -24,6 +25,7 @@ const ToolEndScreen = ({ saveCampaign }) => {
   const preview = useSelector(state => state.campaign.preview)
 
   const [displayFormEndScreen, showFormEndScreen] = useState(false)
+  const [error, setError] = useState('')
 
   const addEndScreenToLibrary = async () => {
     try {
@@ -37,6 +39,12 @@ const ToolEndScreen = ({ saveCampaign }) => {
     }
   }
 
+  const checkFormErrors = () => {
+    if (!endScreen.duration) {
+      throw new Error('A duration must be set.')
+    }
+  }
+
   const getEndScreenList = async () => {
     const { data } = await mainAPI.get('/users/me/endScreens')
     dispatch({
@@ -46,8 +54,13 @@ const ToolEndScreen = ({ saveCampaign }) => {
   }
 
   const saveEndScreen = async () => {
-    await saveCampaign()
-    toast.success('End screen saved.')
+    try {
+      await checkFormErrors()
+      await saveCampaign()
+      toast.success('End screen saved.')
+    } catch (err) {
+      setError(err.message)
+    }
   }
 
   return tool === 4 && (
@@ -100,8 +113,7 @@ const ToolEndScreen = ({ saveCampaign }) => {
                 value={endScreen.name}
                 required
               />
-            </div>
-          
+            </div>    
             <div className={styles.toolSection}>
               <label className={styles.toolLabel}>Background</label>
               <ChromePicker
@@ -132,6 +144,8 @@ const ToolEndScreen = ({ saveCampaign }) => {
                 property="subtitle"
               />
             </div>
+
+            <p className={styles.toolSubtitle}>Add link & more info</p>
             <div className={styles.toolSection}>
               <label className={styles.toolLabel}>Link Button</label>
               <div className={styles.toolInputGrid}>
@@ -181,6 +195,24 @@ const ToolEndScreen = ({ saveCampaign }) => {
                 property="phone"
               />
             </div>
+            <div className={styles.toolSection}>
+              <label className={styles.toolLabel}>Duration (in seconds)</label>
+              <InputNumber
+                className={styles.toolInput}
+                initialValue={endScreen.duration / 1000}
+                onChange={(value) => {
+                  dispatch({
+                    type: 'CHANGE_END_SCREEN',
+                    data: {
+                      duration: parseFloat(value * 1000, 10)
+                    },
+                  })
+                  dispatch({ type: 'CALC_DURATION' })
+                }}
+                max={10}
+              />
+            </div>
+            {error && <p className={styles.error}>{error}</p>}
             <Button onClick={saveEndScreen}>Save changes</Button>
             <Button
               onClick={addEndScreenToLibrary}
@@ -201,7 +233,7 @@ const ToolEndScreen = ({ saveCampaign }) => {
                   type: 'SET_PREVIEW_END_SCREEN',
                   data: {},
                 })
-                dispatch({ type: 'SET_DURATION' })
+                dispatch({ type: 'CALC_DURATION' })
                 showFormEndScreen(true)
               }}
             >

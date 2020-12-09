@@ -209,7 +209,7 @@ export const getServerSideProps = withAuthServerSideProps(async ({ params }, use
       type: 'SET_CAMPAIGN',
       data: campaign,
     })
-    dispatch({ type: 'SET_DURATION' })
+    dispatch({ type: 'CALC_DURATION' })
   } catch (err) {
     console.log(err)
   }

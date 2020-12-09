@@ -46,10 +46,15 @@ const ToolLogo = ({ saveCampaign }) => {
         },
       })
     } catch (err) {
-      console.log(err)
-      setError('Upload fail.')
+      const code = err.response && err.response.data
+      if (code === 'Upload.incorrectFiletype') {
+        setError('Only .jpg and .png images are accepted.')
+      } else {
+        setError('Upload failed.')
+      }
     } finally {
       setUploadloading(false)
+      setTimeout(() => setError(''), 5000)
     }
   }
 
@@ -83,7 +88,7 @@ const ToolLogo = ({ saveCampaign }) => {
           onChange={(e) => uploadLogo(e.target.files[0])}
           className={styles.logoInput}
         />
-        { error && <p className={styles.logoError}>{error}</p> }
+        { error && <p className={styles.error}>{error}</p> }
       </div>
       <div className={styles.toolSection}>
         <label className={styles.toolLabel}>Size</label>

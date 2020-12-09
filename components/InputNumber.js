@@ -1,8 +1,11 @@
 import styles from '@/styles/components/Input.module.sass'
 
-const InputNumber = ({ initialValue, onChange, ...props }) => {
+const InputNumber = ({ initialValue, onChange, max, ...props }) => {
   const filterChars = (e) => {
-    const value = e.target.value.trim().replace(',', '.').replace(/[^0-9.]/g, '')
+    let value = e.target.value.trim().replace(',', '.').replace(/[^0-9.]/g, '')
+    if (value > max) {
+      value = max
+    }
     onChange(value)
     e.target.value = value || ''
   }

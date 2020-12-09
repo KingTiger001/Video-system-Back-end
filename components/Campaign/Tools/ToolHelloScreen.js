@@ -6,6 +6,7 @@ import { toast } from 'react-toastify'
 import { mainAPI } from '@/plugins/axios'
 
 import Button from '@/components/Button'
+import InputNumber from '@/components/InputNumber'
 import InputStyle from '@/components/Campaign/InputStyle'
 import PopupDeleteHelloScreen from '@/components/Popups/PopupDeleteHelloScreen'
 import PopupDeleteDraftHelloScreen from '@/components/Popups/PopupDeleteDraftHelloScreen'
@@ -24,6 +25,7 @@ const ToolHelloScreen = ({ saveCampaign }) => {
   const preview = useSelector(state => state.campaign.preview)
 
   const [displayFormHelloScreen, showFormHelloScreen] = useState(false)
+  const [error, setError] = useState('')
 
   const addHelloScreenToLibrary = async () => {
     try {
@@ -37,6 +39,12 @@ const ToolHelloScreen = ({ saveCampaign }) => {
     }
   }
 
+  const checkFormErrors = () => {
+    if (!helloScreen.duration) {
+      throw new Error('A duration must be set.')
+    }
+  }
+
   const getHelloScreenList = async () => {
     const { data } = await mainAPI.get('/users/me/helloScreens')
     dispatch({
@@ -46,8 +54,13 @@ const ToolHelloScreen = ({ saveCampaign }) => {
   }
 
   const saveHelloScreen = async () => {
-    await saveCampaign()
-    toast.success('First screen saved.')
+    try {
+      await checkFormErrors()
+      await saveCampaign()
+      toast.success('First screen saved.')
+    } catch (err) {
+      setError(err.message)
+    }
   }
 
   return tool === 3 && (
@@ -132,6 +145,24 @@ const ToolHelloScreen = ({ saveCampaign }) => {
                 property="subtitle"
               />
             </div>
+            <div className={styles.toolSection}>
+              <label className={styles.toolLabel}>Duration (in seconds)</label>
+              <InputNumber
+                className={styles.toolInput}
+                initialValue={helloScreen.duration / 1000}
+                onChange={(value) => {
+                  dispatch({
+                    type: 'CHANGE_HELLO_SCREEN',
+                    data: {
+                      duration: parseFloat(value * 1000, 10)
+                    },
+                  })
+                  dispatch({ type: 'CALC_DURATION' })
+                }}
+                max={10}
+              />
+            </div>
+            {error && <p className={styles.error}>{error}</p>}
             <Button onClick={saveHelloScreen}>Save changes</Button>
             <Button
               onClick={addHelloScreenToLibrary}
@@ -152,7 +183,7 @@ const ToolHelloScreen = ({ saveCampaign }) => {
                   type: 'SET_PREVIEW_HELLO_SCREEN',
                   data: {},
                 })
-                dispatch({ type: 'SET_DURATION' })
+                dispatch({ type: 'CALC_DURATION' })
                 showFormHelloScreen(true)
               }}
             >

@@ -375,7 +375,7 @@ const ToolBox = ({ saveCampaign }) => {
                       type: 'SET_PREVIEW_HELLO_SCREEN',
                       data: {},
                     })
-                    dispatch({ type: 'SET_DURATION' })
+                    dispatch({ type: 'CALC_DURATION' })
                     showFormHelloScreen(true)
                   }}
                 >
@@ -619,7 +619,7 @@ const ToolBox = ({ saveCampaign }) => {
                       type: 'SET_PREVIEW_END_SCREEN',
                       data: {},
                     })
-                    dispatch({ type: 'SET_DURATION' })
+                    dispatch({ type: 'CALC_DURATION' })
                     showFormEndScreen(true)
                   }}
                 >

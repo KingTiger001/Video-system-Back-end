@@ -52,21 +52,21 @@ const Tools = ({ saveCampaign }) => {
           className={`${styles.tool} ${tool === 3 ? styles.toolSelected : ''}`}
           onClick={() => selectTool(3, 'helloScreen')}
         >
-          <img src="/assets/campaign/toolFirstScreen.svg" />
+          <img src={`/assets/campaign/${tool === 3 ? 'toolFirstScreenSelected' : 'toolFirstScreen'}.svg`} />
           <p>First Screen</p>
         </li>
         <li
           className={`${styles.tool} ${tool === 4 ? styles.toolSelected : ''}`}
           onClick={() => selectTool(4, 'endScreen')}
         >
-          <img src="/assets/campaign/toolEndScreen.svg" />
+          <img src={`/assets/campaign/${tool === 4 ? 'toolEndScreenSelected' : 'toolEndScreen'}.svg`} />
           <p>End Screen</p>
         </li>
         <li
           className={`${styles.tool} ${tool === 5 ? styles.toolSelected : ''}`}
           onClick={() => selectTool(5, 'logo')}
         >
-          <img src="/assets/campaign/toolLogo.svg" />
+          <img src={`/assets/campaign/${tool === 5 ? 'toolLogoSelected' : 'toolLogo'}.svg`} />
           <p>Add logo</p>
         </li>
       </ul>

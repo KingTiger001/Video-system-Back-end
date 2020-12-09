@@ -4,6 +4,12 @@
   display: grid
   grid-auto-flow: column
   grid-gap: 4px
+  min-height: 0
+
+.error
+  color: red
+  font-size: 13px
+  margin-bottom: 16px
 
 /**
   *
@@ -104,6 +110,7 @@
   grid-template-columns: 4px 1fr
   line-height: 16px
   margin-bottom: 16px
+  padding-top: 8px
   &:before
     background: $primaryColor
     border-radius: 50%
@@ -141,7 +148,7 @@
   display: grid
   grid-gap: 5px
   grid-template-columns: 20px 1fr
-  margin-bottom: 32px
+  margin-bottom: 24px
   p
     color: $textColorThree
     font-size: 14px
@@ -210,7 +217,7 @@
 .toolDraftItem
   @extend .toolLibraryItem
   background: #F0EEFC
-  margin-bottom: 32px
+  margin-bottom: 16px
 
 .toolDraftItemName
   @extend .toolLibraryItemName
@@ -297,6 +304,8 @@
 // Tool "Logo" 
 .toolLogo
   padding: 20px
+  .error
+    margin-bottom: 0
   button
     width: 100%
 
@@ -306,6 +315,7 @@
   cursor: pointer
   display: block
   height: 100px
+  margin-bottom: 8px
   overflow: hidden
   position: relative
   width: 100px
@@ -327,12 +337,6 @@
       width: 30px
   .image
     width: 100%
-
-.logoError
-  color: red
-  font-size: 12px
-  margin-top: 8px
-
 @keyframes rotating
   from 
     transform: rotate(0deg)

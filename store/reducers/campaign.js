@@ -195,7 +195,7 @@ const reducer = (state = initialState, action) => {
         name: action.data.name,
         video: action.data.video || {},
       }
-    case 'SET_DURATION':
+    case 'CALC_DURATION':
       const { endScreen, helloScreen, video } = state
       return {
         ...state,
