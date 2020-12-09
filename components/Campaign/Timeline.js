@@ -53,7 +53,7 @@ const Timeline = () => {
       />
       { helloScreen.duration > 0 &&
         <div className={styles.helloScreen}>
-          <p>Hello<br/>Screen</p>
+          <p>First<br/>Screen</p>
         </div>
       }
       { Object.keys(video).length > 0 &&

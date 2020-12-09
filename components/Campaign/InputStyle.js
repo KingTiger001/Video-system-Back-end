@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import TextStyle from '@/components/Campaign/TextStyle'
 
 import styles from '@/styles/components/Campaign/InputStyle.module.sass'
-import toolBoxStyles from '@/styles/components/Campaign/ToolBox.module.sass'
+import toolsStyles from '@/styles/components/Campaign/Tools.module.sass'
 
 const InputStyle = ({ dispatchType, object, property }) => {
   const dispatch = useDispatch()
@@ -12,7 +12,7 @@ const InputStyle = ({ dispatchType, object, property }) => {
     <div className={styles.inputStyle}>
       <div className={styles.inputStyleInput}>
         <input
-          className={toolBoxStyles.toolInput}
+          className={toolsStyles.toolInput}
           onChange={(e) => {
             dispatch({
               type: dispatchType,

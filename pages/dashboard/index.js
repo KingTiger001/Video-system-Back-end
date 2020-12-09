@@ -99,9 +99,6 @@ const Dashboard = ({ initialCampaigns, user }) => {
                         <p>{dayjs(campaign.createdAt).format('MM/DD/YYYY')}</p>
                         <p>-</p>
                         <div className={styles.campaignsItemActions}>
-                          <Link href={`/campaigns/${campaign._id}`}>
-                            <a className={styles.action}>See</a>
-                          </Link>
                           <Link href={`/dashboard/campaigns/${campaign._id}`}>
                             <a className={styles.action}>Edit</a>
                           </Link>

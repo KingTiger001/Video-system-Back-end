@@ -15,8 +15,8 @@ import Button from '@/components/Button'
 import PopupDeleteVideo from '@/components/Popups/PopupDeleteVideo'
 import PopupUploadVideo from '@/components/Popups/PopupUploadVideo'
 import Timeline from '@/components/Campaign/Timeline'
-import Tools from '@/components/Campaign/Tools'
-import ToolBox from '@/components/Campaign/ToolBox'
+import Tools from '@/components/Campaign/Tools/index'
+// import ToolBox from '@/components/Campaign/ToolBox'
 import Player from '@/components/Campaign/Player'
 
 import styles from '@/styles/pages/dashboardCampaign.module.sass'
@@ -170,10 +170,7 @@ const Campaign = ({ user }) => {
       </div>
 
       <div className={styles.main}>
-        <div className={styles.sidebar}>
-          <Tools/>
-          <ToolBox saveCampaign={saveCampaign}/>
-        </div>
+        <Tools saveCampaign={saveCampaign} />
 
         <Player />
       </div>

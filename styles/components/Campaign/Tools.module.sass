@@ -1,6 +1,19 @@
 @import '../../_variables.sass'
 
 .tools
+  display: grid
+  grid-auto-flow: column
+  grid-gap: 4px
+
+/**
+  *
+  *
+  *
+  *   TOOL LIST
+  *
+  *
+  */
+.toolList
   background: #fff
   border-radius: 8px
   display: grid
@@ -36,3 +49,326 @@
     position: absolute
     top: 0
     width: 2px
+
+
+/**
+  *
+  *
+  *
+  *   TOOL BOX
+  *
+  *
+  */
+.toolBox
+  background: #fff
+  border-radius: 8px
+  width: 270px
+  margin-left: 4px
+  overflow: auto
+  position: relative
+  & > div
+    min-height: 100%
+
+.close
+  cursor: pointer
+  position: absolute
+  right: 20px
+  top: 20px
+  width: 20px
+
+.toolSection
+  margin-bottom: 15px
+
+.toolTitle
+  color: $textColorOne
+  font-size: 18px
+  font-weight: 900
+  margin-bottom: 24px
+  position: relative
+  &:after
+    background: $primaryColor
+    content: ''
+    height: 2px
+    left: 0
+    top: calc(100% + 5px)
+    position: absolute
+    width: 55px
+
+.toolSubtitle
+  align-items: center
+  color: $textColorOne
+  display: grid
+  font-size: 16px
+  font-weight: 700
+  grid-gap: 8px
+  grid-template-columns: 4px 1fr
+  line-height: 16px
+  margin-bottom: 16px
+  &:before
+    background: $primaryColor
+    border-radius: 50%
+    content: ''
+    height: 4px
+    width: 4px
+    
+
+.toolLabel
+  color: $textColorThree
+  display: block
+  font-size: 14px
+  line-height: 13px
+  margin-bottom: 8px
+
+.toolInput
+  border: 1px solid rgba(90,113,132,0.2)
+  border-radius: 8px
+  height: 35px
+  display: block
+  padding: 0 10px
+  width: 100%
+  &:focus
+    & ~ img
+      display: block
+
+.toolInputGrid
+  display: grid
+  grid-gap: 10px
+  grid-template-columns: repeat(2, 1fr)
+
+.toolAdd
+  align-items: center
+  cursor: pointer
+  display: grid
+  grid-gap: 5px
+  grid-template-columns: 20px 1fr
+  margin-bottom: 32px
+  p
+    color: $textColorThree
+    font-size: 14px
+    font-weight: 500
+    line-height: 13px
+
+.toolBack
+  color: $textColorThree
+  cursor: pointer
+  font-size: 11px
+  letter-spacing: 0.2px
+  margin-bottom: 6px
+
+.toolLibrary
+  display: grid
+  grid-gap: 12px
+  margin-bottom: 20px
+
+.toolLibraryItem
+  align-items: center
+  background: #F7F8FB
+  border-radius: 4px
+  display: grid
+  gap: 2px 6px
+  grid-template-columns: 1fr repeat(2, 25px)
+  padding: 12px
+  img
+    cursor: pointer
+    width: 20px
+
+.toolLibraryItemName
+  font-size: 13px
+  font-weight: 500
+
+.toolLibraryItemEdit
+  cursor: pointer
+  display: grid
+  justify-items: center
+  img
+    height: 16px
+    margin-bottom: 2px
+  p
+    color: $secondaryColor
+    font-size: 8px
+    font-weight: 500
+
+.toolLibraryItemDelete
+  cursor: pointer
+  display: grid
+  justify-items: center
+  img
+    height: 16px
+    margin-bottom: 2px
+  p
+    color: #D83B3B
+    font-size: 8px
+    font-weight: 500
+
+.toolLibraryEmptyText
+  color: #B3BAC5
+  font-size: 12px
+  font-weight: 500
+  line-height: 18px
+  letter-spacing: 0.2px
+
+.toolDraftItem
+  @extend .toolLibraryItem
+  background: #F0EEFC
+  margin-bottom: 32px
+
+.toolDraftItemName
+  @extend .toolLibraryItemName
+  color: $primaryColor
+
+// Tool "Record"
+.toolRecord
+  align-content: center
+  display: grid
+  justify-items: center
+  padding: 0 20px
+  .toolRecordImage
+    height: 36px
+    margin-bottom: 5px
+    width: 36px
+  .toolRecordName
+    color: $textColorOne
+    font-size: 25px
+    font-weight: 600
+    line-height: 25px
+    margin-bottom: 15px
+  .toolRecordText
+    color: $textColorThree
+    font-size: 13px
+    line-height: 18px
+    margin-bottom: 20px
+    text-align: center
+  button, label
+    margin-top: 10px
+    width: 150px
+
+// Tool "Add video"
+.toolVideos
+  display: grid
+  grid-auto-rows: max-content
+  padding: 20px
+  
+.videosList
+  display: grid
+  grid-gap: 12px
+
+.videosItem
+  &.selected
+    background: #F0EEFC
+    .toolLibraryItemName
+      color: $primaryColor
+  .toolLibraryItemEdit
+    & > div
+      display: grid
+      justify-items: center
+  .toolLibraryItemEdit, .toolLibraryItemDelete
+    grid-row-start: 1
+    grid-row-end: 3
+
+.videosItemStatus
+  color: $textColorThree
+  font-size: 11px
+  grid-column: 1
+  grid-row: 2
+  &.waiting
+    color: $textColorThree
+    font-style: italic
+  &.processing
+    color: #fbc531
+    font-style: italic
+
+.videosItemDelete
+  align-self: center
+  cursor: pointer
+  grid-column: 2
+  grid-row-start: 1
+  grid-row-end: 3
+  height: 20px
+  justify-self: flex-end
+  width: 20px
+
+// Tool "First Screen" & "End Screen"
+.toolHelloScreen, .toolEndScreen
+  padding: 20px
+  button
+    margin-bottom: 10px
+    width: 100%
+
+// Tool "Logo" 
+.toolLogo
+  padding: 20px
+  button
+    width: 100%
+
+.logo
+  border: 1px solid rgba(90, 113, 132, 0.2)
+  border-radius: 4px
+  cursor: pointer
+  display: block
+  height: 100px
+  overflow: hidden
+  position: relative
+  width: 100px
+  .loading
+    align-items: center
+    background: rgba(#000, 0.6)
+    color: red
+    display: grid
+    justify-items: center
+    height: 100%
+    left: 0
+    position: absolute
+    top: 0
+    width: 100%
+    z-index: 2
+    img
+      animation: rotating 2s linear infinite
+      height: 30px
+      width: 30px
+  .image
+    width: 100%
+
+.logoError
+  color: red
+  font-size: 12px
+  margin-top: 8px
+
+@keyframes rotating
+  from 
+    transform: rotate(0deg)
+  to
+    transform: rotate(-360deg)
+
+.logoInput
+  height: 0px
+  overflow: hidden
+  opacity: 0
+  position: absolute
+  width: 0px
+  z-index: -1
+
+.placement
+  align-content: space-between
+  background: #F3F7F9
+  border-radius: 8px
+  display: grid
+  grid-template-columns: repeat(2, 30px)
+  height: 130px
+  justify-content: space-between
+  padding: 10px
+  position: relative
+  width: 100%
+  & > div
+    background: darken(#F3F7F9, 5%)
+    border-radius: 4px
+    cursor: pointer
+    height: 30px
+    width: 30px
+    &.selected
+      background: $primaryColor
+
+.colorPicker
+  border: 1px solid rgba(90,113,132,0.2)
+  border-radius: 8px !important
+  box-shadow: none !important
+  width: 100% !important
