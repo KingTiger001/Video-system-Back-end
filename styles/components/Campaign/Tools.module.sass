@@ -294,12 +294,36 @@
   justify-self: flex-end
   width: 20px
 
-// Tool "First Screen" & "End Screen"
+// Tool "Start Screen" & "End Screen"
 .toolHelloScreen, .toolEndScreen
   padding: 20px
   button
     margin-bottom: 10px
     width: 100%
+
+.networks
+  display: grid
+  grid-gap: 4px
+
+.network
+  align-items: center
+  display: grid
+  grid-gap: 8px
+  grid-template-columns: auto 1fr auto
+
+.networkAdd
+  color: $primaryColor
+  cursor: pointer
+  font-size: 12px
+  margin-top: 8px
+  text-decoration: underline
+
+.networkDelete
+  cursor: pointer
+  width: 16px
+
+.networkSelect
+  @extend .toolInput
 
 // Tool "Logo" 
 .toolLogo

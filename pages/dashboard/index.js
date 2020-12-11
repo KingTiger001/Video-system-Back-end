@@ -41,6 +41,16 @@ const Dashboard = ({ initialCampaigns, user }) => {
     jscookie.remove('token')
   }
 
+  const msToMinutes = (d) => {
+    d = Number(d);
+    const m = Math.floor(d % 3600 / 60);
+    const s = Math.floor(d % 3600 % 60);
+
+    const mDisplay = m > 0 ? `${m}:` : '0:';
+    const sDisplay = s > 0 ? s : '';
+    return `${mDisplay}${sDisplay}`; 
+  }
+
   return (
     <div className={styles.dashboard}>
       <Head>
@@ -97,7 +107,7 @@ const Dashboard = ({ initialCampaigns, user }) => {
                       >
                         <p>{campaign.name}</p>
                         <p>{dayjs(campaign.createdAt).format('MM/DD/YYYY')}</p>
-                        <p>-</p>
+                        <p>{msToMinutes(campaign.duration)}</p>
                         <div className={styles.campaignsItemActions}>
                           <Link href={`/dashboard/campaigns/${campaign._id}`}>
                             <a className={styles.action}>Edit</a>

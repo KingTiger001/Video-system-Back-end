@@ -63,6 +63,48 @@ const ToolEndScreen = ({ saveCampaign }) => {
     }
   }
 
+  const addNetwork = () => {
+    dispatch({
+      type: 'CHANGE_END_SCREEN',
+      data: {
+        networks: endScreen.networks
+          ? [
+              ...endScreen.networks,
+              {
+                id: endScreen.networks.length + 1 ,
+                link: '',
+              }
+            ]
+          : [{
+              id: 1,
+              link: '',
+              site: ''
+            }],
+      },
+    })
+  }
+
+  const deleteNetwork = (id) => {
+    const newArray = endScreen.networks.filter(network => network.id !== id)
+    dispatch({
+      type: 'CHANGE_END_SCREEN',
+      data: {
+        networks: newArray
+      },
+    })
+  }
+
+  const updateNetwork = ({ index, property, value }) => {
+    const newArray = [...endScreen.networks]
+    newArray[index][property] = value
+    dispatch({
+      type: 'CHANGE_END_SCREEN',
+      data: {
+        networks: newArray
+      },
+    })
+  }
+
   return tool === 4 && (
     <div
       className={styles.toolEndScreen}
@@ -113,7 +155,24 @@ const ToolEndScreen = ({ saveCampaign }) => {
                 value={endScreen.name}
                 required
               />
-            </div>    
+            </div>
+            <div className={styles.toolSection}>
+              <label className={styles.toolLabel}>Duration (in seconds)</label>
+              <InputNumber
+                className={styles.toolInput}
+                initialValue={endScreen.duration / 1000}
+                onChange={(value) => {
+                  dispatch({
+                    type: 'CHANGE_END_SCREEN',
+                    data: {
+                      duration: parseFloat(value * 1000, 10)
+                    },
+                  })
+                  dispatch({ type: 'CALC_DURATION' })
+                }}
+                max={10}
+              />
+            </div>
             <div className={styles.toolSection}>
               <label className={styles.toolLabel}>Background</label>
               <ChromePicker
@@ -196,21 +255,47 @@ const ToolEndScreen = ({ saveCampaign }) => {
               />
             </div>
             <div className={styles.toolSection}>
-              <label className={styles.toolLabel}>Duration (in seconds)</label>
-              <InputNumber
-                className={styles.toolInput}
-                initialValue={endScreen.duration / 1000}
-                onChange={(value) => {
-                  dispatch({
-                    type: 'CHANGE_END_SCREEN',
-                    data: {
-                      duration: parseFloat(value * 1000, 10)
-                    },
-                  })
-                  dispatch({ type: 'CALC_DURATION' })
-                }}
-                max={10}
-              />
+              <label className={styles.toolLabel}>Networks</label>
+              <div className={styles.networks}>
+                {
+                  endScreen.networks && endScreen.networks.map((network, index) => (
+                    <div
+                      className={styles.network}
+                      key={network.id}
+                    >
+                      <select
+                        className={styles.networkSelect}
+                        onChange={(e) => updateNetwork({ index, property: 'site', value: e.target.value })}
+                        required
+                        value={network.site}
+                      >
+                        <option value="facebook">FB</option>
+                        <option value="twitter">TW</option>
+                        <option value="pinterest">PIB</option>
+                        <option value="linkedin">LKD</option>
+                      </select>
+                      <input
+                        className={styles.toolInput}
+                        onChange={(e) => updateNetwork({ index, property: 'link', value: e.target.value })}
+                        placeholder="Link here"
+                        type="text"
+                        value={network.link}
+                      />
+                      <img
+                        className={styles.networkDelete}
+                        onClick={() => deleteNetwork(network.id)}
+                        src="/assets/common/close.svg"
+                      />
+                    </div>
+                  ))
+                }
+                <p
+                  className={styles.networkAdd}
+                  onClick={addNetwork}
+                >
+                  Add more
+                </p>
+              </div>
             </div>
             {error && <p className={styles.error}>{error}</p>}
             <Button onClick={saveEndScreen}>Save changes</Button>

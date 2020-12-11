@@ -52,8 +52,8 @@ const Tools = ({ saveCampaign }) => {
           className={`${styles.tool} ${tool === 3 ? styles.toolSelected : ''}`}
           onClick={() => selectTool(3, 'helloScreen')}
         >
-          <img src={`/assets/campaign/${tool === 3 ? 'toolFirstScreenSelected' : 'toolFirstScreen'}.svg`} />
-          <p>First Screen</p>
+          <img src={`/assets/campaign/${tool === 3 ? 'toolHelloScreenSelected' : 'toolHelloScreen'}.svg`} />
+          <p>Start Screen</p>
         </li>
         <li
           className={`${styles.tool} ${tool === 4 ? styles.toolSelected : ''}`}

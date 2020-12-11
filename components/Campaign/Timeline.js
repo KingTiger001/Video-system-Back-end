@@ -43,8 +43,6 @@ const Timeline = () => {
         gridTemplateColumns: `${helloScreen.duration ? `${(helloScreen.duration / duration) * 100}%` : ''} ${Object.keys(video).length > 0 ? '1fr' : ''} ${endScreen.duration ? `${(endScreen.duration / duration) * 100}%` : ''}`
       }}
     >
-      {/* {progression}
-      {duration} */}
       <span
         className={styles.cursor}
         style={{
@@ -53,17 +51,26 @@ const Timeline = () => {
       />
       { helloScreen.duration > 0 &&
         <div className={styles.helloScreen}>
-          <p>First<br/>Screen</p>
+          <div>
+            <img src="/assets/campaign/toolHelloScreen.svg" />
+            <p>{helloScreen.name}</p>
+          </div>
         </div>
       }
       { Object.keys(video).length > 0 &&
         <div className={styles.videoRecorded}>
-          <p>Video recorded</p>
+          <div>
+            <img src="/assets/campaign/toolVideos.svg" />
+            <p>{video.name}</p>
+          </div>
         </div>
       }
       { endScreen.duration > 0 &&
         <div className={styles.endScreen}>
-          <p>End<br/>Screen</p>
+          <div>
+            <img src="/assets/campaign/toolEndScreen.svg" />
+            <p>{endScreen.name}</p>
+          </div>
         </div>
       }
     </div>

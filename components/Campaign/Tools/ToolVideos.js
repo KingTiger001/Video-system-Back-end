@@ -14,13 +14,13 @@ const ToolVideos = () => {
   const video = useSelector(state => state.campaign.video)
   const videoList = useSelector(state => state.campaign.videoList)
 
-  const secondsToMs = (d) => {
+  const msToMinutes = (d) => {
     d = Number(d);
     const m = Math.floor(d % 3600 / 60);
     const s = Math.floor(d % 3600 % 60);
 
-    const mDisplay = m > 0 ? `${m}m` : '';
-    const sDisplay = s > 0 ? `${s}s` : '';
+    const mDisplay = m > 0 ? `${m}:` : '0:';
+    const sDisplay = s > 0 ? s : '';
     return `${mDisplay}${sDisplay}`; 
   }
 
@@ -66,7 +66,8 @@ const ToolVideos = () => {
               </p>
               { vd.status === 'done'
                 ?
-                <p className={`${styles.videosItemStatus}`}>{secondsToMs(vd.metadata.duration)} - {Math.round(vd.metadata.size / 1000000)} mb</p>
+                // <p className={`${styles.videosItemStatus}`}>{msToMinutes(vd.metadata.duration)} - {Math.round(vd.metadata.size / 1000000)} mb</p>
+                <p className={`${styles.videosItemStatus}`}>{msToMinutes(vd.metadata.duration)}</p>
                 :
                 <p className={`${styles.videosItemStatus} ${styles[vd.status]}`}>{vd.status}... {vd.status === 'processing' && vd.statusProgress > 0 ? `${vd.statusProgress || 0}%` : ''}</p>
               }

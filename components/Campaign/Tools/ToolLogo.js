@@ -72,7 +72,7 @@ const ToolLogo = ({ saveCampaign }) => {
         <label className={styles.toolLabel}>Image</label>
         <label
           className={styles.logo}
-          for="logo"
+          htmlFor="logo"
         >
           { uploadloading &&
             <div className={styles.loading}>

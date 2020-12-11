@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 
 import Button from '@/components/Button'
@@ -16,6 +17,8 @@ const EndScreen = ({ data = {} }) => {
     const handleResize = () => {
       setTitleResponsiveFontSize(ref.current.offsetWidth * (data.title.fontSize / 1000))
       setSubtitleResponsiveFontSize(ref.current.offsetWidth * (data.subtitle.fontSize / 1000))
+      setEmailResponsiveFontSize(ref.current.offsetWidth * (data.email.fontSize / 1000))
+      setPhoneResponsiveFontSize(ref.current.offsetWidth * (data.phone.fontSize / 1000))
     }
     if (ref.current) {
       handleResize()
@@ -97,6 +100,27 @@ const EndScreen = ({ data = {} }) => {
           >
             {data.phone.value}
           </p>
+        }
+        {
+          data.networks && data.networks.length > 0 &&
+          <div className={styles.networks}>
+            {
+              data.networks.map(network => (
+
+                <Link
+                  href={network.link}
+                  key={network.id}
+                >
+                  <a
+                    className={styles.network}
+                    target="blank"
+                  >
+                    {network.site}
+                  </a>
+                </Link>
+              ))
+            }
+          </div>
         }
       </div>
     </div>

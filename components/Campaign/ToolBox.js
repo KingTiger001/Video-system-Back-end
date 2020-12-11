@@ -84,7 +84,7 @@ const ToolBox = ({ saveCampaign }) => {
       const data = { ...helloScreen }
       delete data._id
       await mainAPI.post('/helloScreens', data)
-      toast.success('First screen added to the library.')
+      toast.success('Start screen added to the library.')
       getHelloScreenList()
     } catch (err) {
       console.log(err)
@@ -119,7 +119,7 @@ const ToolBox = ({ saveCampaign }) => {
 
   const saveHelloScreen = async () => {
     await saveCampaign()
-    toast.success('First screen saved.')
+    toast.success('Start screen saved.')
   }
 
   const saveLogo = async () => {
@@ -188,7 +188,7 @@ const ToolBox = ({ saveCampaign }) => {
         <PopupDeleteHelloScreen
           onDone={() => {
             getHelloScreenList()
-            toast.success('First screen deleted.')
+            toast.success('Start screen deleted.')
             hidePopup()
           }}
         />
@@ -309,8 +309,8 @@ const ToolBox = ({ saveCampaign }) => {
                 >
                   &lt; Back to my library
                 </p>
-                <p className={styles.toolTitle}>Edit a First Screen</p>
-                <p className={styles.toolSubtitle}>Your first screen</p>
+                <p className={styles.toolTitle}>Edit a Start Screen</p>
+                <p className={styles.toolSubtitle}>Your start screen</p>
                 <div className={styles.toolSection}>
                   <label className={styles.toolLabel}>Template Name *</label>
                   <input
@@ -366,7 +366,7 @@ const ToolBox = ({ saveCampaign }) => {
               </div>
               :
               <div className={styles.toolSection}>
-                <p className={styles.toolTitle}>First Screen</p>
+                <p className={styles.toolTitle}>Start Screen</p>
                 <div
                   className={styles.toolAdd}
                   onClick={() => {
@@ -380,7 +380,7 @@ const ToolBox = ({ saveCampaign }) => {
                   }}
                 >
                   <img src="/assets/campaign/add.svg" />
-                  <p>Create a First Screen</p>
+                  <p>Create a Start Screen</p>
                 </div>
                 {
                   Object.keys(helloScreen).length > 1 &&

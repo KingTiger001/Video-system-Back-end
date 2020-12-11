@@ -38,7 +38,7 @@ const PopupCreateHelloScreen = ({ onDone }) => {
 
   return (
     <Popup
-      title="New first screen template"
+      title="New start screen template"
     >
       <form
         className={styles.form}

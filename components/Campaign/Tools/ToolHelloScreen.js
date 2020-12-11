@@ -32,7 +32,7 @@ const ToolHelloScreen = ({ saveCampaign }) => {
       const data = { ...helloScreen }
       delete data._id
       await mainAPI.post('/helloScreens', data)
-      toast.success('First screen added to the library.')
+      toast.success('Start screen added to the library.')
       getHelloScreenList()
     } catch (err) {
       console.log(err)
@@ -57,7 +57,7 @@ const ToolHelloScreen = ({ saveCampaign }) => {
     try {
       await checkFormErrors()
       await saveCampaign()
-      toast.success('First screen saved.')
+      toast.success('Start screen saved.')
     } catch (err) {
       setError(err.message)
     }
@@ -84,7 +84,7 @@ const ToolHelloScreen = ({ saveCampaign }) => {
         <PopupDeleteHelloScreen
           onDone={() => {
             getHelloScreenList()
-            toast.success('First screen deleted.')
+            toast.success('Start screen deleted.')
             hidePopup()
           }}
         />
@@ -99,8 +99,8 @@ const ToolHelloScreen = ({ saveCampaign }) => {
             >
               &lt; Back to my library
             </p>
-            <p className={styles.toolTitle}>Edit a First Screen</p>
-            <p className={styles.toolSubtitle}>Your first screen</p>
+            <p className={styles.toolTitle}>Edit a Start Screen</p>
+            <p className={styles.toolSubtitle}>Your start screen</p>
             <div className={styles.toolSection}>
               <label className={styles.toolLabel}>Template Name *</label>
               <input
@@ -113,6 +113,23 @@ const ToolHelloScreen = ({ saveCampaign }) => {
                 })}
                 value={helloScreen.name}
                 required
+              />
+            </div>
+            <div className={styles.toolSection}>
+              <label className={styles.toolLabel}>Duration (in seconds)</label>
+              <InputNumber
+                className={styles.toolInput}
+                initialValue={helloScreen.duration / 1000}
+                onChange={(value) => {
+                  dispatch({
+                    type: 'CHANGE_HELLO_SCREEN',
+                    data: {
+                      duration: parseFloat(value * 1000, 10)
+                    },
+                  })
+                  dispatch({ type: 'CALC_DURATION' })
+                }}
+                max={10}
               />
             </div>
             <div className={styles.toolSection}>
@@ -145,23 +162,6 @@ const ToolHelloScreen = ({ saveCampaign }) => {
                 property="subtitle"
               />
             </div>
-            <div className={styles.toolSection}>
-              <label className={styles.toolLabel}>Duration (in seconds)</label>
-              <InputNumber
-                className={styles.toolInput}
-                initialValue={helloScreen.duration / 1000}
-                onChange={(value) => {
-                  dispatch({
-                    type: 'CHANGE_HELLO_SCREEN',
-                    data: {
-                      duration: parseFloat(value * 1000, 10)
-                    },
-                  })
-                  dispatch({ type: 'CALC_DURATION' })
-                }}
-                max={10}
-              />
-            </div>
             {error && <p className={styles.error}>{error}</p>}
             <Button onClick={saveHelloScreen}>Save changes</Button>
             <Button
@@ -174,7 +174,7 @@ const ToolHelloScreen = ({ saveCampaign }) => {
           </div>
           :
           <div className={styles.toolSection}>
-            <p className={styles.toolTitle}>First Screen</p>
+            <p className={styles.toolTitle}>Start Screen</p>
             <div
               className={styles.toolAdd}
               onClick={() => {
@@ -188,7 +188,7 @@ const ToolHelloScreen = ({ saveCampaign }) => {
               }}
             >
               <img src="/assets/campaign/add.svg" />
-              <p>Create a First Screen</p>
+              <p>Create a Start Screen</p>
             </div>
             {
               Object.keys(helloScreen).length > 1 &&

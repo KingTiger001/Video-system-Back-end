@@ -32,9 +32,9 @@ const PopupDeleteHelloScreen = ({ onDone }) => {
 
   return (
     <Popup
-      title="Delete a first screen"
+      title="Delete a start screen"
     >
-      <p>Are you sure you want to delete this first screen?</p>
+      <p>Are you sure you want to delete this start screen?</p>
       <div className={styles.actions}>
         <Button
           outline={true}
