@@ -33,7 +33,7 @@ const Login = () => {
           email,
           password,
         })
-        jscookie.set('token', jwt, { expires: 30 })
+        jscookie.set('fo_sas_tk', jwt, { expires: 30 })
         mainAPI.defaults.headers.common.Authorization = `Bearer ${jwt}`
         router.push((!user.firstName || !user.lastName) ? '/signup/details' : '/dashboard')
       } catch (err) {

@@ -7,7 +7,6 @@ import { useStore } from '@/store'
 import 'react-toastify/dist/ReactToastify.min.css'
 import '@/styles/fonts.css'
 import '@/styles/_globals.sass'
-import '@/styles/_globals.sass'
 
 function MyApp({ Component, pageProps }) {
   const store = useStore(pageProps.initialReduxState)

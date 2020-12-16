@@ -8,8 +8,8 @@ const mediaAPI = axios.create({
   baseURL: process.env.NEXT_PUBLIC_MEDIA_API,
 })
 
-if (jscookie.get('token')) {
-  mainAPI.defaults.headers.common.Authorization = `Bearer ${jscookie.get('token')}`
+if (jscookie.get('fo_sas_tk')) {
+  mainAPI.defaults.headers.common.Authorization = `Bearer ${jscookie.get('fo_sas_tk')}`
 }
 
 export { mainAPI, mediaAPI }

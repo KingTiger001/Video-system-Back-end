@@ -6,10 +6,10 @@ import { mainAPI } from '@/plugins/axios'
 const withAuthServerSideProps = (serverSidePropsFunc) => {
   return async (ctx) => {
     const cookies = cookie.parse(ctx.req.headers.cookie || '')
-    if (cookies.token) {
+    if (cookies.fo_sas_tk) {
       // TODO: check expiration token
       // console.log(jwtDecode(cookies.token))
-      mainAPI.defaults.headers.common.Authorization = `Bearer ${cookies.token}`
+      mainAPI.defaults.headers.common.Authorization = `Bearer ${cookies.fo_sas_tk}`
       try {
         let user
         const { data } = await mainAPI.get('/users/me')

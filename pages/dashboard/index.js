@@ -38,7 +38,7 @@ const Dashboard = ({ initialCampaigns, user }) => {
 
   const logout = () => {
     router.push('/login')
-    jscookie.remove('token')
+    jscookie.remove('fo_sas_tk')
   }
 
   const msToMinutes = (d) => {

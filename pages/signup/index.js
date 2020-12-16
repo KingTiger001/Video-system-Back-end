@@ -33,11 +33,11 @@ const Signup = () => {
         if (password !== passwordCheck) {
           return setError('Password doesn\'t match')
         }
-        const { data: { jwt, user } } = await mainAPI.post('/auth/signup', {
+        const { data: { jwt } } = await mainAPI.post('/auth/signup', {
           email,
           password,
         })
-        jscookie.set('token', jwt, { expires: 30 })
+        jscookie.set('fo_sas_tk', jwt, { expires: 30 })
         mainAPI.defaults.headers.common.Authorization = `Bearer ${jwt}`
         router.push('/signup/details')
       } catch (err) {

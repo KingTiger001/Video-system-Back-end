@@ -2760,11 +2760,6 @@ find-up@^4.0.0:
     locate-path "^5.0.0"
     path-exists "^4.0.0"
 
-fitty@^2.3.2:
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/fitty/-/fitty-2.3.2.tgz#6638f3e46d2d133b7da914c43631a4a6ad081f28"
-  integrity sha512-aC0d+N7ORRnKG9JIXunZVgLvJRWf2HES7F529CoGQJGLdxF1aHJPLUdaBDQIMDtLFcZhmY1CgtQgFEDWu9vK+w==
-
 flush-write-stream@^1.0.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/flush-write-stream/-/flush-write-stream-1.1.1.tgz#8dd7d873a1babc207d94ead0c2e0e44276ebf2e8"
