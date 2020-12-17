@@ -37,13 +37,11 @@ const SignupDetails = ({ user }) => {
       try {
         await checkFormInputs()
         await mainAPI.patch('/users/me', {
-          data: {
-            company,
-            country,
-            firstName,
-            lastName,
-            job,
-          },
+          company,
+          country,
+          firstName,
+          lastName,
+          job,
         })
         router.push('/dashboard')
       } catch (err) {

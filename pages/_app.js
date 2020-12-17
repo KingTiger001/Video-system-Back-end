@@ -1,4 +1,4 @@
-import Head from 'next/head'  
+import Head from 'next/head'
 import { Provider } from 'react-redux'
 import { ToastContainer } from 'react-toastify'
 
