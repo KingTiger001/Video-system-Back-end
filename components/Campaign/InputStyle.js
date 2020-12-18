@@ -62,6 +62,15 @@ const InputStyle = ({ dispatchType, object, property }) => {
               data: true,
             })
           }}
+          onClose={() => dispatch({
+            type: dispatchType,
+            data: {
+              [property]: {
+                ...object[property],
+                displayOptions: !object[property].displayOptions,
+              }
+            },
+          })}
         />
       }
     </div>

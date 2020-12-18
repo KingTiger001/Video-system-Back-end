@@ -92,7 +92,7 @@ const initialState = {
   },
   previewEndScreen: {},
   previewHelloScreen: {},
-  previewVideo: '',
+  previewVideo: {},
   progression: 0,
   timelineDraggable: false,
   tool: 0,
@@ -200,6 +200,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         duration: (helloScreen && Object.keys(helloScreen).length > 1 ? helloScreen.duration : 0) + (Object.keys(video).length > 0 ? video.metadata.duration * 1000 : 0) + (endScreen && Object.keys(endScreen).length > 1 ? endScreen.duration : 0),
+      }
+    case 'SET_END_SCREEN_LIST':
+      return {
+        ...state,
+        endScreenList: action.data,
       }
     case 'SET_HELLO_SCREEN_LIST':
       return {

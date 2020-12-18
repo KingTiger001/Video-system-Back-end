@@ -67,7 +67,7 @@ const EndScreen = ({ data = {} }) => {
           {data.subtitle.value}
         </p>
       }
-      { data.button.value &&
+      { data.button && data.button.value &&
         <Button
           target="blank"
           type="link"

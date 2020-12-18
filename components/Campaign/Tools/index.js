@@ -41,7 +41,7 @@ const Tools = ({ saveCampaign }) => {
         <li
           className={`${styles.tool} ${tool === 2 ? styles.toolSelected : ''}`}
           onClick={() => {
-            dispatch({ type: 'SET_PREVIEW_VIDEO', data: '' })
+            dispatch({ type: 'SET_PREVIEW_VIDEO', data: {} })
             selectTool(2, 'video')
           }}
         >

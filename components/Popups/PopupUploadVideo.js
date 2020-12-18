@@ -34,6 +34,7 @@ const PopupUploadVideo = ({ onDone }) => {
       formData.append('file', popup.data)
       formData.append('folder', 'videos')
       formData.append('videoId', video._id)
+      console.log(formData)
       await mediaAPI.post(
         '/videos',
         formData,
@@ -44,10 +45,9 @@ const PopupUploadVideo = ({ onDone }) => {
           },
         },
       )
-      
       await mainAPI.patch(`/videos/${video._id}`, {
         status: 'waiting',
-      });
+      })
       onDone()
       setIsFinished(true)
     } catch (err) {
@@ -77,10 +77,7 @@ const PopupUploadVideo = ({ onDone }) => {
           />
           <Button>Upload</Button>
           <p
-            onClick={() => {
-              hidePopup()
-              onClose()
-            }}
+            onClick={() => hidePopup()}
             className={styles.cancel}
           >
             Cancel

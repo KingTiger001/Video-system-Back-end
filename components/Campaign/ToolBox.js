@@ -251,7 +251,7 @@ const ToolBox = ({ saveCampaign }) => {
                 >
                   <p
                     className={styles.toolLibraryItemName}
-                    onClick={() => dispatch({ type: 'SET_PREVIEW_VIDEO', data: vd.url })}
+                    onClick={() => dispatch({ type: 'SET_PREVIEW_VIDEO', data: vd })}
                   >
                     {vd.name}
                   </p>

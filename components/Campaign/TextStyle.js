@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ChromePicker } from 'react-color'
 
 import InputNumber from '@/components/InputNumber'
@@ -16,6 +16,7 @@ const TextStyle = ({
   },
   initialValues = {},
   onChange,
+  onClose,
 }) => {
   const [color, setColor] = useState(initialValues.color)
   const [fontSize, setFontSize] = useState(initialValues.fontSize)
@@ -25,6 +26,35 @@ const TextStyle = ({
   const [textAlign, setTextAlign] = useState(initialValues.textAlign)
 
   const [displayColorPicker, showColorPicker] = useState(false)
+
+  const wrapperRef = useRef(null);
+  const colorPickerRef = useRef(null);
+
+  // Close click outside text style
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+        onClose()
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    };
+  }, [wrapperRef])
+
+  // Close click outside color picker
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (colorPickerRef.current && !colorPickerRef.current.contains(event.target)) {
+        showColorPicker(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    };
+  }, [colorPickerRef])
 
   useEffect(() => {
     onChange({
@@ -45,7 +75,10 @@ const TextStyle = ({
   ])
 
   return (
-    <div className={styles.textStyle}>
+    <div
+      className={styles.textStyle}
+      ref={wrapperRef}
+    >
       { features.fontSize &&
         <div>
           <label>Size</label>
@@ -67,7 +100,10 @@ const TextStyle = ({
               <p>{color}</p>
             </div>
             { displayColorPicker &&
-              <div className={styles.colorPopover}>
+              <div
+                className={styles.colorPopover}
+                ref={colorPickerRef}
+              >
                 <ChromePicker
                   width={198}
                   disableAlpha={true}

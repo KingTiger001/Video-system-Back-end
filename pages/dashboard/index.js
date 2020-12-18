@@ -41,15 +41,16 @@ const Dashboard = ({ initialCampaigns, user }) => {
     jscookie.remove('fo_sas_tk')
   }
 
-  const msToMinutes = (d) => {
-    d = Number(d);
-    const m = Math.floor(d % 3600 / 60);
-    const s = Math.floor(d % 3600 % 60);
-
-    const mDisplay = m > 0 ? `${m}:` : '0:';
-    const sDisplay = s > 0 ? s : '';
-    return `${mDisplay}${sDisplay}`; 
+  const displayDuration = (value) => {
+    if (!value) {
+      return '00:00'
+    }
+    const t = dayjs.duration(parseInt(value, 10))
+    const m = t.minutes()
+    const s = t.seconds()
+    return `${m < 10 ? `0${m}` : m}:${s < 10 ? `0${s}` : s}`
   }
+
 
   return (
     <div className={styles.dashboard}>
@@ -107,7 +108,7 @@ const Dashboard = ({ initialCampaigns, user }) => {
                       >
                         <p>{campaign.name}</p>
                         <p>{dayjs(campaign.createdAt).format('MM/DD/YYYY')}</p>
-                        <p>{msToMinutes(campaign.duration)}</p>
+                        <p>{displayDuration(campaign.duration)}</p>
                         <div className={styles.campaignsItemActions}>
                           <Link href={`/dashboard/campaigns/${campaign._id}`}>
                             <a className={styles.action}>Edit</a>

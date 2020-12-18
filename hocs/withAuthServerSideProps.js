@@ -15,8 +15,9 @@ const withAuthServerSideProps = (serverSidePropsFunc) => {
         const { data } = await mainAPI.get('/users/me')
         user = data
         if ((!user.firstName || !user.lastName) && !ctx.req.url.includes('details')) {
-          ctx.res.writeHead(302, { Location: '/signup/details' });
-          return ctx.res.end()
+          ctx.res.writeHead(302, { Location: '/signup/details' })
+          ctx.res.end()
+          return { props: {} }
         }
         if (serverSidePropsFunc) {
           const otherProps = await serverSidePropsFunc(ctx, user)
@@ -35,13 +36,15 @@ const withAuthServerSideProps = (serverSidePropsFunc) => {
       } catch (err) {
         console.log(err)
         ctx.res.writeHead(302, { Location: '/' });
-        return ctx.res.end()
+        ctx.res.end()
+        return { props: {} }
       }
     } else if (!ctx.req.url.includes('login') && !ctx.req.url.includes('signup')) {
       ctx.res.writeHead(302, { Location: '/' });
-      return ctx.res.end()
+      ctx.res.end()
+      return { props: {} }
     } else {
-      return { props: {} };
+      return { props: {} }
     }
   }
 }

@@ -16,6 +16,7 @@ import styles from '@/styles/components/Campaign/Tools.module.sass'
 const ToolHelloScreen = ({ saveCampaign }) => {
   const dispatch = useDispatch()
   const popup = useSelector(state => state.popup)
+  const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
   const showPopup = (popupProps) => dispatch({ type: 'SHOW_POPUP', ...popupProps })
 
   const tool = useSelector(state => state.campaign.tool)
@@ -23,6 +24,7 @@ const ToolHelloScreen = ({ saveCampaign }) => {
   const helloScreen = useSelector(state => state.campaign.helloScreen)
   const helloScreenList = useSelector(state => state.campaign.helloScreenList)
   const preview = useSelector(state => state.campaign.preview)
+  const previewHelloScreen = useSelector(state => state.campaign.previewHelloScreen)
 
   const [displayFormHelloScreen, showFormHelloScreen] = useState(false)
   const [error, setError] = useState('')
@@ -196,13 +198,13 @@ const ToolHelloScreen = ({ saveCampaign }) => {
                 <p className={styles.toolSubtitle}>Currently Selected</p>
                 <div className={styles.toolDraftItem}>
                   <p
-                    className={styles.toolDraftItemName}
-                    // onClick={() => {
-                    //   dispatch({
-                    //     type: 'SET_PREVIEW_HELLO_SCREEN',
-                    //     data: {},
-                    //   })
-                    // }}
+                    className={`${styles.toolDraftItemName} ${!previewHelloScreen.name ? styles.toolLibraryItemPreview : ''}`}
+                    onClick={() => {
+                      dispatch({
+                        type: 'SET_PREVIEW_HELLO_SCREEN',
+                        data: {},
+                      })
+                    }}
                   >
                     {helloScreen.name}
                   </p>
@@ -216,14 +218,14 @@ const ToolHelloScreen = ({ saveCampaign }) => {
                       showFormHelloScreen(true)
                     }}
                   >
-                    <img src="/assets/campaign/edit.svg" />
+                    <img src="/assets/campaign/libraryEdit.svg" />
                     <p>Edit</p>
                   </div>
                   <div
                     className={styles.toolLibraryItemDelete}
                     onClick={() => showPopup({ display: 'DELETE_DRAFT_HELLO_SCREEN' })}
                   >
-                    <img src="/assets/campaign/delete.svg" />
+                    <img src="/assets/campaign/libraryDelete.svg" />
                     <p>Delete</p>
                   </div>
                 </div>
@@ -241,7 +243,7 @@ const ToolHelloScreen = ({ saveCampaign }) => {
                         className={styles.toolLibraryItem}
                       >
                         <p
-                          className={styles.toolLibraryItemName}
+                          className={`${styles.toolLibraryItemName} ${previewHelloScreen.name === hs.name ? styles.toolLibraryItemPreview : ''}`}
                           onClick={() => {
                             dispatch({ type: 'DISPLAY_ELEMENT', data: 'helloScreen' })
                             dispatch({
@@ -252,32 +254,32 @@ const ToolHelloScreen = ({ saveCampaign }) => {
                         >
                           {hs.name}
                         </p>
-                        <div className={styles.toolLibraryItemEdit}>
-                          <img
-                            src="/assets/campaign/select.svg"
-                            onClick={() => {
-                              dispatch({ type: 'DISPLAY_ELEMENT', data: 'helloScreen' })
-                              dispatch({
-                                type: 'CHANGE_HELLO_SCREEN',
-                                data: hs,
-                              })
-                              dispatch({
-                                type: 'SET_PREVIEW_HELLO_SCREEN',
-                                data: {},
-                              })
-                              showFormHelloScreen(true)
-                            }}
-                          />
+                        <div
+                          className={styles.toolLibraryItemEdit}
+                          onClick={() => {
+                            dispatch({ type: 'DISPLAY_ELEMENT', data: 'helloScreen' })
+                            dispatch({
+                              type: 'CHANGE_HELLO_SCREEN',
+                              data: hs,
+                            })
+                            dispatch({
+                              type: 'SET_PREVIEW_HELLO_SCREEN',
+                              data: {},
+                            })
+                            showFormHelloScreen(true)
+                          }}
+                        >
+                          <img src="/assets/campaign/librarySelect.svg" />
                           <p>Select</p>
                         </div>
-                        <div className={styles.toolLibraryItemDelete}>
-                          <img
-                            src="/assets/campaign/delete.svg"
-                            onClick={() => showPopup({
-                              display: 'DELETE_HELLO_SCREEN',
-                              data: hs,
-                            })}
-                          />
+                        <div
+                          className={styles.toolLibraryItemDelete}
+                          onClick={() => showPopup({
+                            display: 'DELETE_HELLO_SCREEN',
+                            data: hs,
+                          })}
+                        >
+                          <img src="/assets/campaign/libraryDelete.svg" />
                           <p>Delete</p>
                         </div>
                       </div>

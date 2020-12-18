@@ -169,21 +169,30 @@
 
 .toolLibraryItem
   align-items: center
-  background: #F7F8FB
   border-radius: 4px
   display: grid
-  gap: 2px 6px
+  gap: 2px 8px
   grid-template-columns: 1fr repeat(2, 25px)
-  padding: 12px
   img
     cursor: pointer
     width: 20px
 
 .toolLibraryItemName
+  align-items: center
+  background: #F7F8FB
+  border: 1px dashed transparent
+  border-radius: 8px
+  cursor: pointer
+  display: grid
+  grid-gap: 2px 0px
   font-size: 13px
   font-weight: 500
+  padding: 16px 12px
+  &.toolLibraryItemPreview
+    border-color: $primaryColor
 
-.toolLibraryItemEdit
+
+.toolLibraryItemEdit, .toolLibraryItemDelete
   cursor: pointer
   display: grid
   justify-items: center
@@ -191,19 +200,7 @@
     height: 16px
     margin-bottom: 2px
   p
-    color: $secondaryColor
-    font-size: 8px
-    font-weight: 500
-
-.toolLibraryItemDelete
-  cursor: pointer
-  display: grid
-  justify-items: center
-  img
-    height: 16px
-    margin-bottom: 2px
-  p
-    color: #D83B3B
+    color: #000
     font-size: 8px
     font-weight: 500
 
@@ -216,11 +213,11 @@
 
 .toolDraftItem
   @extend .toolLibraryItem
-  background: #F0EEFC
   margin-bottom: 16px
 
 .toolDraftItemName
   @extend .toolLibraryItemName
+  background: #F0EEFC
   color: $primaryColor
 
 // Tool "Record"
@@ -261,22 +258,17 @@
 
 .videosItem
   &.selected
-    background: #F0EEFC
     .toolLibraryItemName
+      background: #F0EEFC
       color: $primaryColor
   .toolLibraryItemEdit
     & > div
       display: grid
       justify-items: center
-  .toolLibraryItemEdit, .toolLibraryItemDelete
-    grid-row-start: 1
-    grid-row-end: 3
 
 .videosItemStatus
   color: $textColorThree
   font-size: 11px
-  grid-column: 1
-  grid-row: 2
   &.waiting
     color: $textColorThree
     font-style: italic

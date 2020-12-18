@@ -98,7 +98,7 @@ const Player = () => {
     const m = t.minutes()
     const s = t.seconds()
     const ms = t.milliseconds()
-    return `${m < 10 ? `0${m}` : m}:${s < 10 ? `0${s}` : s}:${ms.toString().substring(0, 1)}`
+    return `${m < 10 ? `0${m}` : m}:${s < 10 ? `0${s}` : s}:${ms < 100 ? '0' : ms.toString().substring(0, 1)}`
   }
 
   return (
@@ -112,12 +112,12 @@ const Player = () => {
           <div>
             { preview.element === 'video' &&
               <video
-                key={previewVideo}
+                key={previewVideo.url}
                 controls
                 height="100%"
                 width="100%"
               >
-                {previewVideo && <source src={previewVideo} type="video/mp4" />}
+                {previewVideo.url && <source src={previewVideo.url} type="video/mp4" />}
                 Sorry, your browser doesn't support embedded videos.
               </video>
             }

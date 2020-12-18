@@ -18,6 +18,7 @@ import Timeline from '@/components/Campaign/Timeline'
 import Tools from '@/components/Campaign/Tools/index'
 // import ToolBox from '@/components/Campaign/ToolBox'
 import Player from '@/components/Campaign/Player'
+import Preview from '@/components/Campaign/Preview'
 
 import styles from '@/styles/pages/dashboardCampaign.module.sass'
 
@@ -42,6 +43,7 @@ const Campaign = ({ user }) => {
   const videoRef = useSelector(state => state.campaign.videoRef)
 
   const [inputNameWidth, setInputNameWidth] = useState(0)
+  const [displayPreview, showPreview] = useState(false)
 
   // mounted
   useEffect(() => {
@@ -119,6 +121,12 @@ const Campaign = ({ user }) => {
               type: 'SELECT_TOOL',
               data: 2,
             })
+            dispatch({
+              type: 'SHOW_PREVIEW',
+              data: {
+                element: 'video'
+              }
+            })
           }}
         />
       }
@@ -155,13 +163,10 @@ const Campaign = ({ user }) => {
         <div className={styles.headerActions}>
           <Button
             color="white"
-            onClick={() => {
-              saveCampaign()
-              toast.success('Campaign saved.')
-            }}
+            onClick={() => showPreview(true)}
             textColor="dark"
           >
-            Save my campaign
+            Preview mode
           </Button>
           <Button>
             Share
@@ -178,6 +183,8 @@ const Campaign = ({ user }) => {
       <div className={styles.footer}>
         <Timeline />
       </div>
+
+      { displayPreview && <Preview onClose={() => showPreview(false)} /> }
     </div>
   )
 }

@@ -47,11 +47,7 @@ const VideoPlayer = ({ data = {} }) => {
       }, 50);
     }
     if (progression >= duration) {
-      dispatch({ type: 'PAUSE' })
-      dispatch({
-        type: 'videoPlayer/SET_PROGRESSION',
-        data: 0,
-      });
+      dispatch({ type: 'videoPlayer/PAUSE' })
     }
     if (progression < 0) {
       dispatch({
@@ -94,8 +90,8 @@ const VideoPlayer = ({ data = {} }) => {
     }
   }, [video, videoRef]);
 
-  const displayProgression = () => {
-    const t = dayjs.duration(progression)
+  const displayProgression = (value) => {
+    const t = dayjs.duration(parseInt(value, 10))
     const m = t.minutes()
     const s = t.seconds()
     return `${m < 10 ? `0${m}` : m}:${s < 10 ? `0${s}` : s}`
@@ -225,7 +221,11 @@ const VideoPlayer = ({ data = {} }) => {
             </div>
           </div>
         </div>
-        <p className={styles.progression}>{displayProgression()}</p>
+        <div className={styles.progression}>
+          <p>{displayProgression(progression)}</p>
+          <span>/</span>
+          <p>{displayProgression(duration)}</p>
+        </div>
       </div>
     </div>
   )

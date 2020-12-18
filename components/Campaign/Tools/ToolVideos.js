@@ -2,6 +2,9 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { useDebounce } from '@/hooks'
 
+import { mainAPI } from '@/plugins/axios'
+import dayjs from '@/plugins/dayjs'
+
 import styles from '@/styles/components/Campaign/Tools.module.sass'
 
 const ToolVideos = () => {
@@ -11,17 +14,18 @@ const ToolVideos = () => {
   const tool = useSelector(state => state.campaign.tool)
   
   const preview = useSelector(state => state.campaign.preview)
+  const previewVideo = useSelector(state => state.campaign.previewVideo)
   const video = useSelector(state => state.campaign.video)
   const videoList = useSelector(state => state.campaign.videoList)
 
-  const msToMinutes = (d) => {
-    d = Number(d);
-    const m = Math.floor(d % 3600 / 60);
-    const s = Math.floor(d % 3600 % 60);
-
-    const mDisplay = m > 0 ? `${m}:` : '0:';
-    const sDisplay = s > 0 ? s : '';
-    return `${mDisplay}${sDisplay}`; 
+  const displayDuration = (value) => {
+    if (!value) {
+      return '00:00'
+    }
+    const t = dayjs.duration(parseInt(value, 10))
+    const m = t.minutes()
+    const s = t.seconds()
+    return `${m < 10 ? `0${m}` : m}:${s < 10 ? `0${s}` : s}`
   }
 
   const updateProcessingVideos = async () => {
@@ -58,19 +62,19 @@ const ToolVideos = () => {
               key={vd._id}
               className={`${styles.toolLibraryItem} ${styles.videosItem} ${vd._id === video._id ? styles.selected : ''}`}
             >
-              <p
-                className={styles.toolLibraryItemName}
-                onClick={() => dispatch({ type: 'SET_PREVIEW_VIDEO', data: vd.url })}
+              <div
+                className={`${styles.toolLibraryItemName} ${previewVideo.name === vd.name ? styles.toolLibraryItemPreview : ''}`}
+                onClick={() => dispatch({ type: 'SET_PREVIEW_VIDEO', data: vd })}
               >
-                {vd.name}
-              </p>
-              { vd.status === 'done'
-                ?
-                // <p className={`${styles.videosItemStatus}`}>{msToMinutes(vd.metadata.duration)} - {Math.round(vd.metadata.size / 1000000)} mb</p>
-                <p className={`${styles.videosItemStatus}`}>{msToMinutes(vd.metadata.duration)}</p>
-                :
-                <p className={`${styles.videosItemStatus} ${styles[vd.status]}`}>{vd.status}... {vd.status === 'processing' && vd.statusProgress > 0 ? `${vd.statusProgress || 0}%` : ''}</p>
-              }
+                <p>{vd.name}</p>
+                { vd.status === 'done'
+                  ?
+                  // <p className={`${styles.videosItemStatus}`}>{msToMinutes(vd.metadata.duration)} - {Math.round(vd.metadata.size / 1000000)} mb</p>
+                  <p className={`${styles.videosItemStatus}`}>{displayDuration(vd.metadata.duration * 1000)}</p>
+                  :
+                  <p className={`${styles.videosItemStatus} ${styles[vd.status]}`}>{vd.status}... {vd.status === 'processing' && vd.statusProgress > 0 ? `${vd.statusProgress || 0}%` : ''}</p>
+                }
+              </div>
 
               <div className={styles.toolLibraryItemEdit}>
                 {
@@ -81,7 +85,7 @@ const ToolVideos = () => {
                       dispatch({ type: 'SET_PROGRESSION', data: 0 })
                     }}
                   >
-                    <img src="/assets/campaign/select.svg"/>
+                    <img src="/assets/campaign/librarySelect.svg"/>
                     <p>Select</p>
                   </div>
                 }
@@ -90,7 +94,7 @@ const ToolVideos = () => {
                 className={styles.toolLibraryItemDelete}
                 onClick={() => showPopup({ display: 'DELETE_VIDEO', data: vd })}
               >
-                <img src="/assets/campaign/delete.svg" />
+                <img src="/assets/campaign/libraryDelete.svg" />
                 <p>Delete</p>
               </div>
             </div>

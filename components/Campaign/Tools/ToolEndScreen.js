@@ -16,6 +16,7 @@ import styles from '@/styles/components/Campaign/Tools.module.sass'
 const ToolEndScreen = ({ saveCampaign }) => {
   const dispatch = useDispatch()
   const popup = useSelector(state => state.popup)
+  const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
   const showPopup = (popupProps) => dispatch({ type: 'SHOW_POPUP', ...popupProps })
 
   const tool = useSelector(state => state.campaign.tool)
@@ -23,6 +24,7 @@ const ToolEndScreen = ({ saveCampaign }) => {
   const endScreen = useSelector(state => state.campaign.endScreen)
   const endScreenList = useSelector(state => state.campaign.endScreenList)
   const preview = useSelector(state => state.campaign.preview)
+  const previewEndScreen = useSelector(state => state.campaign.previewEndScreen)
 
   const [displayFormEndScreen, showFormEndScreen] = useState(false)
   const [error, setError] = useState('')
@@ -47,6 +49,7 @@ const ToolEndScreen = ({ saveCampaign }) => {
 
   const getEndScreenList = async () => {
     const { data } = await mainAPI.get('/users/me/endScreens')
+    console.log(data)
     dispatch({
       type: 'SET_END_SCREEN_LIST',
       data,
@@ -277,7 +280,7 @@ const ToolEndScreen = ({ saveCampaign }) => {
                       <input
                         className={styles.toolInput}
                         onChange={(e) => updateNetwork({ index, property: 'link', value: e.target.value })}
-                        placeholder="Link here"
+                        placeholder="Copy profile link"
                         type="text"
                         value={network.link}
                       />
@@ -331,13 +334,13 @@ const ToolEndScreen = ({ saveCampaign }) => {
                 <p className={styles.toolSubtitle}>Currently Selected</p>
                 <div className={styles.toolDraftItem}>
                   <p
-                    className={styles.toolDraftItemName}
-                    // onClick={() => {
-                    //   dispatch({
-                    //     type: 'SET_PREVIEW_HELLO_SCREEN',
-                    //     data: {},
-                    //   })
-                    // }}
+                    className={`${styles.toolDraftItemName} ${!previewEndScreen.name ? styles.toolLibraryItemPreview : ''}`}
+                    onClick={() => {
+                      dispatch({
+                        type: 'SET_PREVIEW_END_SCREEN',
+                        data: {},
+                      })
+                    }}
                   >
                     {endScreen.name}
                   </p>
@@ -351,14 +354,14 @@ const ToolEndScreen = ({ saveCampaign }) => {
                       showFormEndScreen(true)
                     }}
                   >
-                    <img src="/assets/campaign/edit.svg" />
+                    <img src="/assets/campaign/libraryEdit.svg" />
                     <p>Edit</p>
                   </div>
                   <div
                     className={styles.toolLibraryItemDelete}
                     onClick={() => showPopup({ display: 'DELETE_DRAFT_END_SCREEN' })}
                   >
-                    <img src="/assets/campaign/delete.svg" />
+                    <img src="/assets/campaign/libraryDelete.svg" />
                     <p>Delete</p>
                   </div>
                 </div>
@@ -376,7 +379,7 @@ const ToolEndScreen = ({ saveCampaign }) => {
                         className={styles.toolLibraryItem}
                       >
                         <p
-                          className={styles.toolLibraryItemName}
+                          className={`${styles.toolLibraryItemName} ${previewEndScreen.name === es.name ? styles.toolLibraryItemPreview : ''}`}
                           onClick={() => {
                             dispatch({ type: 'DISPLAY_ELEMENT', data: 'endScreen' })
                             dispatch({
@@ -389,7 +392,7 @@ const ToolEndScreen = ({ saveCampaign }) => {
                         </p>
                         <div className={styles.toolLibraryItemEdit}>
                           <img
-                            src="/assets/campaign/select.svg"
+                            src="/assets/campaign/librarySelect.svg"
                             onClick={() => {
                               dispatch({ type: 'DISPLAY_ELEMENT', data: 'endScreen' })
                               dispatch({
@@ -407,7 +410,7 @@ const ToolEndScreen = ({ saveCampaign }) => {
                         </div>
                         <div className={styles.toolLibraryItemDelete}>
                           <img
-                            src="/assets/campaign/delete.svg"
+                            src="/assets/campaign/libraryDelete.svg"
                             onClick={() => showPopup({
                               display: 'DELETE_END_SCREEN',
                               data: es,

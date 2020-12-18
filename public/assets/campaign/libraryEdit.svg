@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="11px" height="11px" viewBox="0 0 11 11" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>71706498-E03C-4799-951F-70A6CF556137</title>
+    <defs>
+        <filter id="filter-1">
+            <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0.596078 0 0 0 0 0.631373 0 0 0 0 0.678431 0 0 0 1.000000 0"></feColorMatrix>
+        </filter>
+        <path d="M0.575,8.05625 L0.575,10.025 L2.54375,10.025 L8.35025,4.2185 L6.3815,2.24975 L0.575,8.05625 L0.575,8.05625 Z M9.87275,2.696 C10.0775,2.49125 10.0775,2.1605 9.87275,1.95575 L8.64425,0.72725 C8.4395,0.5225 8.10875,0.5225 7.904,0.72725 L6.94325,1.688 L8.912,3.65675 L9.87275,2.696 L9.87275,2.696 Z" id="path-2"></path>
+        <rect id="path-4" x="0" y="0" width="26.25" height="26.25"></rect>
+    </defs>
+    <g id="FOMO-v2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="_VIDEO/-FIRST-SCREEN-/-LIBRARY-REMPLIS" transform="translate(-319.000000, -400.000000)">
+            <g id="ic_apps-copy" transform="translate(316.500000, 399.000000)" filter="url(#filter-1)">
+                <g transform="translate(2.500000, 1.000000)">
+                    <mask id="mask-3" fill="white">
+                        <use xlink:href="#path-2"></use>
+                    </mask>
+                    <g id="Mask"></g>
+                    <g id="🎨-Color" mask="url(#mask-3)">
+                        <g transform="translate(-7.825000, -7.825000)">
+                            <mask id="mask-5" fill="white">
+                                <use xlink:href="#path-4"></use>
+                            </mask>
+                            <use id="Black" stroke="none" fill="#000000" fill-rule="evenodd" xlink:href="#path-4"></use>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

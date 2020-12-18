@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="14px" height="13px" viewBox="0 0 14 13" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>36F34F36-7B7F-4253-90DC-FA843FF67EB8</title>
+    <defs>
+        <filter id="filter-1">
+            <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0.596078 0 0 0 0 0.631373 0 0 0 0 0.678431 0 0 0 1.000000 0"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="FOMO-v2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="_VIDEO/-FIRST-SCREEN-/-LIBRARY-REMPLIS" transform="translate(-351.000000, -344.000000)">
+            <g id="Black/UI/garbage" transform="translate(345.500000, 344.000000)" filter="url(#filter-1)">
+                <g transform="translate(6.000000, 0.000000)">
+                    <rect id="Boundary" fill-opacity="0" fill="#FFFFFF" x="0" y="0" width="12.6" height="12.6"></rect>
+                    <path d="M9.97340112,3.9375 L9.97340112,10.2375 L9.45,10.2375 L9.45,11.2875 L3.15,11.2875 L3.15,10.2375 L2.625,10.2375 L2.625,3.9375 L1.575,3.9375 L1.575,2.8875 L11.025,2.8875 L11.025,3.9375 L9.97340112,3.9375 Z M8.92340112,3.9375 L3.675,3.9375 L3.675,10.2375 L8.92340112,10.2375 L8.92340112,3.9375 Z M4.2,4.9875 L5.25,4.9875 L5.25,9.1875 L4.2,9.1875 L4.2,4.9875 Z M5.775,4.9875 L6.825,4.9875 L6.825,9.1875 L5.775,9.1875 L5.775,4.9875 Z M7.35,4.9875 L8.4,4.9875 L8.4,9.1875 L7.35,9.1875 L7.35,4.9875 Z M3.675,1.3125 L8.925,1.3125 L8.925,2.3625 L3.675,2.3625 L3.675,1.3125 Z" id="Shape" fill="#000000" fill-rule="nonzero"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

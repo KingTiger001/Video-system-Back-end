@@ -1,14 +1,13 @@
 @import '../_variables.sass'
   
 .videoPlayer
-  background: #000
+  background: #1E1E1E
   border-radius: 8px
   overflow: hidden
   user-select: none
   width: 100%
 
 .player
-  border: 8px solid #333
   border-bottom: 0
   border-radius: 8px 8px 0 0
   overflow: hidden
@@ -16,52 +15,45 @@
   width: 100%
 
 .controls
-  background: #333
   display: grid
-  gap: 6px 16px
-  grid-template-columns: auto auto auto 1fr
-  padding: 0 16px
-  padding-bottom: 8px
-
-.playPause
-  align-self: center
-  cursor: pointer
-  height: 20px
+  gap: 24px
+  grid-auto-columns: 1fr
+  margin: auto
+  padding: 32px 0
+  width: 80%
 
 .timeline
   align-content: center
   display: grid
   cursor: pointer
   grid-column-start: 1
-  grid-column-end: 5
+  grid-column-end: 4
   grid-row: 1
-  height: 18px
+  height: 20px
   position: relative
   &:hover
-    .timelineDuration
-      height: 6px
     .timelineProgression
       &:after
-        height: 14px
-        width: 14px
+        height: 20px
+        width: 20px
 .timelineDuration
-  background: rgba(#fff, 0.3)
+  background: rgba(#fff, 0.1)
   border-radius: 8px
-  height: 4px
-  position: absolute
-  bottom: 4px
+  height: 8px
   transition: all .1s ease-out
   width: 100%
 .timelineProgression
   background: $primaryColor
   border-radius: 8px 0 0 8px
-  height: 100%
+  height: 8px
   left: 0
   position: absolute
-  top: 0
+  top: 50%
+  transform: translateY(-50%)
   &:after
     background: $primaryColor
     border-radius: 50%
+    box-shadow: 0 3px 6px 0 rgba(#000, 0.23)
     content: ''
     height: 0px
     position: absolute
@@ -73,8 +65,9 @@
 .volume
   align-self: center
   display: grid
-  grid-gap: 8px
+  grid-gap: 12px
   grid-template-columns: 24px auto
+  height: 24px
 .volumeIcon
   cursor: pointer
   img
@@ -87,7 +80,7 @@
 .volumeTotal
   background: rgba(#fff, 0.3)
   border-radius: 8px
-  height: 4px
+  height: 6px
   position: absolute
   top: 50%
   transform: translateY(-50%)
@@ -100,7 +93,19 @@
   position: absolute
   top: 0
 
+.playPause
+  align-self: center
+  cursor: pointer
+  height: 20px
+  justify-self: center
+  grid-column: 2
+  grid-row: 2
+
 .progression
   align-self: center
   color: #fff
+  display: grid
+  grid-gap: 4px
+  grid-auto-flow: column
+  justify-self: flex-end
     
