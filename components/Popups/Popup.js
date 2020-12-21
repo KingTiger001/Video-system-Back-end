@@ -2,7 +2,7 @@ import { useDispatch } from 'react-redux'
 
 import styles from '../../styles/components/Popups/Popup.module.sass'
 
-const Popup = ({ allowBackdropClose = true, children, onClose = () => {}, showCloseIcon = true, title }) => {
+const Popup = ({ allowBackdropClose = true, children, onClose = () => {}, showCloseIcon = true, title, width = 600 }) => {
   const dispatch = useDispatch()
   const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
 
@@ -17,19 +17,21 @@ const Popup = ({ allowBackdropClose = true, children, onClose = () => {}, showCl
         }}
         className={styles.background}
       />
-      <div className={styles.content}>
-        <div className={styles.contentHeader}>
-          <p className={styles.title}>{title}</p>
-          { showCloseIcon &&
-            <img
-              onClick={() => {
-                onClose()
-                hidePopup()
-              }}
-              src="/assets/common/close.svg"
-            />
-          }
-        </div>
+      <div
+        className={styles.content}
+        style={{ maxWidth: width }}
+      >
+        { showCloseIcon &&
+          <img
+            className={styles.close}
+            onClick={() => {
+              onClose()
+              hidePopup()
+            }}
+            src="/assets/common/close.svg"
+          />
+        }
+        {title && <p className={styles.title}>{title}</p>}
         {children}
       </div>
     </div>

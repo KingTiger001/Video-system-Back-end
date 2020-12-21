@@ -1,0 +1,51 @@
+@import '../_common.sass'
+@import '../_variables.sass'
+
+.header
+  background: #fff
+  box-shadow: 0 2px 15px 0 rgba(0,0,0,0.05)
+  height: 90px
+
+.container
+  @extend .container
+  align-items: center
+  display: grid
+  height: 100%
+  grid-auto-flow: column
+  grid-gap: 40px
+  grid-template-columns: auto 1fr auto auto auto
+  justify-content: space-between
+
+.logo
+  width: 120px
+  img
+    width: 100%
+
+.menu
+  display: grid
+  grid-auto-flow: column
+  grid-auto-columns: max-content
+  grid-gap: 40px
+  a
+    color: $textColorTwo
+    font-size: 14px
+    position: relative
+    &.selected
+      color: $primaryColor
+      font-weight: 700
+      &:after
+        background: $primaryColor
+        border-radius: 8px
+        content: ''
+        height: 4px
+        left: 0
+        top: calc(100% + 10px)
+        position: absolute
+        width: 30px
+
+.logout
+  cursor: pointer
+  font-size: 16px
+  font-weight: 500
+  &:hover
+    text-decoration: underline

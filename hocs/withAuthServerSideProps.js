@@ -23,14 +23,14 @@ const withAuthServerSideProps = (serverSidePropsFunc) => {
           const otherProps = await serverSidePropsFunc(ctx, user)
           return {
             props: {
-              ...(user && { user }),
+              ...(user && { me: user }),
               ...otherProps,
             },
           }
         }
         return {
           props: {
-            ...(user && { user }),
+            ...(user && { me: user }),
           },
         }
       } catch (err) {
