@@ -35,7 +35,7 @@ const Login = () => {
         })
         jscookie.set('fo_sas_tk', jwt, { expires: 30 })
         mainAPI.defaults.headers.common.Authorization = `Bearer ${jwt}`
-        router.push((!user.firstName || !user.lastName) ? '/signup/details' : '/dashboard')
+        router.push((!user.firstName || !user.lastName) ? '/signup/details' : '/app')
       } catch (err) {
         const code = err.response && err.response.data
         if (code === 'Auth.login.invalidCredentials') {
@@ -94,7 +94,7 @@ const Login = () => {
 export default withAuth(Login)
 export const getServerSideProps = withAuthServerSideProps((ctx, user) => {
   if (user) {
-    ctx.res.writeHead(302, { Location: '/dashboard' });
+    ctx.res.writeHead(302, { Location: '/app' });
     ctx.res.end();
   }
   return false

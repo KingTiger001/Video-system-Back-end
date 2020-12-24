@@ -103,7 +103,7 @@ const Signup = () => {
 export default withAuth(Signup)
 export const getServerSideProps = withAuthServerSideProps((ctx, user) => {
   if (user) {
-    ctx.res.writeHead(302, { Location: '/dashboard' });
+    ctx.res.writeHead(302, { Location: '/app' });
     ctx.res.end();
   }
   return false

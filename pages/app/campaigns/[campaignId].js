@@ -22,7 +22,7 @@ import Preview from '@/components/Campaign/Preview'
 
 import styles from '@/styles/pages/dashboardCampaign.module.sass'
 
-const Campaign = ({ user }) => {
+const Campaign = ({ me }) => {
   const router = useRouter()
 
   const dispatch = useDispatch()
@@ -47,11 +47,11 @@ const Campaign = ({ user }) => {
 
   // mounted
   useEffect(() => {
-    if (user.logo && !logo.value) {
+    if (me.logo && !logo.value) {
       dispatch({
         type: 'CHANGE_LOGO',
         data: {
-          value: user.logo
+          value: me.logo
         }
       })
     }
@@ -140,7 +140,7 @@ const Campaign = ({ user }) => {
       }
 
       <div className={styles.header}>
-        <Link href="/dashboard">
+        <Link href="/app/campaigns">
           <a className={styles.headerMenu}>
             <img src="/assets/common/back.svg" />
             <p>Back</p>

@@ -9,12 +9,12 @@ const PopupWelcome = ({ onClose }) => {
   const router = useRouter()
   
   const goToCampaigns = () => {
-    router.push('/dashboard/campaigns')
+    router.push('/app/campaigns')
     onClose()
   }
 
   const goToContacts = () => {
-    router.push('/dashboard/contacts')
+    router.push('/app/contacts')
     onClose()
   }
 
@@ -34,7 +34,7 @@ const PopupWelcome = ({ onClose }) => {
           <div>
             <p>Ajoutez ou importez votre première liste de contact :</p>
             <Button
-              href="/dashboard/contacts"
+              href="/app/contacts"
               onClick={goToContacts}
               outline={true}
             >
@@ -45,7 +45,7 @@ const PopupWelcome = ({ onClose }) => {
             <p>Vous êtes impatient ? Créez votre première campagne vidéo !</p>
             <Button
               color="secondary"
-              href="/dashboard/campaigns"
+              href="/app/campaigns"
               onClick={goToCampaigns}
               outline={true}
             >

@@ -3,14 +3,27 @@
 
 .layout
   background: #F3F7F9
-  min-height: 100vh
+  height: 100vh
 
 .content
-  min-height: 0
-  padding: 50px 0
+  height: calc(100% - 90px)
+  .container
+    padding: 40px 0
+
+.header
+  align-items: center
+  border-bottom: 1px solid $primaryColor
+  display: grid
+  grid-auto-flow: column
+  grid-auto-columns: max-content
+  justify-content: space-between
+  margin-bottom: 40px
+  padding-bottom: 20px
 
 .title
   color: $textColorTwo
-  font-size: 30px
+  font-size: 24px
   font-weight: 700
-  margin-bottom: 40px
+  span
+    color: $primaryColor
+    font-size: 14px

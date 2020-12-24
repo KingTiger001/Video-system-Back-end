@@ -43,7 +43,7 @@ const SignupDetails = ({ user }) => {
           lastName,
           job,
         })
-        router.push('/dashboard')
+        router.push('/app')
       } catch (err) {
         console.log(err)
         setError('An error occured.')
@@ -115,7 +115,7 @@ const SignupDetails = ({ user }) => {
 export default withAuth(SignupDetails)
 export const getServerSideProps = withAuthServerSideProps((ctx, user) => {
   if (user && user.firstName && user.lastName) {
-    ctx.res.writeHead(302, { Location: '/dashboard' });
+    ctx.res.writeHead(302, { Location: '/app' });
     ctx.res.end();
   }
   return false

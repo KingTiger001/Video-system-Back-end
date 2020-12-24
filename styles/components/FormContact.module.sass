@@ -1,0 +1,25 @@
+@import '../_variables.sass'
+  
+.form
+  display: grid
+  grid-gap: 20px
+  grid-template-columns: 1fr 1fr
+  button
+    grid-column-start: 1
+    grid-column-end: 3
+
+.cancel
+  color: $textColorThree
+  cursor: pointer
+  font-size: 14px
+  grid-column-start: 1
+  grid-column-end: 3
+  justify-self: center
+  letter-spacing: 0.2px
+
+.label
+  color: $textColorTwo
+  display: block
+  font-size: 14px
+  font-weight: 700
+  margin-bottom: 10px

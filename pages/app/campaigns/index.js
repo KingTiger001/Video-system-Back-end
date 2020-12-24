@@ -31,7 +31,7 @@ const Campaigns = ({ initialCampaigns }) => {
 
   const createCampaign = async () => {
     const { data: campaign } = await mainAPI.post('/campaigns')
-    router.push(`/dashboard/campaigns/${campaign._id}`)
+    router.push(`/app/campaigns/${campaign._id}`)
   }
 
   const getCampaigns = async () => {
@@ -86,7 +86,7 @@ const Campaigns = ({ initialCampaigns }) => {
                       <p>{dayjs(campaign.createdAt).format('MM/DD/YYYY')}</p>
                       <p>{displayDuration(campaign.duration)}</p>
                       <div className={styles.campaignsItemActions}>
-                        <Link href={`/dashboard/campaigns/${campaign._id}`}>
+                        <Link href={`/app/campaigns/${campaign._id}`}>
                           <a className={styles.action}>Edit</a>
                         </Link>
                         <span

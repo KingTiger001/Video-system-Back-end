@@ -17,24 +17,24 @@ const HeaderApp = () => {
   return (
     <div className={styles.header}>
       <div className={styles.container}>
-        <Link href="/dashboard">
+        <Link href="/app">
           <a className={styles.logo}>
             <img src="/logo-simple.svg" />
           </a>
         </Link>
 
         <nav className={styles.menu}>
-          <Link href="/dashboard">
-            <a className={router.route === '/dashboard' ? styles.selected : ''}>Dashboard</a>
+          <Link href="/app">
+            <a className={router.route === '/app' ? styles.selected : ''}>Dashboard</a>
           </Link>
-          <Link href="/dashboard/campaigns">
-            <a className={router.route === '/dashboard/campaigns' ? styles.selected : ''}>Campaigns</a>
+          <Link href="/app/campaigns">
+            <a className={router.route === '/app/campaigns' ? styles.selected : ''}>Campaigns</a>
           </Link>
-          <Link href="/dashboard/analytics">
-            <a className={router.route === '/dashboard/analytics' ? styles.selected : ''}>Analytics</a>
+          <Link href="/app/analytics">
+            <a className={router.route === '/app/analytics' ? styles.selected : ''}>Analytics</a>
           </Link>
-          <Link href="/dashboard/contacts">
-            <a className={router.route === '/dashboard/contacts' ? styles.selected : ''}>Contacts</a>
+          <Link href="/app/contacts">
+            <a className={router.route.includes('/app/contacts') ? styles.selected : ''}>Contacts</a>
           </Link>
         </nav>
 

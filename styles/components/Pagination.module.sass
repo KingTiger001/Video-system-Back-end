@@ -1,0 +1,25 @@
+@import '../_variables.sass'
+
+.pagination
+  display: grid
+  grid-auto-flow: column
+  grid-auto-columns: max-content
+  grid-gap: 10px
+  justify-content: center
+  margin-top: 30px
+
+.page
+  &.selected
+    a
+      color: $primaryColor
+      opacity: 1 !important
+  a
+    color: $textColorTwo
+    cursor: pointer
+    font-size: 14px
+    font-weight: 700
+    opacity: 0.4
+    &:hover
+      opacity: 0.6
+    &:focus
+      outline: none
