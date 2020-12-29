@@ -5,7 +5,7 @@ import { mainAPI } from '@/plugins/axios'
 import FormContactList from '../FormContactList'
 import Popup from './Popup'
 
-const PopupAddContactList = ({ onDone }) => {
+const PopupContactListCreate = ({ onDone }) => {
   const [loading, setLoading] = useState(false)
 
   const addContactList = async (data) => {
@@ -35,4 +35,4 @@ const PopupAddContactList = ({ onDone }) => {
 }
 
 
-export default PopupAddContactList
+export default PopupContactListCreate

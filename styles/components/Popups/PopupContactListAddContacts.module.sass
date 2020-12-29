@@ -1,0 +1,68 @@
+@import '../../_variables.sass'
+
+.tabs
+  display: grid
+  grid-auto-flow: column
+  grid-auto-columns: max-content
+  grid-gap: 24px
+  margin-bottom: 32px
+  li
+    color: $primaryColor
+    cursor: pointer
+    font-size: 14px
+    position: relative
+    &.selected
+      color: $primaryColor
+      font-weight: 700
+      &:after
+        background: $primaryColor
+        border-radius: 8px
+        content: ''
+        height: 3px
+        left: 0
+        top: calc(100% + 5px)
+        position: absolute
+        width: 30px
+
+.existingContacts
+  & > button
+    width: 100%
+
+.contactsHeader, .contact
+  align-items: center
+  display: grid
+  grid-gap: 8px
+  grid-template-columns: 16px 1fr 1fr
+
+.contactsHeader
+  margin-bottom: 8px
+  p
+    color: $textColorThree
+    font-size: 13px
+    font-weight: 700
+    letter-spacing: 0.2px
+
+.contacts
+  display: grid
+  grid-gap: 8px
+  grid-auto-rows: max-content
+  height: 300px
+  overflow: auto
+
+.contact
+  color: $textColorTwo
+  font-size: 13px
+  letter-spacing: 0.2px
+  input
+    cursor: pointer
+  img
+    height: 16px
+
+.cancel
+  color: $textColorThree
+  cursor: pointer
+  font-size: 14px
+  justify-self: center
+  letter-spacing: 0.2px
+  margin-top: 20px
+  text-align: center

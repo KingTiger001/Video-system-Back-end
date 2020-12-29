@@ -1,9 +1,10 @@
+import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import styles from '@/styles/components/Contacts/ListItem.module.sass'
 
-const ListItem = ({ data }) => {
+const ListItem = ({ data, renderDropdownActions }) => {
   const dispatch = useDispatch()
   const showPopup = (popupProps) => dispatch({ type: 'SHOW_POPUP', ...popupProps })
 
@@ -27,7 +28,9 @@ const ListItem = ({ data }) => {
   return data
     ?
     <div className={styles.listItem}>
-      <p>{data.name}</p>
+      <Link href={`/app/contacts/lists/${data._id}`}>
+        <a>{data.name}</a>
+      </Link>
       <p>{data.list.length} contacts</p>
       <div className={styles.more}>
         <img
@@ -35,27 +38,12 @@ const ListItem = ({ data }) => {
           src="/assets/common/more.svg"
         />
         { displayDropdown &&
-          <ul
+          <div
             className={styles.dropdown}
             ref={dropdownRef}
           >
-            <li
-              onClick={() => showPopup({
-                display: 'RENAME_CONTACT_LIST',
-                data,
-              })}
-            >
-              <p>Rename</p>
-            </li>
-            <li
-              onClick={() => showPopup({
-                display: 'DELETE_CONTACT_LIST',
-                data,
-              })}
-            >
-              <p>Delete</p>
-            </li>
-          </ul>
+            {renderDropdownActions()}
+          </div>
         }
       </div>
     

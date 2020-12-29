@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 
 import styles from '@/styles/components/Contacts/ContactItem.module.sass'
 
-const ContactItem = ({ data }) => {
+const ContactItem = ({ data, renderDropdownActions }) => {
   const dispatch = useDispatch()
   const showPopup = (popupProps) => dispatch({ type: 'SHOW_POPUP', ...popupProps })
 
@@ -39,27 +39,12 @@ const ContactItem = ({ data }) => {
           src="/assets/common/more.svg"
         />
         { displayDropdown &&
-          <ul
+          <div
             className={styles.dropdown}
             ref={dropdownRef}
           >
-            <li
-              onClick={() => showPopup({
-                display: 'EDIT_CONTACT',
-                data,
-              })}
-            >
-              <p>Edit</p>
-            </li>
-            <li
-              onClick={() => showPopup({
-                display: 'DELETE_CONTACT',
-                data,
-              })}
-            >
-              <p>Delete</p>
-            </li>
-          </ul>
+            {renderDropdownActions()}
+          </div>
         }
       </div>
     </div>

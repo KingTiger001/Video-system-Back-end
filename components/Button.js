@@ -9,6 +9,7 @@ const Button = ({
   loading, 
   onClick, 
   outline = false,
+  size,
   style,
   target, 
   textColor, 
@@ -19,7 +20,7 @@ const Button = ({
     case 'button':
       return (
         <button
-          className={`${styles.button} ${styles[`${color}Color`]} ${outline ? styles.outline : ''} ${loading ? styles.loading : ''} ${textColor ? styles[`${textColor}TextColor`] : ''}`}
+          className={`${styles.button} ${styles[`${color}Color`]} ${outline ? styles.outline : ''} ${loading ? styles.loading : ''} ${textColor ? styles[`${textColor}TextColor`] : ''} ${size ? styles[`${size}Size`] : ''}`}
           style={{
             ...(width && { width }),
             ...style,
@@ -32,7 +33,7 @@ const Button = ({
     case 'div':
       return (
         <div
-          className={`${styles.button} ${styles[`${color}Color`]} ${outline ? styles.outline : ''} ${loading ? styles.loading : ''} ${textColor ? styles[`${textColor}TextColor`] : ''}`}
+          className={`${styles.button} ${styles[`${color}Color`]} ${outline ? styles.outline : ''} ${loading ? styles.loading : ''} ${textColor ? styles[`${textColor}TextColor`] : ''} ${size ? styles[`${size}Size`] : ''}`}
           style={{
             ...(width && { width }),
             ...style,
@@ -48,7 +49,7 @@ const Button = ({
           href={href}
         >
           <a
-            className={`${styles.button} ${styles[`${color}Color`]} ${outline ? styles.outline : ''}`}
+            className={`${styles.button} ${styles[`${color}Color`]} ${outline ? styles.outline : ''} ${textColor ? styles[`${textColor}TextColor`] : ''} ${size ? styles[`${size}Size`] : ''}`}
             style={{
               ...(width && { width }),
               ...style,

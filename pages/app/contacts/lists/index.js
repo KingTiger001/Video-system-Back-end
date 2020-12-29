@@ -13,7 +13,7 @@ import ContactLayout from '@/layouts/ContactLayout'
 import Button from '@/components/Button'
 import ListItem from '@/components/Contacts/ListItem'
 import Pagination from '@/components/Pagination'
-import PopupAddContactList from '@/components/Popups/PopupAddContactList'
+import PopupContactListCreate from '@/components/Popups/PopupContactListCreate'
 import PopupDeleteContactList from '@/components/Popups/PopupDeleteContactList'
 import PopupRenameContactList from '@/components/Popups/PopupRenameContactList'
 
@@ -43,8 +43,8 @@ const ContactLists = ({ initialContactLists, me }) => {
         <title>Lists | FOMO</title>
       </Head>
 
-      { popup.display === 'ADD_CONTACT_LIST' && 
-        <PopupAddContactList
+      { popup.display === 'CONTACT_LIST_CREATE' && 
+        <PopupContactListCreate
           onDone={() => {
             getContactLists()
             hidePopup()
@@ -74,7 +74,9 @@ const ContactLists = ({ initialContactLists, me }) => {
         <div className={layoutStyles.header}>
           <h1 className={layoutStyles.title}>Lists <span>({ contactLists.totalDocs })</span></h1>
           <Button
-            onClick={() => showPopup({ display: 'ADD_CONTACT_LIST' })}
+            color="secondary"
+            onClick={() => showPopup({ display: 'CONTACT_LIST_CREATE' })}
+            size="small"
           >
             Add new list
           </Button>
@@ -92,6 +94,26 @@ const ContactLists = ({ initialContactLists, me }) => {
             <ListItem
               data={contactList}
               key={contactList._id}
+              renderDropdownActions={() => (
+                <ul>
+                  <li
+                    onClick={() => showPopup({
+                      display: 'RENAME_CONTACT_LIST',
+                      data: contactList,
+                    })}
+                  >
+                    <p>Rename</p>
+                  </li>
+                  <li
+                    onClick={() => showPopup({
+                      display: 'DELETE_CONTACT_LIST',
+                      data: contactList,
+                    })}
+                  >
+                    <p>Delete</p>
+                  </li>
+                </ul>
+              )}
             />
           ))}
           { contactLists.totalDocs <= 0 && <ListItem /> }
