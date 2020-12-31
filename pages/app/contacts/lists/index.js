@@ -31,11 +31,47 @@ const ContactLists = ({ initialContactLists, me }) => {
   const showPopup = (popupProps) => dispatch({ type: 'SHOW_POPUP', ...popupProps })
   
   const [contactLists, setContactLists] = useState(initialContactLists)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const getContactLists = async () => {
     const { data } = await mainAPI.get(`/users/me/contactLists?limit=${CONTACT_LISTS_LIMIT}&page=${router.query.page ? router.query.page : 1}`)
     setContactLists(data)
   }
+
+  const searchContactLists = async (query) => {
+    if (!query) {
+      return getContactLists()
+    }
+    const { data } = await mainAPI.get(`/contactLists/search?query=${query}`)
+    setContactLists(data)
+  }
+
+  const renderContactList = (contactList) => (
+    <ListItem
+      data={contactList}
+      key={contactList._id}
+      renderDropdownActions={() => (
+        <ul>
+          <li
+            onClick={() => showPopup({
+              display: 'RENAME_CONTACT_LIST',
+              data: contactList,
+            })}
+          >
+            <p>Rename</p>
+          </li>
+          <li
+            onClick={() => showPopup({
+              display: 'DELETE_CONTACT_LIST',
+              data: contactList,
+            })}
+          >
+            <p>Delete</p>
+          </li>
+        </ul>
+      )}
+    />
+  )
 
   return (
     <AppLayout>
@@ -72,15 +108,32 @@ const ContactLists = ({ initialContactLists, me }) => {
 
       <ContactLayout>
         <div className={layoutStyles.header}>
-          <h1 className={layoutStyles.title}>Lists <span>({ contactLists.totalDocs })</span></h1>
-          <Button
-            color="secondary"
-            onClick={() => showPopup({ display: 'CONTACT_LIST_CREATE' })}
-            size="small"
-          >
-            Add new list
-          </Button>
+          <div className={layoutStyles.headerTop}>
+            <h1 className={layoutStyles.headerTitle}>Lists <span>({ searchQuery ? contactLists.length : contactLists.totalDocs })</span></h1>
+            <div className={layoutStyles.headerActions}>
+              <Button
+                color="secondary"
+                onClick={() => showPopup({ display: 'CONTACT_LIST_CREATE' })}
+                size="small"
+              >
+                Add new list
+              </Button>
+            </div>
+          </div>
+          <div className={layoutStyles.headerBottom}>
+            <div className={layoutStyles.headerSearch}>
+              <img src="/assets/common/search.svg" />
+              <input
+                placeholder="Search"
+                onChange={(e) => {
+                  setSearchQuery(e.target.value)
+                  searchContactLists(e.target.value)
+                }}
+              />
+            </div>
+          </div>
         </div>
+
         <div className={styles.contactLists}>
           <div className={styles.contactListsHeader}>
             <div>
@@ -90,33 +143,9 @@ const ContactLists = ({ initialContactLists, me }) => {
               <p>Number of contacts</p>
             </div>
           </div>
-          { contactLists.totalDocs > 0 && contactLists.docs.map(contactList => (
-            <ListItem
-              data={contactList}
-              key={contactList._id}
-              renderDropdownActions={() => (
-                <ul>
-                  <li
-                    onClick={() => showPopup({
-                      display: 'RENAME_CONTACT_LIST',
-                      data: contactList,
-                    })}
-                  >
-                    <p>Rename</p>
-                  </li>
-                  <li
-                    onClick={() => showPopup({
-                      display: 'DELETE_CONTACT_LIST',
-                      data: contactList,
-                    })}
-                  >
-                    <p>Delete</p>
-                  </li>
-                </ul>
-              )}
-            />
-          ))}
-          { contactLists.totalDocs <= 0 && <ListItem /> }
+          { contactLists.totalDocs > 0 && contactLists.docs.map(contactList => renderContactList(contactList)) }
+          { searchQuery && contactLists.length > 0 && contactLists.map(contactList => renderContactList(contactList)) }
+          { (contactLists.totalDocs <= 0 || (searchQuery && contactLists.length <= 0)) && <ListItem /> }
         </div>
       </ContactLayout>
     </AppLayout>

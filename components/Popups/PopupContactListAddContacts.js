@@ -109,18 +109,20 @@ const PopupContactListAddContact = ({ me, onDone }) => {
               </div>
             ))}
           </div>
-          <Button
-            loading={loading}
-            onClick={addExistingContacts}
-          >
-            Add
-          </Button>
-          <p
-            onClick={hidePopup}
-            className={styles.cancel}
-          >
-            Cancel
-          </p>
+          <div className={styles.footer}>
+            <Button
+              loading={loading}
+              onClick={addExistingContacts}
+            >
+              Add
+            </Button>
+            <p
+              onClick={hidePopup}
+              className={styles.cancel}
+            >
+              Cancel
+            </p>
+          </div>
         </div>
       }
       { tab === 1 &&

@@ -24,18 +24,15 @@
         position: absolute
         width: 30px
 
-.existingContacts
-  & > button
-    width: 100%
-
 .contactsHeader, .contact
   align-items: center
   display: grid
-  grid-gap: 8px
+  grid-gap: 15px
   grid-template-columns: 16px 1fr 1fr
 
 .contactsHeader
   margin-bottom: 8px
+  padding: 0 15px
   p
     color: $textColorThree
     font-size: 13px
@@ -43,20 +40,30 @@
     letter-spacing: 0.2px
 
 .contacts
+  border: 1px solid $primaryColor
+  border-radius: 4px
   display: grid
-  grid-gap: 8px
   grid-auto-rows: max-content
   height: 300px
   overflow: auto
+  & > div:nth-child(odd)
+    background: #F9FAFC
 
 .contact
   color: $textColorTwo
+  height: 40px
   font-size: 13px
   letter-spacing: 0.2px
+  padding: 0 15px
   input
     cursor: pointer
   img
     height: 16px
+
+.footer
+  display: grid
+  grid-gap: 12px
+  margin-top: 24px
 
 .cancel
   color: $textColorThree
@@ -64,5 +71,4 @@
   font-size: 14px
   justify-self: center
   letter-spacing: 0.2px
-  margin-top: 20px
   text-align: center

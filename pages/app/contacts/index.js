@@ -32,11 +32,7 @@ const Contacts = ({ initialContacts, me }) => {
   const showPopup = (popupProps) => dispatch({ type: 'SHOW_POPUP', ...popupProps })
   
   const [contacts, setContacts] = useState(initialContacts)
-
-  const getContacts = async () => {
-    const { data } = await mainAPI.get(`/users/me/contacts?limit=${CONTACTS_LIMIT}&page=${router.query.page ? router.query.page : 1}`)
-    setContacts(data)
-  }
+  const [searchQuery, setSearchQuery] = useState('')
 
   const extractDataFromCSV = async (e) => {
     const formData = new FormData()
@@ -44,6 +40,46 @@ const Contacts = ({ initialContacts, me }) => {
     const { data } = await mainAPI.post('/contacts/csv', formData)
     showPopup({ display: 'IMPORT_CONTACTS', data })
   }
+
+  const getContacts = async () => {
+    const { data } = await mainAPI.get(`/users/me/contacts?limit=${CONTACTS_LIMIT}&page=${router.query.page ? router.query.page : 1}`)
+    setContacts(data)
+  }
+
+  const searchContacts = async (query) => {
+    if (!query) {
+      return getContacts()
+    }
+    const { data } = await mainAPI.get(`/contacts/search?query=${query}`)
+    setContacts(data)
+  }
+
+  const renderContact = (contact) => (
+    <ContactItem
+      data={contact}
+      key={contact._id}
+      renderDropdownActions={() => (
+        <ul>
+          <li
+            onClick={() => showPopup({
+              display: 'EDIT_CONTACT',
+              data: contact,
+            })}
+          >
+            <p>Edit</p>
+          </li>
+          <li
+            onClick={() => showPopup({
+              display: 'DELETE_CONTACT',
+              data: contact,
+            })}
+          >
+            <p>Delete</p>
+          </li>
+        </ul>
+      )}
+    />
+  )
 
   return (
     <AppLayout>
@@ -89,23 +125,37 @@ const Contacts = ({ initialContacts, me }) => {
 
       <ContactLayout>
         <div className={layoutStyles.header}>
-          <h1 className={layoutStyles.title}>Contacts <span>({ contacts.totalDocs })</span></h1>
-          <div className={layoutStyles.headerActions}>
-            <Button
-              color="lightGrey"
-              onClick={() => showPopup({ display: 'ADD_CONTACT' })}
-              size="small"
-            >
-              Add contact
-            </Button>
-            <Button
-              color="secondary"
-              onChange={extractDataFromCSV}
-              size="small"
-              type="file"
-            >
-              Import contacts
-            </Button>
+          <div className={layoutStyles.headerTop}>
+            <h1 className={layoutStyles.headerTitle}>Contacts <span>({ searchQuery ? contacts.length : contacts.totalDocs })</span></h1>
+            <div className={layoutStyles.headerActions}>
+              <Button
+                color="lightGrey"
+                onClick={() => showPopup({ display: 'ADD_CONTACT' })}
+                size="small"
+              >
+                Add contact
+              </Button>
+              <Button
+                color="secondary"
+                onChange={extractDataFromCSV}
+                size="small"
+                type="file"
+              >
+                Import contacts
+              </Button>
+            </div>
+          </div>
+          <div className={layoutStyles.headerBottom}>
+            <div className={layoutStyles.headerSearch}>
+              <img src="/assets/common/search.svg" />
+              <input
+                placeholder="Search"
+                onChange={(e) => {
+                  setSearchQuery(e.target.value)
+                  searchContacts(e.target.value)
+                }}
+              />
+            </div>
           </div>
         </div>
         <div className={styles.contacts}>
@@ -129,39 +179,17 @@ const Contacts = ({ initialContacts, me }) => {
               <p>Phone number</p>
             </div>
           </div>
-          { contacts.totalDocs > 0 && contacts.docs.map(contact => (
-            <ContactItem
-              data={contact}
-              key={contact._id}
-              renderDropdownActions={() => (
-                <ul>
-                  <li
-                    onClick={() => showPopup({
-                      display: 'EDIT_CONTACT',
-                      data: contact,
-                    })}
-                  >
-                    <p>Edit</p>
-                  </li>
-                  <li
-                    onClick={() => showPopup({
-                      display: 'DELETE_CONTACT',
-                      data: contact,
-                    })}
-                  >
-                    <p>Delete</p>
-                  </li>
-                </ul>
-              )}
-            />
-          ))}
-          { contacts.totalDocs <= 0 && <ContactItem /> }
+          { contacts.totalDocs > 0 && contacts.docs.map(contact => renderContact(contact)) }
+          { searchQuery && contacts.length > 0 && contacts.map(contact => renderContact(contact)) }
+          { (contacts.totalDocs <= 0 || (searchQuery && contacts.length <= 0)) && <ContactItem /> }
         </div>
-        <Pagination
-          pageCount={contacts.totalPages}
-          initialPage={router.query.page ? parseInt(router.query.page, 10) - 1 : 0}
-          route="/app/contacts"
-        />
+        { !searchQuery && 
+          <Pagination
+            pageCount={contacts.totalPages}
+            initialPage={router.query.page ? parseInt(router.query.page, 10) - 1 : 0}
+            route="/app/contacts"
+          />
+        }
       </ContactLayout>
     </AppLayout>
   )

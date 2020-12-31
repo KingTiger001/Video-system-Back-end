@@ -89,23 +89,25 @@ const ContactList = ({ initialContactList, me }) => {
 
       <ContactLayout>
         <div className={layoutStyles.header}>
-          <h1 className={layoutStyles.title}>Lists / {contactList.name}</h1>
-          <div className={layoutStyles.headerActions}>
-            <Button
-              color="lightGrey"
-              onClick={() => showPopup({ display: 'CONTACT_LIST_ADD_CONTACTS', data: contactList })}
-              size="small"
-            >
-              Add contacts
-            </Button>
-            <Button
-              color="secondary"
-              onChange={extractDataFromCSV}
-              size="small"
-              type="file"
-            >
-              Import contacts
-            </Button>
+          <div className={layoutStyles.headerTop}>
+            <h1 className={layoutStyles.headerTitle}>Lists / {contactList.name}</h1>
+            <div className={layoutStyles.headerActions}>
+              <Button
+                color="lightGrey"
+                onClick={() => showPopup({ display: 'CONTACT_LIST_ADD_CONTACTS', data: contactList })}
+                size="small"
+              >
+                Add contacts
+              </Button>
+              <Button
+                color="secondary"
+                onChange={extractDataFromCSV}
+                size="small"
+                type="file"
+              >
+                Import contacts
+              </Button>
+            </div>
           </div>
         </div>
         <div className={styles.contacts}>
