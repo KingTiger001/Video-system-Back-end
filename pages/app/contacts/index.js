@@ -16,6 +16,7 @@ import Pagination from '@/components/Pagination'
 import PopupAddContact from '@/components/Popups/PopupAddContact'
 import PopupDeleteContact from '@/components/Popups/PopupDeleteContact'
 import PopupEditContact from '@/components/Popups/PopupEditContact'
+import PopupImportContacts from '@/components/Popups/PopupImportContacts'
 
 import layoutStyles from '@/styles/layouts/App.module.sass'
 import styles from '@/styles/layouts/Contact.module.sass'
@@ -35,6 +36,13 @@ const Contacts = ({ initialContacts, me }) => {
   const getContacts = async () => {
     const { data } = await mainAPI.get(`/users/me/contacts?limit=${CONTACTS_LIMIT}&page=${router.query.page ? router.query.page : 1}`)
     setContacts(data)
+  }
+
+  const extractDataFromCSV = async (e) => {
+    const formData = new FormData()
+    formData.append('file', e.target.files[0])
+    const { data } = await mainAPI.post('/contacts/csv', formData)
+    showPopup({ display: 'IMPORT_CONTACTS', data })
   }
 
   return (
@@ -69,16 +77,36 @@ const Contacts = ({ initialContacts, me }) => {
           }}
         />
       }
+      { popup.display === 'IMPORT_CONTACTS' && 
+        <PopupImportContacts
+          me={me}
+          onDone={() => {
+            getContacts()
+            hidePopup()
+          }}
+        />
+      }
 
       <ContactLayout>
         <div className={layoutStyles.header}>
           <h1 className={layoutStyles.title}>Contacts <span>({ contacts.totalDocs })</span></h1>
-          <Button
-            onClick={() => showPopup({ display: 'ADD_CONTACT' })}
-            size="small"
-          >
-            Add contact
-          </Button>
+          <div className={layoutStyles.headerActions}>
+            <Button
+              color="lightGrey"
+              onClick={() => showPopup({ display: 'ADD_CONTACT' })}
+              size="small"
+            >
+              Add contact
+            </Button>
+            <Button
+              color="secondary"
+              onChange={extractDataFromCSV}
+              size="small"
+              type="file"
+            >
+              Import contacts
+            </Button>
+          </div>
         </div>
         <div className={styles.contacts}>
           <div className={styles.contactsHeader}>

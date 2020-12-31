@@ -1,0 +1,46 @@
+@import '../../_variables.sass'
+
+.countContactsFound
+  color: $textColorOne
+  font-size: 16px
+  font-weight: 700
+  margin-bottom: 16px
+  span
+    color: $primaryColor
+  
+.columnsNotMatching
+  & > p
+    color: $textColorOne
+    font-size: 14px
+    line-height: 20px
+    margin-bottom: 8px
+
+.columnsNotMatchingList
+  border: 1px solid $primaryColor
+  border-radius: 4px
+  overflow: hidden
+  & > div:nth-child(odd)
+    background: #F9FAFC
+
+.columnsNotMatchingItem
+  align-items: center
+  display: grid
+  grid-template-columns: 1fr auto
+  height: 40px
+  padding: 0 15px
+  p
+    color: $textColorTwo
+    font-size: 13px
+    font-weight: 500
+
+.footer
+  display: grid
+  grid-gap: 12px
+  margin-top: 24px
+
+.cancel
+  color: $textColorThree
+  cursor: pointer
+  font-size: 14px
+  letter-spacing: 0.2px
+  text-align: center

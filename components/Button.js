@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { useState } from 'react'
 
 import styles from '../styles/components/Button.module.sass'
 
@@ -7,7 +8,8 @@ const Button = ({
   children, 
   href, 
   loading, 
-  onClick, 
+  onChange,
+  onClick,
   outline = false,
   size,
   style,
@@ -16,6 +18,7 @@ const Button = ({
   type = 'button',
   width,
 }) => {
+  const [fileInputKey, setfileInputKey] = useState(Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5))
   switch (type) {
     case 'button':
       return (
@@ -59,6 +62,27 @@ const Button = ({
             <span>{ children }</span>
           </a>
         </Link>
+      )
+    case 'file':
+      return (
+        <div>
+          <label
+            className={`${styles.button} ${styles[`${color}Color`]} ${outline ? styles.outline : ''} ${textColor ? styles[`${textColor}TextColor`] : ''} ${size ? styles[`${size}Size`] : ''}`}
+            htmlFor="file"
+          >
+            <span>{ children }</span>
+          </label>
+          <input
+            id="file"
+            key={fileInputKey}
+            type="file"
+            onChange={(e) => {
+              onChange(e)
+              setfileInputKey(Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5))
+            }}
+            className={styles.inputFile}
+          />
+        </div>
       )
   }
 }

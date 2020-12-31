@@ -16,6 +16,7 @@ import Pagination from '@/components/Pagination'
 import PopupContactListAddContacts from '@/components/Popups/PopupContactListAddContacts'
 import PopupContactListRemoveContact from '@/components/Popups/PopupContactListRemoveContact'
 import PopupEditContact from '@/components/Popups/PopupEditContact'
+import PopupImportContacts from '@/components/Popups/PopupImportContacts'
 
 import layoutStyles from '@/styles/layouts/App.module.sass'
 import styles from '@/styles/layouts/Contact.module.sass'
@@ -33,6 +34,13 @@ const ContactList = ({ initialContactList, me }) => {
   const getContactList = async () => {
     const { data } = await mainAPI.get(`/contactLists/${router.query.listId}`)
     setContactList(data)
+  }
+
+  const extractDataFromCSV = async (e) => {
+    const formData = new FormData()
+    formData.append('file', e.target.files[0])
+    const { data } = await mainAPI.post('/contacts/csv', formData)
+    showPopup({ display: 'IMPORT_CONTACTS', data })
   }
 
   return (
@@ -68,6 +76,16 @@ const ContactList = ({ initialContactList, me }) => {
           }}
         />
       }
+      { popup.display === 'IMPORT_CONTACTS' && 
+        <PopupImportContacts
+          listId={router.query.listId}
+          me={me}
+          onDone={() => {
+            getContactList()
+            hidePopup()
+          }}
+        />
+      }
 
       <ContactLayout>
         <div className={layoutStyles.header}>
@@ -82,8 +100,9 @@ const ContactList = ({ initialContactList, me }) => {
             </Button>
             <Button
               color="secondary"
-              onClick={() => showPopup({ display: 'CONTACT_LIST_IMPORT_CONTACTS' })}
+              onChange={extractDataFromCSV}
               size="small"
+              type="file"
             >
               Import contacts
             </Button>

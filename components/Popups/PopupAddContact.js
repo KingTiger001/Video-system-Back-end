@@ -12,7 +12,7 @@ const PopupAddContact = ({ onDone }) => {
     if (!loading) {
       try {
         setLoading(true)
-        await mainAPI.post('/contacts', data)
+        await mainAPI.post('/contacts', [data])
         onDone()
       } catch (err) {
         setLoading(false)

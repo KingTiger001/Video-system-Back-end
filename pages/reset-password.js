@@ -21,8 +21,8 @@ const Login = () => {
 
   useEffect(() => {
     const checkToken = async () => {
-      if (router.query.fo_sas_tk) {
-        const { data: isValid } = await mainAPI.get(`/auth/password/${router.query.fo_sas_tk}`)
+      if (router.query.token) {
+        const { data: isValid } = await mainAPI.get(`/auth/password/${router.query.token}`)
         setIsValid(isValid)
       }
     }
@@ -38,7 +38,7 @@ const Login = () => {
         if (password !== passwordCheck) {
           return setError('Password doesn\'t match')
         }
-        await mainAPI.post(`/auth/password/${router.query.fo_sas_tk}`, {
+        await mainAPI.post(`/auth/password/${router.query.token}`, {
           password,
           passwordCheck,
         })
