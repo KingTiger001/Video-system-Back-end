@@ -50,7 +50,7 @@ const ContactItem = ({ data, renderDropdownActions }) => {
     </div>
     :
     <div className={`${styles.contactItem} ${styles.empty}`}>
-      <p>No contacts added</p>
+      <p>No contacts found</p>
     </div>
 }
 

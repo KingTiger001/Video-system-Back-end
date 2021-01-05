@@ -2,9 +2,7 @@ import { useRouter } from 'next/router'
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Link from 'next/link'
-import { toast } from 'react-toastify'
 
-// import withAuth from '../hocs/withAuth'
 import withAuthServerSideProps from '@/hocs/withAuthServerSideProps'
 
 import { initializeStore } from '@/store'
@@ -16,9 +14,9 @@ import PopupDeleteVideo from '@/components/Popups/PopupDeleteVideo'
 import PopupUploadVideo from '@/components/Popups/PopupUploadVideo'
 import Timeline from '@/components/Campaign/Timeline'
 import Tools from '@/components/Campaign/Tools/index'
-// import ToolBox from '@/components/Campaign/ToolBox'
 import Player from '@/components/Campaign/Player'
 import Preview from '@/components/Campaign/Preview'
+import Share from '@/components/Campaign/Share'
 
 import styles from '@/styles/pages/dashboardCampaign.module.sass'
 
@@ -44,6 +42,7 @@ const Campaign = ({ me }) => {
 
   const [inputNameWidth, setInputNameWidth] = useState(0)
   const [displayPreview, showPreview] = useState(false)
+  const [displayShare, showShare] = useState(true)
 
   // mounted
   useEffect(() => {
@@ -168,7 +167,7 @@ const Campaign = ({ me }) => {
           >
             Preview mode
           </Button>
-          <Button>
+          <Button onClick={() => showShare(true)}>
             Share
           </Button>
         </div>
@@ -185,6 +184,13 @@ const Campaign = ({ me }) => {
       </div>
 
       { displayPreview && <Preview onClose={() => showPreview(false)} /> }
+      { displayShare && 
+        <Share
+          campaignId={router.query.campaignId}
+          onClose={() => showShare(false)}
+          me={me}
+        />
+      }
     </div>
   )
 }
