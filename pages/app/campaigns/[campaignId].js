@@ -77,6 +77,7 @@ const Campaign = ({ me }) => {
   }
 
   const saveCampaign = async (override = {}) => {
+    console.log('o', override);
     await mainAPI.patch(`/campaigns/${router.query.campaignId}`, {
       duration,
       endScreen,

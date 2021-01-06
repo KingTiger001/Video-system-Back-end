@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ChromePicker } from 'react-color'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
@@ -28,6 +28,10 @@ const ToolHelloScreen = ({ saveCampaign }) => {
 
   const [displayFormHelloScreen, showFormHelloScreen] = useState(false)
   const [error, setError] = useState('')
+
+  useEffect(() => {
+    saveCampaign()
+  }, [displayFormHelloScreen]);
 
   const addHelloScreenToLibrary = async () => {
     try {
@@ -138,7 +142,7 @@ const ToolHelloScreen = ({ saveCampaign }) => {
                     background: color.hex,
                   },
                 })}
-                onChangeComplete={saveCampaign}
+                onChangeComplete={() => saveCampaign()}
               />
             </div>
             <div className={styles.toolSection}>
@@ -146,8 +150,9 @@ const ToolHelloScreen = ({ saveCampaign }) => {
               <InputStyle
                 dispatchType="CHANGE_HELLO_SCREEN"
                 object={helloScreen}
-                onBlur={saveCampaign}
+                objectName="helloScreen"
                 property="title"
+                saveCampaign={saveCampaign}
               />
             </div>
             <div className={styles.toolSection}>
@@ -155,8 +160,9 @@ const ToolHelloScreen = ({ saveCampaign }) => {
               <InputStyle
                 dispatchType="CHANGE_HELLO_SCREEN"
                 object={helloScreen}
-                onBlur={saveCampaign}
+                objectName="helloScreen"
                 property="subtitle"
+                saveCampaign={saveCampaign}
               />
             </div>
             {error && <p className={styles.error}>{error}</p>}

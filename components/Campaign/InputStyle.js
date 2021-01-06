@@ -5,7 +5,13 @@ import TextStyle from '@/components/Campaign/TextStyle'
 import styles from '@/styles/components/Campaign/InputStyle.module.sass'
 import toolsStyles from '@/styles/components/Campaign/Tools.module.sass'
 
-const InputStyle = ({ dispatchType, object, onBlur, property }) => {
+const InputStyle = ({
+  dispatchType,
+  object,
+  objectName,
+  property,
+  saveCampaign = () => {},
+}) => {
   const dispatch = useDispatch()
 
   return (
@@ -13,7 +19,6 @@ const InputStyle = ({ dispatchType, object, onBlur, property }) => {
       <div className={styles.inputStyleInput}>
         <input
           className={toolsStyles.toolInput}
-          onBlur={onBlur}
           onChange={(e) => {
             dispatch({
               type: dispatchType,
@@ -27,6 +32,15 @@ const InputStyle = ({ dispatchType, object, onBlur, property }) => {
             dispatch({
               type: 'HAS_CHANGES',
               data: true,
+            })
+            saveCampaign({
+              [objectName]: {
+                ...object,
+                [property]: {
+                  ...object[property],
+                  value: e.target.value,
+                },
+              },
             })
           }}
           value={object[property].value}
@@ -62,9 +76,17 @@ const InputStyle = ({ dispatchType, object, onBlur, property }) => {
               type: 'HAS_CHANGES',
               data: true,
             })
-            onBlur()
+            saveCampaign({
+              [objectName]: {
+                ...object,
+                [property]: {
+                  ...object[property],
+                  ...textStyle,
+                },
+              },
+            })
           }}
-          onClose={() => {
+          onClose={(textStyle) => {
             dispatch({
               type: dispatchType,
               data: {
@@ -74,7 +96,15 @@ const InputStyle = ({ dispatchType, object, onBlur, property }) => {
                 }
               },
             })
-            onBlur()
+            // saveCampaign({
+            //   [objectName]: {
+            //     ...object,
+            //     [property]: {
+            //       ...object[property],
+            //       ...textStyle,
+            //     },
+            //   },
+            // })
           }}
         />
       }

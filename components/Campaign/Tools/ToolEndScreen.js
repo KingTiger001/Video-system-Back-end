@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ChromePicker } from 'react-color'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
@@ -28,6 +28,10 @@ const ToolEndScreen = ({ saveCampaign }) => {
 
   const [displayFormEndScreen, showFormEndScreen] = useState(false)
   const [error, setError] = useState('')
+
+  useEffect(() => {
+    saveCampaign()
+  }, [displayFormEndScreen]);
 
   const addEndScreenToLibrary = async () => {
     try {
@@ -149,6 +153,7 @@ const ToolEndScreen = ({ saveCampaign }) => {
               <label className={styles.toolLabel}>Template Name *</label>
               <input
                 className={styles.toolInput}
+                onBlur={saveCampaign}
                 onChange={(e) => dispatch({
                   type: 'CHANGE_END_SCREEN',
                   data: {
@@ -164,6 +169,7 @@ const ToolEndScreen = ({ saveCampaign }) => {
               <InputNumber
                 className={styles.toolInput}
                 initialValue={endScreen.duration / 1000}
+                onBlur={saveCampaign}
                 onChange={(value) => {
                   dispatch({
                     type: 'CHANGE_END_SCREEN',
@@ -188,6 +194,7 @@ const ToolEndScreen = ({ saveCampaign }) => {
                     background: color.hex,
                   },
                 })}
+                onChangeComplete={() => saveCampaign()}
               />
             </div>
             <div className={styles.toolSection}>
@@ -195,7 +202,9 @@ const ToolEndScreen = ({ saveCampaign }) => {
               <InputStyle
                 dispatchType="CHANGE_END_SCREEN"
                 object={endScreen}
+                objectName="endScreen"
                 property="title"
+                saveCampaign={saveCampaign}
               />
             </div>
             <div className={styles.toolSection}>
@@ -203,7 +212,9 @@ const ToolEndScreen = ({ saveCampaign }) => {
               <InputStyle
                 dispatchType="CHANGE_END_SCREEN"
                 object={endScreen}
+                objectName="endScreen"
                 property="subtitle"
+                saveCampaign={saveCampaign}
               />
             </div>
 
@@ -213,6 +224,7 @@ const ToolEndScreen = ({ saveCampaign }) => {
               <div className={styles.toolInputGrid}>
                 <input
                   className={styles.toolInput}
+                  onBlur={saveCampaign}
                   onChange={(e) => dispatch({
                     type: 'CHANGE_END_SCREEN',
                     data: {
@@ -227,6 +239,7 @@ const ToolEndScreen = ({ saveCampaign }) => {
                 />
                 <input
                   className={styles.toolInput}
+                  onBlur={saveCampaign}
                   onChange={(e) => dispatch({
                     type: 'CHANGE_END_SCREEN',
                     data: {
@@ -246,7 +259,9 @@ const ToolEndScreen = ({ saveCampaign }) => {
               <InputStyle
                 dispatchType="CHANGE_END_SCREEN"
                 object={endScreen}
+                objectName="endScreen"
                 property="email"
+                saveCampaign={saveCampaign}
               />
             </div>
             <div className={styles.toolSection}>
@@ -254,7 +269,9 @@ const ToolEndScreen = ({ saveCampaign }) => {
               <InputStyle
                 dispatchType="CHANGE_END_SCREEN"
                 object={endScreen}
+                objectName="endScreen"
                 property="phone"
+                saveCampaign={saveCampaign}
               />
             </div>
             {/* //TODO: FINISH THIS */}

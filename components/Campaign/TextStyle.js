@@ -34,7 +34,14 @@ const TextStyle = ({
   useEffect(() => {
     function handleClickOutside(event) {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-        onClose()
+        onClose({
+          color,
+          fontSize,
+          fontWeight,
+          letterSpacing,
+          lineHeight,
+          textAlign,
+        })
       }
     }
     document.addEventListener('mousedown', handleClickOutside)
