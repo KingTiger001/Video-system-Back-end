@@ -7,7 +7,7 @@ import dayjs from '@/plugins/dayjs'
 
 import styles from '@/styles/components/Campaign/Tools.module.sass'
 
-const ToolVideos = () => {
+const ToolVideos = ({ saveCampaign }) => {
   const dispatch = useDispatch()
   const showPopup = (popupProps) => dispatch({ type: 'SHOW_POPUP', ...popupProps })
 
@@ -69,7 +69,6 @@ const ToolVideos = () => {
                 <p>{vd.name}</p>
                 { vd.status === 'done'
                   ?
-                  // <p className={`${styles.videosItemStatus}`}>{msToMinutes(vd.metadata.duration)} - {Math.round(vd.metadata.size / 1000000)} mb</p>
                   <p className={`${styles.videosItemStatus}`}>{displayDuration(vd.metadata.duration * 1000)}</p>
                   :
                   <p className={`${styles.videosItemStatus} ${styles[vd.status]}`}>{vd.status}... {vd.status === 'processing' && vd.statusProgress > 0 ? `${vd.statusProgress || 0}%` : ''}</p>
@@ -83,6 +82,7 @@ const ToolVideos = () => {
                     onClick={() => {
                       dispatch({ type: 'SET_VIDEO', data: vd })
                       dispatch({ type: 'SET_PROGRESSION', data: 0 })
+                      saveCampaign()
                     }}
                   >
                     <img src="/assets/campaign/librarySelect.svg"/>

@@ -36,13 +36,14 @@ const SignupDetails = ({ user }) => {
       setLoading(true)
       try {
         await checkFormInputs()
-        await mainAPI.patch('/users/me', {
+        const { data: user } = await mainAPI.patch('/users/me', {
           company,
           country,
           firstName,
           lastName,
           job,
         })
+        await mainAPI.post('/auth/email/confirmation/new', { userId: user._id })
         router.push('/app')
       } catch (err) {
         console.log(err)
@@ -105,7 +106,7 @@ const SignupDetails = ({ user }) => {
           loading={loading}
           width="100%"
         >
-          Let's begin
+          Sign Up
         </Button>
       </form>
     </SignupLayout>

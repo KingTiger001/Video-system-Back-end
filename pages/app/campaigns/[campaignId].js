@@ -42,7 +42,7 @@ const Campaign = ({ me }) => {
 
   const [inputNameWidth, setInputNameWidth] = useState(0)
   const [displayPreview, showPreview] = useState(false)
-  const [displayShare, showShare] = useState(true)
+  const [displayShare, showShare] = useState(false)
 
   // mounted
   useEffect(() => {

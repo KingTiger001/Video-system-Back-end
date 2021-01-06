@@ -223,7 +223,7 @@ const ToolEndScreen = ({ saveCampaign }) => {
                     },
                   })}
                   placeholder="Text"
-                  value={endScreen.button.value}
+                  value={endScreen.button ? endScreen.button.value : ''}
                 />
                 <input
                   className={styles.toolInput}
@@ -237,7 +237,7 @@ const ToolEndScreen = ({ saveCampaign }) => {
                     },
                   })}
                   placeholder="Copy link"
-                  value={endScreen.button.href}
+                  value={endScreen.button ? endScreen.button.href : ''}
                 />
               </div>
             </div>

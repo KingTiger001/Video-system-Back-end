@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router'
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -9,6 +10,7 @@ import PopupImportContacts from '@/components/Popups/PopupImportContacts'
 import styles from '@/styles/components/Campaign/Share.module.sass'
 
 const Share = ({ campaignId, onClose, me }) => {
+  const router = useRouter()
   const dispatch = useDispatch()
   
   const popup = useSelector(state => state.popup)
@@ -25,11 +27,12 @@ const Share = ({ campaignId, onClose, me }) => {
   })
   const [lists, setLists] = useState({})
   const [listsSelected, setListsSelected] = useState([])
+  const [shareLoading, setShareLoading] = useState(false)
   const [step, setStep] = useState(1)
-  const [thumbnailLoading, setThumbnailLoading] = useState(false)
-
   const [stepOneError, setStepOneError] = useState('')
   const [stepTwoError, setStepTwoError] = useState('')
+  const [stepThreeError, setStepThreeError] = useState('')
+  const [thumbnailLoading, setThumbnailLoading] = useState(false)
 
   const refFormDetails = useRef(null)
 
@@ -144,8 +147,16 @@ const Share = ({ campaignId, onClose, me }) => {
     }
   }
 
-  const send = async () => {
-
+  const share = async () => {
+    try {
+      setShareLoading(true)
+      await mainAPI.post('/campaigns/share', { campaign })
+      router.push('/app/campaigns')
+    } catch (err) {
+      setStepThreeError('An error has occured.')
+    } finally {
+      setShareLoading(false)
+    }
   }
 
   const stepOne = async () => {
@@ -183,6 +194,21 @@ const Share = ({ campaignId, onClose, me }) => {
       console.log(err)
       throw setStepTwoError(err.message || 'An error has occured.')
     }
+  }
+
+  const removeThumbnail = async () => {
+    await mediaAPI.delete('/', {
+      data: {
+        url: campaign.share.thumbnail,
+      },
+    })
+    const { data: campaignUpdated } = await mainAPI.patch(`/campaigns/${campaignId}`, {
+      share: {
+        ...campaign.share,
+        thumbnail: null,
+      }
+    })
+    setCampaign(campaignUpdated)
   }
 
   const uploadThumbnail = async (file) => {
@@ -359,7 +385,7 @@ const Share = ({ campaignId, onClose, me }) => {
               </div>
               <div className={styles.uploadThumbnail}>
                 <label>Thumbnail</label>
-                <p className={styles.text}>Importez une image qui donne un aperçu du contenu de votre vidéo.<br/>Si vous n’importez pas de miniature, une image par défaut sera intégré.</p>
+                <p className={styles.text}>Import an image that previews the content of your video.<br/>If you don't import a thumbnail, a default image will be included.</p>
                 <label
                   className={styles.uploadThumbnailArea}
                   htmlFor="thumbnail"
@@ -375,11 +401,17 @@ const Share = ({ campaignId, onClose, me }) => {
                   onChange={(e) => uploadThumbnail(e.target.files[0])}
                   className={styles.uploadThumbnailInput}
                 />
+                <img
+                  className={styles.uploadThumbnailPreview}
+                  src={campaign.share && campaign.share.thumbnail ? campaign.share.thumbnail : '/assets/video/defaultThumbnail.jpg'}
+                />
                 { campaign.share && campaign.share.thumbnail &&
-                  <img
-                    className={styles.uploadThumbnailPreview}
-                    src={campaign.share.thumbnail}
-                  />
+                  <p
+                    className={styles.removeThumbnail}
+                    onClick={removeThumbnail}
+                  >
+                    Remove thumbnail
+                  </p>
                 }
               </div>
               <p className={styles.error}>{stepOneError}</p>
@@ -442,7 +474,7 @@ const Share = ({ campaignId, onClose, me }) => {
                   {(lists.totalDocs <= 0 || (!lists.totalDocs && lists.length <= 0)) && renderList()}
                 </div>
               </div>
-              <p className={styles.error}>{stepTwoError}</p>
+              {stepTwoError && <p className={styles.error}>{stepTwoError}</p>}
             </div>
           }
           { step === 3 &&
@@ -464,6 +496,10 @@ const Share = ({ campaignId, onClose, me }) => {
                     <p><b>Message: </b>{campaign.share.message}</p>
                     <div>
                       <p><b>Thumbnail: </b></p>
+                      <img
+                        className={styles.summaryThumbnailPreview}
+                        src={campaign.share && campaign.share.thumbnail ? campaign.share.thumbnail : '/assets/video/defaultThumbnail.jpg'}
+                      />
                     </div>
                   </div>
                 </div>
@@ -481,6 +517,7 @@ const Share = ({ campaignId, onClose, me }) => {
                   </div>
                 </div>
               </div>
+              {stepThreeError && <p className={styles.error}>{stepThreeError}</p>}
             </div>
           }
         </div>
@@ -496,7 +533,14 @@ const Share = ({ campaignId, onClose, me }) => {
               Save & Quit
             </Button>
             { step < 3 && <Button onClick={next}>Next</Button> }
-            { step === 3 && <Button onClick={send}>Send</Button> }
+            { step === 3 && 
+              <Button
+                loading={shareLoading}
+                onClick={share}
+              >
+                Share
+              </Button>
+            }
           </div>
         </div>
       </div>
