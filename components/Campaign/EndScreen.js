@@ -71,7 +71,7 @@ const EndScreen = ({ data = {} }) => {
         <Button
           target="blank"
           type="link"
-          href={data.button.href}
+          href={data.button.href || ''}
           color="white"
         >
           {data.button.value}

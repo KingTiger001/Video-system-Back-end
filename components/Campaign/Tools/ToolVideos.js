@@ -82,7 +82,7 @@ const ToolVideos = ({ saveCampaign }) => {
                     onClick={() => {
                       dispatch({ type: 'SET_VIDEO', data: vd })
                       dispatch({ type: 'SET_PROGRESSION', data: 0 })
-                      saveCampaign()
+                      saveCampaign({ video: vd })
                     }}
                   >
                     <img src="/assets/campaign/librarySelect.svg"/>

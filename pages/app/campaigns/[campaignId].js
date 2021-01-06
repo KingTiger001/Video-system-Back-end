@@ -1,7 +1,8 @@
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import Link from 'next/link'
+import { toast } from 'react-toastify'
 
 import withAuthServerSideProps from '@/hocs/withAuthServerSideProps'
 
@@ -68,7 +69,14 @@ const Campaign = ({ me }) => {
   //   }
   // }, [hasChanges])
 
-  const saveCampaign = async () => {
+  const checkBeforeStartShare = () => {
+    if (Object.keys(video).length <= 0) {
+      return toast.error('You need to add a video before sharing your campaign.')
+    }
+    showShare(true);
+  }
+
+  const saveCampaign = async (override = {}) => {
     await mainAPI.patch(`/campaigns/${router.query.campaignId}`, {
       duration,
       endScreen,
@@ -76,6 +84,7 @@ const Campaign = ({ me }) => {
       logo,
       name,
       ...(Object.keys(video).length > 0 && { video: video._id }),
+      ...override,
     })
     dispatch({
       type: 'HAS_CHANGES',
@@ -167,7 +176,7 @@ const Campaign = ({ me }) => {
           >
             Preview mode
           </Button>
-          <Button onClick={() => showShare(true)}>
+          <Button onClick={checkBeforeStartShare}>
             Share
           </Button>
         </div>

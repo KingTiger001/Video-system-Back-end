@@ -5,7 +5,7 @@ import TextStyle from '@/components/Campaign/TextStyle'
 import styles from '@/styles/components/Campaign/InputStyle.module.sass'
 import toolsStyles from '@/styles/components/Campaign/Tools.module.sass'
 
-const InputStyle = ({ dispatchType, object, property }) => {
+const InputStyle = ({ dispatchType, object, onBlur, property }) => {
   const dispatch = useDispatch()
 
   return (
@@ -13,6 +13,7 @@ const InputStyle = ({ dispatchType, object, property }) => {
       <div className={styles.inputStyleInput}>
         <input
           className={toolsStyles.toolInput}
+          onBlur={onBlur}
           onChange={(e) => {
             dispatch({
               type: dispatchType,
@@ -61,16 +62,20 @@ const InputStyle = ({ dispatchType, object, property }) => {
               type: 'HAS_CHANGES',
               data: true,
             })
+            onBlur()
           }}
-          onClose={() => dispatch({
-            type: dispatchType,
-            data: {
-              [property]: {
-                ...object[property],
-                displayOptions: !object[property].displayOptions,
-              }
-            },
-          })}
+          onClose={() => {
+            dispatch({
+              type: dispatchType,
+              data: {
+                [property]: {
+                  ...object[property],
+                  displayOptions: !object[property].displayOptions,
+                }
+              },
+            })
+            onBlur()
+          }}
         />
       }
     </div>

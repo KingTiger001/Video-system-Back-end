@@ -19,11 +19,6 @@ const ToolLogo = ({ saveCampaign }) => {
 
   const [error, setError] = useState('')
   const [uploadloading, setUploadloading] = useState(false)
-  
-  const saveLogo = async () => {
-    await saveCampaign()
-    toast.success('Logo saved.')
-  }
 
   const uploadLogo = async (file) => {
     const formData = new FormData()
@@ -34,6 +29,13 @@ const ToolLogo = ({ saveCampaign }) => {
     try {
       setUploadloading(true)
       const { data: url } = await mediaAPI.post('/images', formData)
+      if (logo.value) {
+        await mediaAPI.delete('/', {
+          data: {
+            url: logo.value,
+          },
+        })
+      }
       dispatch({
         type: 'CHANGE_LOGO',
         data: {
@@ -45,6 +47,7 @@ const ToolLogo = ({ saveCampaign }) => {
           logo: url,
         },
       })
+      saveCampaign({ logo: { ...logo, value: url } })
     } catch (err) {
       const code = err.response && err.response.data
       if (code === 'Upload.incorrectFiletype') {
@@ -95,6 +98,7 @@ const ToolLogo = ({ saveCampaign }) => {
         <InputNumber
           initialValue={logo.size}
           className={styles.toolInput}
+          onBlur={saveCampaign}
           onChange={(value) => dispatch({
             type: 'CHANGE_LOGO',
             data: {
@@ -108,43 +112,54 @@ const ToolLogo = ({ saveCampaign }) => {
         <div className={styles.placement}>
           <div
             className={`${logo.placement === 'top-left' ? styles.selected : ''}`}
-            onClick={() => dispatch({
-              type: 'CHANGE_LOGO',
-              data: {
-                placement: 'top-left'
-              }
-            })}
+            onClick={() => {
+              dispatch({
+                type: 'CHANGE_LOGO',
+                data: {
+                  placement: 'top-left'
+                }
+              })
+              saveCampaign()
+            }}
           />
           <div 
             className={`${logo.placement === 'top-right' ? styles.selected : ''}`}
-            onClick={() => dispatch({
-              type: 'CHANGE_LOGO',
-              data: {
-                placement: 'top-right'
-              }
-            })}
+            onClick={() => {
+              dispatch({
+                type: 'CHANGE_LOGO',
+                data: {
+                  placement: 'top-right'
+                }
+              })
+              saveCampaign()
+            }}
           />
           <div 
             className={`${logo.placement === 'bottom-left' ? styles.selected : ''}`}
-            onClick={() => dispatch({
-              type: 'CHANGE_LOGO',
-              data: {
-                placement: 'bottom-left'
-              }
-            })}
+            onClick={() => {
+              dispatch({
+                type: 'CHANGE_LOGO',
+                data: {
+                  placement: 'bottom-left'
+                }
+              })
+              saveCampaign()
+            }}
           />
           <div 
             className={`${logo.placement === 'bottom-right' ? styles.selected : ''}`}
-            onClick={() => dispatch({
-              type: 'CHANGE_LOGO',
-              data: {
-                placement: 'bottom-right'
-              }
-            })}
+            onClick={() => {
+              dispatch({
+                type: 'CHANGE_LOGO',
+                data: {
+                  placement: 'bottom-right'
+                }
+              })
+              saveCampaign()
+            }}
           />
         </div>
       </div>
-      <Button onClick={saveLogo}>Save changes</Button>
     </div>
   )
 }

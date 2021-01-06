@@ -257,7 +257,8 @@ const ToolEndScreen = ({ saveCampaign }) => {
                 property="phone"
               />
             </div>
-            <div className={styles.toolSection}>
+            {/* //TODO: FINISH THIS */}
+            {/* <div className={styles.toolSection}>
               <label className={styles.toolLabel}>Networks</label>
               <div className={styles.networks}>
                 {
@@ -299,7 +300,7 @@ const ToolEndScreen = ({ saveCampaign }) => {
                   Add more
                 </p>
               </div>
-            </div>
+            </div> */}
             {error && <p className={styles.error}>{error}</p>}
             <Button onClick={saveEndScreen}>Save changes</Button>
             <Button
@@ -404,6 +405,7 @@ const ToolEndScreen = ({ saveCampaign }) => {
                                 data: {},
                               })
                               showFormEndScreen(true)
+                              saveCampaign({ endScreen: es })
                             }}
                           />
                           <p>Select</p>

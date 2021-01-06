@@ -55,16 +55,6 @@ const ToolHelloScreen = ({ saveCampaign }) => {
     })
   }
 
-  const saveHelloScreen = async () => {
-    try {
-      await checkFormErrors()
-      await saveCampaign()
-      toast.success('Start screen saved.')
-    } catch (err) {
-      setError(err.message)
-    }
-  }
-
   return tool === 3 && (
     <div
       className={styles.toolHelloScreen}
@@ -107,6 +97,7 @@ const ToolHelloScreen = ({ saveCampaign }) => {
               <label className={styles.toolLabel}>Template Name *</label>
               <input
                 className={styles.toolInput}
+                onBlur={saveCampaign}
                 onChange={(e) => dispatch({
                   type: 'CHANGE_HELLO_SCREEN',
                   data: {
@@ -122,6 +113,7 @@ const ToolHelloScreen = ({ saveCampaign }) => {
               <InputNumber
                 className={styles.toolInput}
                 initialValue={helloScreen.duration / 1000}
+                onBlur={saveCampaign}
                 onChange={(value) => {
                   dispatch({
                     type: 'CHANGE_HELLO_SCREEN',
@@ -146,6 +138,7 @@ const ToolHelloScreen = ({ saveCampaign }) => {
                     background: color.hex,
                   },
                 })}
+                onChangeComplete={saveCampaign}
               />
             </div>
             <div className={styles.toolSection}>
@@ -153,6 +146,7 @@ const ToolHelloScreen = ({ saveCampaign }) => {
               <InputStyle
                 dispatchType="CHANGE_HELLO_SCREEN"
                 object={helloScreen}
+                onBlur={saveCampaign}
                 property="title"
               />
             </div>
@@ -161,11 +155,11 @@ const ToolHelloScreen = ({ saveCampaign }) => {
               <InputStyle
                 dispatchType="CHANGE_HELLO_SCREEN"
                 object={helloScreen}
+                onBlur={saveCampaign}
                 property="subtitle"
               />
             </div>
             {error && <p className={styles.error}>{error}</p>}
-            <Button onClick={saveHelloScreen}>Save changes</Button>
             <Button
               onClick={addHelloScreenToLibrary}
               outline={true}
@@ -267,6 +261,7 @@ const ToolHelloScreen = ({ saveCampaign }) => {
                               data: {},
                             })
                             showFormHelloScreen(true)
+                            saveCampaign({ helloScreen: hs })
                           }}
                         >
                           <img src="/assets/campaign/librarySelect.svg" />
