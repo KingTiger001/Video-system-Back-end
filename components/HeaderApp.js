@@ -2,12 +2,19 @@ import jscookie from 'js-cookie'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
+import { mainAPI } from '@/plugins/axios'
+
 import Button from '@/components/Button'
 
 import styles from '@/styles/components/HeaderApp.module.sass'
 
 const HeaderApp = () => {
   const router = useRouter()
+
+  const createCampaign = async () => {
+    const { data: campaign } = await mainAPI.post('/campaigns')
+    router.push(`/app/campaigns/${campaign._id}`)
+  }
 
   const logout = () => {
     router.push('/login')
@@ -40,8 +47,7 @@ const HeaderApp = () => {
 
         <p>Need help ?</p>
         
-        {/* <Button onClick={createCampaign}> */}
-        <Button>
+        <Button onClick={createCampaign}>
           Create a campaign
         </Button>
         <p

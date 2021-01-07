@@ -58,16 +58,24 @@ const Campaign = ({ me }) => {
     setInputNameWidth((name.length + 1) * 16)
   }, [])
 
-  // useEffect(() => {
-  //   if (hasChanges) {
-  //     window.onbeforeunload = confirmExit;
-  //     function confirmExit() {
-  //       return 'show warning'
-  //     }
-  //   } else {
-  //     window.onbeforeunload = null
-  //   }
-  // }, [hasChanges])
+  // Save campaign
+  useEffect(() => {
+    const saveCampaign = async () => {
+      await mainAPI.patch(`/campaigns/${router.query.campaignId}`, {
+        duration,
+        endScreen,
+        helloScreen,
+        logo,
+        name,
+        video: Object.keys(video).length > 0 ? video._id : null,
+      })
+    }
+    saveCampaign()
+    dispatch({
+      type: 'HAS_CHANGES',
+      data: false
+    })
+  }, [duration, endScreen, helloScreen, logo, name, video])
 
   const checkBeforeStartShare = () => {
     if (Object.keys(video).length <= 0) {
@@ -76,22 +84,6 @@ const Campaign = ({ me }) => {
     showShare(true);
   }
 
-  const saveCampaign = async (override = {}) => {
-    console.log('o', override);
-    await mainAPI.patch(`/campaigns/${router.query.campaignId}`, {
-      duration,
-      endScreen,
-      helloScreen,
-      logo,
-      name,
-      ...(Object.keys(video).length > 0 && { video: video._id }),
-      ...override,
-    })
-    dispatch({
-      type: 'HAS_CHANGES',
-      data: false
-    })
-  }
 
   const getVideos = async () => {
     const { data } = await mainAPI('/users/me/videos')
@@ -184,7 +176,7 @@ const Campaign = ({ me }) => {
       </div>
 
       <div className={styles.main}>
-        <Tools saveCampaign={saveCampaign} />
+        <Tools />
 
         <Player />
       </div>

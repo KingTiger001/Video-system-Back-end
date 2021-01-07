@@ -14,8 +14,10 @@ const HelloScreen = ({ data = {} }) => {
       setSubtitleResponsiveFontSize(ref.current.offsetWidth * (data.subtitle.fontSize / 1000))
     }
     if (ref.current) {
-      handleResize()
-      window.addEventListener('resize', handleResize)
+      setTimeout(() => {
+        handleResize()
+        window.addEventListener('resize', handleResize)
+      }, 0)
     }
     return () => {
       if (ref.current) {

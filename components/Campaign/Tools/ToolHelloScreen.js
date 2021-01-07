@@ -13,7 +13,7 @@ import PopupDeleteDraftHelloScreen from '@/components/Popups/PopupDeleteDraftHel
 
 import styles from '@/styles/components/Campaign/Tools.module.sass'
 
-const ToolHelloScreen = ({ saveCampaign }) => {
+const ToolHelloScreen = () => {
   const dispatch = useDispatch()
   const popup = useSelector(state => state.popup)
   const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
@@ -28,10 +28,6 @@ const ToolHelloScreen = ({ saveCampaign }) => {
 
   const [displayFormHelloScreen, showFormHelloScreen] = useState(false)
   const [error, setError] = useState('')
-
-  useEffect(() => {
-    saveCampaign()
-  }, [displayFormHelloScreen]);
 
   const addHelloScreenToLibrary = async () => {
     try {
@@ -101,7 +97,6 @@ const ToolHelloScreen = ({ saveCampaign }) => {
               <label className={styles.toolLabel}>Template Name *</label>
               <input
                 className={styles.toolInput}
-                onBlur={saveCampaign}
                 onChange={(e) => dispatch({
                   type: 'CHANGE_HELLO_SCREEN',
                   data: {
@@ -117,7 +112,6 @@ const ToolHelloScreen = ({ saveCampaign }) => {
               <InputNumber
                 className={styles.toolInput}
                 initialValue={helloScreen.duration / 1000}
-                onBlur={saveCampaign}
                 onChange={(value) => {
                   dispatch({
                     type: 'CHANGE_HELLO_SCREEN',
@@ -142,7 +136,6 @@ const ToolHelloScreen = ({ saveCampaign }) => {
                     background: color.hex,
                   },
                 })}
-                onChangeComplete={() => saveCampaign()}
               />
             </div>
             <div className={styles.toolSection}>
@@ -152,7 +145,6 @@ const ToolHelloScreen = ({ saveCampaign }) => {
                 object={helloScreen}
                 objectName="helloScreen"
                 property="title"
-                saveCampaign={saveCampaign}
               />
             </div>
             <div className={styles.toolSection}>
@@ -162,7 +154,6 @@ const ToolHelloScreen = ({ saveCampaign }) => {
                 object={helloScreen}
                 objectName="helloScreen"
                 property="subtitle"
-                saveCampaign={saveCampaign}
               />
             </div>
             {error && <p className={styles.error}>{error}</p>}
@@ -266,8 +257,8 @@ const ToolHelloScreen = ({ saveCampaign }) => {
                               type: 'SET_PREVIEW_HELLO_SCREEN',
                               data: {},
                             })
+                            dispatch({ type: 'CALC_DURATION' })
                             showFormHelloScreen(true)
-                            saveCampaign({ helloScreen: hs })
                           }}
                         >
                           <img src="/assets/campaign/librarySelect.svg" />

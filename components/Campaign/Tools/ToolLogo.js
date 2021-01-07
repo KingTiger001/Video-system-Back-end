@@ -9,7 +9,7 @@ import InputNumber from '@/components/InputNumber'
 
 import styles from '@/styles/components/Campaign/Tools.module.sass'
 
-const ToolLogo = ({ saveCampaign }) => {
+const ToolLogo = () => {
   const dispatch = useDispatch()
 
   const tool = useSelector(state => state.campaign.tool)
@@ -47,7 +47,6 @@ const ToolLogo = ({ saveCampaign }) => {
           logo: url,
         },
       })
-      saveCampaign({ logo: { ...logo, value: url } })
     } catch (err) {
       const code = err.response && err.response.data
       if (code === 'Upload.incorrectFiletype') {
@@ -98,7 +97,6 @@ const ToolLogo = ({ saveCampaign }) => {
         <InputNumber
           initialValue={logo.size}
           className={styles.toolInput}
-          onBlur={saveCampaign}
           onChange={(value) => dispatch({
             type: 'CHANGE_LOGO',
             data: {
@@ -119,7 +117,6 @@ const ToolLogo = ({ saveCampaign }) => {
                   placement: 'top-left'
                 }
               })
-              saveCampaign()
             }}
           />
           <div 
@@ -131,7 +128,6 @@ const ToolLogo = ({ saveCampaign }) => {
                   placement: 'top-right'
                 }
               })
-              saveCampaign()
             }}
           />
           <div 
@@ -143,7 +139,6 @@ const ToolLogo = ({ saveCampaign }) => {
                   placement: 'bottom-left'
                 }
               })
-              saveCampaign()
             }}
           />
           <div 
@@ -155,7 +150,6 @@ const ToolLogo = ({ saveCampaign }) => {
                   placement: 'bottom-right'
                 }
               })
-              saveCampaign()
             }}
           />
         </div>

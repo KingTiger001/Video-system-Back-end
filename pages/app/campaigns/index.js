@@ -1,4 +1,3 @@
-import jscookie from 'js-cookie'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -71,6 +70,7 @@ const Campaigns = ({ initialCampaigns }) => {
             <p>Name</p>
             <p>Created at</p>
             <p>Duration</p>
+            <p>Status</p>
             <p>Actions</p>
           </div>
           <div className={styles.campaignsList}>
@@ -85,12 +85,20 @@ const Campaigns = ({ initialCampaigns }) => {
                       <p>{campaign.name}</p>
                       <p>{dayjs(campaign.createdAt).format('MM/DD/YYYY')}</p>
                       <p>{displayDuration(campaign.duration)}</p>
+                      <p>{campaign.status}</p>
                       <div className={styles.campaignsItemActions}>
-                        <Link href={`/app/campaigns/${campaign._id}`}>
-                          <a className={styles.action}>Edit</a>
-                        </Link>
+                        { campaign.status === 'draft' &&
+                          <Link href={`/app/campaigns/${campaign._id}`}>
+                            <a className={`${styles.action} ${styles.edit}`}>Edit</a>
+                          </Link>
+                        }
+                        { campaign.status === 'shared' &&
+                          <Link href={`/campaigns/${campaign._id}`}>
+                            <a className={`${styles.action} ${styles.see}`}>See</a>
+                          </Link>
+                        }
                         <span
-                          className={styles.action}
+                          className={`${styles.action} ${styles.delete}`}
                           onClick={() => showPopup({ display: 'DELETE_CAMPAIGN', data: campaign })}
                         >
                           Delete

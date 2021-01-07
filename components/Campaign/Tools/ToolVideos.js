@@ -7,7 +7,7 @@ import dayjs from '@/plugins/dayjs'
 
 import styles from '@/styles/components/Campaign/Tools.module.sass'
 
-const ToolVideos = ({ saveCampaign }) => {
+const ToolVideos = () => {
   const dispatch = useDispatch()
   const showPopup = (popupProps) => dispatch({ type: 'SHOW_POPUP', ...popupProps })
 
@@ -82,11 +82,22 @@ const ToolVideos = ({ saveCampaign }) => {
                     onClick={() => {
                       dispatch({ type: 'SET_VIDEO', data: vd })
                       dispatch({ type: 'SET_PROGRESSION', data: 0 })
-                      saveCampaign({ video: vd })
                     }}
                   >
                     <img src="/assets/campaign/librarySelect.svg"/>
                     <p>Select</p>
+                  </div>
+                }
+                {
+                  vd._id === video._id &&
+                  <div
+                    onClick={() => {
+                      dispatch({ type: 'SET_VIDEO', data: {} })
+                      dispatch({ type: 'SET_PROGRESSION', data: 0 })
+                    }}
+                  >
+                    <img src="/assets/campaign/libraryUnselect.svg"/>
+                    <p>Remove</p>
                   </div>
                 }
               </div>

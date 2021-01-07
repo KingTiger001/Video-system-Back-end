@@ -21,8 +21,10 @@ const EndScreen = ({ data = {} }) => {
       setPhoneResponsiveFontSize(ref.current.offsetWidth * (data.phone.fontSize / 1000))
     }
     if (ref.current) {
-      handleResize()
-      window.addEventListener('resize', handleResize)
+      setTimeout(() => {
+        handleResize()
+        window.addEventListener('resize', handleResize)
+      }, 0)
     }
     return () => {
       if (ref.current) {

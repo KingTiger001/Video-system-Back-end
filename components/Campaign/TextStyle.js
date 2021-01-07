@@ -18,6 +18,8 @@ const TextStyle = ({
   onChange,
   onClose,
 }) => {
+  const [display, show] = useState(initialValues.displayOptions)
+
   const [color, setColor] = useState(initialValues.color)
   const [fontSize, setFontSize] = useState(initialValues.fontSize)
   const [fontWeight, setFontWeight] = useState(initialValues.fontWeight)
@@ -34,14 +36,7 @@ const TextStyle = ({
   useEffect(() => {
     function handleClickOutside(event) {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-        onClose({
-          color,
-          fontSize,
-          fontWeight,
-          letterSpacing,
-          lineHeight,
-          textAlign,
-        })
+        show(false)
       }
     }
     document.addEventListener('mousedown', handleClickOutside)
@@ -66,6 +61,7 @@ const TextStyle = ({
   useEffect(() => {
     onChange({
       color,
+      displayOptions: display,
       fontSize,
       fontWeight,
       letterSpacing,
@@ -74,6 +70,7 @@ const TextStyle = ({
     })
   }, [
     color,
+    display,
     fontSize,
     fontWeight,
     letterSpacing,

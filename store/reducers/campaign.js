@@ -244,7 +244,7 @@ const reducer = (state = initialState, action) => {
     case 'SET_VIDEO':
       return {
         ...state,
-        duration: state.helloScreen.duration + (action.data.metadata.duration * 1000) + state.endScreen.duration,
+        duration: state.helloScreen.duration + (Object.keys(action.data).length > 0 ? action.data.metadata.duration * 1000 : 0) + state.endScreen.duration,
         video: action.data,
       }
     case 'SET_VIDEO_LIST':

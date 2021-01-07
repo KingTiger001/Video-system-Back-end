@@ -8,7 +8,7 @@ import ToolLogo from './ToolLogo'
 import ToolRecord from './ToolRecord'
 import ToolVideos from './ToolVideos'
 
-const Tools = ({ saveCampaign }) => {
+const Tools = () => {
   const dispatch = useDispatch()
   const isPlaying = useSelector(state => state.campaign.isPlaying)
   const tool = useSelector(state => state.campaign.tool)
@@ -79,10 +79,10 @@ const Tools = ({ saveCampaign }) => {
             src="/assets/common/close.svg"
           />
           <ToolRecord />
-          <ToolVideos saveCampaign={saveCampaign} />
-          <ToolHelloScreen saveCampaign={saveCampaign} />
-          <ToolEndScreen saveCampaign={saveCampaign} />
-          <ToolLogo saveCampaign={saveCampaign} />
+          <ToolVideos />
+          <ToolHelloScreen />
+          <ToolEndScreen />
+          <ToolLogo />
         </div>
       }
     </div>

@@ -22,7 +22,11 @@ const PopupDeleteVideo = ({ onDone }) => {
       try {
         setLoading(true)
         if (popup.data.url) {
-          await mediaAPI.post('/delete', { url: popup.data.url })
+          await mediaAPI.delete('/', {
+            data: {
+              url: popup.data.url
+            }
+          })
         }
         await mainAPI.delete(`/videos/${popup.data._id}`)
         onDone()

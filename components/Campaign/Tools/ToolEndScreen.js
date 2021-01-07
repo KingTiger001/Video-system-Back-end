@@ -13,7 +13,7 @@ import PopupDeleteDraftEndScreen from '@/components/Popups/PopupDeleteDraftEndSc
 
 import styles from '@/styles/components/Campaign/Tools.module.sass'
 
-const ToolEndScreen = ({ saveCampaign }) => {
+const ToolEndScreen = () => {
   const dispatch = useDispatch()
   const popup = useSelector(state => state.popup)
   const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
@@ -28,10 +28,6 @@ const ToolEndScreen = ({ saveCampaign }) => {
 
   const [displayFormEndScreen, showFormEndScreen] = useState(false)
   const [error, setError] = useState('')
-
-  useEffect(() => {
-    saveCampaign()
-  }, [displayFormEndScreen]);
 
   const addEndScreenToLibrary = async () => {
     try {
@@ -58,16 +54,6 @@ const ToolEndScreen = ({ saveCampaign }) => {
       type: 'SET_END_SCREEN_LIST',
       data,
     })
-  }
-
-  const saveEndScreen = async () => {
-    try {
-      await checkFormErrors()
-      await saveCampaign()
-      toast.success('End screen saved.')
-    } catch (err) {
-      setError(err.message)
-    }
   }
 
   const addNetwork = () => {
@@ -125,6 +111,8 @@ const ToolEndScreen = ({ saveCampaign }) => {
         <PopupDeleteDraftEndScreen
           onConfirm={() => {
             dispatch({ type: 'RESET_END_SCREEN' })
+            dispatch({ type: 'SET_PROGRESSION', data: 0 })
+            dispatch({ type: 'CALC_DURATION' })
             hidePopup()
           }}
         />
@@ -153,7 +141,6 @@ const ToolEndScreen = ({ saveCampaign }) => {
               <label className={styles.toolLabel}>Template Name *</label>
               <input
                 className={styles.toolInput}
-                onBlur={saveCampaign}
                 onChange={(e) => dispatch({
                   type: 'CHANGE_END_SCREEN',
                   data: {
@@ -169,7 +156,6 @@ const ToolEndScreen = ({ saveCampaign }) => {
               <InputNumber
                 className={styles.toolInput}
                 initialValue={endScreen.duration / 1000}
-                onBlur={saveCampaign}
                 onChange={(value) => {
                   dispatch({
                     type: 'CHANGE_END_SCREEN',
@@ -194,7 +180,6 @@ const ToolEndScreen = ({ saveCampaign }) => {
                     background: color.hex,
                   },
                 })}
-                onChangeComplete={() => saveCampaign()}
               />
             </div>
             <div className={styles.toolSection}>
@@ -204,7 +189,6 @@ const ToolEndScreen = ({ saveCampaign }) => {
                 object={endScreen}
                 objectName="endScreen"
                 property="title"
-                saveCampaign={saveCampaign}
               />
             </div>
             <div className={styles.toolSection}>
@@ -214,7 +198,6 @@ const ToolEndScreen = ({ saveCampaign }) => {
                 object={endScreen}
                 objectName="endScreen"
                 property="subtitle"
-                saveCampaign={saveCampaign}
               />
             </div>
 
@@ -224,7 +207,6 @@ const ToolEndScreen = ({ saveCampaign }) => {
               <div className={styles.toolInputGrid}>
                 <input
                   className={styles.toolInput}
-                  onBlur={saveCampaign}
                   onChange={(e) => dispatch({
                     type: 'CHANGE_END_SCREEN',
                     data: {
@@ -239,7 +221,6 @@ const ToolEndScreen = ({ saveCampaign }) => {
                 />
                 <input
                   className={styles.toolInput}
-                  onBlur={saveCampaign}
                   onChange={(e) => dispatch({
                     type: 'CHANGE_END_SCREEN',
                     data: {
@@ -261,7 +242,6 @@ const ToolEndScreen = ({ saveCampaign }) => {
                 object={endScreen}
                 objectName="endScreen"
                 property="email"
-                saveCampaign={saveCampaign}
               />
             </div>
             <div className={styles.toolSection}>
@@ -271,7 +251,6 @@ const ToolEndScreen = ({ saveCampaign }) => {
                 object={endScreen}
                 objectName="endScreen"
                 property="phone"
-                saveCampaign={saveCampaign}
               />
             </div>
             {/* //TODO: FINISH THIS */}
@@ -319,7 +298,6 @@ const ToolEndScreen = ({ saveCampaign }) => {
               </div>
             </div> */}
             {error && <p className={styles.error}>{error}</p>}
-            <Button onClick={saveEndScreen}>Save changes</Button>
             <Button
               onClick={addEndScreenToLibrary}
               outline={true}
@@ -421,8 +399,8 @@ const ToolEndScreen = ({ saveCampaign }) => {
                                 type: 'SET_PREVIEW_END_SCREEN',
                                 data: {},
                               })
+                              dispatch({ type: 'CALC_DURATION' })
                               showFormEndScreen(true)
-                              saveCampaign({ endScreen: es })
                             }}
                           />
                           <p>Select</p>

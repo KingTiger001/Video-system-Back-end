@@ -10,7 +10,6 @@ const InputStyle = ({
   object,
   objectName,
   property,
-  saveCampaign = () => {},
 }) => {
   const dispatch = useDispatch()
 
@@ -32,15 +31,6 @@ const InputStyle = ({
             dispatch({
               type: 'HAS_CHANGES',
               data: true,
-            })
-            saveCampaign({
-              [objectName]: {
-                ...object,
-                [property]: {
-                  ...object[property],
-                  value: e.target.value,
-                },
-              },
             })
           }}
           value={object[property].value}
@@ -76,35 +66,6 @@ const InputStyle = ({
               type: 'HAS_CHANGES',
               data: true,
             })
-            saveCampaign({
-              [objectName]: {
-                ...object,
-                [property]: {
-                  ...object[property],
-                  ...textStyle,
-                },
-              },
-            })
-          }}
-          onClose={(textStyle) => {
-            dispatch({
-              type: dispatchType,
-              data: {
-                [property]: {
-                  ...object[property],
-                  displayOptions: !object[property].displayOptions,
-                }
-              },
-            })
-            // saveCampaign({
-            //   [objectName]: {
-            //     ...object,
-            //     [property]: {
-            //       ...object[property],
-            //       ...textStyle,
-            //     },
-            //   },
-            // })
           }}
         />
       }
