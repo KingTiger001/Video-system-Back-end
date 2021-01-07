@@ -18,6 +18,9 @@ import layoutStyles from '@/styles/layouts/App.module.sass'
 import styles from '@/styles/pages/dashboard.module.sass'
 
 const Dashboard = ({ me }) => {
+  const dispatch = useDispatch()
+  const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
+  
   return (
     <AppLayout>
       <Head>
@@ -27,8 +30,8 @@ const Dashboard = ({ me }) => {
       { (!me.popups || !me.popups.welcome) && 
         <PopupWelcome
           onClose={() => {
-            console.log('on close passed')
             mainAPI.patch('/users/me', { 'popups.welcome': 1 })
+            hidePopup()
           }}
         />
       }
