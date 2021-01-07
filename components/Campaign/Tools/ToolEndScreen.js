@@ -49,7 +49,6 @@ const ToolEndScreen = () => {
 
   const getEndScreenList = async () => {
     const { data } = await mainAPI.get('/users/me/endScreens')
-    console.log(data)
     dispatch({
       type: 'SET_END_SCREEN_LIST',
       data,

@@ -34,7 +34,6 @@ const PopupUploadVideo = ({ onDone }) => {
       formData.append('file', popup.data)
       formData.append('folder', 'videos')
       formData.append('videoId', video._id)
-      console.log(formData)
       await mediaAPI.post(
         '/videos',
         formData,

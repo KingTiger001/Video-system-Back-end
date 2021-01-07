@@ -55,7 +55,6 @@ const PopupImportContacts = ({ listId, me, onDone }) => {
 
   const addImportedContactsInList = async (contacts) => {
     const contactsId = contacts.map(c => c._id)
-    console.log(contactsId)
     await mainAPI.post(`/contactLists/${listId}/contacts`, { contactsId, ownerId: me._id })
   }
 
