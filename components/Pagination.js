@@ -19,10 +19,12 @@ const Pagination = ({ initialPage, pageCount, route }) => {
       containerClassName={styles.pagination}
       disabledClassName={styles.disabled}
       initialPage={initialPage}
+      nextLabel={<img src="/assets/pagination/next.svg" />}
       nextClassName={styles.next}
       onPageChange={goToPage}
       pageClassName={styles.page}
       pageCount={pageCount}
+      previousLabel={<img src="/assets/pagination/previous.svg" />}
       previousClassName={styles.previous}
     />
 }

@@ -160,10 +160,10 @@ const Share = ({ campaignId, onClose, me }) => {
   }
 
   const stepOne = async () => {
+    if (!refFormDetails.current.checkValidity()) {
+      throw refFormDetails.current.reportValidity()
+    }
     try {
-      if (!refFormDetails.current.checkValidity()) {
-        throw refFormDetails.current.reportValidity()
-      }
       const { data: campaignUpdated } = await mainAPI.patch(`/campaigns/${campaignId}`, {
         share: {
           ...campaign.share,

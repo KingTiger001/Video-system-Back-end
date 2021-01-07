@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import withAuthServerSideProps from '@/hocs/withAuthServerSideProps'
@@ -30,8 +30,10 @@ const ContactLists = ({ initialContactLists, me }) => {
   const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
   const showPopup = (popupProps) => dispatch({ type: 'SHOW_POPUP', ...popupProps })
   
-  const [contactLists, setContactLists] = useState(initialContactLists)
+  const [contactLists, setContactLists] = useState({})
   const [searchQuery, setSearchQuery] = useState('')
+
+  useEffect(() => { setContactLists(initialContactLists) }, [initialContactLists])
 
   const getContactLists = async () => {
     const { data } = await mainAPI.get(`/users/me/contactLists?limit=${CONTACT_LISTS_LIMIT}&page=${router.query.page ? router.query.page : 1}`)
@@ -147,6 +149,14 @@ const ContactLists = ({ initialContactLists, me }) => {
           { searchQuery && contactLists.length > 0 && contactLists.map(contactList => renderContactList(contactList)) }
           { (contactLists.totalDocs <= 0 || (searchQuery && contactLists.length <= 0)) && <ListItem /> }
         </div>
+
+        { !searchQuery && 
+          <Pagination
+            pageCount={contactLists.totalPages}
+            initialPage={router.query.page ? parseInt(router.query.page, 10) - 1 : 0}
+            route="/app/contacts/lists"
+          />
+        }
       </ContactLayout>
     </AppLayout>
   )

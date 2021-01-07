@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import withAuthServerSideProps from '@/hocs/withAuthServerSideProps'
@@ -31,8 +31,10 @@ const Contacts = ({ initialContacts, me }) => {
   const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
   const showPopup = (popupProps) => dispatch({ type: 'SHOW_POPUP', ...popupProps })
   
-  const [contacts, setContacts] = useState(initialContacts)
+  const [contacts, setContacts] = useState({})
   const [searchQuery, setSearchQuery] = useState('')
+
+  useEffect(() => { setContacts(initialContacts) }, [initialContacts])
 
   const extractDataFromCSV = async (e) => {
     const formData = new FormData()

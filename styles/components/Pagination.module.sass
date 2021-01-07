@@ -1,10 +1,11 @@
 @import '../_variables.sass'
 
 .pagination
+  align-items: center
   display: grid
   grid-auto-flow: column
   grid-auto-columns: max-content
-  grid-gap: 10px
+  grid-gap: 15px
   justify-content: center
   margin-top: 30px
 
@@ -21,5 +22,15 @@
     opacity: 0.4
     &:hover
       opacity: 0.6
+    &:focus
+      outline: none
+
+.previous, .next
+  &.disabled
+    display: none
+  img
+    display: block
+  a
+    cursor: pointer
     &:focus
       outline: none

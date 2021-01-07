@@ -39,7 +39,7 @@ const Campaign = ({ campaign }) => {
           >
             Reply
           </Button>
-          <p>You can replay to {campaign.user.firstName}</p>
+          <p>You can reply to {campaign.user.firstName}</p>
         </div>
       </div>
     </div>
