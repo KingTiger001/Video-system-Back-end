@@ -1,21 +1,40 @@
-@import '../../_variables'
+@import '../_variables'
   
-.contactItem
+.listItem
   align-items: center
   background: #fff
   border-radius: 4px
   box-shadow: 0 5px 16px 0 rgba(24,59,86,0.03)
   display: grid
-  grid-template-columns: repeat(6, 1fr) 24px
   height: 40px
-  padding: 0 20px
+  padding: 0 30px
   &.empty
     grid-template-columns: 1fr
     justify-items: center
-  p
+  p, a
     color: $textColorTwo
     font-size: 12px
     letter-spacing: 0.2px
+  span
+    color: $primaryColor
+    font-weight: 600
+  .actions
+    & > div
+      display: grid
+      grid-auto-flow: column
+      grid-gap: 5px
+      justify-content: flex-start
+    a, button
+      align-items: center
+      border: 1px solid #98A1AD
+      color: $textColorTwo
+      cursor: pointer
+      display: flex
+      font-size: 12px
+      font-weight: 600
+      height: 26px
+      justify-content: center
+      width: 80px
   .more
     align-items: center
     display: flex
@@ -29,7 +48,7 @@
     border-radius: 4px
     box-shadow: 0 5px 16px 0 rgba(24,59,86,0.13)
     position: absolute
-    right: -20px
+    right: -30px
     top: 100%
     width: 145px
     z-index: 2

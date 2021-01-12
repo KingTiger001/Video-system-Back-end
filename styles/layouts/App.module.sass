@@ -9,7 +9,8 @@
 
 .content
   .container
-    padding: 40px 0
+    padding-bottom: 40px
+    padding-top: 40px
 
 .header
   display: grid
@@ -18,12 +19,10 @@
 
 .headerTop
   align-items: center
-  border-bottom: 1px solid $primaryColor
   display: grid
   grid-auto-flow: column
   grid-auto-columns: max-content
   justify-content: space-between
-  padding-bottom: 20px
 
 .headerActions
   display: grid
@@ -33,15 +32,18 @@
 .headerTitle
   color: $textColorTwo
   font-size: 24px
-  font-weight: 700
+  font-weight: 600
+  line-height: 29px
   span
     color: $primaryColor
     font-size: 14px
 
 .headerBottom
+  border-top: 1px solid $primaryColor
   display: grid
   grid-auto-flow: column
   grid-auto-columns: 1fr
+  padding-top: 20px
 
 .headerSearch
   border: 1px solid $textColorTwo

@@ -11,7 +11,8 @@ import AppLayout from '@/layouts/AppLayout'
 import ContactLayout from '@/layouts/ContactLayout'
 
 import Button from '@/components/Button'
-import ContactItem from '@/components/Contacts/ContactItem'
+import ListHeader from '@/components/ListHeader'
+import ListItem from '@/components/ListItem'
 import Pagination from '@/components/Pagination'
 import PopupContactListAddContacts from '@/components/Popups/PopupContactListAddContacts'
 import PopupContactListRemoveContact from '@/components/Popups/PopupContactListRemoveContact'
@@ -111,29 +112,17 @@ const ContactList = ({ initialContactList, me }) => {
           </div>
         </div>
         <div className={styles.contacts}>
-          <div className={styles.contactsHeader}>
-            <div>
-              <p>First name</p>
-            </div>
-            <div>
-              <p>Last name</p>
-            </div>
-            <div>
-              <p>Company</p>
-            </div>
-            <div>
-              <p>Job</p>
-            </div>
-            <div>
-              <p>Email</p>
-            </div>
-            <div>
-              <p>Phone number</p>
-            </div>
-          </div>
+          <ListHeader className={styles.contactsHeader}>
+            <p>First name</p>
+            <p>Last name</p>
+            <p>Company</p>
+            <p>Job</p>
+            <p>Email</p>
+            <p>Phone number</p>
+          </ListHeader>
           { contactList.list.length > 0 && contactList.list.map(contact => (
-            <ContactItem
-              data={contact}
+            <ListItem
+              className={styles.contactsItem}
               key={contact._id}
               renderDropdownActions={() => (
                 <ul>
@@ -158,9 +147,16 @@ const ContactList = ({ initialContactList, me }) => {
                   </li>
                 </ul>
               )}
-            />
+            >
+              <p>{contact.firstName}</p>
+              <p>{contact.lastName}</p>
+              <p>{contact.company}</p>
+              <p>{contact.job}</p>
+              <p>{contact.email}</p>
+              <p>{contact.phone}</p>
+            </ListItem>
           ))}
-          { contactList.list.length <= 0 && <ContactItem /> }
+          { contactList.list.length <= 0 && <ContactItem emtpy={true} /> }
         </div>
         {/* <Pagination
           pageCount={contacts.totalPages}

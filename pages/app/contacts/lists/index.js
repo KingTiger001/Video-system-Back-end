@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -11,7 +12,8 @@ import AppLayout from '@/layouts/AppLayout'
 import ContactLayout from '@/layouts/ContactLayout'
 
 import Button from '@/components/Button'
-import ListItem from '@/components/Contacts/ListItem'
+import ListHeader from '@/components/ListHeader'
+import ListItem from '@/components/ListItem'
 import Pagination from '@/components/Pagination'
 import PopupContactListCreate from '@/components/Popups/PopupContactListCreate'
 import PopupDeleteContactList from '@/components/Popups/PopupDeleteContactList'
@@ -20,7 +22,7 @@ import PopupRenameContactList from '@/components/Popups/PopupRenameContactList'
 import layoutStyles from '@/styles/layouts/App.module.sass'
 import styles from '@/styles/layouts/Contact.module.sass'
 
-const CONTACT_LISTS_LIMIT = 24
+const CONTACT_LISTS_LIMIT = 20
 
 const ContactLists = ({ initialContactLists, me }) => {
   const router = useRouter()
@@ -48,9 +50,10 @@ const ContactLists = ({ initialContactLists, me }) => {
     setContactLists(data)
   }
 
-  const renderContactList = (contactList) => (
+  const renderContactList = (contactList= {}) => (
     <ListItem
-      data={contactList}
+      className={styles.contactListsItem}
+      empty={Object.keys(contactList).length > 0 ? false : true}
       key={contactList._id}
       renderDropdownActions={() => (
         <ul>
@@ -72,7 +75,16 @@ const ContactLists = ({ initialContactLists, me }) => {
           </li>
         </ul>
       )}
-    />
+      renderEmpty={() => (
+        <p>No contact lists found.</p>
+      )}
+    >
+      <p><b>#{contactList.uniqueId}</b></p>
+      <Link href={`/app/contacts/lists/${contactList._id}`}>
+        <a>{contactList.name}</a>
+      </Link>
+      { contactList.list && <span className={styles.countContacts}>{contactList.list.length}</span> }
+    </ListItem>
   )
 
   return (
@@ -136,18 +148,15 @@ const ContactLists = ({ initialContactLists, me }) => {
           </div>
         </div>
 
+        <ListHeader className={styles.contactListsHeader}>
+          <p>ID</p>
+          <p>Name</p>
+          <p>Contacts</p>
+        </ListHeader>
         <div className={styles.contactLists}>
-          <div className={styles.contactListsHeader}>
-            <div>
-              <p>Name</p>
-            </div>
-            <div>
-              <p>Number of contacts</p>
-            </div>
-          </div>
           { contactLists.totalDocs > 0 && contactLists.docs.map(contactList => renderContactList(contactList)) }
           { searchQuery && contactLists.length > 0 && contactLists.map(contactList => renderContactList(contactList)) }
-          { (contactLists.totalDocs <= 0 || (searchQuery && contactLists.length <= 0)) && <ListItem /> }
+          { (contactLists.totalDocs <= 0 || (searchQuery && contactLists.length <= 0)) && renderContactList() }
         </div>
 
         { !searchQuery && 

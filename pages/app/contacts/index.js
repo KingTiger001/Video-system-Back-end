@@ -11,7 +11,8 @@ import AppLayout from '@/layouts/AppLayout'
 import ContactLayout from '@/layouts/ContactLayout'
 
 import Button from '@/components/Button'
-import ContactItem from '@/components/Contacts/ContactItem'
+import ListHeader from '@/components/ListHeader'
+import ListItem from '@/components/ListItem'
 import Pagination from '@/components/Pagination'
 import PopupAddContact from '@/components/Popups/PopupAddContact'
 import PopupDeleteContact from '@/components/Popups/PopupDeleteContact'
@@ -21,7 +22,7 @@ import PopupImportContacts from '@/components/Popups/PopupImportContacts'
 import layoutStyles from '@/styles/layouts/App.module.sass'
 import styles from '@/styles/layouts/Contact.module.sass'
 
-const CONTACTS_LIMIT = 24
+const CONTACTS_LIMIT = 20
 
 const Contacts = ({ initialContacts, me }) => {
   const router = useRouter()
@@ -56,9 +57,10 @@ const Contacts = ({ initialContacts, me }) => {
     setContacts(data)
   }
 
-  const renderContact = (contact) => (
-    <ContactItem
-      data={contact}
+  const renderContact = (contact = {}) => (
+    <ListItem
+      className={styles.contactsItem}
+      empty={Object.keys(contact).length > 0 ? false : true}
       key={contact._id}
       renderDropdownActions={() => (
         <ul>
@@ -80,7 +82,17 @@ const Contacts = ({ initialContacts, me }) => {
           </li>
         </ul>
       )}
-    />
+      renderEmpty={() => (
+        <p>No contacts found.</p>
+      )}
+    >
+      <p>{contact.firstName}</p>
+      <p>{contact.lastName}</p>
+      <p>{contact.company}</p>
+      <p>{contact.job}</p>
+      <p>{contact.email}</p>
+      <p>{contact.phone}</p>
+    </ListItem>
   )
 
   return (
@@ -160,30 +172,18 @@ const Contacts = ({ initialContacts, me }) => {
             </div>
           </div>
         </div>
+        <ListHeader className={styles.contactsHeader}>
+          <p>First name</p>
+          <p>Last name</p>
+          <p>Company</p>
+          <p>Job</p>
+          <p>Email</p>
+          <p>Phone number</p>
+        </ListHeader>
         <div className={styles.contacts}>
-          <div className={styles.contactsHeader}>
-            <div>
-              <p>First name</p>
-            </div>
-            <div>
-              <p>Last name</p>
-            </div>
-            <div>
-              <p>Company</p>
-            </div>
-            <div>
-              <p>Job</p>
-            </div>
-            <div>
-              <p>Email</p>
-            </div>
-            <div>
-              <p>Phone number</p>
-            </div>
-          </div>
           { contacts.totalDocs > 0 && contacts.docs.map(contact => renderContact(contact)) }
           { searchQuery && contacts.length > 0 && contacts.map(contact => renderContact(contact)) }
-          { (contacts.totalDocs <= 0 || (searchQuery && contacts.length <= 0)) && <ContactItem /> }
+          { (contacts.totalDocs <= 0 || (searchQuery && contacts.length <= 0)) && renderContact() }
         </div>
         { !searchQuery && 
           <Pagination

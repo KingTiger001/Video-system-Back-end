@@ -15,7 +15,11 @@ const Analytics = ({}) => {
       </Head>
 
       <div className={layoutStyles.container}>
-        <h1 className={layoutStyles.title}>Analytics</h1>
+        <div className={layoutStyles.header}>
+          <div className={layoutStyles.headerTop}>
+            <h1 className={layoutStyles.headerTitle}>Analytics</h1>
+          </div>
+        </div>
       </div>
     </AppLayout>
   )

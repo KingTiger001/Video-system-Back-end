@@ -12,13 +12,14 @@ import dayjs from '@/plugins/dayjs'
 
 import AppLayout from '@/layouts/AppLayout'
 
-import Button from '@/components/Button'
+import ListHeader from '@/components/ListHeader'
+import ListItem from '@/components/ListItem'
 import PopupDeleteCampaign from '@/components/Popups/PopupDeleteCampaign'
 
 import layoutStyles from '@/styles/layouts/App.module.sass'
-import styles from '@/styles/pages/dashboard.module.sass'
+import styles from '@/styles/pages/app/campaigns.module.sass'
 
-const Campaigns = ({ initialCampaigns }) => {
+const Campaigns = ({ initialCampaignsDraft, initialCampaignsShared }) => {
   const router = useRouter()
   
   const dispatch = useDispatch()
@@ -26,7 +27,8 @@ const Campaigns = ({ initialCampaigns }) => {
   const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
   const showPopup = (popupProps) => dispatch({ type: 'SHOW_POPUP', ...popupProps })
   
-  const [campaigns, setCampaigns] = useState(initialCampaigns)
+  const [campaignsDraft, setCampaignsDraft] = useState(initialCampaignsDraft)
+  const [campaignsShared, setCampaignsShared] = useState(initialCampaignsShared)
 
   const createCampaign = async () => {
     const { data: campaign } = await mainAPI.post('/campaigns')
@@ -34,8 +36,10 @@ const Campaigns = ({ initialCampaigns }) => {
   }
 
   const getCampaigns = async () => {
-    const { data } = await mainAPI.get('/users/me/campaigns')
-    setCampaigns(data)
+    const { data: campaignsDraftUpdated } = await mainAPI.get('/users/me/campaigns?status=draft')
+    const { data: campaignsSharedUpdated } = await mainAPI.get('/users/me/campaigns?status=shared')
+    setCampaignsDraft(campaignsDraftUpdated)
+    setCampaignsShared(campaignsSharedUpdated)
   }
 
   const displayDuration = (value) => {
@@ -47,6 +51,65 @@ const Campaigns = ({ initialCampaigns }) => {
     const s = t.seconds()
     return `${m < 10 ? `0${m}` : m}:${s < 10 ? `0${s}` : s}`
   }
+
+  const renderListHeader = ({ draft = false }) => (
+    <ListHeader className={styles.campaignsHeader}>
+      <p>ID</p>
+      <p>Video name</p>
+      <p>{draft ? 'Creation date' : 'Sent date'}</p>
+      <p>Recipients</p>
+      <p>Duration</p>
+      <p>Actions</p>
+    </ListHeader>
+  )
+
+  const renderCampaign = (campaign = {}) => (
+    <ListItem
+      className={styles.campaignsItem}
+      empty={Object.keys(campaign).length > 0 ? false : true}
+      key={campaign._id}
+      renderActions={() => (
+        <div>
+          { campaign.status === 'draft' &&
+            <Link href={`/app/campaigns/${campaign._id}`}>
+              <a>Edit</a>
+            </Link>
+          }
+          { campaign.status === 'draft' &&
+            <Link href={`/app/campaigns/${campaign._id}`}>
+              <a>Share</a>
+            </Link>
+          }
+          { campaign.status === 'shared' &&
+            <Link href={`/analytics/${campaign._id}`}>
+              <a>Report</a>
+            </Link>
+          }
+          { campaign.status === 'shared' &&
+            <Link href={`/campaigns/${campaign._id}`}>
+              <a>Preview</a>
+            </Link>
+          }
+        </div>
+      )}
+      renderDropdownActions={() => (
+        <ul>
+          <li onClick={() => showPopup({ display: 'DELETE_CAMPAIGN', data: campaign })}>
+            <p>Delete</p>
+          </li>
+        </ul>
+      )}
+      renderEmpty={() => (
+        <p>No videos found.</p>
+      )}
+    >
+      <p><b>#{campaign.uniqueId}</b></p>
+      <p>{campaign.name}</p>
+      <p>{dayjs(campaign.status === 'draft' ? campaign.createdAt : campaign.sentAt).format('MM/DD/YYYY')}</p>
+      <p>0</p>
+      <p>{displayDuration(campaign.duration)}</p>
+    </ListItem>
+  )
 
   return (
     <AppLayout>
@@ -64,56 +127,29 @@ const Campaigns = ({ initialCampaigns }) => {
       }
 
       <div className={layoutStyles.container}>
-        <h1 className={layoutStyles.title}>Your campaigns</h1>
-        <div className={styles.campaigns}>
-          <div className={styles.campaignsHeader}>
-            <p>Name</p>
-            <p>Created at</p>
-            <p>Duration</p>
-            <p>Status</p>
-            <p>Actions</p>
+        <div className={layoutStyles.header}>
+          <div className={layoutStyles.headerTop}>
+            <h1 className={layoutStyles.headerTitle}>My video campaigns</h1>
           </div>
+        </div>
+        
+        <p className={styles.videosDraftTitle}>Videos drafts</p>
+
+        <div className={styles.campaigns}>
+          {renderListHeader({ draft: true })}
           <div className={styles.campaignsList}>
-            {
-              campaigns.length > 0
-                ?
-                  campaigns.map((campaign) => (
-                    <div
-                      className={styles.campaignsItem}
-                      key={campaign._id}
-                    >
-                      <p>{campaign.name}</p>
-                      <p>{dayjs(campaign.createdAt).format('MM/DD/YYYY')}</p>
-                      <p>{displayDuration(campaign.duration)}</p>
-                      <p>{campaign.status}</p>
-                      <div className={styles.campaignsItemActions}>
-                        { campaign.status === 'draft' &&
-                          <Link href={`/app/campaigns/${campaign._id}`}>
-                            <a className={`${styles.action} ${styles.edit}`}>Edit</a>
-                          </Link>
-                        }
-                        { campaign.status === 'shared' &&
-                          <Link href={`/campaigns/${campaign._id}`}>
-                            <a className={`${styles.action} ${styles.see}`}>See</a>
-                          </Link>
-                        }
-                        <span
-                          className={`${styles.action} ${styles.delete}`}
-                          onClick={() => showPopup({ display: 'DELETE_CAMPAIGN', data: campaign })}
-                        >
-                          Delete
-                        </span>
-                      </div>
-                    </div>
-                  ))
-                :
-                  <div className={styles.campaignsEmpty}>
-                    <p>No campaign found.</p>
-                    <Button onClick={createCampaign}>
-                      Create a video campaign
-                    </Button>
-                  </div>
-            }
+            { campaignsDraft.length > 0 && campaignsDraft.map((campaign) => renderCampaign(campaign)) }
+            { campaignsDraft.length <= 0 && renderCampaign() }
+          </div>
+        </div>
+        
+        <p className={styles.videosSentTitle}>Videos sent</p>
+
+        <div className={styles.campaigns}>
+          {renderListHeader({})}
+          <div className={styles.campaignsList}>
+            { campaignsShared.length > 0 && campaignsShared.map((campaign) => renderCampaign(campaign)) }
+            { campaignsDraft.length <= 0 && renderCampaign() }
           </div>
         </div>
       </div>
@@ -124,8 +160,10 @@ const Campaigns = ({ initialCampaigns }) => {
 
 export default withAuth(Campaigns)
 export const getServerSideProps = withAuthServerSideProps(async (ctx, user) => {
-  const { data: initialCampaigns } = await mainAPI.get('/users/me/campaigns')
+  const { data: initialCampaignsDraft } = await mainAPI.get('/users/me/campaigns?status=draft')
+  const { data: initialCampaignsShared } = await mainAPI.get('/users/me/campaigns?status=shared')
   return {
-    initialCampaigns
+    initialCampaignsDraft,
+    initialCampaignsShared,
   }
 })
