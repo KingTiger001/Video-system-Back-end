@@ -1,4 +1,6 @@
 import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { useEffect, useRef, useState } from 'react'
 
 import withAuthServerSideProps from '@/hocs/withAuthServerSideProps'
 
@@ -10,6 +12,55 @@ import VideoPlayer from '@/components/VideoPlayer'
 import styles from '@/styles/pages/campaign.module.sass'
 
 const Campaign = ({ campaign }) => {
+  const router = useRouter()
+
+  const campaignId = router.query.campaignId
+  const contactId = router.query.c
+
+  const [viewDuration, setViewDuration] = useState(70)
+  const viewDurationRef = useRef()
+  const [isPlaying, setIsPlaying] = useState(false)
+
+  useEffect(() => {
+    if (contactId) {
+      mainAPI.post(`/analytics/${campaignId}/opened?c=${contactId}`)
+    }
+    return () => {
+      if (viewDurationRef.current > 0) {
+        mainAPI.post(`/analytics/${campaignId}/viewDuration`, { duration: viewDuration })
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    const videoDuration = Math.round(campaign.duration / 1000)
+    if (viewDuration > videoDuration) {
+      setViewDuration(videoDuration)
+      viewDurationRef.current = videoDuration
+      return
+    }
+    viewDurationRef.current = viewDuration
+  }, [campaign, viewDuration])
+
+  useEffect(() => {
+    let interval = null;
+    if (!isPlaying) {
+      clearInterval(interval)
+    } else if (isPlaying) {
+      interval = setInterval(() => {
+        setViewDuration(duration => duration + 1)
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isPlaying])
+
+  const reply = () => {
+    if (contactId) {
+      mainAPI.post(`/analytics/${campaignId}/replied?c=${contactId}`)
+    }
+    window.location = `mailto:${campaign.user.email}`
+  }
+
   return (
     <div className={styles.campaign}>
 
@@ -31,12 +82,13 @@ const Campaign = ({ campaign }) => {
       </div>
       <div className={styles.content}>
         <h1 className={styles.title}>{campaign.user.firstName} has a message for you !</h1>
-        <VideoPlayer data={campaign} />
+        <VideoPlayer
+          data={campaign}
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
+        />
         <div className={styles.reply}>
-          <Button
-            href={`mailto:${campaign.user.email}`}
-            type="link"
-          >
+          <Button onClick={reply}>
             Reply
           </Button>
           <p>You can reply to {campaign.user.firstName}</p>

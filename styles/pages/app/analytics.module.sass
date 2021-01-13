@@ -1,0 +1,28 @@
+@import '../../_variables'
+
+.analyticsHeader, .analyticItemDetails
+  grid-template-columns: 100px repeat(4, 1fr) 100px
+
+.analyticsList
+  display: grid
+  grid-gap: 20px
+
+.analyticItemStats
+  display: grid
+  grid-gap: 10px
+  grid-template-columns: 30% repeat(3, 1fr)
+  padding: 10px 30px
+
+.analyticItemStatsText
+  align-content: center
+  display: grid
+  grid-auto-rows: max-content
+  grid-gap: 20px
+  div
+    p
+      color: $textColorTwo
+      font-size: 12px
+      letter-spacing: 0.2px
+      &:first-child
+        font-weight: 600
+        margin-bottom: 5px

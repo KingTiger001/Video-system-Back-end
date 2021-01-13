@@ -11,7 +11,7 @@ import Logo from '@/components/Campaign/Logo'
 
 import styles from '@/styles/components/VideoPlayer.module.sass'
 
-const VideoPlayer = ({ data = {} }) => {
+const VideoPlayer = ({ data = {}, onPause = () => {}, onPlay = () => {} }) => {
   const dispatch = useDispatch()
 
   const { endScreen, helloScreen, logo, video } = data
@@ -59,14 +59,26 @@ const VideoPlayer = ({ data = {} }) => {
     if (videoRef.ended && !videoRef.paused) {
       videoRef.currenTime = 0
       videoRef.pause()
+      onPause()
     } else if (Object.keys(videoRef).length > 0 && !videoRef.paused && (progression < helloScreen.duration || progression > duration - endScreen.duration)) {
       videoRef.currenTime = 0
       videoRef.pause()
+      onPause()
     } else if (Object.keys(videoRef).length > 0 && videoRef.paused && progression > helloScreen.duration && progression < duration - endScreen.duration && isPlaying) {
       videoRef.play()
+      onPlay()
     }
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval)
+    };
   }, [isPlaying, progression, videoSeeking])
+  
+  useEffect(() => {
+    return () => {
+      dispatch({ type: 'videoPlayer/PAUSE' })
+      dispatch({ type: 'videoPlayer/SET_PROGRESSION', data: 0 })
+    }
+  }, [])
 
   const videoRefCb = useCallback(node => {
     const handleSeeking = () => dispatch({ type: 'videoPlayer/SET_VIDEO_SEEKING', data: true })
@@ -149,6 +161,7 @@ const VideoPlayer = ({ data = {} }) => {
           dispatch({ type: isPlaying ? 'videoPlayer/PAUSE' : 'videoPlayer/PLAY' })
           if (progression > helloScreen.duration && progression < duration - endScreen.duration) {
             isPlaying ? videoRef.pause() : videoRef.play()
+            isPlaying ? onPause() : onPlay()
           }
         }}
         ref={playerRef}
@@ -192,6 +205,7 @@ const VideoPlayer = ({ data = {} }) => {
             dispatch({ type: isPlaying ? 'videoPlayer/PAUSE' : 'videoPlayer/PLAY' })
             if (progression > helloScreen.duration && progression < duration - endScreen.duration) {
               isPlaying ? videoRef.pause() : videoRef.play()
+              isPlaying ? onPause() : onPlay()
             }
           }}
           src={isPlaying ? '/assets/video/pauseW.svg' : '/assets/video/playW.svg'}

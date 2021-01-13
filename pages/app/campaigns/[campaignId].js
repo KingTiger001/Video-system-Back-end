@@ -19,7 +19,7 @@ import Player from '@/components/Campaign/Player'
 import Preview from '@/components/Campaign/Preview'
 import Share from '@/components/Campaign/Share'
 
-import styles from '@/styles/pages/dashboardCampaign.module.sass'
+import styles from '@/styles/pages/app/[campaignId].module.sass'
 
 const Campaign = ({ me }) => {
   const router = useRouter()
@@ -148,18 +148,18 @@ const Campaign = ({ me }) => {
           </a>
         </Link>
         <div className={styles.headerVideoTitle}>
-          <input
-            onChange={(e) => {
-              dispatch({ type: 'SET_NAME', data: e.target.value })
-              setInputNameWidth((e.target.value.length + 1) * 16)
-            }}
-            placeholder="Campaign name"
-            style={{ width: inputNameWidth }}
-            value={name}
-          />
-          <img
-            src="/assets/campaign/pen.svg"
-          />
+          <div>
+            <input
+              onChange={(e) => {
+                dispatch({ type: 'SET_NAME', data: e.target.value })
+                setInputNameWidth((e.target.value.length + 1) * 16)
+              }}
+              placeholder="Campaign name"
+              style={{ width: inputNameWidth }}
+              value={name}
+            />
+            <img src="/assets/campaign/pen.svg" />
+          </div>
         </div>
         <div className={styles.headerActions}>
           <Button

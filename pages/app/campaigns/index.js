@@ -149,7 +149,7 @@ const Campaigns = ({ initialCampaignsDraft, initialCampaignsShared }) => {
           {renderListHeader({})}
           <div className={styles.campaignsList}>
             { campaignsShared.length > 0 && campaignsShared.map((campaign) => renderCampaign(campaign)) }
-            { campaignsDraft.length <= 0 && renderCampaign() }
+            { campaignsShared.length <= 0 && renderCampaign() }
           </div>
         </div>
       </div>
