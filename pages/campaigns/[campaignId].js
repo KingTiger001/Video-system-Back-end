@@ -26,7 +26,7 @@ const Campaign = ({ campaign }) => {
       mainAPI.post(`/analytics/${campaignId}/opened?c=${contactId}`)
     }
     return () => {
-      if (viewDurationRef.current > 0) {
+      if (viewDurationRef.current > 0 && contactId) {
         mainAPI.post(`/analytics/${campaignId}/viewDuration`, { duration: viewDuration })
       }
     }

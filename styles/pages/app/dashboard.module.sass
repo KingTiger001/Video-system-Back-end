@@ -1,0 +1,109 @@
+@import '../../_variables'
+
+.dashboard
+  background: #F8FBFF
+  height: 100vh
+
+.container
+  display: grid
+  grid-template-columns: repeat(12, 1fr)
+  grid-gap: 25px 10px
+  padding: 50px 0
+  margin: auto
+  max-width: 1080px
+  width: 100%
+      
+
+
+.title
+  color: $textColorTwo
+  font-size: 30px
+  grid-column-start: 1
+  grid-column-end: 13
+
+.stats
+  display: grid
+  grid-gap: 10px
+  grid-template-columns: repeat(4, 1fr)
+  grid-column-start: 1
+  grid-column-end: 13
+  
+.statsTitle
+  color: $textColorTwo
+  font-size: 24px
+  font-weight: 500
+  grid-row: 1
+  grid-column-start: 1
+  grid-column-end: 5
+
+.stat
+  grid-row: 2
+
+.campaignsAndButtons
+  display: grid
+  grid-gap: 10px
+  grid-template-columns: repeat(12, 1fr)
+  grid-column-start: 1
+  grid-column-end: 13
+  .campaigns
+    grid-row: 1 / 3
+
+.campaigns
+  background: #fff
+  border-radius: 4px
+  display: grid
+  grid-template-rows: auto auto 1fr auto
+  height: 410px
+  grid-column-start: 1
+  grid-column-end: 10
+
+.campaignsTitle
+  color: $textColorTwo
+  display: grid
+  font-size: 24px
+  font-weight: 700
+  letter-spacing: 0.2px
+  margin-bottom: 15px
+  padding: 20px
+  &:after
+    background: $primaryColor
+    content: ''
+    height: 3px
+    margin-top: 14px
+    width: 130px
+
+.campaignsHeader, .campaignsItem
+  grid-template-columns: 60px repeat(4, 1fr) 90px
+  &.draft
+    grid-template-columns: 60px 1fr 150px 90px
+
+.campaignsItem
+  box-shadow: none
+  &:nth-child(odd)
+    background: #F9FAFC
+
+.createCampaign, .importContacts
+  border-radius: 4px
+  display: grid
+  align-items: center
+  justify-items: center
+  grid-column-start: 10
+  grid-column-end: 13
+  height: 200px
+
+.createCampaign
+  background: $primaryColor
+
+.importContacts
+  background: #fff
+
+.campaignsFooter
+  display: flex
+  justify-content: center
+  padding: 30px 0
+  a
+    color: $primaryColor
+    font-size: 12px
+    font-weight: 500
+    line-height: 20px
+    text-decoration: underline

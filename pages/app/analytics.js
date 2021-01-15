@@ -55,11 +55,11 @@ const Analytics = ({ initialAnalytics }) => {
           <p>No analytics found.</p>
         )}
       >
-        <p><b>#{analytic.campaign.uniqueId}</b></p>
-        <p>{analytic.campaign.name}</p>
-        <p>{dayjs(analytic.campaign.sentAt).format('MM/DD/YYYY')}</p>
-        <span>{analytic.sentTo.length}</span>
-        <p>{displayDuration(analytic.campaign.duration)}</p>
+        <p><b>#{analytic.campaign && analytic.campaign.uniqueId}</b></p>
+        <p>{analytic.campaign && analytic.campaign.name}</p>
+        <p>{analytic.campaign && dayjs(analytic.campaign.sentAt).format('MM/DD/YYYY')}</p>
+        <span>{analytic.sentTo && analytic.sentTo.length}</span>
+        <p>{analytic.campaign && displayDuration(analytic.campaign.duration)}</p>
       </ListItem>
       { analytic.displayReport && 
         <div className={styles.analyticItemStats}>

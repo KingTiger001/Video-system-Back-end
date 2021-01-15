@@ -72,8 +72,8 @@ const Index = () => {
       <main className={styles.main}>
         <section className={styles.engageSection}>
           <div className={styles.container}>
-            <h1 className={styles.engageTitle}>Engage your leads through a video message</h1>
-            <h2 className={styles.engageSubtitle}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.Olor sit amet, consectetur adipiscing eli.</h2>
+            <h1 className={styles.engageTitle}>Video messaging reinvents your <span>professional interactions</span></h1>
+            <h2 className={styles.engageSubtitle}>Story telling is what makes you unique<br />Sharing it is what makes your mission exist.</h2>
             <div className={styles.engageButtons}>
               <Button
                 href="/signup"
@@ -120,36 +120,36 @@ const Index = () => {
         <ElementScroll name="solution">
           <section className={styles.solutionSection}>
             <div className={styles.container}>
-              <h1 className={styles.sectionTitleCenter}>Solution made for you</h1>
-              <h2 className={styles.sectionSubtitleCenter}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor,  adipiscing elit sed.</h2>
+              <h1 className={styles.sectionTitleCenter}>For a stronger competitive advantage</h1>
+              <h2 className={styles.sectionSubtitleCenter}>Boost productivity and reshape remote interactions</h2>
               <div className={styles.solutionGrid}>
                 <div className={styles.solutionItem}>
                   <div className={styles.icon}>
                     <img src="/assets/common/iconPlus.svg" />
                   </div>
-                  <p className={styles.solutionItemTitle}>Text</p>
-                  <p className={styles.solutionItemText}>Lorem ipsum dolor sit amet, consectetur adipiscing.</p>
+                  <p className={styles.solutionItemTitle}>Prospect</p>
+                  <p className={styles.solutionItemText}>Reach your business targets/partners at scale.</p>
                 </div>
                 <div className={styles.solutionItem}>
                   <div className={styles.icon}>
                     <img src="/assets/common/iconPlus.svg" />
                   </div>
-                  <p className={styles.solutionItemTitle}>Text</p>
-                  <p className={styles.solutionItemText}>Lorem ipsum dolor sit amet, consectetur adipiscing.</p>
+                  <p className={styles.solutionItemTitle}>Attract</p>
+                  <p className={styles.solutionItemText}>Catch attention with impactful customized video messages.</p>
                 </div>
                 <div className={styles.solutionItem}>
                   <div className={styles.icon}>
                     <img src="/assets/common/iconPlus.svg" />
                   </div>
-                  <p className={styles.solutionItemTitle}>Text</p>
-                  <p className={styles.solutionItemText}>Lorem ipsum dolor sit amet, consectetur adipiscing.</p>
+                  <p className={styles.solutionItemTitle}>Convert</p>
+                  <p className={styles.solutionItemText}>Increase your engagement success rate.</p>
                 </div>
                 <div className={styles.solutionItem}>
                   <div className={styles.icon}>
                     <img src="/assets/common/iconPlus.svg" />
                   </div>
-                  <p className={styles.solutionItemTitle}>Text</p>
-                  <p className={styles.solutionItemText}>Lorem ipsum dolor sit amet, consectetur adipiscing.</p>
+                  <p className={styles.solutionItemTitle}>Retain</p>
+                  <p className={styles.solutionItemText}>Build a special connection with your business relations.</p>
                 </div>
               </div>
               <Button
@@ -165,8 +165,8 @@ const Index = () => {
         <ElementScroll name="product">
           <section className={styles.productSection}>
             <div className={styles.container}>
-              <h1 className={styles.productTitle}>Product & advantages</h1>
-              <h2 className={styles.productSubtitle}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </h2>
+              <h1 className={styles.productTitle}>Send a video note</h1>
+              <h2 className={styles.productSubtitle}>After emails, text messages and voice notes, send video messages on demand.</h2>
               <ul className={styles.productList}>
                 <li className={styles.productItem}>
                   <div className={styles.icon}>
@@ -375,7 +375,7 @@ const Index = () => {
         </ElementScroll>
 
         <section className={styles.tryItSection}>
-          <h1 className={styles.sectionTitle}>Try it free</h1>
+          <h1 className={styles.sectionTitle}>Never miss an opportunity<br />to connect and engage</h1>
           <h2 className={styles.sectionSubtitle}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.</h2>
           <Button
             color="white"

@@ -47,8 +47,11 @@ const HeaderApp = () => {
 
         <p>Need help ?</p>
         
-        <Button onClick={createCampaign}>
-          Create a campaign
+        <Button
+          onClick={createCampaign}
+          outline={true}
+        >
+          Create a video campaign
         </Button>
         <p
           className={styles.logout}
