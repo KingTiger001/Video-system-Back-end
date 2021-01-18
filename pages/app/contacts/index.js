@@ -143,8 +143,8 @@ const Contacts = ({ initialContacts, me }) => {
             <h1 className={layoutStyles.headerTitle}>Contacts <span>({ searchQuery ? contacts.length : contacts.totalDocs })</span></h1>
             <div className={layoutStyles.headerActions}>
               <Button
-                color="lightGrey"
                 onClick={() => showPopup({ display: 'ADD_CONTACT' })}
+                outline={true}
                 size="small"
               >
                 Add contact

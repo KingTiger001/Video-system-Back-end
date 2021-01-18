@@ -94,7 +94,7 @@ const ToolHelloScreen = () => {
             <p className={styles.toolTitle}>Edit a Start Screen</p>
             <p className={styles.toolSubtitle}>Your start screen</p>
             <div className={styles.toolSection}>
-              <label className={styles.toolLabel}>Template Name *</label>
+              <label className={styles.toolLabel}>Start Screen name *</label>
               <input
                 className={styles.toolInput}
                 onChange={(e) => dispatch({
@@ -105,6 +105,38 @@ const ToolHelloScreen = () => {
                 })}
                 value={helloScreen.name}
                 required
+              />
+            </div>
+            <div className={styles.toolSection}>
+              <label className={styles.toolLabel}>Background color</label>
+              <ChromePicker
+                className={styles.colorPicker}
+                disableAlpha={true}
+                color={helloScreen.background}
+                onChange={(color) => dispatch({
+                  type: 'CHANGE_HELLO_SCREEN',
+                  data: {
+                    background: color.hex,
+                  },
+                })}
+              />
+            </div>
+            <div className={styles.toolSection}>
+              <label className={styles.toolLabel}>Text line 1</label>
+              <InputStyle
+                dispatchType="CHANGE_HELLO_SCREEN"
+                object={helloScreen}
+                objectName="helloScreen"
+                property="title"
+              />
+            </div>
+            <div className={styles.toolSection}>
+              <label className={styles.toolLabel}>Text line 2</label>
+              <InputStyle
+                dispatchType="CHANGE_HELLO_SCREEN"
+                object={helloScreen}
+                objectName="helloScreen"
+                property="subtitle"
               />
             </div>
             <div className={styles.toolSection}>
@@ -122,38 +154,6 @@ const ToolHelloScreen = () => {
                   dispatch({ type: 'CALC_DURATION' })
                 }}
                 max={10}
-              />
-            </div>
-            <div className={styles.toolSection}>
-              <label className={styles.toolLabel}>Background Color</label>
-              <ChromePicker
-                className={styles.colorPicker}
-                disableAlpha={true}
-                color={helloScreen.background}
-                onChange={(color) => dispatch({
-                  type: 'CHANGE_HELLO_SCREEN',
-                  data: {
-                    background: color.hex,
-                  },
-                })}
-              />
-            </div>
-            <div className={styles.toolSection}>
-              <label className={styles.toolLabel}>Title</label>
-              <InputStyle
-                dispatchType="CHANGE_HELLO_SCREEN"
-                object={helloScreen}
-                objectName="helloScreen"
-                property="title"
-              />
-            </div>
-            <div className={styles.toolSection}>
-              <label className={styles.toolLabel}>Text</label>
-              <InputStyle
-                dispatchType="CHANGE_HELLO_SCREEN"
-                object={helloScreen}
-                objectName="helloScreen"
-                property="subtitle"
               />
             </div>
             {error && <p className={styles.error}>{error}</p>}
@@ -181,7 +181,7 @@ const ToolHelloScreen = () => {
               }}
             >
               <img src="/assets/campaign/add.svg" />
-              <p>Create a Start Screen</p>
+              <p>Create Start Screen</p>
             </div>
             {
               Object.keys(helloScreen).length > 1 &&

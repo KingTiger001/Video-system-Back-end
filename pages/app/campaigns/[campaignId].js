@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import AutosizeInput from 'react-input-autosize';
 import { toast } from 'react-toastify'
 
 import withAuthServerSideProps from '@/hocs/withAuthServerSideProps'
@@ -149,13 +150,11 @@ const Campaign = ({ me }) => {
         </Link>
         <div className={styles.headerVideoTitle}>
           <div>
-            <input
+            <AutosizeInput
               onChange={(e) => {
                 dispatch({ type: 'SET_NAME', data: e.target.value })
-                setInputNameWidth((e.target.value.length + 1) * 16)
               }}
-              placeholder="Campaign name"
-              style={{ width: inputNameWidth }}
+              placeholder="Name your video here"
               value={name}
             />
             <img src="/assets/campaign/pen.svg" />

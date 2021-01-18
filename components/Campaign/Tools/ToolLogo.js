@@ -90,6 +90,7 @@ const ToolLogo = () => {
           onChange={(e) => uploadLogo(e.target.files[0])}
           className={styles.logoInput}
         />
+        <p className={styles.logoRecoSize}>(Recommended size: 300x300)</p>
         { error && <p className={styles.error}>{error}</p> }
       </div>
       <div className={styles.toolSection}>

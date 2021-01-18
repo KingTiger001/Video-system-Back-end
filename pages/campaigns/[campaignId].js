@@ -99,9 +99,11 @@ const Campaign = ({ campaign }) => {
 }
 
 export default Campaign
-export const getServerSideProps = withAuthServerSideProps(async ({ params }, user) => {
+export const getServerSideProps = async ({ params }) => {
   const { data: campaign } = await mainAPI.get(`/campaigns/${params.campaignId}`)
   return {
-    campaign,
+    props: {
+      campaign,
+    },
   }
-});
+};

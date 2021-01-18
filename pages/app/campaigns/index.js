@@ -77,6 +77,11 @@ const Campaigns = ({ initialCampaignsDraft, initialCampaignsShared }) => {
           }
           { campaign.status === 'draft' &&
             <Link href={`/app/campaigns/${campaign._id}`}>
+              <a>Preview</a>
+            </Link>
+          }
+          { campaign.status === 'draft' &&
+            <Link href={`/app/campaigns/${campaign._id}`}>
               <a>Share</a>
             </Link>
           }
@@ -84,6 +89,11 @@ const Campaigns = ({ initialCampaignsDraft, initialCampaignsShared }) => {
             <Link href={`/analytics/${campaign._id}`}>
               <a>Report</a>
             </Link>
+          }
+          { campaign.status === 'shared' &&
+            <button>
+              Duplicate
+            </button>
           }
           { campaign.status === 'shared' &&
             <Link href={`/campaigns/${campaign._id}`}>

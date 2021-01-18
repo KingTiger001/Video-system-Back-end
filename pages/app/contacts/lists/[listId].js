@@ -44,6 +44,47 @@ const ContactList = ({ initialContactList, me }) => {
     showPopup({ display: 'IMPORT_CONTACTS', data })
   }
 
+  const renderContact = (contact = {}) => (
+    <ListItem
+      className={styles.contactsItem}
+      empty={Object.keys(contact).length > 0 ? false : true}
+      key={contact._id}
+      renderDropdownActions={() => (
+        <ul>
+          <li
+            onClick={() => showPopup({
+              display: 'EDIT_CONTACT',
+              data: contact,
+            })}
+          >
+            <p>Edit</p>
+          </li>
+          <li
+            onClick={() => showPopup({
+              display: 'CONTACT_LIST_REMOVE_CONTACT',
+              data: {
+                ...contactList,
+                contactId: contact._id,
+              },
+            })}
+          >
+            <p>Delete</p>
+          </li>
+        </ul>
+      )}
+      renderEmpty={() => (
+        <p>No contacts found.</p>
+      )}
+    >
+      <p>{contact.firstName}</p>
+      <p>{contact.lastName}</p>
+      <p>{contact.company}</p>
+      <p>{contact.job}</p>
+      <p>{contact.email}</p>
+      <p>{contact.phone}</p>
+    </ListItem>
+  )
+
   return (
     <AppLayout>
       <Head>
@@ -94,8 +135,8 @@ const ContactList = ({ initialContactList, me }) => {
             <h1 className={layoutStyles.headerTitle}>Lists / {contactList.name}</h1>
             <div className={layoutStyles.headerActions}>
               <Button
-                color="lightGrey"
                 onClick={() => showPopup({ display: 'CONTACT_LIST_ADD_CONTACTS', data: contactList })}
+                outline={true}
                 size="small"
               >
                 Add contacts
@@ -120,7 +161,7 @@ const ContactList = ({ initialContactList, me }) => {
             <p>Email</p>
             <p>Phone number</p>
           </ListHeader>
-          { contactList.list.length > 0 && contactList.list.map(contact => (
+          {/* { contactList.list.length > 0 && contactList.list.map(contact => (
             <ListItem
               className={styles.contactsItem}
               key={contact._id}
@@ -155,8 +196,9 @@ const ContactList = ({ initialContactList, me }) => {
               <p>{contact.email}</p>
               <p>{contact.phone}</p>
             </ListItem>
-          ))}
-          { contactList.list.length <= 0 && <ContactItem emtpy={true} /> }
+          ))} */}
+          { contactList.list.length > 0 && contactList.list.map(contact => renderContact(contact))}
+          { contactList.list.length <= 0 && renderContact() }
         </div>
         {/* <Pagination
           pageCount={contacts.totalPages}

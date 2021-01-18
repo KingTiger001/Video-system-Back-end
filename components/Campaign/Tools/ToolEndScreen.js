@@ -134,10 +134,10 @@ const ToolEndScreen = () => {
             >
               &lt; Back to my library
             </p>
-            <p className={styles.toolTitle}>Edit an End Screen</p>
+            <p className={styles.toolTitle}>Edit End Screen</p>
             <p className={styles.toolSubtitle}>Your End screen</p>
             <div className={styles.toolSection}>
-              <label className={styles.toolLabel}>Template Name *</label>
+              <label className={styles.toolLabel}>End Screen name *</label>
               <input
                 className={styles.toolInput}
                 onChange={(e) => dispatch({
@@ -148,6 +148,38 @@ const ToolEndScreen = () => {
                 })}
                 value={endScreen.name}
                 required
+              />
+            </div>
+            <div className={styles.toolSection}>
+              <label className={styles.toolLabel}>Background</label>
+              <ChromePicker
+                className={styles.colorPicker}
+                disableAlpha={true}
+                color={endScreen.background}
+                onChange={(color) => dispatch({
+                  type: 'CHANGE_END_SCREEN',
+                  data: {
+                    background: color.hex,
+                  },
+                })}
+              />
+            </div>
+            <div className={styles.toolSection}>
+              <label className={styles.toolLabel}>Text line 1</label>
+              <InputStyle
+                dispatchType="CHANGE_END_SCREEN"
+                object={endScreen}
+                objectName="endScreen"
+                property="title"
+              />
+            </div>
+            <div className={styles.toolSection}>
+              <label className={styles.toolLabel}>Text line 2</label>
+              <InputStyle
+                dispatchType="CHANGE_END_SCREEN"
+                object={endScreen}
+                objectName="endScreen"
+                property="subtitle"
               />
             </div>
             <div className={styles.toolSection}>
@@ -167,42 +199,10 @@ const ToolEndScreen = () => {
                 max={10}
               />
             </div>
-            <div className={styles.toolSection}>
-              <label className={styles.toolLabel}>Background</label>
-              <ChromePicker
-                className={styles.colorPicker}
-                disableAlpha={true}
-                color={endScreen.background}
-                onChange={(color) => dispatch({
-                  type: 'CHANGE_END_SCREEN',
-                  data: {
-                    background: color.hex,
-                  },
-                })}
-              />
-            </div>
-            <div className={styles.toolSection}>
-              <label className={styles.toolLabel}>Title</label>
-              <InputStyle
-                dispatchType="CHANGE_END_SCREEN"
-                object={endScreen}
-                objectName="endScreen"
-                property="title"
-              />
-            </div>
-            <div className={styles.toolSection}>
-              <label className={styles.toolLabel}>Text</label>
-              <InputStyle
-                dispatchType="CHANGE_END_SCREEN"
-                object={endScreen}
-                objectName="endScreen"
-                property="subtitle"
-              />
-            </div>
 
-            <p className={styles.toolSubtitle}>Add link & more info</p>
+            <p className={styles.toolSubtitle}>Add links</p>
             <div className={styles.toolSection}>
-              <label className={styles.toolLabel}>Link Button</label>
+              <label className={styles.toolLabel}>Main link: website, ...</label>
               <div className={styles.toolInputGrid}>
                 <input
                   className={styles.toolInput}
@@ -215,7 +215,7 @@ const ToolEndScreen = () => {
                       }
                     },
                   })}
-                  placeholder="Text"
+                  placeholder="Text button"
                   value={endScreen.button ? endScreen.button.value : ''}
                 />
                 <input
@@ -321,7 +321,7 @@ const ToolEndScreen = () => {
               }}
             >
               <img src="/assets/campaign/add.svg" />
-              <p>Create an End Screen</p>
+              <p>Create End Screen</p>
             </div>
             {
               Object.keys(endScreen).length > 1 &&

@@ -10,8 +10,12 @@ import PopupImportContacts from '@/components/Popups/PopupImportContacts'
 import styles from '@/styles/components/Campaign/Share.module.sass'
 
 const Share = ({ campaignId, onClose, me }) => {
+  const FROM = me.firstName
+  const SUBJECT = 'This is the subject'
+
   const router = useRouter()
   const dispatch = useDispatch()
+
   
   const popup = useSelector(state => state.popup)
   const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
@@ -21,9 +25,9 @@ const Share = ({ campaignId, onClose, me }) => {
   const [contacts, setContacts] = useState({})
   const [contactsSelected, setContactsSelected] = useState([])
   const [formDetails, setFormDetails] = useState({
-    from: '',
+    from: FROM,
     message: '',
-    subject: '',
+    subject: SUBJECT,
   })
   const [lists, setLists] = useState({})
   const [listsSelected, setListsSelected] = useState([])
@@ -55,9 +59,9 @@ const Share = ({ campaignId, onClose, me }) => {
     const { data: campaign } = await mainAPI.get(`/campaigns/${campaignId}`)
     setCampaign(campaign)
     setFormDetails({
-      from: campaign.share ? campaign.share.from : '',
+      from: campaign.share ? campaign.share.from : FROM,
       message: campaign.share ? campaign.share.message : '',
-      subject: campaign.share ? campaign.share.subject : '',
+      subject: campaign.share ? campaign.share.subject : SUBJECT,
     })
     setContactsSelected(campaign.share && campaign.share.contacts ? campaign.share.contacts : [])
     setListsSelected(campaign.share && campaign.share.lists ? campaign.share.lists : [])
@@ -131,22 +135,6 @@ const Share = ({ campaignId, onClose, me }) => {
     }
   }
 
-  const saveAndQuit = async () => {
-    try {
-      switch (step) {
-        case 1:
-          await stepOne()
-          break
-        case 2:
-          await stepTwo()
-          break
-      }
-      onClose()
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
   const share = async () => {
     try {
       setShareLoading(true)
@@ -213,7 +201,6 @@ const Share = ({ campaignId, onClose, me }) => {
 
   const uploadThumbnail = async (file) => {
     const formData = new FormData()
-    console.log(file)
     formData.append('file', file)
     formData.append('folder', 'thumbnails')
     formData.append('height', 720)
@@ -221,7 +208,7 @@ const Share = ({ campaignId, onClose, me }) => {
     try {
       setThumbnailLoading(true)
       const { data: url } = await mediaAPI.post('/images', formData)
-      if (campaign.share.thumbnail) {
+      if (campaign.share && campaign.share.thumbnail) {
         await mediaAPI.delete('/', {
           data: {
             url: campaign.share.thumbnail,
@@ -236,6 +223,7 @@ const Share = ({ campaignId, onClose, me }) => {
       })
       setCampaign(campaignUpdated)
     } catch (err) {
+      console.log(err)
       const code = err.response && err.response.data
       if (code === 'Upload.incorrectFiletype') {
         setStepOneError('Only .jpg and .png images are accepted.')
@@ -308,10 +296,7 @@ const Share = ({ campaignId, onClose, me }) => {
         />
       }
 
-      <div
-        className={styles.backdrop}
-        onClick={onClose}
-      />
+      <div className={styles.backdrop} />
       <div className={styles.box}>
         <div className={styles.header}>
           <p className={styles.headerTitle}>Your campaign video</p>
@@ -347,7 +332,7 @@ const Share = ({ campaignId, onClose, me }) => {
               ref={refFormDetails}
             >
               <p className={styles.title}>Details</p>
-              <div>
+              {/* <div>
                 <label>Subject*</label>
                 <input
                   onChange={(e) => setFormDetails({
@@ -370,7 +355,7 @@ const Share = ({ campaignId, onClose, me }) => {
                   type="text"
                   value={formDetails.from}
                 />
-              </div>
+              </div> */}
               <div>
                 <label>Your message*</label>
                 <textarea
@@ -391,8 +376,8 @@ const Share = ({ campaignId, onClose, me }) => {
                   htmlFor="thumbnail"
                 >
                   <img src="/assets/common/thumbnail.svg" />
-                  { !thumbnailLoading && <p>Import a<br/>thumbnail</p> }
-                  { thumbnailLoading && <p>Importing...</p> }
+                  { !thumbnailLoading && <p>Download image</p> }
+                  { thumbnailLoading && <p>Downloading...</p> }
                 </label>
                 <input
                   accept="image/*"
@@ -413,6 +398,7 @@ const Share = ({ campaignId, onClose, me }) => {
                     Remove thumbnail
                   </p>
                 }
+                <p className={styles.uploadThumbnailRecoSize}>(Recommended size: 1280x720)</p>
               </div>
               <p className={styles.error}>{stepOneError}</p>
             </form>
@@ -526,12 +512,6 @@ const Share = ({ campaignId, onClose, me }) => {
             { step > 1 && <Button outline={true} onClick={() => setStep(step - 1)}>Back</Button> }
           </div>
           <div>
-            <Button
-              color="lightPrimary"
-              onClick={saveAndQuit}
-            >
-              Save & Quit
-            </Button>
             { step < 3 && <Button onClick={next}>Next</Button> }
             { step === 3 && 
               <Button

@@ -31,11 +31,8 @@ const HeaderApp = () => {
         </Link>
 
         <nav className={styles.menu}>
-          <Link href="/app">
-            <a className={router.route === '/app' ? styles.selected : ''}>Dashboard</a>
-          </Link>
           <Link href="/app/campaigns">
-            <a className={router.route === '/app/campaigns' ? styles.selected : ''}>Campaigns</a>
+            <a className={router.route === '/app/campaigns' ? styles.selected : ''}>Videos campaigns</a>
           </Link>
           <Link href="/app/analytics">
             <a className={router.route === '/app/analytics' ? styles.selected : ''}>Analytics</a>
