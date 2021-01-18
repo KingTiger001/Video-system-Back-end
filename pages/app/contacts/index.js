@@ -86,6 +86,9 @@ const Contacts = ({ initialContacts, me }) => {
         <p>No contacts found.</p>
       )}
     >
+      <input
+        type="checkbox"
+      />
       <p>{contact.firstName}</p>
       <p>{contact.lastName}</p>
       <p>{contact.company}</p>
@@ -173,6 +176,9 @@ const Contacts = ({ initialContacts, me }) => {
           </div>
         </div>
         <ListHeader className={styles.contactsHeader}>
+          <input
+            type="checkbox"
+          />
           <p>First name</p>
           <p>Last name</p>
           <p>Company</p>

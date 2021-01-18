@@ -79,6 +79,9 @@ const ContactLists = ({ initialContactLists, me }) => {
         <p>No contact lists found.</p>
       )}
     >
+      <input
+        type="checkbox"
+      />
       <p><b>#{contactList.uniqueId}</b></p>
       <Link href={`/app/contacts/lists/${contactList._id}`}>
         <a>{contactList.name}</a>
@@ -149,6 +152,9 @@ const ContactLists = ({ initialContactLists, me }) => {
         </div>
 
         <ListHeader className={styles.contactListsHeader}>
+          <input
+            type="checkbox"
+          />
           <p>ID</p>
           <p>Name</p>
           <p>Contacts</p>

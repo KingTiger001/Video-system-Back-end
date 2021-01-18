@@ -15,6 +15,7 @@ import AppLayout from '@/layouts/AppLayout'
 import ListHeader from '@/components/ListHeader'
 import ListItem from '@/components/ListItem'
 import PopupDeleteCampaign from '@/components/Popups/PopupDeleteCampaign'
+import PopupDuplicateCampaign from '@/components/Popups/PopupDuplicateCampaign'
 
 import layoutStyles from '@/styles/layouts/App.module.sass'
 import styles from '@/styles/pages/app/campaigns.module.sass'
@@ -29,11 +30,6 @@ const Campaigns = ({ initialCampaignsDraft, initialCampaignsShared }) => {
   
   const [campaignsDraft, setCampaignsDraft] = useState(initialCampaignsDraft)
   const [campaignsShared, setCampaignsShared] = useState(initialCampaignsShared)
-
-  const createCampaign = async () => {
-    const { data: campaign } = await mainAPI.post('/campaigns')
-    router.push(`/app/campaigns/${campaign._id}`)
-  }
 
   const getCampaigns = async () => {
     const { data: campaignsDraftUpdated } = await mainAPI.get('/users/me/campaigns?status=draft')
@@ -91,7 +87,7 @@ const Campaigns = ({ initialCampaignsDraft, initialCampaignsShared }) => {
             </Link>
           }
           { campaign.status === 'shared' &&
-            <button>
+            <button onClick={() => showPopup({ display: 'DUPLICATE_CAMPAIGN', data: campaign })}>
               Duplicate
             </button>
           }
@@ -129,6 +125,14 @@ const Campaigns = ({ initialCampaignsDraft, initialCampaignsShared }) => {
       
       { popup.display === 'DELETE_CAMPAIGN' && 
         <PopupDeleteCampaign
+          onDone={() => {
+            getCampaigns()
+            hidePopup()
+          }}
+        />
+      }
+      { popup.display === 'DUPLICATE_CAMPAIGN' && 
+        <PopupDuplicateCampaign
           onDone={() => {
             getCampaigns()
             hidePopup()

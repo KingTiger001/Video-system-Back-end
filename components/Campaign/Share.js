@@ -10,8 +10,8 @@ import PopupImportContacts from '@/components/Popups/PopupImportContacts'
 import styles from '@/styles/components/Campaign/Share.module.sass'
 
 const Share = ({ campaignId, onClose, me }) => {
-  const FROM = me.firstName
-  const SUBJECT = 'This is the subject'
+  const FROM = `${me.firstName} ${me.lastName} sent you a video message`
+  const SUBJECT = `${me.firstName} from ${me.job} sent you a video message`
 
   const router = useRouter()
   const dispatch = useDispatch()

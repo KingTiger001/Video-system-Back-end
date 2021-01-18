@@ -4,9 +4,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { mainAPI } from '@/plugins/axios'
 
 import Button from '../Button'
+import Input from '../Input'
 import Popup from './Popup'
 
-import styles from '@/styles/components/Popups/Popup.module.sass'
+import styles from '@/styles/components/Popups/PopupDuplicateCampaign.module.sass'
 
 const PopupDuplicateCampaign = ({ onDone }) => {
   const dispatch = useDispatch()
@@ -32,7 +33,7 @@ const PopupDuplicateCampaign = ({ onDone }) => {
 
   return (
     <Popup
-      title="Delete a campaign"
+      title="Duplicate a video campaign"
     >
       <form
         className={styles.form}
