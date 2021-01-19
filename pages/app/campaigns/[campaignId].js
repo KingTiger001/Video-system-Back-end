@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import AutosizeInput from 'react-input-autosize';
+import AutosizeInput from 'react-input-autosize'
 import { toast } from 'react-toastify'
 
 import withAuthServerSideProps from '@/hocs/withAuthServerSideProps'
@@ -84,7 +84,6 @@ const Campaign = ({ me }) => {
     }
     showShare(true);
   }
-
 
   const getVideos = async () => {
     const { data } = await mainAPI('/users/me/videos')
@@ -184,11 +183,17 @@ const Campaign = ({ me }) => {
         <Timeline />
       </div>
 
-      { displayPreview && <Preview onClose={() => showPreview(false)} /> }
+      { displayPreview &&
+        <Preview
+          campaign={campaign}
+          onClose={() => showPreview(false)}
+        />
+      }
       { displayShare && 
         <Share
           campaignId={router.query.campaignId}
           onClose={() => showShare(false)}
+          onDone={() => router.push('/app/campaigns')}
           me={me}
         />
       }

@@ -77,6 +77,7 @@ const VideoPlayer = ({ data = {}, onPause = () => {}, onPlay = () => {} }) => {
     return () => {
       dispatch({ type: 'videoPlayer/PAUSE' })
       dispatch({ type: 'videoPlayer/SET_PROGRESSION', data: 0 })
+      dispatch({ type: 'videoPlayer/SET_DURATION', data: 0 })
     }
   }, [])
 
@@ -167,18 +168,20 @@ const VideoPlayer = ({ data = {}, onPause = () => {}, onPlay = () => {} }) => {
         ref={playerRef}
         style={{ height }}
       >
-        <video
-          height="100%"
-          key={video.url}
-          ref={videoRefCb}
-          src={video.url}
-          style={{
-            display: progression > helloScreen.duration && progression < duration - endScreen.duration ? 'block' : 'none'
-          }}
-          width="100%"
-        />
-        {progression < helloScreen.duration && <HelloScreen data={helloScreen}/>}
-        {progression >= duration - endScreen.duration && <EndScreen data={endScreen}/>}
+        { video && Object.keys(video).length > 0 &&
+          <video
+            height="100%"
+            key={video.url}
+            ref={videoRefCb}
+            src={video.url}
+            style={{
+              display: progression > helloScreen.duration && progression < duration - endScreen.duration ? 'block' : 'none'
+            }}
+            width="100%"
+          />
+        }
+        {helloScreen && Object.keys(helloScreen).length > 0 && progression < helloScreen.duration && <HelloScreen data={helloScreen}/>}
+        {endScreen && Object.keys(endScreen).length > 0 && progression >= duration - endScreen.duration && <EndScreen data={endScreen}/>}
         <Logo data={logo} />
       </div>
       <div

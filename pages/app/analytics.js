@@ -1,5 +1,6 @@
 import Head from 'next/head'
-import { useState } from 'react'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 
 import withAuthServerSideProps from '@/hocs/withAuthServerSideProps'
 
@@ -16,7 +17,19 @@ import layoutStyles from '@/styles/layouts/App.module.sass'
 import styles from '@/styles/pages/app/analytics.module.sass'
 
 const Analytics = ({ initialAnalytics }) => {
+  const router = useRouter()
+
   const [analytics, setAnalytics] = useState(initialAnalytics)
+
+  useEffect(() => {
+    const campaignId = router.query.c
+    if (campaignId) {
+      const el = document.getElementById(campaignId)
+      if (el) {
+        el.scrollIntoView()
+      }
+    }
+  }, [])
 
   const displayDuration = (value) => {
     if (!value) {
@@ -31,6 +44,7 @@ const Analytics = ({ initialAnalytics }) => {
   const renderAnalytic = (analytic = {}) => (
     <div
       className={styles.analyticItem}
+      id={analytic.campaign._id}
       key={analytic._id}
     >
       <ListItem
@@ -129,13 +143,14 @@ const Analytics = ({ initialAnalytics }) => {
 }
 
 export default Analytics
-export const getServerSideProps = withAuthServerSideProps(async (ctx, user) => {
+export const getServerSideProps = withAuthServerSideProps(async ({ query }, user) => {
   let { data: initialAnalytics } = await mainAPI.get('/users/me/analytics')
+  const campaignId = query.c
   initialAnalytics = initialAnalytics
     .map(analytic => ({
       [analytic._id]: {
         ...analytic,
-        displayReport: false,
+        displayReport: campaignId && campaignId === analytic.campaign._id ? true : false,
       }
     }))
     .reduce(function(result, current) {

@@ -21,6 +21,64 @@
   grid-column-start: 1
   grid-column-end: 13
 
+.welcome
+  background: #fff
+  border-radius: 4px
+  grid-column-start: 1
+  grid-column-end: 13
+  padding: 30px
+
+.welcomeTitle
+  color: $primaryColor
+  font-size: 30px
+  font-weight: 700
+  letter-spacing: 0.2px
+  line-height: 36px
+  margin-bottom: 10px
+
+.welcomeSubtitle
+  color: $textColorTwo
+  font-size: 16px
+  letter-spacing: 0.1px
+  margin-bottom: 40px
+
+.welcomeList
+  display: grid
+  grid-gap: 30px
+
+.welcomeListItem
+  display: grid
+  grid-template-columns: 50px 1fr
+  gap: 0 20px
+  div
+    border: 3px solid #98A1AD
+    border-radius: 50%
+    display: flex
+    grid-column: 1
+    grid-row-start: 1
+    grid-row-end: 3
+    height: 50px
+    width: 50px
+    img
+      margin: auto
+  p
+    color: $textColorTwo
+    font-size: 16px
+    font-weight: 700
+    line-height: 20px
+    letter-spacing: 0.1px
+    grid-column: 2
+    margin-bottom: 4px
+  span
+    color: $textColorTwo
+    font-size: 16px
+    letter-spacing: 0.1px
+    grid-column: 2
+    a
+      color: $primaryColor
+      cursor: pointer
+      text-decoration: underline
+
 .stats
   display: grid
   grid-gap: 10px
@@ -75,7 +133,7 @@
 .campaignsHeader, .campaignsItem
   grid-template-columns: 60px repeat(4, 1fr) 90px
   &.draft
-    grid-template-columns: 60px 1fr 150px 90px
+    grid-template-columns: 60px 1fr 150px 185px
 
 .campaignsItem
   box-shadow: none

@@ -2,7 +2,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
 
 import withAuthServerSideProps from '@/hocs/withAuthServerSideProps'
 
@@ -14,7 +14,7 @@ import AppLayout from '@/layouts/AppLayout'
 import Button from '@/components/Button'
 import ListHeader from '@/components/ListHeader'
 import ListItem from '@/components/ListItem'
-import PopupWelcome from '@/components/Popups/PopupWelcome'
+import Preview from '@/components/Campaign/Preview'
 import Stat from '@/components/Stat'
 
 import styles from '@/styles/pages/app/dashboard.module.sass'
@@ -27,8 +27,8 @@ const Dashboard = ({
   stats = {},
 }) => {
   const router = useRouter()
-  const dispatch = useDispatch()
-  const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
+  
+  const [campaignPreviewed, setCampaignPreviewed] = useState(null)
 
   const createCampaign = async () => {
     const { data: campaign } = await mainAPI.post('/campaigns')
@@ -37,12 +37,19 @@ const Dashboard = ({
 
   const displayDuration = (value) => {
     if (!value) {
-      return '00:00'
+      return '0:00'
     }
     const t = dayjs.duration(parseInt(value, 10))
     const m = t.minutes()
     const s = t.seconds()
-    return `${m < 10 ? `0${m}` : m}:${s < 10 ? `0${s}` : s}`
+    return `${m}:${s < 10 ? `0${s}` : s}`
+  }
+
+  const sendEmailConfirmation = async () => {
+    if (dayjs(me.emailConfirmationExpires).diff(dayjs(), 'minute') > 5) {
+      await mainAPI.post('/auth/email/confirmation/new', { userId: me._id })
+    } 
+    toast.success('Email sent.')
   }
 
   const renderCampaignsHeader = ({ draft = false }) => (
@@ -68,8 +75,11 @@ const Dashboard = ({
               <a>Edit</a>
             </Link>
           }
+          { campaign.status === 'draft' &&
+            <button onClick={() => setCampaignPreviewed(campaign)}>Preview</button>
+          }
           { campaign.status === 'shared' &&
-            <Link href={`/analytics/${campaign._id}`}>
+            <Link href={`/app/analytics?c=${campaign._id}`}>
               <a>Report</a>
             </Link>
           }
@@ -90,17 +100,34 @@ const Dashboard = ({
         <title>Dashboard | FOMO</title>
       </Head>
 
-      { (!me.popups || !me.popups.welcome) && 
-        <PopupWelcome
-          onClose={() => {
-            mainAPI.patch('/users/me', { 'popups.welcome': 1 })
-            hidePopup()
-          }}
-        />
-      }
-
       <div className={styles.container}>
         <h1 className={styles.title}>Hello {me.firstName} 👋</h1>
+        { (!me.emailConfirmed || contactsCount <= 0) && 
+          <div className={styles.welcome}>
+            <p className={styles.welcomeTitle}>Welcome to your dasboard !</p>
+            <p className={styles.welcomeSubtitle}>To send your first video campaign, you will have to:</p>
+            <ul className={styles.welcomeList}>
+              { !me.emailConfirmed && 
+                <li className={styles.welcomeListItem}>
+                  <div>
+                    <img src="/assets/common/closeG.svg" />
+                  </div>
+                  <p>Verify your email address</p>
+                  <span>We sent an email with a confirmation link to your email address. In order to complete the sign-up process, please click on the confirmation link. If you didn't receive it, <a onClick={sendEmailConfirmation}>click here to resend activation link</a></span>
+                </li>
+              }
+              { contactsCount <= 0 &&
+                <li className={styles.welcomeListItem}>
+                  <div>
+                    <img src="/assets/common/closeG.svg" />
+                  </div>
+                  <p>Import your first contacts</p>
+                  <span>You can import your contacts now or later.</span>
+                </li>
+              }
+            </ul>
+          </div>
+        }
         <div className={styles.stats}>
           <p className={styles.statsTitle}>Your statistics</p>
           <Stat
@@ -167,6 +194,14 @@ const Dashboard = ({
             </Link>
           </div>
         </div>
+
+
+        { campaignPreviewed &&
+          <Preview
+            campaign={campaignPreviewed}
+            onClose={() => setCampaignPreviewed(null)}
+          />
+        }
       </div>
     </AppLayout>
   )

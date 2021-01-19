@@ -1,13 +1,11 @@
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import VideoPlayer from '@/components/VideoPlayer'
 
 import styles from '@/styles/components/Campaign/Preview.module.sass'
 
-const Preview = ({ onClose }) => {
+const Preview = ({ campaign, onClose }) => {
   const dispatch = useDispatch()
-
-  const campaign = useSelector(state => state.campaign)
 
   const closePreview = () => {
     dispatch({ type: 'videoPlayer/PAUSE' })

@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router'
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -9,13 +8,11 @@ import PopupImportContacts from '@/components/Popups/PopupImportContacts'
 
 import styles from '@/styles/components/Campaign/Share.module.sass'
 
-const Share = ({ campaignId, onClose, me }) => {
+const Share = ({ campaignId, onClose, onDone, me }) => {
   const FROM = `${me.firstName} ${me.lastName} sent you a video message`
   const SUBJECT = `${me.firstName} from ${me.job} sent you a video message`
 
-  const router = useRouter()
   const dispatch = useDispatch()
-
   
   const popup = useSelector(state => state.popup)
   const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
@@ -139,7 +136,7 @@ const Share = ({ campaignId, onClose, me }) => {
     try {
       setShareLoading(true)
       await mainAPI.post('/campaigns/share', { campaign })
-      router.push('/app/campaigns')
+      onDone()
     } catch (err) {
       setStepThreeError('An error has occured.')
     } finally {

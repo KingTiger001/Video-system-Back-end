@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
 
 import withAuth from '@/hocs/withAuth'
 import withAuthServerSideProps from '@/hocs/withAuthServerSideProps'
@@ -16,11 +17,13 @@ import ListHeader from '@/components/ListHeader'
 import ListItem from '@/components/ListItem'
 import PopupDeleteCampaign from '@/components/Popups/PopupDeleteCampaign'
 import PopupDuplicateCampaign from '@/components/Popups/PopupDuplicateCampaign'
+import Preview from '@/components/Campaign/Preview'
+import Share from '@/components/Campaign/Share'
 
 import layoutStyles from '@/styles/layouts/App.module.sass'
 import styles from '@/styles/pages/app/campaigns.module.sass'
 
-const Campaigns = ({ initialCampaignsDraft, initialCampaignsShared }) => {
+const Campaigns = ({ initialCampaignsDraft, initialCampaignsShared, me }) => {
   const router = useRouter()
   
   const dispatch = useDispatch()
@@ -30,6 +33,9 @@ const Campaigns = ({ initialCampaignsDraft, initialCampaignsShared }) => {
   
   const [campaignsDraft, setCampaignsDraft] = useState(initialCampaignsDraft)
   const [campaignsShared, setCampaignsShared] = useState(initialCampaignsShared)
+
+  const [campaignPreviewed, setCampaignPreviewed] = useState(null)
+  const [campaignShared, setCampaignShared] = useState(null)
 
   const getCampaigns = async () => {
     const { data: campaignsDraftUpdated } = await mainAPI.get('/users/me/campaigns?status=draft')
@@ -46,6 +52,13 @@ const Campaigns = ({ initialCampaignsDraft, initialCampaignsShared }) => {
     const m = t.minutes()
     const s = t.seconds()
     return `${m < 10 ? `0${m}` : m}:${s < 10 ? `0${s}` : s}`
+  }
+
+  const checkBeforeStartShare = (campaign) => {
+    if (!campaign.video || Object.keys(campaign.video).length <= 0) {
+      return toast.error('You need to add a video before sharing your campaign.')
+    }
+    setCampaignShared(campaign);
   }
 
   const renderListHeader = ({ draft = false }) => (
@@ -72,17 +85,13 @@ const Campaigns = ({ initialCampaignsDraft, initialCampaignsShared }) => {
             </Link>
           }
           { campaign.status === 'draft' &&
-            <Link href={`/app/campaigns/${campaign._id}`}>
-              <a>Preview</a>
-            </Link>
+            <button onClick={() => setCampaignPreviewed(campaign)}>Preview</button>
           }
           { campaign.status === 'draft' &&
-            <Link href={`/app/campaigns/${campaign._id}`}>
-              <a>Share</a>
-            </Link>
+            <button onClick={() => checkBeforeStartShare(campaign)}>Share</button>
           }
           { campaign.status === 'shared' &&
-            <Link href={`/analytics/${campaign._id}`}>
+            <Link href={`/app/analytics?c=${campaign._id}`}>
               <a>Report</a>
             </Link>
           }
@@ -92,9 +101,7 @@ const Campaigns = ({ initialCampaignsDraft, initialCampaignsShared }) => {
             </button>
           }
           { campaign.status === 'shared' &&
-            <Link href={`/campaigns/${campaign._id}`}>
-              <a>Preview</a>
-            </Link>
+            <a href={`/campaigns/${campaign._id}`} target="blank">Preview</a>
           }
         </div>
       )}
@@ -136,6 +143,23 @@ const Campaigns = ({ initialCampaignsDraft, initialCampaignsShared }) => {
           onDone={() => {
             getCampaigns()
             hidePopup()
+          }}
+        />
+      }
+      { campaignPreviewed &&
+        <Preview
+          campaign={campaignPreviewed}
+          onClose={() => setCampaignPreviewed(null)}
+        />
+      }
+      { campaignShared && 
+        <Share
+          campaignId={campaignShared._id}
+          me={me}
+          onClose={() => setCampaignShared(null)}
+          onDone={() => {
+            getCampaigns()
+            setCampaignShared(null)
           }}
         />
       }
