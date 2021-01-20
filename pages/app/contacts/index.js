@@ -2,6 +2,7 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
 
 import withAuthServerSideProps from '@/hocs/withAuthServerSideProps'
 
@@ -109,6 +110,7 @@ const Contacts = ({ initialContacts, me }) => {
           onDone={() => {
             getContacts()
             hidePopup()
+            toast.success('Contact added.')
           }}
         />
       }
@@ -127,6 +129,7 @@ const Contacts = ({ initialContacts, me }) => {
           onDone={() => {
             getContacts()
             hidePopup()
+            toast.success('Contact deleted.')
           }}
         />
       }
@@ -136,6 +139,7 @@ const Contacts = ({ initialContacts, me }) => {
           onDone={() => {
             getContacts()
             hidePopup()
+            toast.success('Contacts imported.')
           }}
         />
       }
@@ -182,7 +186,7 @@ const Contacts = ({ initialContacts, me }) => {
           <p>First name</p>
           <p>Last name</p>
           <p>Company</p>
-          <p>Job</p>
+          <p>Job Title</p>
           <p>Email</p>
           <p>Phone number</p>
         </ListHeader>

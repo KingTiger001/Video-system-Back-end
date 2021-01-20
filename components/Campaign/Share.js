@@ -1,16 +1,19 @@
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
 
 import { mainAPI, mediaAPI } from '@/plugins/axios'
 
 import Button from '@/components/Button'
+import PopupAddContact from '@/components/Popups/PopupAddContact'
 import PopupImportContacts from '@/components/Popups/PopupImportContacts'
+import PopupQuitShare from '@/components/Popups/PopupQuitShare'
 
 import styles from '@/styles/components/Campaign/Share.module.sass'
 
 const Share = ({ campaignId, onClose, onDone, me }) => {
-  const FROM = `${me.firstName} ${me.lastName} sent you a video message`
-  const SUBJECT = `${me.firstName} from ${me.job} sent you a video message`
+  const FROM = `${me.firstName} ${me.lastName} via FOMO`
+  const SUBJECT = `${me.firstName} from ${me.company} sent you a video message`
 
   const dispatch = useDispatch()
   
@@ -44,13 +47,13 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
     getLists()
   }, []);
 
-  // useEffect(() => {
-  //   if (campaign.share && (campaign.share.contacts || campaign.share.lists)) {
-  //     setStep(3)
-  //   } else if (campaign.share && campaign.share.from && campaign.share.message && campaign.share.subject) {
-  //     setStep(2)
-  //   }
-  // }, [campaign]);
+  useEffect(() => {
+    if (campaign.share && (campaign.share.contacts || campaign.share.lists)) {
+      setStep(3)
+    } else if (campaign.share && campaign.share.from && campaign.share.message && campaign.share.subject) {
+      setStep(2)
+    }
+  }, [campaign]);
 
   const getCampaign = async () => {
     const { data: campaign } = await mainAPI.get(`/campaigns/${campaignId}`)
@@ -282,12 +285,29 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
   
   return (
     <div className={styles.shareCampaign}>
-
+      { popup.display === 'ADD_CONTACT' && 
+        <PopupAddContact
+          onDone={() => {
+            getContacts()
+            hidePopup()
+            toast.success('Contact added.')
+          }}
+        />
+      }
       { popup.display === 'IMPORT_CONTACTS' && 
         <PopupImportContacts
           me={me}
           onDone={() => {
             getContacts()
+            hidePopup()
+            toast.success('Contacts imported.')
+          }}
+        />
+      }
+      { popup.display === 'QUIT_SHARE' && 
+        <PopupQuitShare
+          onDone={() => {
+            onClose()
             hidePopup()
           }}
         />
@@ -298,7 +318,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
         <div className={styles.header}>
           <p className={styles.headerTitle}>Your campaign video</p>
           <img
-            onClick={onClose}
+            onClick={() => showPopup({ display: 'QUIT_SHARE' })}
             src="/assets/common/close.svg"
           />
         </div>
@@ -413,6 +433,13 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
                     />
                   </div>
                   <Button
+                    onClick={() => showPopup({ display: 'ADD_CONTACT' })}
+                    outline={true}
+                    size="small"
+                  >
+                    Add contact
+                  </Button>
+                  <Button
                     color="secondary"
                     onChange={extractDataFromCSV}
                     size="small"
@@ -425,7 +452,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
                   <div />
                   <p>First name</p>
                   <p>Company</p>
-                  <p>Job</p>
+                  <p>Job Title</p>
                   <p>Email</p>
                 </div>
                 <div className={styles.contactsList}>

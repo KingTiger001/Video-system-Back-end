@@ -29,13 +29,6 @@ const ToolLogo = () => {
     try {
       setUploadloading(true)
       const { data: url } = await mediaAPI.post('/images', formData)
-      if (logo.value) {
-        await mediaAPI.delete('/', {
-          data: {
-            url: logo.value,
-          },
-        })
-      }
       dispatch({
         type: 'CHANGE_LOGO',
         data: {

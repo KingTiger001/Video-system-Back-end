@@ -23,7 +23,7 @@ const FormContact = ({ buttonText, data = {}, loading, onSubmit }) => {
       onSubmit={submit}
     >
       <div>
-        <label className={styles.label}>First name</label>
+        <label className={styles.label}>First name*</label>
         <Input
           onChange={(e) => setForm({
             ...form,
@@ -35,7 +35,7 @@ const FormContact = ({ buttonText, data = {}, loading, onSubmit }) => {
         />
       </div>
       <div>
-        <label className={styles.label}>Last name</label>
+        <label className={styles.label}>Last name*</label>
         <Input
           onChange={(e) => setForm({
             ...form,
@@ -47,7 +47,7 @@ const FormContact = ({ buttonText, data = {}, loading, onSubmit }) => {
         />
       </div>
       <div>
-        <label className={styles.label}>Company</label>
+        <label className={styles.label}>Company*</label>
         <Input
           onChange={(e) => setForm({
             ...form,
@@ -59,19 +59,18 @@ const FormContact = ({ buttonText, data = {}, loading, onSubmit }) => {
         />
       </div>
       <div>
-        <label className={styles.label}>Job</label>
+        <label className={styles.label}>Job Title</label>
         <Input
           onChange={(e) => setForm({
             ...form,
             job: e.target.value,
           })}
           type="text"
-          required
           value={form.job}
         />
       </div>
       <div>
-        <label className={styles.label}>Email</label>
+        <label className={styles.label}>Email*</label>
         <Input
           onChange={(e) => setForm({
             ...form,
@@ -90,7 +89,6 @@ const FormContact = ({ buttonText, data = {}, loading, onSubmit }) => {
             phone: e.target.value,
           })}
           type="text"
-          required
           value={form.phone}
         />
       </div>

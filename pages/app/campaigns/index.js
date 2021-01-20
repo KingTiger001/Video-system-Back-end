@@ -62,19 +62,21 @@ const Campaigns = ({ initialCampaignsDraft, initialCampaignsShared, me }) => {
   }
 
   const renderListHeader = ({ draft = false }) => (
-    <ListHeader className={styles.campaignsHeader}>
+    <ListHeader className={`${styles.campaignsHeader} ${draft ? styles.draft : ''}`}>
       <p>ID</p>
       <p>Video name</p>
       <p>{draft ? 'Creation date' : 'Sent date'}</p>
-      <p>Recipients</p>
+      {!draft && <p>Recipients</p>}
       <p>Duration</p>
       <p>Actions</p>
     </ListHeader>
   )
 
+  console.log(campaignsShared)
+
   const renderCampaign = (campaign = {}) => (
     <ListItem
-      className={styles.campaignsItem}
+      className={`${styles.campaignsItem} ${campaign.status === 'draft' ? styles.draft : ''}`}
       empty={Object.keys(campaign).length > 0 ? false : true}
       key={campaign._id}
       renderActions={() => (
@@ -119,7 +121,7 @@ const Campaigns = ({ initialCampaignsDraft, initialCampaignsShared, me }) => {
       <p><b>#{campaign.uniqueId}</b></p>
       <p>{campaign.name}</p>
       <p>{dayjs(campaign.status === 'draft' ? campaign.createdAt : campaign.sentAt).format('MM/DD/YYYY')}</p>
-      <p>0</p>
+      {campaign.status === 'shared' && <p>{campaign.sentCount || 0}</p>}
       <p>{displayDuration(campaign.duration)}</p>
     </ListItem>
   )
@@ -158,6 +160,7 @@ const Campaigns = ({ initialCampaignsDraft, initialCampaignsShared, me }) => {
           me={me}
           onClose={() => setCampaignShared(null)}
           onDone={() => {
+            toast.success('Campaign sent.')
             getCampaigns()
             setCampaignShared(null)
           }}

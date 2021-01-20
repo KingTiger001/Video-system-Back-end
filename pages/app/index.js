@@ -2,6 +2,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 
 import withAuthServerSideProps from '@/hocs/withAuthServerSideProps'
@@ -27,13 +28,11 @@ const Dashboard = ({
   stats = {},
 }) => {
   const router = useRouter()
+  const dispatch = useDispatch()
+
+  const showPopup = (popupProps) => dispatch({ type: 'SHOW_POPUP', ...popupProps })
   
   const [campaignPreviewed, setCampaignPreviewed] = useState(null)
-
-  const createCampaign = async () => {
-    const { data: campaign } = await mainAPI.post('/campaigns')
-    router.push(`/app/campaigns/${campaign._id}`)
-  }
 
   const displayDuration = (value) => {
     if (!value) {
@@ -146,7 +145,7 @@ const Dashboard = ({
             value={displayDuration(stats.averageViewDuration * 1000)}
           />
           <Stat
-            text="Reply rate"
+            text="Reply button click through rate"
             unit="%"
             value={stats.replyRate}
           />
@@ -167,7 +166,7 @@ const Dashboard = ({
           <div className={styles.createCampaign}>
             <Button
               color="white"
-              onClick={createCampaign}
+              onClick={() => showPopup({ display: 'CREATE_CAMPAIGN' })}
             >
               Create a video campaign
             </Button>

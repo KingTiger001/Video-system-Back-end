@@ -1,7 +1,9 @@
 import Head from 'next/head'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
 
 import withAuthServerSideProps from '@/hocs/withAuthServerSideProps'
 
@@ -76,6 +78,9 @@ const ContactList = ({ initialContactList, me }) => {
         <p>No contacts found.</p>
       )}
     >
+      <input
+        type="checkbox"
+      />
       <p>{contact.firstName}</p>
       <p>{contact.lastName}</p>
       <p>{contact.company}</p>
@@ -97,6 +102,7 @@ const ContactList = ({ initialContactList, me }) => {
           onDone={() => {
             getContactList()
             hidePopup()
+            toast.success('Contacts added.')
           }}
         />
       }
@@ -106,6 +112,7 @@ const ContactList = ({ initialContactList, me }) => {
           onDone={() => {
             getContactList()
             hidePopup()
+            toast.success('Contact removed.')
           }}
         />
       }
@@ -125,6 +132,7 @@ const ContactList = ({ initialContactList, me }) => {
           onDone={() => {
             getContactList()
             hidePopup()
+            toast.success('Contacts imported.')
           }}
         />
       }
@@ -132,7 +140,12 @@ const ContactList = ({ initialContactList, me }) => {
       <ContactLayout>
         <div className={layoutStyles.header}>
           <div className={layoutStyles.headerTop}>
-            <h1 className={layoutStyles.headerTitle}>Lists / {contactList.name}</h1>
+            <div>
+              <Link href="/app/contacts/lists">
+                <a className={layoutStyles.headerBack}>&lt; Back to lists</a>
+              </Link>
+              <h1 className={layoutStyles.headerTitle}>Lists / {contactList.name}</h1>
+            </div>
             <div className={layoutStyles.headerActions}>
               <Button
                 onClick={() => showPopup({ display: 'CONTACT_LIST_ADD_CONTACTS', data: contactList })}
@@ -154,57 +167,19 @@ const ContactList = ({ initialContactList, me }) => {
         </div>
         <div className={styles.contacts}>
           <ListHeader className={styles.contactsHeader}>
+            <input
+              type="checkbox"
+            />
             <p>First name</p>
             <p>Last name</p>
             <p>Company</p>
-            <p>Job</p>
+            <p>Job Title</p>
             <p>Email</p>
             <p>Phone number</p>
           </ListHeader>
-          {/* { contactList.list.length > 0 && contactList.list.map(contact => (
-            <ListItem
-              className={styles.contactsItem}
-              key={contact._id}
-              renderDropdownActions={() => (
-                <ul>
-                  <li
-                    onClick={() => showPopup({
-                      display: 'EDIT_CONTACT',
-                      data: contact,
-                    })}
-                  >
-                    <p>Edit</p>
-                  </li>
-                  <li
-                    onClick={() => showPopup({
-                      display: 'CONTACT_LIST_REMOVE_CONTACT',
-                      data: {
-                        ...contactList,
-                        contactId: contact._id,
-                      },
-                    })}
-                  >
-                    <p>Remove</p>
-                  </li>
-                </ul>
-              )}
-            >
-              <p>{contact.firstName}</p>
-              <p>{contact.lastName}</p>
-              <p>{contact.company}</p>
-              <p>{contact.job}</p>
-              <p>{contact.email}</p>
-              <p>{contact.phone}</p>
-            </ListItem>
-          ))} */}
           { contactList.list.length > 0 && contactList.list.map(contact => renderContact(contact))}
           { contactList.list.length <= 0 && renderContact() }
         </div>
-        {/* <Pagination
-          pageCount={contacts.totalPages}
-          initialPage={router.query.page ? parseInt(router.query.page, 10) - 1 : 0}
-          route="/app/contacts"
-        /> */}
       </ContactLayout>
     </AppLayout>
   )

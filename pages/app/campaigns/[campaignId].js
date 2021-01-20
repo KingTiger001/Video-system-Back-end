@@ -28,8 +28,6 @@ const Campaign = ({ me }) => {
   const dispatch = useDispatch()
   const popup = useSelector(state => state.popup)
   const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
-
-  const ref = useRef()
   
   const duration = useSelector(state => state.campaign.duration)
   const endScreen = useSelector(state => state.campaign.endScreen)
@@ -43,8 +41,23 @@ const Campaign = ({ me }) => {
   const videoRef = useSelector(state => state.campaign.videoRef)
 
   const [inputNameWidth, setInputNameWidth] = useState(0)
+  const [displayMenu, showMenu] = useState(false)
   const [displayPreview, showPreview] = useState(false)
   const [displayShare, showShare] = useState(false)
+
+  const ref = useRef()
+  const headerMenuRef = useRef(null)
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (headerMenuRef.current && !headerMenuRef.current.contains(e.target)) {
+        showMenu(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [headerMenuRef])
 
   // mounted
   useEffect(() => {
@@ -141,12 +154,55 @@ const Campaign = ({ me }) => {
       }
 
       <div className={styles.header}>
-        <Link href="/app/campaigns">
-          <a className={styles.headerMenu}>
-            <img src="/assets/common/back.svg" />
-            <p>Back</p>
-          </a>
-        </Link>
+        <div className={styles.headerMenu}>
+          <div
+            className={styles.headerMenuButton}
+            onClick={() => showMenu(true)}
+          >
+            <img src="/assets/common/menu.svg" />
+            <p>Menu</p>
+          </div>
+          { displayMenu && 
+            <div
+              className={styles.headerMenuDropdown}
+              ref={headerMenuRef}
+            >
+              <div
+                className={styles.headerMenuClose}
+                onClick={() => showMenu(false)}
+              >
+                <img src="/assets/common/close.svg" />
+                <p>Close menu</p>
+              </div>
+              <img
+                className={styles.headerMenuLogo}
+                src="/logo-simple.svg"
+              />
+              <ul>
+                <li>
+                  <Link href="/app"><a>Dashboard</a></Link>
+                </li>
+                <li>
+                  <Link href="/app/campaigns"><a>My videos campaigns</a></Link>
+                </li>
+                <li>
+                  <Link href="/app/analytics"><a>Analytics</a></Link>
+                </li>
+                <li>
+                  <Link href="/app/contacts"><a>Contacts</a></Link>
+                </li>
+              </ul>
+              <ul>
+                <li>
+                  <a href="mailto:contact@myfomo.io">Need help ?</a>
+                </li>
+                <li>
+                  <a>My Profile</a>
+                </li>
+              </ul>
+            </div>
+          }
+        </div>
         <div className={styles.headerVideoTitle}>
           <div>
             <AutosizeInput
@@ -192,9 +248,12 @@ const Campaign = ({ me }) => {
       { displayShare && 
         <Share
           campaignId={router.query.campaignId}
-          onClose={() => showShare(false)}
-          onDone={() => router.push('/app/campaigns')}
           me={me}
+          onClose={() => showShare(false)}
+          onDone={() => {
+            toast.success('Campaign sent.')
+            router.push('/app/campaigns')
+          }}
         />
       }
     </div>

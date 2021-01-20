@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
 
 import withAuthServerSideProps from '@/hocs/withAuthServerSideProps'
 
@@ -101,6 +102,7 @@ const ContactLists = ({ initialContactLists, me }) => {
           onDone={() => {
             getContactLists()
             hidePopup()
+            toast.success('List created.')
           }}
         />
       }
@@ -110,6 +112,7 @@ const ContactLists = ({ initialContactLists, me }) => {
           onDone={() => {
             getContactLists()
             hidePopup()
+            toast.success('List updated.')
           }}
         />
       }
@@ -119,6 +122,7 @@ const ContactLists = ({ initialContactLists, me }) => {
           onDone={() => {
             getContactLists()
             hidePopup()
+            toast.success('List deleted.')
           }}
         />
       }

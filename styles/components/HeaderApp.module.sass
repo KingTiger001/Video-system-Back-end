@@ -45,9 +45,45 @@
         position: absolute
         width: 30px
 
-.logout
-  cursor: pointer
-  font-size: 16px
-  font-weight: 500
-  &:hover
-    text-decoration: underline
+.needHelp
+  color: $textColorTwo
+
+.user
+  align-items: center
+  display: flex
+  height: 100%
+  position: relative
+  .userName
+    align-items: center
+    cursor: pointer
+    display: grid
+    grid-gap: 12px
+    grid-auto-flow: column
+    grid-template-columns: auto 1fr auto
+    height: 48px
+    p
+      color: $textColorTwo
+      font-size: 14px
+      font-weight: 700
+  .userDropdown
+    background: #fff
+    border-radius: 4px
+    box-shadow: 0 2px 24px 0 rgba(29,41,63,0.12)
+    padding: 30px
+    position: absolute
+    right: 0px
+    top: calc(100% + 5px)
+    width: 160px
+    .userMenu
+      border-bottom: 1px solid $primaryColor
+      display: grid
+      grid-gap: 25px
+      margin-bottom: 30px
+      padding-bottom: 30px
+    p, a
+      color: $textColorTwo
+      cursor: pointer
+      font-size: 14px
+      line-height: 14px
+  .logout
+    margin-top: 25px

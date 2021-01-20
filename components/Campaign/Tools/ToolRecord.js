@@ -42,7 +42,7 @@ const ToolRecord = () => {
         src="/assets/campaign/record.svg"
       />
       <p className={styles.toolRecordName}>Record</p>
-      <p className={styles.toolRecordText}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor </p>
+      <p className={styles.toolRecordText}>Start recording your video and personalize it with custom screens</p>
       <Button onClick={() => showVideoRecorder(true)}>
         Start recording
       </Button>

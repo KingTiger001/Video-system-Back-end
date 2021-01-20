@@ -23,7 +23,7 @@ const PopupAddContact = ({ onDone }) => {
 
   return (
     <Popup
-      title="Add a new contact"
+      title="Add a contact"
     >
       <FormContact
         buttonText="Add"

@@ -98,7 +98,6 @@ const PopupContactListAddContact = ({ me, onDone }) => {
               >
                 { !popup.data.list.find(c => c._id === contact._id) &&
                   <input
-                    checked={selectedExistingContacts.includes(contact._id)}
                     type="checkbox"
                     value={contact._id}
                   />

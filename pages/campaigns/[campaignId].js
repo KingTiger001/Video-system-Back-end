@@ -81,7 +81,7 @@ const Campaign = ({ campaign }) => {
         </div>
       </div>
       <div className={styles.content}>
-        <h1 className={styles.title}>{campaign.user.firstName} has a message for you !</h1>
+        <h1 className={styles.title}>{campaign.user.firstName} from {campaign.user.company} sent you a video message</h1>
         <VideoPlayer
           data={campaign}
           onPlay={() => setIsPlaying(true)}

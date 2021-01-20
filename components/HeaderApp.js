@@ -1,6 +1,8 @@
 import jscookie from 'js-cookie'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useEffect, useRef, useState } from 'react'
+import { useDispatch } from 'react-redux'
 
 import { mainAPI } from '@/plugins/axios'
 
@@ -10,11 +12,33 @@ import styles from '@/styles/components/HeaderApp.module.sass'
 
 const HeaderApp = () => {
   const router = useRouter()
+  const dispatch = useDispatch()
 
-  const createCampaign = async () => {
-    const { data: campaign } = await mainAPI.post('/campaigns')
-    router.push(`/app/campaigns/${campaign._id}`)
-  }
+  const showPopup = (popupProps) => dispatch({ type: 'SHOW_POPUP', ...popupProps })
+
+  const [displayUserMenu, showUserMenu] = useState(false)
+  const [me, setMe] = useState({})
+  
+  useEffect(() => {
+    async function getMe () {
+      const { data } = await mainAPI.get('/users/me')
+      setMe(data)
+    }
+    getMe()
+  }, [])
+
+  const userMenuRef = useRef(null)
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
+        showUserMenu(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [userMenuRef])
 
   const logout = () => {
     router.push('/login')
@@ -42,20 +66,45 @@ const HeaderApp = () => {
           </Link>
         </nav>
 
-        <p>Need help ?</p>
-        
+        <a className={styles.needHelp} href="mailto:contact@myfomo.io">Need help ?</a>
         <Button
-          onClick={createCampaign}
+          onClick={() => showPopup({ display: 'CREATE_CAMPAIGN' })}
           outline={true}
         >
           Create a video campaign
         </Button>
-        <p
-          className={styles.logout}
-          onClick={logout}
-        >
-          Log out
-        </p>
+        <div className={styles.user}>
+          { me.firstName &&
+            <div
+              className={styles.userName}
+              onClick={() => showUserMenu(!displayUserMenu)}
+            >
+              <img src="/assets/common/profile.svg" />
+              <p>{me.firstName}</p>
+              <img src={`/assets/common/${displayUserMenu ? 'expandLess' : 'expandMore'}.svg`} />
+            </div>
+          }
+          { displayUserMenu &&
+            <div
+              className={styles.userDropdown}
+              ref={userMenuRef}
+            >
+              <ul className={styles.userMenu}>
+                <li>
+                  <Link href=""><a>Account</a></Link>
+                </li>
+                <li>
+                  <Link href=""><a>Billing</a></Link>
+                </li>
+                <li>
+                  <Link href=""><a>Settings</a></Link>
+                </li>
+              </ul>
+              <a href="mailto:contact@myfomo.io">Need help ?</a>
+              <p className={styles.logout} onClick={logout}>Log out</p>
+            </div>
+          }
+        </div>
       </div>
     </div>
   )

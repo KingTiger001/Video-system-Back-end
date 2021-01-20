@@ -16,12 +16,16 @@
   padding-top: 20px
 
 .headerMenu
+  position: relative
+
+.headerMenuButton
   background: #fff
   border-radius: 8px
   cursor: pointer
   display: grid
   height: 80px
   justify-items: center
+  position: relative
   width: 90px
   img
     align-self: flex-end
@@ -30,6 +34,48 @@
     color: $textColorOne
     font-size: 12px
     font-weight: 500
+
+.headerMenuClose
+  align-items: center
+  cursor: pointer
+  display: grid
+  grid-gap: 12px
+  grid-template-columns: auto 1fr
+  margin-bottom: 25px
+  p
+    color: $textColorTwo
+    font-size: 13px
+
+.headerMenuLogo
+  height: 24px
+  margin-bottom: 25px
+
+.headerMenuDropdown
+  background: #fff
+  border-radius: 8px
+  box-shadow: 0 2px 24px 0 rgba(29,41,63,0.12)
+  left: 0
+  padding: 30px
+  position: absolute
+  top: 0
+  width: 200px
+  z-index: 5
+  ul
+    display: grid
+    grid-gap: 25px
+    border-bottom: 1px solid $primaryColor
+    margin-bottom: 30px
+    padding-bottom: 30px
+    &:last-child
+      border: 0
+      margin: 0
+      padding: 0
+    p, a
+      color: $textColorTwo
+      cursor: pointer
+      font-size: 14px
+      line-height: 14px
+    
 
 .headerVideoTitle
   div

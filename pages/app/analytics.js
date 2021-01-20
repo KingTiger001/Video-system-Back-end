@@ -79,10 +79,6 @@ const Analytics = ({ initialAnalytics }) => {
         <div className={styles.analyticItemStats}>
           <div className={styles.analyticItemStatsText}>
             <div>
-              <p>Subject</p>
-              <p>{analytic.campaign.share.subject}</p>
-            </div>
-            <div>
               <p>From</p>
               <p>{analytic.campaign.share.from}</p>
             </div>
@@ -102,7 +98,7 @@ const Analytics = ({ initialAnalytics }) => {
             value={displayDuration(analytic.averageViewDuration * 1000)}
           />
           <Stat
-            text="Reply rate"
+            text="Reply button click through rate"
             unit="%"
             value={analytic.replyRate}
           />

@@ -73,7 +73,7 @@ const EndScreen = ({ data = {} }) => {
         <Button
           target="blank"
           type="link"
-          href={data.button.href || ''}
+          href={`https://${data.button.href.replace('https://', '')}` || ''}
           color="white"
         >
           {data.button.value}
