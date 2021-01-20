@@ -33,12 +33,12 @@ const Analytics = ({ initialAnalytics }) => {
 
   const displayDuration = (value) => {
     if (!value) {
-      return '00:00'
+      return '0:00'
     }
     const t = dayjs.duration(parseInt(value, 10))
     const m = t.minutes()
     const s = t.seconds()
-    return `${m < 10 ? `0${m}` : m}:${s < 10 ? `0${s}` : s}`
+    return `${m}:${s < 10 ? `0${s}` : s}`
   }
 
   const renderAnalytic = (analytic = {}) => (

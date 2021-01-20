@@ -22,13 +22,17 @@ const Campaign = ({ campaign }) => {
   const [isPlaying, setIsPlaying] = useState(false)
 
   useEffect(() => {
+    async function postSession () {
+      if (viewDurationRef.current > 0 && contactId) {
+        await mainAPI.post(`/analytics/${campaignId}/viewDuration`, { duration: viewDuration })
+      }
+    }
+    window.addEventListener('beforeunload', postSession)
     if (contactId) {
       mainAPI.post(`/analytics/${campaignId}/opened?c=${contactId}`)
     }
     return () => {
-      if (viewDurationRef.current > 0 && contactId) {
-        mainAPI.post(`/analytics/${campaignId}/viewDuration`, { duration: viewDuration })
-      }
+      window.removeEventListener('beforeunload', postSession)
     }
   }, [])
 
