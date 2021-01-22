@@ -83,8 +83,9 @@ const ContactList = ({ initialContactList, me }) => {
       />
       <p>{contact.firstName}</p>
       <p>{contact.lastName}</p>
-      <p>{contact.company}</p>
       <p>{contact.job}</p>
+      <p>{contact.company}</p>
+      <p>{contact.city}</p>
       <p>{contact.email}</p>
       <p>{contact.phone}</p>
     </ListItem>
@@ -172,8 +173,9 @@ const ContactList = ({ initialContactList, me }) => {
             />
             <p>First name</p>
             <p>Last name</p>
-            <p>Company</p>
             <p>Job Title</p>
+            <p>Company</p>
+            <p>City</p>
             <p>Email</p>
             <p>Phone number</p>
           </ListHeader>

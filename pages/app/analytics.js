@@ -44,7 +44,7 @@ const Analytics = ({ initialAnalytics }) => {
   const renderAnalytic = (analytic = {}) => (
     <div
       className={styles.analyticItem}
-      id={analytic.campaign._id}
+      id={analytic.campaign ? analytic.campaign._id : ''}
       key={analytic._id}
     >
       <ListItem
@@ -66,7 +66,7 @@ const Analytics = ({ initialAnalytics }) => {
           </div>
         )}
         renderEmpty={() => (
-          <p>No analytics found.</p>
+          <p>No analytics yet.</p>
         )}
       >
         <p><b>#{analytic.campaign && analytic.campaign.uniqueId}</b></p>

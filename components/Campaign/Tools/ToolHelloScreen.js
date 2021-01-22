@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { ChromePicker } from 'react-color'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
@@ -183,10 +183,10 @@ const ToolHelloScreen = () => {
               <img src="/assets/campaign/add.svg" />
               <p>Create Start Screen</p>
             </div>
-            {
-              Object.keys(helloScreen).length > 1 &&
-              <div>
-                <p className={styles.toolSubtitle}>Currently Selected</p>
+            <div>
+              <p className={styles.toolSubtitle}>Currently Selected</p>
+              { Object.keys(helloScreen).length > 1
+                ?
                 <div className={styles.toolDraftItem}>
                   <p
                     className={`${styles.toolDraftItemName} ${!previewHelloScreen.name ? styles.toolLibraryItemPreview : ''}`}
@@ -220,8 +220,10 @@ const ToolHelloScreen = () => {
                     <p>Delete</p>
                   </div>
                 </div>
-              </div>
-            }
+                :
+                <p className={styles.toolDescription}>Here you will find your start screen created. Start by creating one by clicking just above!</p>
+              }
+            </div>
             <p className={styles.toolSubtitle}>Your Library</p>
             {
               helloScreenList.length > 0
@@ -279,7 +281,7 @@ const ToolHelloScreen = () => {
                   }
                 </div>
                 :
-                <p className={styles.toolLibraryEmptyText}>Here you will find your first screens created. Start by creating one by clicking just above!</p>
+                <p className={styles.toolDescription}>Here you will find your lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt</p>
             }
           </div>
       }

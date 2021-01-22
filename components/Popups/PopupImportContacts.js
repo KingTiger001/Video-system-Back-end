@@ -85,7 +85,6 @@ const PopupImportContacts = ({ listId, me, onDone }) => {
                               ...columnsMatchingComplete,
                               [key]: e.target.value,
                             })}
-                            required
                           >
                             <option value="" disabled></option>
                             {columnsFound.map(c => <option value={c} key={c}>{c}</option>)}

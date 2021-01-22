@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useRef, useState } from 'react'
+import { useBeforeunload } from 'react-beforeunload'
 
 import withAuthServerSideProps from '@/hocs/withAuthServerSideProps'
 
@@ -17,22 +18,27 @@ const Campaign = ({ campaign }) => {
   const campaignId = router.query.campaignId
   const contactId = router.query.c
 
-  const [viewDuration, setViewDuration] = useState(70)
+  const sessionId = useRef()
+  const [viewDuration, setViewDuration] = useState(0)
   const viewDurationRef = useRef()
   const [isPlaying, setIsPlaying] = useState(false)
 
   useEffect(() => {
-    async function postSession () {
-      if (viewDurationRef.current > 0 && contactId) {
-        await mainAPI.post(`/analytics/${campaignId}/viewDuration`, { duration: viewDuration })
-      }
-    }
-    window.addEventListener('beforeunload', postSession)
+    sessionId.current = Math.floor(Math.random() * Date.now())
     if (contactId) {
       mainAPI.post(`/analytics/${campaignId}/opened?c=${contactId}`)
     }
+    let interval
+    interval = setInterval(() => {
+      if (sessionId.current && viewDurationRef.current > 0 && contactId) {
+        mainAPI.post(`/analytics/${campaignId}/viewDuration`, { sessionId: sessionId.current, duration: viewDurationRef.current })
+      }
+    }, 1000)
     return () => {
-      window.removeEventListener('beforeunload', postSession)
+      clearInterval(interval)
+      if (sessionId.current && viewDurationRef.current > 0 && contactId) {
+        mainAPI.post(`/analytics/${campaignId}/viewDuration`, { sessionId: sessionId.current, duration: viewDurationRef.current })
+      }
     }
   }, [])
 

@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import ContentEditable from 'react-contenteditable'
 import AutosizeInput from 'react-input-autosize'
 import { toast } from 'react-toastify'
 
@@ -205,12 +206,14 @@ const Campaign = ({ me }) => {
         </div>
         <div className={styles.headerVideoTitle}>
           <div>
-            <AutosizeInput
-              onChange={(e) => {
-                dispatch({ type: 'SET_NAME', data: e.target.value })
+            <ContentEditable
+              onChange={(e) => dispatch({ type: 'SET_NAME', data: e.target.value })}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') e.preventDefault()
               }}
               placeholder="Name your video here"
-              value={name}
+              html={name}
+              className={styles.headerVideoInput}
             />
             <img src="/assets/campaign/pen.svg" />
           </div>

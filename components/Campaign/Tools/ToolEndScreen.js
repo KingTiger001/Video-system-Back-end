@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { ChromePicker } from 'react-color'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
@@ -323,10 +323,10 @@ const ToolEndScreen = () => {
               <img src="/assets/campaign/add.svg" />
               <p>Create End Screen</p>
             </div>
-            {
-              Object.keys(endScreen).length > 1 &&
-              <div>
-                <p className={styles.toolSubtitle}>Currently Selected</p>
+            <div>
+              <p className={styles.toolSubtitle}>Currently Selected</p>
+              { Object.keys(endScreen).length > 1
+                ?
                 <div className={styles.toolDraftItem}>
                   <p
                     className={`${styles.toolDraftItemName} ${!previewEndScreen.name ? styles.toolLibraryItemPreview : ''}`}
@@ -360,8 +360,10 @@ const ToolEndScreen = () => {
                     <p>Delete</p>
                   </div>
                 </div>
-              </div>
-            }
+                :
+                <p className={styles.toolDescription}>Here you will find your end screen created. Start by creating one by clicking just above!</p>
+              }
+            </div>
             <p className={styles.toolSubtitle}>Your Library</p>
             {
               endScreenList.length > 0
@@ -419,7 +421,7 @@ const ToolEndScreen = () => {
                   }
                 </div>
                 :
-                <p className={styles.toolLibraryEmptyText}>Here you will find your end screens created. Start by creating one by clicking just above!</p>
+                <p className={styles.toolDescription}>Here you will find your end screens created. Start by creating one by clicking just above!</p>
             }
           </div>
       }

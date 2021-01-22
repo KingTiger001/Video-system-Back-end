@@ -70,6 +70,17 @@ const FormContact = ({ buttonText, data = {}, loading, onSubmit }) => {
         />
       </div>
       <div>
+        <label className={styles.label}>City</label>
+        <Input
+          onChange={(e) => setForm({
+            ...form,
+            city: e.target.value,
+          })}
+          type="text"
+          value={form.city}
+        />
+      </div>
+      <div>
         <label className={styles.label}>Email*</label>
         <Input
           onChange={(e) => setForm({

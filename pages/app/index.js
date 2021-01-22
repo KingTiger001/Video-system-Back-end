@@ -128,7 +128,7 @@ const Dashboard = ({
           </div>
         }
         <div className={styles.stats}>
-          <p className={styles.statsTitle}>Your statistics</p>
+          <p className={styles.statsTitle}>Your analytics</p>
           <Stat
             text="Contacts"
             value="0"

@@ -82,19 +82,22 @@
     height: 100%
     position: relative
     width: max-content
-  input
+  .headerVideoInput
     background: transparent
     border: 0
     color: $textColorOne
     font-size: 30px
     font-weight: 700
-    height: 100%
+    line-height: 80px
+    height: 80px
     padding-right: 30px
     position: relative
     width: fit-content
     z-index: 2
     &::placeholder
       color: rgba($textColorThree, 0.2)
+    &:focus
+      outline: none
   img
     position: absolute
     right: 0

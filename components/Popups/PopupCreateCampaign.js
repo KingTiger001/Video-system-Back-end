@@ -1,5 +1,6 @@
+import { useRouter } from 'next/router'
 import { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import { mainAPI } from '@/plugins/axios'
 
@@ -10,9 +11,9 @@ import Popup from './Popup'
 import styles from '@/styles/components/Popups/PopupCreateCampaign.module.sass'
 
 const PopupCreateCampaign = () => {
+  const router = useRouter()
   const dispatch = useDispatch()
   const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
-  const popup = useSelector(state => state.popup)
 
   const [isLoading, setIsLoading] = useState(false)
   const [name, setName] = useState(null)
@@ -46,7 +47,7 @@ const PopupCreateCampaign = () => {
           type="text"
           required
         />
-        <Button>Create</Button>
+        <Button loading={loading}>Create</Button>
         <p
           onClick={hidePopup}
           className={styles.cancel}
