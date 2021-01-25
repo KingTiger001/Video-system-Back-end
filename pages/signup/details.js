@@ -22,12 +22,9 @@ const SignupDetails = ({ user }) => {
   const [job, setJob] = useState('')
   const [lastName, setLastName] = useState('')
   const [loading, setLoading] = useState(false)
+  const [phone, setPhone] = useState('')
 
   const router = useRouter()
-
-  const checkFormInputs = () => {
-    // TODO: do this after meeting
-  }
 
   const updateProfile = async (e) => {
     e.preventDefault()
@@ -35,13 +32,13 @@ const SignupDetails = ({ user }) => {
       setError('')
       setLoading(true)
       try {
-        await checkFormInputs()
         const { data: user } = await mainAPI.patch('/users/me', {
           company,
           country,
           firstName,
           lastName,
           job,
+          phone,
         })
         await mainAPI.post('/auth/email/confirmation/new', { userId: user._id })
         router.push('/app')
@@ -92,6 +89,14 @@ const SignupDetails = ({ user }) => {
           <Input
             onChange={(e) => setJob(e.target.value.trim())}
             placeholder="Job title*"
+            type="text"
+            required
+          />
+        </div>
+        <div>
+          <Input
+            onChange={(e) => setPhone(e.target.value.trim())}
+            placeholder="Phone*"
             type="text"
             required
           />
