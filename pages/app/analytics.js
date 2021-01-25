@@ -139,14 +139,14 @@ const Analytics = ({ initialAnalytics }) => {
 }
 
 export default Analytics
-export const getServerSideProps = withAuthServerSideProps(async ({ query }, user) => {
+export const getServerSideProps = withAuthServerSideProps(async ({ query }) => {
   let { data: initialAnalytics } = await mainAPI.get('/users/me/analytics')
   const campaignId = query.c
   initialAnalytics = initialAnalytics
     .map(analytic => ({
       [analytic._id]: {
         ...analytic,
-        displayReport: campaignId && campaignId === analytic.campaign._id ? true : false,
+        displayReport: campaignId && analytic.campaign && campaignId === analytic.campaign._id ? true : false,
       }
     }))
     .reduce(function(result, current) {

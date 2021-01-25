@@ -54,22 +54,29 @@
 // header
 .header
   background: #F8FBFF
-  padding: 50px 0
+  height: 90px
+  top: 0
+  position: sticky
+  &.sticky
+    background: #fff
+    box-shadow: 0 2px 35px 0 rgba(0,0,0,0.1)
+    position: fixed
+    top: 0
+    width: 100%
+    z-index: 999
   .container
     align-items: center
-    display: flex
-    justify-content: space-between
-
-.headerContent
-  display: grid
-  grid-gap: 50px
-  grid-template-columns: repeat(2, auto)
+    display: grid
+    grid-gap: 50px
+    grid-template-columns: 250px 1fr 250px
+    height: 100%
 
 .headerMenu
   align-items: center
   display: grid
   grid-gap: 40px
   grid-template-columns: repeat(3, auto)
+  justify-content: flex-end
   a
     color: $textColorOne
     cursor: pointer
@@ -94,14 +101,19 @@
 // Section engage
 .engageSection
   background: #F8FBFF
-  .container
+  padding-top: 10px
+  &.sticky
+    padding-top: 100px
+  & > .container
     margin-bottom: 40px
+    padding-top: 30px
 
 .engageTitle
   color: $textColorTwo
   font-family: 'hk_groteskbold'
-  font-size: 56px
-  line-height: 72px
+  font-size: 50px
+  letter-spacing: 0.2px
+  line-height: 65px
   margin: auto
   margin-bottom: 20px
   width: 100%
@@ -111,9 +123,10 @@
 
 .engageSubtitle
   @extend .sectionSubtitle
+  color: $textColorTwo
   font-weight: 500
   margin: auto
-  margin-bottom: 40px
+  margin-bottom: 20px
   max-width: 830px
   text-align: center
 
@@ -296,6 +309,7 @@
 .wave
   background: #F8FBFF
   display: block
+  width: 100%
 
 // Section steps
 .stepsSection
@@ -306,13 +320,20 @@
     display: grid
     grid-auto-rows: max-content
     height: 610px
-    padding-left: 45%
+    padding-left: 37%
 
 .stepsVisual
   height: 100%
   left: 0%
   position: absolute
   top: 0
+
+.stepsVisualOval
+  position: absolute
+  height: 550px
+  right: -100px
+  top: 130px
+  width: 550px
 
 .stepsVisualScreenshot
   border-radius: 8px
@@ -472,9 +493,17 @@
   &:after
     bottom: 0
   .advanced
-    display: flex
-    align-items: center
-    justify-content: center
+    display: grid
+    grid-gap: 5px
+    justify-items: center
+    img
+      height: 38px
+      width: 38px
+    p
+      color: $textColorTwo
+      font-size: 14px
+      line-height: 17px
+      letter-spacing: 0.2px
 
 .planDetailsItem
   align-items: center
@@ -487,7 +516,6 @@
   p
     color: $textColorTwo
     font-size: 14px
-
 
 // Section try it
 .tryItSection

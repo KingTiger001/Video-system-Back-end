@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="37px" height="37px" viewBox="0 0 37 37" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group 8 Copy 3</title>
+    <defs>
+        <path d="M35.7,17.85 C35.7,27.7082154 27.7082154,35.7 17.85,35.7 C7.99178463,35.7 0,27.7082154 0,17.85 C0,7.99178463 7.99178463,0 17.85,0 C27.7082154,0 35.7,7.99178463 35.7,17.85 Z" id="path-1"></path>
+    </defs>
+    <g id="FOMO" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="_Fomo_Landing-Marketing" transform="translate(-1141.000000, -4272.000000)">
+            <g id="Group-20" transform="translate(-159.000000, 3486.000000)">
+                <g id="Group-14-Copy-2" transform="translate(1253.000000, 786.000000)">
+                    <g id="Group-8-Copy-3" transform="translate(47.000000, 0.000000)">
+                        <g id="Path-Copy" transform="translate(0.600016, 0.600016)">
+                            <mask id="mask-2" fill="white">
+                                <use xlink:href="#path-1"></use>
+                            </mask>
+                            <use id="Mask" fill-opacity="0.2" fill="#5F59F7" fill-rule="nonzero" xlink:href="#path-1"></use>
+                            <path d="M35.0064012,20.1220556 C35.153548,29.7660933 27.1106096,36.5484374 17.4650145,36.5484374 C7.81941927,36.5484374 0,28.7290181 0,19.0834229 C0,11.6695417 4.3125485,13.3273554 5.58338703,13.9129797 C10.3521901,16.1105264 10.1186924,23.7380589 15.572256,23.1458545 C20.5074758,22.6099373 27.0480747,18.4632435 29.6304404,16.7767235 C31.4513353,15.5875131 34.9300289,15.116595 35.0064012,20.1220556 Z" fill="#5F59F7" fill-rule="nonzero" mask="url(#mask-2)"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

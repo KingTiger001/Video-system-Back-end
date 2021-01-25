@@ -53,6 +53,25 @@ const ToolLogo = () => {
     }
   }
 
+  const removeLogo = async () => {
+    await mediaAPI.delete('/', {
+      data: {
+        url: logo.value,
+      },
+    })
+    await mainAPI.patch('/users/me', {
+      data: {
+        logo: null,
+      },
+    })
+    dispatch({
+      type: 'CHANGE_LOGO',
+      data: {
+        value: null
+      }
+    })
+  }
+
   return tool === 5 && (
     <div
       className={styles.toolLogo}
@@ -83,6 +102,7 @@ const ToolLogo = () => {
           onChange={(e) => uploadLogo(e.target.files[0])}
           className={styles.logoInput}
         />
+        { logo.value && <p className={styles.logoRemove} onClick={removeLogo}>Remove</p> }
         <p className={styles.logoRecoSize}>(Recommended size: 300x300)</p>
         { error && <p className={styles.error}>{error}</p> }
       </div>

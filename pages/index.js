@@ -1,6 +1,7 @@
 import dayjs from 'dayjs'
 import Head from 'next/head'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 import { Link as LinkScroll, Element as ElementScroll } from 'react-scroll'
 
 import Button from '@/components/Button'
@@ -8,69 +9,80 @@ import Button from '@/components/Button'
 import styles from '@/styles/pages/index.module.sass'
 
 const Index = () => {
+  const [isHeaderSticky, setIsHeaderSticky] = useState(false)
+
+  useEffect(() => {
+    const header = document.getElementsByTagName('header')[0];
+    const sticky = header.offsetTop;
+    const scrollCallBack = window.addEventListener("scroll", () => {
+      window.pageYOffset > sticky ? setIsHeaderSticky(true) : setIsHeaderSticky(false)
+    });
+    return () => {
+      window.removeEventListener('scroll', scrollCallBack);
+    };
+  }, []);
+  
   return (
     <div className={styles.homepage}>
       <Head>
         <title>FOMO</title>
       </Head>
 
-      <header className={styles.header}>
-        <div className={styles.container}>
-          <img
-            src="/logo.svg"
-            alt="Logo FOMO"
-            className={styles.logo}
-          />
-          <div className={styles.headerContent}>
-            <nav className={styles.headerMenu}>
-              <LinkScroll
-                to="solution"
-                smooth={true}
-                offset={50}
-                duration={500}
-              >
-                Why FOMO?
-              </LinkScroll>
-              <LinkScroll
-                to="product"
-                smooth={true}
-                offset={-70}
-                duration={500}
-              >
-                Features
-              </LinkScroll>
-              <LinkScroll
-                to="pricing"
-                smooth={true}
-                offset={80}
-                duration={500}
-              >
-                Pricing
-              </LinkScroll>
-            </nav>
-            <div className={styles.headerButtons}>
-              <Button
-                href="/login"
-                outline={true}
-                type="link"
-                width={120}
-              >
-                Log in
-              </Button>
-              <Button
-                href="/signup"
-                type="link"
-                width={120}
-              >
-                Try it free
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
-
       <main className={styles.main}>
-        <section className={styles.engageSection}>
+        <section className={`${styles.engageSection} ${isHeaderSticky ? styles.sticky : ''}`}>
+          <header className={`${styles.header} ${isHeaderSticky ? styles.sticky : ''}`}>
+            <div className={styles.container}>
+              <img
+                src="/logo.svg"
+                alt="Logo FOMO"
+                className={styles.logo}
+              />
+              <nav className={styles.headerMenu}>
+                <LinkScroll
+                  to="solution"
+                  smooth={true}
+                  offset={-50}
+                  duration={500}
+                >
+                  Why FOMO?
+                </LinkScroll>
+                <LinkScroll
+                  to="product"
+                  smooth={true}
+                  offset={-170}
+                  duration={500}
+                >
+                  Features
+                </LinkScroll>
+                <LinkScroll
+                  to="pricing"
+                  smooth={true}
+                  offset={-20}
+                  duration={500}
+                >
+                  Pricing
+                </LinkScroll>
+              </nav>
+              <div className={styles.headerButtons}>
+                <Button
+                  href="/login"
+                  outline={true}
+                  type="link"
+                  width={120}
+                >
+                  Log in
+                </Button>
+                <Button
+                  href="/signup"
+                  type="link"
+                  width={120}
+                >
+                  Try it free
+                </Button>
+              </div>
+            </div>
+          </header>
+            
           <div className={styles.container}>
             <h1 className={styles.engageTitle}>Reinvent your professional interactions<br/><span>Send a video message</span></h1>
             <h2 className={styles.engageSubtitle}>Story telling is what makes you unique<br />Sharing it is what makes your mission exist.</h2>
@@ -208,8 +220,8 @@ const Index = () => {
           <div className={styles.container}>
             <div className={styles.stepsVisual}>
               <img
-                className={styles.productVisualOval}
-                src="/assets/home/stepsVisual.svg"
+                className={styles.stepsVisualOval}
+                src="/assets/home/stepsOval.svg"
               />
               <img
                 alt="Screenshot dashboard FOMO"
@@ -348,7 +360,7 @@ const Index = () => {
                       </li>
                     </ul>
                     <Button
-                      href="/signup"
+                      href="mailto:contact@myfomo.io"
                       type="link"
                       width={160}
                     >
@@ -365,11 +377,12 @@ const Index = () => {
                     </div>
                     <div className={styles.planDetails}>
                       <div className={styles.advanced}>
+                        <img src="/logo-circle.svg" />
                         <p>Advanced features</p>
                       </div>
                     </div>
                     <Button
-                      href="/signup"
+                      href="mailto:contact@myfomo.io"
                       outline={true}
                       type="link"
                       width={160}
@@ -433,7 +446,7 @@ const Index = () => {
               </Link>
             </li>
             <li>
-              <Link href="/">
+              <Link href="mailto:contact@myfomo.io">
                 <a>Contact us</a>
               </Link>
             </li>

@@ -72,8 +72,6 @@ const Campaigns = ({ initialCampaignsDraft, initialCampaignsShared, me }) => {
     </ListHeader>
   )
 
-  console.log(campaignsShared)
-
   const renderCampaign = (campaign = {}) => (
     <ListItem
       className={`${styles.campaignsItem} ${campaign.status === 'draft' ? styles.draft : ''}`}

@@ -19,7 +19,7 @@ const Campaign = ({ campaign }) => {
   const contactId = router.query.c
 
   const sessionId = useRef()
-  const [viewDuration, setViewDuration] = useState(0)
+  const [viewDuration, setViewDuration] = useState(-1)
   const viewDurationRef = useRef()
   const [isPlaying, setIsPlaying] = useState(false)
 
