@@ -26,23 +26,23 @@ const Index = () => {
               <LinkScroll
                 to="solution"
                 smooth={true}
-                offset={150}
+                offset={50}
                 duration={500}
               >
-                Solution
+                Why FOMO?
               </LinkScroll>
               <LinkScroll
                 to="product"
                 smooth={true}
-                offset={-100}
+                offset={-70}
                 duration={500}
               >
-                Product
+                Features
               </LinkScroll>
               <LinkScroll
                 to="pricing"
                 smooth={true}
-                offset={50}
+                offset={80}
                 duration={500}
               >
                 Pricing
@@ -72,13 +72,13 @@ const Index = () => {
       <main className={styles.main}>
         <section className={styles.engageSection}>
           <div className={styles.container}>
-            <h1 className={styles.engageTitle}>Video messaging reinvents your <span>professional interactions</span></h1>
+            <h1 className={styles.engageTitle}>Reinvent your professional interactions<br/><span>Send a video message</span></h1>
             <h2 className={styles.engageSubtitle}>Story telling is what makes you unique<br />Sharing it is what makes your mission exist.</h2>
             <div className={styles.engageButtons}>
               <Button
                 href="/signup"
                 type="link"
-                width={200}
+                width={240}
               >
                 Start 7 Days Free Trial
               </Button>
@@ -86,7 +86,7 @@ const Index = () => {
                 href="/"
                 outline={true}
                 type="link"
-                width={200}
+                width={240}
               >
                 Watch our demo
               </Button>
@@ -105,7 +105,7 @@ const Index = () => {
               />
               <div className={styles.engageScreenshotHidden}>
                 <img
-                  src="/assets/home/screenshot.jpg"
+                  src="/assets/home/engageScreenshot.webp"
                   alt="Screenshot dashboard FOMO"
                 />
               </div>
@@ -120,33 +120,33 @@ const Index = () => {
         <ElementScroll name="solution">
           <section className={styles.solutionSection}>
             <div className={styles.container}>
-              <h1 className={styles.sectionTitleCenter}>For a stronger competitive advantage</h1>
-              <h2 className={styles.sectionSubtitleCenter}>Boost productivity and reshape remote interactions</h2>
+              <h3 className={styles.sectionTitleCenter}>For a stronger competitive advantage</h3>
+              <span className={styles.sectionSubtitleCenter}>Video messaging is the human element strengthening your customer-centric strategy and your company culture.</span>
               <div className={styles.solutionGrid}>
                 <div className={styles.solutionItem}>
                   <div className={styles.icon}>
-                    <img src="/assets/common/iconPlus.svg" />
+                    <img src="/assets/home/solutionIconOne.png" />
                   </div>
                   <p className={styles.solutionItemTitle}>Prospect</p>
                   <p className={styles.solutionItemText}>Reach your business targets/partners at scale.</p>
                 </div>
                 <div className={styles.solutionItem}>
                   <div className={styles.icon}>
-                    <img src="/assets/common/iconPlus.svg" />
+                    <img src="/assets/home/solutionIconTwo.png" />
                   </div>
                   <p className={styles.solutionItemTitle}>Attract</p>
                   <p className={styles.solutionItemText}>Catch attention with impactful customized video messages.</p>
                 </div>
                 <div className={styles.solutionItem}>
                   <div className={styles.icon}>
-                    <img src="/assets/common/iconPlus.svg" />
+                    <img src="/assets/home/solutionIconThree.png" />
                   </div>
                   <p className={styles.solutionItemTitle}>Convert</p>
                   <p className={styles.solutionItemText}>Increase your engagement success rate.</p>
                 </div>
                 <div className={styles.solutionItem}>
                   <div className={styles.icon}>
-                    <img src="/assets/common/iconPlus.svg" />
+                    <img src="/assets/home/solutionIconFour.png" />
                   </div>
                   <p className={styles.solutionItemTitle}>Retain</p>
                   <p className={styles.solutionItemText}>Build a special connection with your business relations.</p>
@@ -155,6 +155,7 @@ const Index = () => {
               <Button
                 href="/signup"
                 type="link"
+                width={240}
               >
                 Start 7 Days Free Trial
               </Button>
@@ -165,44 +166,38 @@ const Index = () => {
         <ElementScroll name="product">
           <section className={styles.productSection}>
             <div className={styles.container}>
-              <h1 className={styles.productTitle}>Send a video note</h1>
-              <h2 className={styles.productSubtitle}>After emails, text messages and voice notes, send video messages on demand.</h2>
+              <h3 className={styles.productTitle}>Send a video note</h3>
+              <span className={styles.productSubtitle}>After emails, text messages and voice notes, send video messages on demand.</span>
               <ul className={styles.productList}>
                 <li className={styles.productItem}>
-                  <div className={styles.icon}>
-                    <img src="/assets/common/iconPeople.svg" />
-                  </div>
-                  <p>Connect with new people</p>
+                  <div className={styles.label}>create</div>
+                  <p className={styles.productItemText}><b>Create</b> a customized video message<br />through a seamless process</p>
                 </li>
                 <li className={styles.productItem}>
-                  <div className={styles.icon}>
-                    <img src="/assets/common/iconChart.svg" />
-                  </div>
-                  <p>Increase chance to engage</p>
+                  <div className={styles.label}>share</div>
+                  <p className={styles.productItemText}><b>Share</b> and scale with your contact lists</p>
                 </li>
                 <li className={styles.productItem}>
-                  <div className={styles.icon}>
-                    <img src="/assets/common/iconSDCard.svg" />
-                  </div>
-                  <p>Unlimited storage</p>
-                  <div className={styles.premiumLabel}>premium</div>
+                  <div className={styles.label}>measure</div>
+                  <p className={styles.productItemText}><b>Measure</b> with analytics to optimize<br />your success rate</p>
                 </li>
               </ul>
               <Button
                 href="/signup"
                 type="link"
+                width={240}
               >
                 Start 7 Days Free Trial
               </Button>
               <div className={styles.productVisual}>
                 <img
-                  src="/assets/home/productOval.svg"
                   className={styles.productVisualOval}
+                  src="/assets/home/productOval.svg"
                 />
                 <img
-                  src="/assets/home/screenshot.jpg"
                   alt="Screenshot dashboard FOMO"
                   className={styles.productScreenshot}
+                  src="/assets/home/productVisual.png"
                 />
               </div>
             </div>
@@ -212,77 +207,73 @@ const Index = () => {
         <section className={styles.stepsSection}>
           <div className={styles.container}>
             <div className={styles.stepsVisual}>
-              <img src="/assets/home/stepsVisual.svg" />
-              <Button
-                href="/signup"
-                type="link"
-              >
-                Start 7 Days Free Trial
-              </Button>
+              <img
+                className={styles.productVisualOval}
+                src="/assets/home/stepsVisual.svg"
+              />
+              <img
+                alt="Screenshot dashboard FOMO"
+                className={styles.stepsVisualScreenshot}
+                src="/assets/home/stepsVisual.png"
+              />
             </div>
-            <div>
-              <h1 className={styles.sectionTitle}>Create a pitch in 3 steps</h1>
-              <ul className={styles.stepsList}>
-                <li className={styles.stepsItem}>
-                  <div className={styles.stepsItemNumber}>
-                    <span>1</span>
-                  </div>
-                  <p className={styles.stepsItemTitle}>Step 1</p>
-                  <p className={styles.stepsItemText}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.</p>
-                </li>
-                <li className={styles.stepsItem}>
-                  <div className={styles.stepsItemNumber}>
-                    <span>2</span>
-                  </div>
-                  <p className={styles.stepsItemTitle}>Step 2</p>
-                  <p className={styles.stepsItemText}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.</p>
-                </li>
-                <li className={styles.stepsItem}>
-                  <div className={styles.stepsItemNumber}>
-                    <span>3</span>
-                  </div>
-                  <p className={styles.stepsItemTitle}>Step 3</p>
-                  <p className={styles.stepsItemText}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.</p>
-                </li>
-              </ul>
-            </div>
+            <h3 className={styles.sectionTitle}>Create a message<br />in 3 steps</h3>
+            <ul className={styles.stepsList}>
+              <li className={styles.stepsItem}>
+                <p className={styles.stepsItemNumber}>1</p>
+                <p className={styles.stepsItemText}>Record a video message</p>
+              </li>
+              <li className={styles.stepsItem}>
+                <p className={styles.stepsItemNumber}>2</p>
+                <p className={styles.stepsItemText}>Personalize and scale</p>
+              </li>
+              <li className={styles.stepsItem}>
+                <p className={styles.stepsItemNumber}>3</p>
+                <p className={styles.stepsItemText}>Share your message with your contacts</p>
+              </li>
+            </ul>
+            <Button
+              href="/signup"
+              type="link"
+              width={240}
+            >
+              Start 7 Days Free Trial
+            </Button>
           </div>
-          <img
-            src="/assets/home/stepsWave.svg"
-            className={styles.stepsWave}
-          />
         </section>
+
+        <img
+          src="/assets/home/stepsWave.svg"
+          className={styles.wave}
+        />
 
         <ElementScroll name="pricing">
           <section className={styles.plansSection}>
             <div className={styles.container}>
-              <h1 className={styles.plansTitle}>Choose the plan that’s right for your business</h1>
-              <h2 className={styles.plansSubtitle}>Get started for free, try out our platform  for an unlimited period of time. Explore our monthly and yearly plans and pick the one that best suits your needs.</h2>
+              <h3 className={styles.plansTitle}>Choose the plan that’s right<br/>for your business</h3>
+              <span className={styles.plansSubtitle}>Boost productivity and reshape remote interactions.</span>
               <ul className={styles.plansList}>
                 <li>
                   <div className={styles.planContent}>
+                    <p className={styles.planTitle}>Free</p>
                     <div className={styles.planPrice}>
-                      <p>$39</p>
-                      <span>/month</span>
+                      <p className={styles.planPriceValue}>$0</p>
                     </div>
-                    <p className={styles.planTitle}>Basic</p>
-                    <p className={styles.planText}>All the basics for businesses that are just getting started.</p>
                     <ul className={styles.planDetails}>
                       <li className={styles.planDetailsItem}>
-                        <img src="/assets/home/planBasic.svg" />
-                        <p>Single project use</p>
+                        <img src="/assets/home/planCheckBlue.svg" />
+                        <p>Record a video message</p>
                       </li>
                       <li className={styles.planDetailsItem}>
-                        <img src="/assets/home/planBasic.svg" />
-                        <p>Basic dashboard</p>
+                        <img src="/assets/home/planCheckBlue.svg" />
+                        <p>Share your video</p>
                       </li>
                       <li className={styles.planDetailsItem}>
-                        <img src="/assets/home/planBasic.svg" />
-                        <p>All components included</p>
+                        <img src="/assets/home/planCheckBlue.svg" />
+                        <p>FOMO branding</p>
                       </li>
                     </ul>
                     <Button
-                      color="grey"
                       href="/signup"
                       outline={true}
                       type="link"
@@ -293,73 +284,35 @@ const Index = () => {
                     <p className={styles.creditCardNotRequired}>No credit card required</p>
                   </div>
                 </li>
-                <li className={styles.planRecommended}>
-                  <div className={styles.planRecommendedLabel}>Recommended</div>
+                <li className={styles.planBusiness}>
+                  <div className={styles.planColorBanner} />
                   <div className={styles.planContent}>
+                    <p className={styles.planTitle}>Business</p>
                     <div className={styles.planPrice}>
-                      <p>$99</p>
-                      <span>/month</span>
+                      <p className={styles.planPriceValue}>$70</p>
+                      <p className={styles.planPriceText}>per user/month<br/><span>billed annually</span></p>
                     </div>
-                    <p className={styles.planTitle}>Standard</p>
-                    <p className={styles.planText}>Better for growing businesses that want more customers.</p>
                     <ul className={styles.planDetails}>
                       <li className={styles.planDetailsItem}>
-                        <img src="/assets/home/planRecommended.svg" />
-                        <p>Unlimited project use</p>
+                        <img src="/assets/home/planCheckSecondary.svg" />
+                        <p>Analytics</p>
                       </li>
                       <li className={styles.planDetailsItem}>
-                        <img src="/assets/home/planRecommended.svg" />
-                        <p>Advanced dashboard</p>
+                        <img src="/assets/home/planCheckSecondary.svg" />
+                        <p>Dashboard</p>
                       </li>
                       <li className={styles.planDetailsItem}>
-                        <img src="/assets/home/planRecommended.svg" />
-                        <p>All components included</p>
+                        <img src="/assets/home/planCheckSecondary.svg" />
+                        <p>Add your logo</p>
                       </li>
                       <li className={styles.planDetailsItem}>
-                        <img src="/assets/home/planRecommended.svg" />
-                        <p>Advanced insight</p>
+                        <img src="/assets/home/planCheckSecondary.svg" />
+                        <p>Create a call-to-action<br/>in your videos</p>
                       </li>
                     </ul>
                     <Button
                       color="secondary"
-                      href="/"
-                      type="link"
-                    >
-                      Try it free
-                    </Button>
-                    <p className={styles.creditCardNotRequired}>No credit card required</p>
-                  </div>
-                </li>
-                <li className={styles.planPremium}>
-                  <div className={styles.planContent}>
-                    <div className={styles.planPrice}>
-                      <p>$339</p>
-                      <span>/month</span>
-                    </div>
-                    <p className={styles.planTitle}>Premium</p>
-                    <p className={styles.planText}>Advanced features for pros who need more customization.</p>
-                    <ul className={styles.planDetails}>
-                      <li className={styles.planDetailsItem}>
-                        <img src="/assets/home/planPremium.svg" />
-                        <p>Single project use</p>
-                      </li>
-                      <li className={styles.planDetailsItem}>
-                        <img src="/assets/home/planPremium.svg" />
-                        <p>Basic dashboard</p>
-                      </li>
-                      <li className={styles.planDetailsItem}>
-                        <img src="/assets/home/planPremium.svg" />
-                        <p>Mutlivariate components</p>
-                      </li>
-                      <li className={styles.planDetailsItem}>
-                        <img src="/assets/home/planPremium.svg" />
-                        <p>Phone Support</p>
-                      </li>
-                    </ul>
-                    <Button
-                      color="grey"
-                      href="/"
-                      outline={true}
+                      href="/signup"
                       type="link"
                       width={160}
                     >
@@ -368,21 +321,77 @@ const Index = () => {
                     <p className={styles.creditCardNotRequired}>No credit card required</p>
                   </div>
                 </li>
-                
+                <li className={styles.planTeams}>
+                  <div className={styles.planColorBanner} />
+                  <div className={styles.planContent}>
+                    <p className={styles.planTitle}>Business</p>
+                    <div className={styles.planPrice}>
+                      <p className={styles.planPriceValue}>$240</p>
+                      <p className={styles.planPriceText}>per user/month<br/><span>billed annually</span></p>
+                    </div>
+                    <ul className={styles.planDetails}>
+                      <li className={styles.planDetailsItem}>
+                        <img src="/assets/home/planCheckPrimary.svg" />
+                        <p>Start Screen Automation</p>
+                      </li>
+                      <li className={styles.planDetailsItem}>
+                        <img src="/assets/home/planCheckPrimary.svg" />
+                        <p>Prompter</p>
+                      </li>
+                      <li className={styles.planDetailsItem}>
+                        <img src="/assets/home/planCheckPrimary.svg" />
+                        <p>Subtitles</p>
+                      </li>
+                      <li className={styles.planDetailsItem}>
+                        <img src="/assets/home/planCheckPrimary.svg" />
+                        <p>Enhanced storage</p>
+                      </li>
+                    </ul>
+                    <Button
+                      href="/signup"
+                      type="link"
+                      width={160}
+                    >
+                      Contact us
+                    </Button>
+                    <p className={styles.creditCardNotRequired}></p>
+                  </div>
+                </li>
+                <li>
+                  <div className={styles.planContent}>
+                    <p className={styles.planTitle}>Elite</p>
+                    <div className={styles.planPrice}>
+                      <p className={styles.planPriceValue}>Contact us</p>
+                    </div>
+                    <div className={styles.planDetails}>
+                      <div className={styles.advanced}>
+                        <p>Advanced features</p>
+                      </div>
+                    </div>
+                    <Button
+                      href="/signup"
+                      outline={true}
+                      type="link"
+                      width={160}
+                    >
+                      Contact us
+                    </Button>
+                    <p className={styles.creditCardNotRequired}></p>
+                  </div>
+                </li>
               </ul>
             </div>
           </section>
         </ElementScroll>
 
         <section className={styles.tryItSection}>
-          <h1 className={styles.sectionTitle}>Never miss an opportunity<br />to connect and engage</h1>
-          <h2 className={styles.sectionSubtitle}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.</h2>
+          <h3 className={styles.sectionTitle}>Never miss an opportunity<br />to connect and engage</h3>
           <Button
             color="white"
             outline={true}
             href="/"
             type="link"
-            width={160}
+            width={240}
           >
             Try it free
           </Button>
@@ -404,70 +413,62 @@ const Index = () => {
             <img
               src="/logo.svg"
               alt="Logo FOMO"
-              className={styles.logo}
+              className={styles.footerLogo}
             />
           </div>
-          <div>
-            <p className={styles.footerLinksTitle}>Company</p>
-            <div className={styles.footerLinks}>
+          <ul className={styles.footerLinks}>
+            <li>
               <Link href="/">
-                <a className={styles.footerLinksItem}>About</a>
+                <a>About us</a>
               </Link>
+            </li>
+            <li>
               <Link href="/">
-                <a className={styles.footerLinksItem}>Privacy Policy</a>
+                <a>Terms & Conditions</a>
               </Link>
+            </li>
+            <li>
               <Link href="/">
-                <a className={styles.footerLinksItem}>Terms</a>
+                <a>Privacy Policy</a>
               </Link>
+            </li>
+            <li>
               <Link href="/">
-                <a className={styles.footerLinksItem}>Careers</a>
+                <a>Contact us</a>
               </Link>
-            </div>
-          </div>
-          <div>
-            <p className={styles.footerLinksTitle}>More</p>
-            <div className={styles.footerLinks}>
+            </li>
+          </ul>
+          <ul className={styles.footerSocials}>
+            <li>
               <Link href="/">
-                <a className={styles.footerLinksItem}>Documentation</a>
+                <a>
+                  <img src="/assets/socials/facebook.svg" />
+                </a>
               </Link>
+            </li>
+            <li>
               <Link href="/">
-                <a className={styles.footerLinksItem}>License</a>
+                <a>
+                  <img src="/assets/socials/youtube.svg" />
+                </a>
               </Link>
-            </div>
-          </div>
-          <div>
-            <ul className={styles.footerSocials}>
-              <li>
-                <Link href="/">
-                  <a>
-                    <img src="/assets/socials/facebook.svg" />
-                  </a>
-                </Link>
-              </li>
-              <li>
-                <Link href="/">
-                  <a>
-                    <img src="/assets/socials/youtube.svg" />
-                  </a>
-                </Link>
-              </li>
-              <li>
-                <Link href="/">
-                  <a>
-                    <img src="/assets/socials/twitter.svg" />
-                  </a>
-                </Link>
-              </li>
-              <li>
-                <Link href="/">
-                  <a>
-                    <img src="/assets/socials/linkedin.svg" />
-                  </a>
-                </Link>
-              </li>
-            </ul>
-            <p className={styles.copyright}>Copyright © {dayjs().format('YYYY')}.</p>
-          </div>
+            </li>
+            <li>
+              <Link href="/">
+                <a>
+                  <img src="/assets/socials/twitter.svg" />
+                </a>
+              </Link>
+            </li>
+            <li>
+              <Link href="/">
+                <a>
+                  <img src="/assets/socials/linkedin.svg" />
+                </a>
+              </Link>
+            </li>
+          </ul>
+          <p className={styles.copyright}>Copyright © {dayjs().format('YYYY')}.</p>
         </div>
       </footer>
     </div>

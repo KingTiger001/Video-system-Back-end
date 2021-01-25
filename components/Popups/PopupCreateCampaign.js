@@ -15,19 +15,19 @@ const PopupCreateCampaign = () => {
   const dispatch = useDispatch()
   const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
 
-  const [isLoading, setIsLoading] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [name, setName] = useState(null)
 
   const create = async (e) => {
     e.preventDefault()
-    if (!isLoading) {
+    if (!loading) {
       try {
-        setIsLoading(true)
+        setLoading(true)
         const { data: campaign } = await mainAPI.post('/campaigns', { name })
         router.push(`/app/campaigns/${campaign._id}`)
         hidePopup()
       } catch (err) {
-        setIsLoading(false)
+        setLoading(false)
         console.log(err)
       }
     }

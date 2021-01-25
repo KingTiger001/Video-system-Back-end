@@ -9,12 +9,12 @@
   width: 100%
 
 .sectionTitle
-  color: $textColorOne
+  color: $textColorTwo
   font-family: 'hk_groteskbold'
   font-size: 48px
   letter-spacing: 0.2px
   line-height: 56px
-  margin-bottom: 16px
+  margin-bottom: 15px
 
 .sectionTitleCenter
   @extend .sectionTitle
@@ -98,19 +98,20 @@
     margin-bottom: 40px
 
 .engageTitle
-  color: $textColorOne
+  color: $textColorTwo
   font-family: 'hk_groteskbold'
   font-size: 56px
   line-height: 72px
   margin: auto
   margin-bottom: 20px
-  max-width: 800px
+  width: 100%
   text-align: center
   span
     color: $primaryColor
 
 .engageSubtitle
   @extend .sectionSubtitle
+  font-weight: 500
   margin: auto
   margin-bottom: 40px
   max-width: 830px
@@ -150,10 +151,11 @@
   max-width: 945px
   position: relative
   .engageScreenshotHidden
-    box-shadow: 0 10px 36px 0 rgba(0,0,0,0.05)
+    box-shadow: 0 10px 36px 0 rgba(#000, 0.1)
     border-radius: 8px
     height: 100%
     overflow: hidden
+    position: relative
     img
       position: relative
       width: 100%
@@ -164,8 +166,8 @@
 .solutionSection
   background: #fff
   position: relative
-  padding-bottom: 360px
-  padding-top: 250px
+  padding-bottom: 200px
+  padding-top: 120px
   z-index: 2
   .container
     align-items: center
@@ -229,21 +231,47 @@
 
 .productList
   display: grid
-  grid-gap: 20px
   margin-bottom: 70px
   margin-top: 50px
 
 .productItem
-  align-items: center
   display: grid
-  grid-gap: 15px
-  grid-template-columns: auto 1fr
-  p
+  grid-gap: 5px
+  &:after
+    background: #E5EAF4
+    content: ""
+    display: block
+    height: 1px
+    margin: 30px 0
+    width: 150px
+  &:nth-child(1)
+    .label
+      background: rgba($primaryColor, 0.2)
+      color: $primaryColor
+  &:nth-child(2)
+    .label
+      background: rgba($secondaryColor, 0.2)
+      color: $secondaryColor
+  &:nth-child(3)
+    &:after
+      display: none
+    .label
+      background: rgba(#60E4FD, 0.2)
+      color: #60E4FD
+  .label
+    align-items: center
+    display: grid
+    font-size: 13px
+    font-weight: 600
+    height: 30px
+    justify-items: center
+    text-transform: uppercase
+    width: 85px
+  .productItemText
     color: $textColorOne
     font-size: 24px
+    letter-spacing: 0.2px
     font-wieght: 500
-  .premiumLabel
-    grid-column: 3
 
 .productVisual
   height: 100%
@@ -253,8 +281,10 @@
 
 .productVisualOval
   position: absolute
+  height: 550px
+  left: -120px
   top: -60px
-  left: -250px
+  width: 550px
 
 .productScreenshot
   height: 100%
@@ -263,73 +293,71 @@
   position: relative
   z-index: 2
 
+.wave
+  background: #F8FBFF
+  display: block
 
 // Section steps
 .stepsSection
+  padding-bottom: 100px
   position: relative
   .container
+    align-content: center
     display: grid
-    grid-template-columns: repeat(2, 50%)
-    padding-bottom: 400px
+    grid-auto-rows: max-content
+    height: 610px
+    padding-left: 45%
 
 .stepsVisual
-  align-items: center
-  display: flex
-  flex-direction: column
-  img
-    flex: 1
-    max-width: 80%
+  height: 100%
+  left: 0%
+  position: absolute
+  top: 0
+
+.stepsVisualScreenshot
+  border-radius: 8px
+  box-shadow: 0 10px 36px 0 rgba(0,0,0,0.05)
+  height: 610px
+  position: relative
+  z-index: 2
 
 .stepsList
   display: grid
   grid-gap: 40px
-  margin-top: 50px
+  margin-bottom: 50px
+  margin-top: 40px
 
 .stepsItem
+  align-items: center
   display: grid
+  grid-template-columns: 50px 1fr
   gap: 0 20px
-  grid-template-columns: 48px 1fr
+  &:nth-child(1)
+    .stepsItemNumber
+      background: rgba($primaryColor, 0.2)
+      color: $primaryColor
+  &:nth-child(2)
+    .stepsItemNumber
+      background: rgba($secondaryColor, 0.2)
+      color: $secondaryColor
+  &:nth-child(3)
+    .stepsItemNumber
+      background: rgba(#60E4FD, 0.2)
+      color: #60E4FD
 
 .stepsItemNumber
   align-items: center
-  border: 1px solid rgba($primaryColor, 0.3)
-  border-radius: 50%
+  border-radius: 4px
   display: flex
-  height: 48px
+  font-size: 32px
+  font-weight: 900
+  height: 50px
   justify-content: center
-  width: 48px
-  span
-    align-items: center
-    background: $primaryColor
-    border-radius: 50%
-    box-shadow: 0 10px 15px 0 rgba(21,37,71,0.15)
-    color: #fff
-    display: flex
-    font-size: 16px
-    font-weight: 600
-    height: 36px
-    justify-content: center
-    width: 36px
-
-.stepsItemTitle
-  align-self: center
-  color: $textColorOne
-  font-size: 22px
-  font-weight: 600
+  width: 50px
 
 .stepsItemText
-  color: $textColorThree
-  font-size: 18px
-  line-height: 32px
-  grid-column: 2
-
-.stepsWave
-  background: #F8FBFF
-  bottom: -1px
-  left: 0
-  position: absolute
-  width: 100%
-  z-index: 3
+  color: $textColorTwo
+  font-size: 24px
 
 
 // Section plans
@@ -346,6 +374,7 @@
 
 .plansSubtitle
   @extend .sectionSubtitleCenter
+  display: block
   margin-left: auto
   margin-right: auto
   max-width: 700px
@@ -353,93 +382,111 @@
 .plansList
   align-items: flex-end
   display: grid
-  grid-gap: 30px
-  grid-template-columns: repeat(3, 1fr)
+  grid-gap: 20px
+  grid-template-columns: repeat(4, 1fr)
   margin-top: 70px
 
-.planRecommended
+.planBusiness
+  .planColorBanner
+    background: $secondaryColor
   .planContent
-    border-radius: 0 0 8px 8px
+    border-radius: 0 0 4px 4px
+    border: 2px solid $secondaryColor
     .planPrice
-      p
+      .planPriceValue
         color: $secondaryColor
 
-.planPremium
+.planTeams
+  .planColorBanner
+    background: $primaryColor
   .planContent
+    border-radius: 0 0 4px 4px
+    border: 2px solid $primaryColor
     .planPrice
-      p
+      .planPriceValue
         color: $primaryColor
 
 .planContent
+  background: #fff
+  border: 1px solid rgba(95,89,247,0.2)
+  border-radius: 4px
+  box-shadow: 0 9px 31px 0 rgba(#000, 0.03)
+  display: grid
+  grid-template-rows: auto auto 1fr auto
+  height: 580px
+  padding: 35px
   a
     margin: auto
   .creditCardNotRequired
+    height: 20px
     margin-top: 20px
+  
 
-.planContent
-  background: #fff
-  border-radius: 8px
-  padding: 50px 40px
-
-.planRecommendedLabel
-  align-items: center
-  background: $secondaryColor
-  border-radius: 8px 8px 0 0
-  color: #fff
-  display: flex
-  font-size: 18px
-  font-weight: 600
-  justify-content: center
-  height: 50px
-  text-transform: uppercase
-
-.planPrice
-  align-items: baseline
-  display: flex
-  margin-bottom: 30px
-  p
-    color: $textColorOne
-    font-family: 'hk_groteskbold'
-    font-size: 45px
-    margin-right: 10px
-  span
-    color: $textColorThree
-    font-size: 18px
+.planColorBanner
+  border-radius: 4px 4px 0 0
+  height: 30px
 
 .planTitle
   color: $textColorOne
   font-family: 'hk_groteskbold'
-  font-size: 26px
+  font-size: 20px
   font-weight: 600
   letter-spacing: 0.2px
+  line-height: 28px
   margin-bottom: 15px
 
-.planText
-  color: $textColorThree
-  font-size: 18px
-  line-height: 31px
-  &:after
-    background: #E5EAF4
-    content: ""
-    display: block
-    height: 1px
-    margin: 30px 0
-    width: 100%
+.planPrice
+  align-items: flex-start
+  display: grid
+  grid-gap: 5px
+  grid-template-columns: auto 1fr
+  margin-bottom: 30px
+  .planPriceValue
+    color: $textColorTwo
+    font-family: 'hk_groteskbold'
+    font-size: 40px
+    line-height: 33px
+  .planPriceText
+    font-size: 14px
+    line-height: 17px
+    span
+      color: #B3BAC5
 
 .planDetails
   display: grid
-  grid-gap: 25px
-  grid-template-rows: repeat(4, 1fr)
-  margin-bottom: 60px
+  grid-auto-rows: max-content
+  grid-gap: 20px
+  margin-bottom: 40px
+  padding: 40px 0
+  position: relative
+  &:before, &:after
+    background: #E5EAF4
+    content: ""
+    height: 1px
+    left: 50%
+    transform: translateX(-50%)
+    position: absolute
+    width: 120px
+  &:before
+    top: 0
+  &:after
+    bottom: 0
+  .advanced
+    display: flex
+    align-items: center
+    justify-content: center
 
 .planDetailsItem
   align-items: center
   display: grid
-  grid-gap: 12px
+  grid-gap: 10px
   grid-template-columns: auto 1fr
+  height: max-content
+  img
+    width: 22px
   p
-    color: $textColorOne
-    font-size: 18px
+    color: $textColorTwo
+    font-size: 14px
 
 
 // Section try it
@@ -472,36 +519,42 @@
 
 // Footer
 .footer
-  padding: 120px 0
+  padding: 60px 0
   .container
+    align-items: center
     display: grid
-    gap: 45px 30px
-    grid-template-columns: repeat(3, 1fr)
+    gap: 0px 30px
+    grid-template-columns: 200px 1fr 200px
 
-.footerLinksTitle
-  color: $textColorThree
-  font-size: 18px
-  font-weight: 600
-  margin-bottom: 30px
-
+.footerLogo
+  height: 45px
+  
 .footerLinks
   display: grid
-  gap: 25px
-  grid-template-columns: repeat(2, auto)
-
-.footerLinksItem
-  color: #959EAD
-  font-size: 16px
-  text-decoration: none
+  grid-auto-flow: column
+  grid-gap: 50px
+  justify-content: center
+  a
+    color: $textColorTwo
+    font-size: 14px
+    font-weight: 500
 
 .footerSocials
   align-items: center
   display: grid
-  grid-gap: 30px
-  grid-template-columns: repeat(4, 25px)
-  margin-bottom: 35px
+  grid-gap: 25px
+  grid-template-columns: repeat(4, 26px)
+  justify-content: flex-end
+  justify-items: center
 
 .copyright
-  color: $textColorThree
-  font-size: 16px
+  color: $textColorTwo
+  border-top: 1px solid rgba(24,59,86,0.1)
+  font-size: 12px
   font-weight: 500
+  grid-column-start: 1
+  grid-column-end: 4
+  grid-row: 2
+  margin-top: 30px
+  padding-top: 30px
+  text-align: center

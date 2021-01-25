@@ -19,7 +19,7 @@ const PopupQuitShare = ({ onDone }) => {
         <Button
           onClick={onDone}
         >
-          Save & Quit
+          Save & Close
         </Button>
         <Button
           onClick={hidePopup}
