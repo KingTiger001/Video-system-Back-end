@@ -48,7 +48,7 @@ const Campaigns = ({ initialCampaignsDraft, initialCampaignsShared, me }) => {
     if (!value) {
       return '00:00'
     }
-    const t = dayjs.duration(parseInt(value, 10))
+    const t = dayjs.duration(parseInt(Math.round(value), 10))
     const m = t.minutes()
     const s = t.seconds()
     return `${m < 10 ? `0${m}` : m}:${s < 10 ? `0${s}` : s}`
