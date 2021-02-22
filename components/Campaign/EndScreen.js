@@ -15,10 +15,12 @@ const EndScreen = ({ data = {} }) => {
 
   useEffect(() => {
     const handleResize = () => {
-      setTitleResponsiveFontSize(ref.current.offsetWidth * (data.title.fontSize / 1000))
-      setSubtitleResponsiveFontSize(ref.current.offsetWidth * (data.subtitle.fontSize / 1000))
-      setEmailResponsiveFontSize(ref.current.offsetWidth * (data.email.fontSize / 1000))
-      setPhoneResponsiveFontSize(ref.current.offsetWidth * (data.phone.fontSize / 1000))
+      if (ref.current) {
+        setTitleResponsiveFontSize(ref.current.offsetWidth * (data.title.fontSize / 1000))
+        setSubtitleResponsiveFontSize(ref.current.offsetWidth * (data.subtitle.fontSize / 1000))
+        setEmailResponsiveFontSize(ref.current.offsetWidth * (data.email.fontSize / 1000))
+        setPhoneResponsiveFontSize(ref.current.offsetWidth * (data.phone.fontSize / 1000))
+      }
     }
     if (ref.current) {
       setTimeout(() => {
@@ -73,7 +75,7 @@ const EndScreen = ({ data = {} }) => {
         <Button
           target="blank"
           type="link"
-          href={`https://${data.button.href.replace('https://', '')}` || ''}
+          href={data.button.href ? `https://${data.button.href.replace('https://', '')}` : ''}
           color="white"
         >
           {data.button.value}
