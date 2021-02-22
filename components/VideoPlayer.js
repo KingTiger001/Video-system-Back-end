@@ -38,6 +38,13 @@ const VideoPlayer = ({ data = {}, onPause = () => {}, onPlay = () => {} }) => {
       || (!isPlaying && progression !== 0)
     ) {
       clearInterval(interval)
+    } else if ((progression > helloScreen.duration) && (progression < (duration - endScreen.duration)) && isPlaying) {
+      interval = setInterval(() => {
+        dispatch({
+          type: 'videoPlayer/SET_PROGRESSION',
+          data: helloScreen.duration + (videoRef.currentTime * 1000),
+        });
+      }, 50);
     } else if (isPlaying) {
       interval = setInterval(() => {
         dispatch({
@@ -46,6 +53,7 @@ const VideoPlayer = ({ data = {}, onPause = () => {}, onPlay = () => {} }) => {
         });
       }, 50);
     }
+    console.log('prog', (progression - helloScreen.duration) / 1000, videoRef.currentTime, videoRef.duration)
     if (progression >= duration) {
       dispatch({ type: 'videoPlayer/PAUSE' })
     }
@@ -61,8 +69,8 @@ const VideoPlayer = ({ data = {}, onPause = () => {}, onPlay = () => {} }) => {
       videoRef.pause()
       onPause()
     } else if (Object.keys(videoRef).length > 0 && !videoRef.paused && (progression < helloScreen.duration || progression > duration - endScreen.duration)) {
-      videoRef.currenTime = 0
       videoRef.pause()
+      videoRef.currenTime = 0
       onPause()
     } else if (Object.keys(videoRef).length > 0 && videoRef.paused && progression > helloScreen.duration && progression < duration - endScreen.duration && isPlaying) {
       videoRef.play()
@@ -92,7 +100,7 @@ const VideoPlayer = ({ data = {}, onPause = () => {}, onPlay = () => {} }) => {
       if (Object.keys(videoRef).length > 0) {
         videoRef.addEventListener('playing', handlePlaying)
         videoRef.addEventListener('seeking', handleSeeking)
-        const currentTime = (progression - helloScreen.duration) / 1000
+        const currentTime = Math.round(progression - helloScreen.duration) / 1000
         videoRef.currentTime = currentTime > 0 ? currentTime : 0 
       }
     } else {
@@ -117,7 +125,7 @@ const VideoPlayer = ({ data = {}, onPause = () => {}, onPlay = () => {} }) => {
     dispatch({ type: 'videoPlayer/SET_PROGRESSION', data: progression })
     if (Object.keys(videoRef).length > 0) {
       const currentTime = (progression - helloScreen.duration) / 1000
-      videoRef.currentTime = currentTime > 0 ? currentTime : 0 
+      videoRef.currentTime = currentTime > 0 ? currentTime : 0
     }
   }
 
