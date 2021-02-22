@@ -30,6 +30,7 @@ const Campaign = ({ me }) => {
   const popup = useSelector(state => state.popup)
   const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
   
+  const campaign = useSelector(state => state.campaign)
   const duration = useSelector(state => state.campaign.duration)
   const endScreen = useSelector(state => state.campaign.endScreen)
   const hasChanges = useSelector(state => state.campaign.hasChanges)
