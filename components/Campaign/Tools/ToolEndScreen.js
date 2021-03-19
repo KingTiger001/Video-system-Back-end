@@ -7,7 +7,7 @@ import { mainAPI } from '@/plugins/axios'
 
 import Button from '@/components/Button'
 import InputNumber from '@/components/InputNumber'
-import InputStyle from '@/components/Campaign/InputStyle'
+import InputWithTools from '@/components/Campaign/InputWithTools'
 import PopupDeleteEndScreen from '@/components/Popups/PopupDeleteEndScreen'
 import PopupDeleteDraftEndScreen from '@/components/Popups/PopupDeleteDraftEndScreen'
 
@@ -27,7 +27,6 @@ const ToolEndScreen = () => {
   const previewEndScreen = useSelector(state => state.campaign.previewEndScreen)
 
   const [displayFormEndScreen, showFormEndScreen] = useState(false)
-  const [error, setError] = useState('')
 
   const addEndScreenToLibrary = async () => {
     try {
@@ -38,12 +37,6 @@ const ToolEndScreen = () => {
       getEndScreenList()
     } catch (err) {
       console.log(err)
-    }
-  }
-
-  const checkFormErrors = () => {
-    if (!endScreen.duration) {
-      throw new Error('A duration must be set.')
     }
   }
 
@@ -166,20 +159,24 @@ const ToolEndScreen = () => {
             </div>
             <div className={styles.toolSection}>
               <label className={styles.toolLabel}>Text line 1</label>
-              <InputStyle
+              <InputWithTools
                 dispatchType="CHANGE_END_SCREEN"
                 object={endScreen}
                 objectName="endScreen"
                 property="title"
+                toolStyle={true}
+                toolVariables={true}
               />
             </div>
             <div className={styles.toolSection}>
               <label className={styles.toolLabel}>Text line 2</label>
-              <InputStyle
+              <InputWithTools
                 dispatchType="CHANGE_END_SCREEN"
                 object={endScreen}
                 objectName="endScreen"
                 property="subtitle"
+                toolStyle={true}
+                toolVariables={true}
               />
             </div>
             <div className={styles.toolSection}>
@@ -236,20 +233,22 @@ const ToolEndScreen = () => {
             </div>
             <div className={styles.toolSection}>
               <label className={styles.toolLabel}>Email</label>
-              <InputStyle
+              <InputWithTools
                 dispatchType="CHANGE_END_SCREEN"
                 object={endScreen}
                 objectName="endScreen"
                 property="email"
+                toolStyle={true}
               />
             </div>
             <div className={styles.toolSection}>
               <label className={styles.toolLabel}>Phone</label>
-              <InputStyle
+              <InputWithTools
                 dispatchType="CHANGE_END_SCREEN"
                 object={endScreen}
                 objectName="endScreen"
                 property="phone"
+                toolStyle={true}
               />
             </div>
             {/* //TODO: FINISH THIS */}

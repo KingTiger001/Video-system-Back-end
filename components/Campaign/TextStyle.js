@@ -16,9 +16,8 @@ const TextStyle = ({
   },
   initialValues = {},
   onChange,
-  onClose,
 }) => {
-  const [display, show] = useState(initialValues.displayOptions)
+  const [display, show] = useState(initialValues.displayStyle)
 
   const [color, setColor] = useState(initialValues.color)
   const [fontSize, setFontSize] = useState(initialValues.fontSize)
@@ -61,7 +60,7 @@ const TextStyle = ({
   useEffect(() => {
     onChange({
       color,
-      displayOptions: display,
+      displayStyle: display,
       fontSize,
       fontWeight,
       letterSpacing,

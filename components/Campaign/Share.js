@@ -31,6 +31,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
   })
   const [lists, setLists] = useState({})
   const [listsSelected, setListsSelected] = useState([])
+  const [mounted, setMounted] = useState(false)
   const [shareLoading, setShareLoading] = useState(false)
   const [step, setStep] = useState(1)
   const [stepOneError, setStepOneError] = useState('')
@@ -38,7 +39,26 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
   const [stepThreeError, setStepThreeError] = useState('')
   const [thumbnailLoading, setThumbnailLoading] = useState(false)
 
-  const refFormDetails = useRef(null)
+  const [displayPopupVariable, showPopupVariables] = useState(false)
+  const [variable, setVariable] = useState('firstName')
+
+  const formDetailsRef = useRef(null)
+  const textareaMessageRef = useRef(null)
+  const variablesPopupRef = useRef(null)
+
+  // Close click outside text style
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (variablesPopupRef.current && !variablesPopupRef.current.contains(event.target)) {
+        setVariable(false)
+        showPopupVariables(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    };
+  }, [variablesPopupRef])
 
   // mounted
   useEffect(() => {
@@ -48,23 +68,27 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
   }, []);
 
   useEffect(() => {
-    if (campaign.share && (campaign.share.contacts || campaign.share.lists)) {
+    if (campaign.share && campaign.share.contacts && campaign.share.lists && (campaign.share.contacts.length > 0 || campaign.share.lists.length > 0)) {
       setStep(3)
     } else if (campaign.share && campaign.share.from && campaign.share.message && campaign.share.subject) {
       setStep(2)
     }
-  }, [campaign]);
+  }, [mounted]);
 
   const getCampaign = async () => {
     const { data: campaign } = await mainAPI.get(`/campaigns/${campaignId}`)
+    if (campaign.share && campaign.share.contacts) {
+      campaign.share.contacts = campaign.share.contacts.map(c => c._id)
+    }
     setCampaign(campaign)
     setFormDetails({
-      from: campaign.share ? campaign.share.from : FROM,
+      from: FROM,
       message: campaign.share ? campaign.share.message : '',
-      subject: campaign.share ? campaign.share.subject : SUBJECT,
+      subject: SUBJECT,
     })
     setContactsSelected(campaign.share && campaign.share.contacts ? campaign.share.contacts : [])
     setListsSelected(campaign.share && campaign.share.lists ? campaign.share.lists : [])
+    setMounted(true)
   }
   const getContacts = async () => {
     const { data: contacts } = await mainAPI.get(`/users/me/contacts?pagination=false`)
@@ -119,6 +143,17 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
     ])
   }
 
+  const insertVariableInMessage = () => {
+    const cursorPosition = textareaMessageRef.current.selectionStart
+    const value = textareaMessageRef.current.value
+    setFormDetails({
+      ...formDetails,
+      message: `${value.substring(0, cursorPosition)}{{${variable}}}${value.substring(cursorPosition, value.length)}`,
+    })
+    showPopupVariables(false)
+    setVariable('firstName')
+  }
+
   const next = async () => {
     try {
       switch (step) {
@@ -148,8 +183,8 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
   }
 
   const stepOne = async () => {
-    if (!refFormDetails.current.checkValidity()) {
-      throw refFormDetails.current.reportValidity()
+    if (!formDetailsRef.current.checkValidity()) {
+      throw formDetailsRef.current.reportValidity()
     }
     try {
       const { data: campaignUpdated } = await mainAPI.patch(`/campaigns/${campaignId}`, {
@@ -346,7 +381,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
           { step === 1 && 
             <form
               className={styles.stepOne}
-              ref={refFormDetails}
+              ref={formDetailsRef}
             >
               <p className={styles.title}>Details</p>
               {/* <div>
@@ -374,12 +409,48 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
                 />
               </div> */}
               <div>
-                <label>Your message*</label>
+                <div className={styles.detailsMessageHeader}>
+                  <label>Your message*</label>
+                  <span
+                    className={styles.addVariable}
+                    onClick={() => showPopupVariables(true)}
+                  >
+                    Add variable
+                  </span>
+                  { displayPopupVariable &&
+                    <div
+                      className={styles.popupVariables}
+                      ref={variablesPopupRef}
+                    >
+                      <label>Variables</label>
+                      <select
+                        onChange={(e) => setVariable(e.target.value)}
+                        defaultValue={variable}
+                      >
+                        <option value="firstName">First name</option>
+                        <option value="lastName">Last name</option>
+                        <option value="job">Job title</option>
+                        <option value="company">Company</option>
+                        <option value="city">City</option>
+                        <option value="email">Email</option>
+                        <option value="phone">Phone number</option>
+                      </select>
+                      <Button
+                        onClick={() => insertVariableInMessage(variable)}
+                        size="small"
+                        type="div"
+                      >
+                        Add
+                      </Button>
+                    </div>
+                  }
+                </div>
                 <textarea
                   onChange={(e) => setFormDetails({
                     ...formDetails,
                     message: e.target.value,
                   })}
+                  ref={textareaMessageRef}
                   required
                   type="text"
                   value={formDetails.message}

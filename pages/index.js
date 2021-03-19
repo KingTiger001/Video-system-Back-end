@@ -92,7 +92,7 @@ const Index = () => {
                 type="link"
                 width={240}
               >
-                Start 7 Days Free Trial
+                Start 14 Days Free Trial
               </Button>
               <Button
                 href="/"
@@ -169,7 +169,7 @@ const Index = () => {
                 type="link"
                 width={240}
               >
-                Start 7 Days Free Trial
+                Start 14 Days Free Trial
               </Button>
             </div>
           </section>
@@ -199,7 +199,7 @@ const Index = () => {
                 type="link"
                 width={240}
               >
-                Start 7 Days Free Trial
+                Start 14 Days Free Trial
               </Button>
               <div className={styles.productVisual}>
                 <img
@@ -249,7 +249,7 @@ const Index = () => {
               type="link"
               width={240}
             >
-              Start 7 Days Free Trial
+              Start 14 Days Free Trial
             </Button>
           </div>
         </section>
@@ -265,61 +265,34 @@ const Index = () => {
               <h3 className={styles.plansTitle}>Choose the plan that’s right<br/>for your business</h3>
               <span className={styles.plansSubtitle}>Boost productivity and reshape remote interactions.</span>
               <ul className={styles.plansList}>
-                <li>
-                  <div className={styles.planContent}>
-                    <p className={styles.planTitle}>Free</p>
-                    <div className={styles.planPrice}>
-                      <p className={styles.planPriceValue}>$0</p>
-                    </div>
-                    <ul className={styles.planDetails}>
-                      <li className={styles.planDetailsItem}>
-                        <img src="/assets/home/planCheckBlue.svg" />
-                        <p>Record a video message</p>
-                      </li>
-                      <li className={styles.planDetailsItem}>
-                        <img src="/assets/home/planCheckBlue.svg" />
-                        <p>Share your video</p>
-                      </li>
-                      <li className={styles.planDetailsItem}>
-                        <img src="/assets/home/planCheckBlue.svg" />
-                        <p>FOMO branding</p>
-                      </li>
-                    </ul>
-                    <Button
-                      href="/signup"
-                      outline={true}
-                      type="link"
-                      width={160}
-                    >
-                      Try it free
-                    </Button>
-                    <p className={styles.creditCardNotRequired}>No credit card required</p>
-                  </div>
-                </li>
                 <li className={styles.planBusiness}>
                   <div className={styles.planColorBanner} />
                   <div className={styles.planContent}>
                     <p className={styles.planTitle}>Business</p>
                     <div className={styles.planPrice}>
-                      <p className={styles.planPriceValue}>$70</p>
+                      <p className={styles.planPriceValue}>$30</p>
                       <p className={styles.planPriceText}>per user/month<br/><span>billed annually</span></p>
                     </div>
                     <ul className={styles.planDetails}>
                       <li className={styles.planDetailsItem}>
                         <img src="/assets/home/planCheckSecondary.svg" />
-                        <p>Analytics</p>
+                        <p>Sharing one to one</p>
                       </li>
                       <li className={styles.planDetailsItem}>
                         <img src="/assets/home/planCheckSecondary.svg" />
-                        <p>Dashboard</p>
+                        <p>1 logo</p>
                       </li>
                       <li className={styles.planDetailsItem}>
                         <img src="/assets/home/planCheckSecondary.svg" />
-                        <p>Add your logo</p>
+                        <p>Simple analytics</p>
                       </li>
                       <li className={styles.planDetailsItem}>
                         <img src="/assets/home/planCheckSecondary.svg" />
-                        <p>Create a call-to-action<br/>in your videos</p>
+                        <p>Reply by email or video</p>
+                      </li>
+                      <li className={styles.planDetailsItem}>
+                        <img src="/assets/home/planCheckSecondary.svg" />
+                        <p>CTA</p>
                       </li>
                     </ul>
                     <Button
@@ -336,27 +309,31 @@ const Index = () => {
                 <li className={styles.planTeams}>
                   <div className={styles.planColorBanner} />
                   <div className={styles.planContent}>
-                    <p className={styles.planTitle}>Business</p>
+                    <p className={styles.planTitle}>Pro</p>
                     <div className={styles.planPrice}>
-                      <p className={styles.planPriceValue}>$240</p>
+                      <p className={styles.planPriceValue}>$95</p>
                       <p className={styles.planPriceText}>per user/month<br/><span>billed annually</span></p>
                     </div>
                     <ul className={styles.planDetails}>
                       <li className={styles.planDetailsItem}>
                         <img src="/assets/home/planCheckPrimary.svg" />
-                        <p>Start Screen Automation</p>
+                        <p>Mass sending</p>
                       </li>
                       <li className={styles.planDetailsItem}>
                         <img src="/assets/home/planCheckPrimary.svg" />
-                        <p>Prompter</p>
+                        <p>2 logos</p>
                       </li>
                       <li className={styles.planDetailsItem}>
                         <img src="/assets/home/planCheckPrimary.svg" />
-                        <p>Subtitles</p>
+                        <p>Full analytics</p>
                       </li>
                       <li className={styles.planDetailsItem}>
                         <img src="/assets/home/planCheckPrimary.svg" />
-                        <p>Enhanced storage</p>
+                        <p>Customized automation for mass sending</p>
+                      </li>
+                      <li className={styles.planDetailsItem}>
+                        <img src="/assets/home/planCheckPrimary.svg" />
+                        <p>Integrations</p>
                       </li>
                     </ul>
                     <Button
@@ -364,14 +341,14 @@ const Index = () => {
                       type="link"
                       width={160}
                     >
-                      Contact us
+                      Try it free
                     </Button>
-                    <p className={styles.creditCardNotRequired}></p>
+                    <p className={styles.creditCardNotRequired}>No credit card required</p>
                   </div>
                 </li>
                 <li>
                   <div className={styles.planContent}>
-                    <p className={styles.planTitle}>Elite</p>
+                    <p className={styles.planTitle}>5+ Users Enterprise</p>
                     <div className={styles.planPrice}>
                       <p className={styles.planPriceValue}>Contact us</p>
                     </div>

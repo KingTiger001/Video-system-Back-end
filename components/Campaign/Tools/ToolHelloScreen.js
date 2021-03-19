@@ -7,7 +7,7 @@ import { mainAPI } from '@/plugins/axios'
 
 import Button from '@/components/Button'
 import InputNumber from '@/components/InputNumber'
-import InputStyle from '@/components/Campaign/InputStyle'
+import InputWithTools from '@/components/Campaign/InputWithTools'
 import PopupDeleteHelloScreen from '@/components/Popups/PopupDeleteHelloScreen'
 import PopupDeleteDraftHelloScreen from '@/components/Popups/PopupDeleteDraftHelloScreen'
 
@@ -27,7 +27,6 @@ const ToolHelloScreen = () => {
   const previewHelloScreen = useSelector(state => state.campaign.previewHelloScreen)
 
   const [displayFormHelloScreen, showFormHelloScreen] = useState(false)
-  const [error, setError] = useState('')
 
   const addHelloScreenToLibrary = async () => {
     try {
@@ -38,12 +37,6 @@ const ToolHelloScreen = () => {
       getHelloScreenList()
     } catch (err) {
       console.log(err)
-    }
-  }
-
-  const checkFormErrors = () => {
-    if (!helloScreen.duration) {
-      throw new Error('A duration must be set.')
     }
   }
 
@@ -123,20 +116,24 @@ const ToolHelloScreen = () => {
             </div>
             <div className={styles.toolSection}>
               <label className={styles.toolLabel}>Text line 1</label>
-              <InputStyle
+              <InputWithTools
                 dispatchType="CHANGE_HELLO_SCREEN"
                 object={helloScreen}
                 objectName="helloScreen"
                 property="title"
+                toolStyle={true}
+                toolVariables={true}
               />
             </div>
             <div className={styles.toolSection}>
               <label className={styles.toolLabel}>Text line 2</label>
-              <InputStyle
+              <InputWithTools
                 dispatchType="CHANGE_HELLO_SCREEN"
                 object={helloScreen}
                 objectName="helloScreen"
                 property="subtitle"
+                toolStyle={true}
+                toolVariables={true}
               />
             </div>
             <div className={styles.toolSection}>
@@ -156,7 +153,6 @@ const ToolHelloScreen = () => {
                 max={10}
               />
             </div>
-            {error && <p className={styles.error}>{error}</p>}
             <Button
               onClick={addHelloScreenToLibrary}
               outline={true}

@@ -1,9 +1,9 @@
+import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import ContentEditable from 'react-contenteditable'
-import AutosizeInput from 'react-input-autosize'
 import { toast } from 'react-toastify'
 
 import withAuthServerSideProps from '@/hocs/withAuthServerSideProps'
@@ -33,7 +33,6 @@ const Campaign = ({ me }) => {
   const campaign = useSelector(state => state.campaign)
   const duration = useSelector(state => state.campaign.duration)
   const endScreen = useSelector(state => state.campaign.endScreen)
-  const hasChanges = useSelector(state => state.campaign.hasChanges)
   const helloScreen = useSelector(state => state.campaign.helloScreen)
   const logo = useSelector(state => state.campaign.logo)
   const name = useSelector(state => state.campaign.name)
@@ -129,6 +128,10 @@ const Campaign = ({ me }) => {
       onMouseMove={(e) => timelineDraggable && seekTo(e)}
       ref={ref}
     >
+      <Head>
+        <title>Edit my video campaign | FOMO</title>
+      </Head>
+
       { popup.display === 'UPLOAD_VIDEO' && 
         <PopupUploadVideo
           onDone={() => {

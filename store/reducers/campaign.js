@@ -4,7 +4,8 @@ const defaultHelloScreen = {
   name: 'Draft',
   title: {
     color: '#fff',
-    displayOptions: false,
+    displayStyle: false,
+    displayVariables: false,
     fontSize: 50,
     fontWeight: 700,
     letterSpacing: 0,
@@ -14,7 +15,8 @@ const defaultHelloScreen = {
   },
   subtitle: {
     color: '#fff',
-    displayOptions: false,
+    displayStyle: false,
+    displayVariables: false,
     fontSize: 35,
     fontWeight: 400,
     letterSpacing: 0,
@@ -30,7 +32,7 @@ const defaultEndScreen = {
   name: 'Draft',
   title: {
     color: '#fff',
-    displayOptions: false,
+    displayStyle: false,
     fontSize: 50,
     fontWeight: 700,
     letterSpacing: 0,
@@ -40,7 +42,7 @@ const defaultEndScreen = {
   },
   subtitle: {
     color: '#fff',
-    displayOptions: false,
+    displayStyle: false,
     fontSize: 35,
     fontWeight: 400,
     letterSpacing: 0,
@@ -54,14 +56,14 @@ const defaultEndScreen = {
   },
   email: {
     color: '#fff',
-    displayOptions: false,
+    displayStyle: false,
     fontSize: 16,
     fontWeight: 400,
     value: '',
   },
   phone: {
     color: '#fff',
-    displayOptions: false,
+    displayStyle: false,
     fontSize: 16,
     fontWeight: 400,
     value: '',

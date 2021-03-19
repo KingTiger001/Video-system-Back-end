@@ -403,8 +403,10 @@
 .plansList
   align-items: flex-end
   display: grid
+  grid-auto-flow: column
+  justify-content: center
+  grid-template-columns: repeat(3, 280px)
   grid-gap: 20px
-  grid-template-columns: repeat(4, 1fr)
   margin-top: 70px
 
 .planBusiness

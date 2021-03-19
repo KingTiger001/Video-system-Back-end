@@ -1,9 +1,7 @@
+import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useRef, useState } from 'react'
-import { useBeforeunload } from 'react-beforeunload'
-
-import withAuthServerSideProps from '@/hocs/withAuthServerSideProps'
 
 import { mainAPI } from '@/plugins/axios'
 
@@ -22,6 +20,8 @@ const Campaign = ({ campaign }) => {
   const [viewDuration, setViewDuration] = useState(-1)
   const viewDurationRef = useRef()
   const [isPlaying, setIsPlaying] = useState(false)
+
+  const contact = campaign.share.contacts.find(c => c._id === contactId)
 
   useEffect(() => {
     sessionId.current = Math.floor(Math.random() * Date.now())
@@ -73,6 +73,9 @@ const Campaign = ({ campaign }) => {
 
   return (
     <div className={styles.campaign}>
+      <Head>
+        <title>{campaign.user.firstName} from {campaign.user.company} sent you a video message | FOMO</title>
+      </Head>
 
       <div className={styles.header}>
         <div className={styles.container}>
@@ -93,6 +96,7 @@ const Campaign = ({ campaign }) => {
       <div className={styles.content}>
         <h1 className={styles.title}>{campaign.user.firstName} from {campaign.user.company} sent you a video message</h1>
         <VideoPlayer
+          contact={contact}
           data={campaign}
           onPlay={() => setIsPlaying(true)}
           onPause={() => setIsPlaying(false)}

@@ -24,8 +24,6 @@ import layoutStyles from '@/styles/layouts/App.module.sass'
 import styles from '@/styles/pages/app/campaigns.module.sass'
 
 const Campaigns = ({ initialCampaignsDraft, initialCampaignsShared, me }) => {
-  const router = useRouter()
-  
   const dispatch = useDispatch()
   const popup = useSelector(state => state.popup)
   const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
@@ -127,7 +125,7 @@ const Campaigns = ({ initialCampaignsDraft, initialCampaignsShared, me }) => {
   return (
     <AppLayout>
       <Head>
-        <title>Campaigns | FOMO</title>
+        <title>Videos campaigns | FOMO</title>
       </Head>
       
       { popup.display === 'DELETE_CAMPAIGN' && 
@@ -168,7 +166,7 @@ const Campaigns = ({ initialCampaignsDraft, initialCampaignsShared, me }) => {
       <div className={layoutStyles.container}>
         <div className={layoutStyles.header}>
           <div className={layoutStyles.headerTop}>
-            <h1 className={layoutStyles.headerTitle}>My video campaigns</h1>
+            <h1 className={layoutStyles.headerTitle}>My videos campaigns</h1>
           </div>
         </div>
         

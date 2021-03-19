@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 
 import styles from '@/styles/components/Campaign/HelloScreen.module.sass'
 
-const HelloScreen = ({ data = {} }) => {
+const HelloScreen = ({ contact, data = {} }) => {
   const ref = useRef()
   
   const [titleResponsiveFontSize, setTitleResponsiveFontSize] = useState(0)
@@ -10,8 +10,10 @@ const HelloScreen = ({ data = {} }) => {
 
   useEffect(() => {
     const handleResize = () => {
-      setTitleResponsiveFontSize(ref.current.offsetWidth * (data.title.fontSize / 1000))
-      setSubtitleResponsiveFontSize(ref.current.offsetWidth * (data.subtitle.fontSize / 1000))
+      if (ref.current) {
+        setTitleResponsiveFontSize(ref.current.offsetWidth * (data.title.fontSize / 1000))
+        setSubtitleResponsiveFontSize(ref.current.offsetWidth * (data.subtitle.fontSize / 1000))
+      }
     }
     if (ref.current) {
       setTimeout(() => {
@@ -25,6 +27,20 @@ const HelloScreen = ({ data = {} }) => {
       }
     }
   }, [ref, data])
+
+  const replaceVariables = (text) => {
+    if (!contact) {
+      return text
+    }
+    const matches = text.match(/(?:\{\{)(.*?)(?:\}\})/gi)
+    if (!matches || matches.length <= 0) {
+      return text
+    }
+    matches.map(match => {
+      text = text.replace(match, contact[match.replace(/{|}/g, '')])
+    })
+    return text
+  }
 
   return Object.keys(data).length > 1 &&
     <div
@@ -44,7 +60,7 @@ const HelloScreen = ({ data = {} }) => {
             ...(data.title.letterSpacing > 0 && { paddingLeft: data.title.letterSpacing }),
           }}
         >
-          {data.title.value}
+          {replaceVariables(data.title.value)}
         </p>
       }
       { data.subtitle.value &&
@@ -59,7 +75,7 @@ const HelloScreen = ({ data = {} }) => {
             ...(data.subtitle.letterSpacing > 0 && { paddingLeft: data.subtitle.letterSpacing }),
           }}
         >
-          {data.subtitle.value}
+          {replaceVariables(data.subtitle.value)}
         </p>
       }
     </div>

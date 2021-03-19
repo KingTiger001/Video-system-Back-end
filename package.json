@@ -26,6 +26,7 @@
     "react-dom": "^16.14.0",
     "react-input-autosize": "^3.0.0",
     "react-paginate": "^6.5.0",
+    "react-player": "^2.9.0",
     "react-redux": "^7.2.1",
     "react-scroll": "^1.8.1",
     "react-toastify": "^6.0.9",

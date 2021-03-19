@@ -176,18 +176,17 @@ const VideoPlayer = ({ data = {}, onPause = () => {}, onPlay = () => {} }) => {
         ref={playerRef}
         style={{ height }}
       >
-        { video && Object.keys(video).length > 0 &&
-          <video
-            height="100%"
-            key={video.url}
-            ref={videoRefCb}
-            src={video.url}
-            style={{
-              display: progression > helloScreen.duration && progression < duration - endScreen.duration ? 'block' : 'none'
-            }}
-            width="100%"
-          />
-        }
+        <video
+          className={styles.videoElement}
+          height="100%"
+          key={video.url}
+          ref={videoRefCb}
+          src={video.url}
+          // style={{
+          //   display: progression > helloScreen.duration && progression < duration - endScreen.duration ? 'block' : 'none'
+          // }}
+          width="100%"
+        />
         {helloScreen && Object.keys(helloScreen).length > 0 && progression < helloScreen.duration && <HelloScreen data={helloScreen}/>}
         {endScreen && Object.keys(endScreen).length > 0 && progression >= duration - endScreen.duration && <EndScreen data={endScreen}/>}
         <Logo data={logo} />

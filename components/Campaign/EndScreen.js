@@ -5,7 +5,7 @@ import Button from '@/components/Button'
 
 import styles from '@/styles/components/Campaign/EndScreen.module.sass'
 
-const EndScreen = ({ data = {} }) => {
+const EndScreen = ({ contact, data = {} }) => {
   const ref = useRef()
 
   const [titleResponsiveFontSize, setTitleResponsiveFontSize] = useState(0)
@@ -34,6 +34,20 @@ const EndScreen = ({ data = {} }) => {
       }
     }
   }, [ref, data])
+  
+  const replaceVariables = (text) => {
+    if (!contact) {
+      return text
+    }
+    const matches = text.match(/(?:\{\{)(.*?)(?:\}\})/gi)
+    if (!matches || matches.length <= 0) {
+      return text
+    }
+    matches.map(match => {
+      text = text.replace(match, contact[match.replace(/{|}/g, '')])
+    })
+    return text
+  }
 
   return Object.keys(data).length > 1 &&
     <div
@@ -53,7 +67,7 @@ const EndScreen = ({ data = {} }) => {
             ...(data.title.letterSpacing > 0 && { paddingLeft: data.title.letterSpacing }),
           }}
         >
-          {data.title.value}
+          {replaceVariables(data.title.value)}
         </p>
       }
       { data.subtitle.value &&
@@ -68,7 +82,7 @@ const EndScreen = ({ data = {} }) => {
             ...(data.subtitle.letterSpacing > 0 && { paddingLeft: data.subtitle.letterSpacing }),
           }}
         >
-          {data.subtitle.value}
+          {replaceVariables(data.subtitle.value)}
         </p>
       }
       { data.button && data.button.value &&

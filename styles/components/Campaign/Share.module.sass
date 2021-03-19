@@ -154,6 +154,38 @@
     height: 110px
     padding: 20px
     resize: none
+  .detailsMessageHeader
+    align-items: center
+    display: grid
+    grid-auto-flow: column
+    justify-content: space-between
+    position: relative
+    .addVariable
+      color: $primaryColor
+      cursor: pointer
+      text-decoration: underline
+    .popupVariables
+      background: #fff
+      border-radius: 8px
+      box-shadow: 1px 1px 8px rgba(#000, 0.1)
+      position: absolute
+      right: 0
+      top: 100%
+      padding: 16px
+      width: 250px
+      select
+        appearance: none
+        background: #ffffff
+        border-radius: 4px
+        border: 1px solid rgba(90,113,132,0.2)
+        cursor: pointer
+        font-size: 12px
+        height: 38px
+        margin-bottom: 8px
+        padding: 0 12px
+        width: 100%
+      button
+        width: 100%
   .uploadThumbnail
     display: grid
     grid-auto-columns: max-content
