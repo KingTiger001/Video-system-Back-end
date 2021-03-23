@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 
 import styles from '@/styles/components/CountriesSelect.module.sass'
 
-const CountriesSelect = ({ onChange, ...props }) => {
+const CountriesSelect = ({ onChange, defaultCountrySelected, ...props }) => {
   const [countrySelected, setCountry] = useState('')
   const [isShow, show] = useState(false)
 
@@ -21,6 +21,10 @@ const CountriesSelect = ({ onChange, ...props }) => {
   }, [wrapperRef]);
 
   const orderedCountries = Object.values(countries).sort((a, b) => a.name.localeCompare(b.name))
+
+  useEffect(() => {
+    setCountry(orderedCountries.find(c => c.name === defaultCountrySelected).name)
+  }, [])
 
   const selectCountry = (country) => {
     setCountry(country.name)

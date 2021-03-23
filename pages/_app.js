@@ -1,3 +1,5 @@
+import { loadStripe } from '@stripe/stripe-js'
+import { Elements } from '@stripe/react-stripe-js'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import NProgress from 'nprogress'
@@ -41,22 +43,26 @@ function MyApp({ Component, pageProps }) {
     </Head>
   )
 
+  const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY)
+
   return (
     <Provider store={store}>
-      <div className="page">
-        {head}
-        <Component {...pageProps} />
-        <ToastContainer
-          position="top-center"
-          autoClose={5000}
-          hideProgressBar={true}
-          newestOnTop={false}
-          closeOnClick={true}
-          rtl={false}
-          pauseOnHover={false}
-          draggable={true}
-        />
-      </div>
+      <Elements stripe={stripePromise}>
+        <div className="page">
+          {head}
+          <Component {...pageProps} />
+          <ToastContainer
+            position="top-center"
+            autoClose={5000}
+            hideProgressBar={true}
+            newestOnTop={false}
+            closeOnClick={true}
+            rtl={false}
+            pauseOnHover={false}
+            draggable={true}
+          />
+        </div>
+      </Elements>
     </Provider>
   )
 }

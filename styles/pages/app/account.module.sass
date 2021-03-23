@@ -2,8 +2,15 @@
   
 .form
   display: grid
-  grid-gap: 20px
+  grid-gap: 60px
   grid-template-columns: 1fr
+  button
+    padding: 0 80px
+
+.formRow
+  display: grid
+  grid-template-columns: repeat(3, 1fr)
+  grid-gap: 30px 80px
 
 .cancel
   color: $textColorThree
@@ -18,3 +25,14 @@
   font-size: 14px
   font-weight: 700
   margin-bottom: 10px
+
+.newEmail, .newPassword
+  display: grid
+  grid-gap: 20px
+
+.error
+  color: red
+  font-size: 15px
+  font-weight: 500
+  margin-bottom: 16px
+

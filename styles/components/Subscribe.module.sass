@@ -1,0 +1,247 @@
+@import '../_variables.sass'
+  
+.subscribe
+  height: 100%
+  display: flex
+  left: 0
+  position: fixed
+  top: 0
+  width: 100%
+  z-index: 9
+
+.backdrop
+  background: rgba(#B3BAC5, 0.8)
+  height: 100%
+  left: 0
+  position: absolute
+  top: 0
+  width: 100%
+  z-index: 1
+
+.box
+  background: #fff
+  border-radius: 8px
+  margin: auto
+  max-width: 980px
+  overflow: hidden
+  position: relative
+  width: 100%
+  z-index: 2
+
+.header
+  align-items: center
+  border-bottom: 1px solid rgba(#000, 0.1)
+  display: grid
+  grid-template-columns: 1fr auto
+  height: 64px
+  padding: 0 20px
+  img
+    cursor: pointer
+
+.headerTitle
+  color: $textColorOne
+  font-size: 24px
+  font-weight: 600
+
+.steps
+  box-shadow: 0 2px 15px 0 rgba(0,0,0,0.05)
+  display: grid
+  grid-gap: 81px
+  grid-auto-columns: max-content
+  grid-auto-flow: column
+  height: 64px
+  justify-content: center
+  padding: 0 20px
+
+.step
+  align-content: center
+  display: grid
+  grid-gap: 8px
+  justify-items: center
+  position: relative
+  p
+    color: $textColorTwo
+    font-size: 14px
+    letter-spacing: 0.2px
+  &:after
+    background: #ECEEF1
+    content: ''
+    bottom: 17px
+    position: absolute
+    height: 4px
+  &:nth-child(1)
+    &:after
+      left: 57%
+      width: 182px
+  &:nth-child(2)
+    &:after
+      left: 58%
+      width: 167px
+  &:last-child
+    &:after
+      display: none
+  &.current
+    p
+      color: $secondaryColor
+      font-weight: 700
+    .stepStatus
+      background: rgba(59,216,169,0.35)
+  &.valid
+    p
+      color: $secondaryColor
+      font-weight: 700
+    .stepStatus
+      background: $secondaryColor
+      img
+        display: block
+
+.stepStatus
+  align-items: center
+  background: #ECEEF1
+  border-radius: 50%
+  display: flex
+  height: 18px
+  justify-content: center
+  position: relative
+  width: 18px
+  z-index: 3
+  img
+    display: none
+    height: 14px
+    width: 14px
+
+.content
+  height: 65vh
+  overflow: auto
+  padding: 35px 50px
+
+.title
+  color: $textColorTwo
+  font-size: 18px
+  font-weight: 600
+  letter-spacing: 0.2px
+
+.text
+  color: $textColorThree
+  font-size: 14px
+  letter-spacing: 0.2px
+
+.error
+  color: red
+  text-align: center
+
+.footer
+  align-items: center
+  border-top: 1px solid rgba(#000, 0.1)
+  display: grid
+  grid-auto-flow: column
+  justify-content: space-between
+  height: 64px
+  padding: 0 20px
+  div
+    display: grid
+    grid-auto-flow: column
+    grid-gap: 10px
+
+.stepOneTitle
+  @extend .title
+  margin-bottom: 24px
+
+.stepTwo
+  margin: auto
+  max-width: 630px
+  width: 100%
+
+.stepTwoTitles
+  @extend .title
+  margin-bottom: 12px
+
+.selectedPlan
+  align-items: center
+  border: 1px solid rgba(95,89,247,0.2)
+  border-radius: 4px
+  box-shadow: 0 9px 31px 0 rgba(0,0,0,0.03)
+  display: grid
+  grid-gap: 20px
+  justify-content: space-between
+  margin-bottom: 40px
+  padding: 40px
+.planBusiness
+  .selectedPlanPriceValue
+    color: $secondaryColor
+.planPro
+  .selectedPlanPriceValue
+    color: $primaryColor
+.selectedPlanPrice
+  align-items: flex-start
+  display: grid
+  grid-gap: 5px
+  grid-template-columns: auto 1fr
+.selectedPlanPriceValue
+  font-family: 'hk_groteskbold'
+  font-size: 40px
+  line-height: 33px
+.selectedPlanPriceText
+  font-size: 14px
+  line-height: 17px
+  span
+    color: #B3BAC5
+.selectedPlanName
+  color: $textColorTwo
+  font-size: 20px
+  font-weight: 700
+.anotherPlan
+  grid-column: 2
+  grid-row-start: 1
+  grid-row-end: 3
+
+.stripeForm
+  display: grid
+  grid-gap: 30px
+  margin-top: 30px
+  label
+    display: block
+    font-weight: 500
+    margin-bottom: 10px
+    text-transform: uppercase
+  .error
+    color: red
+    text-align: center
+
+.stripeInput
+  align-items: center
+  border: 1px solid rgba(90,113,132,0.2)
+  border-radius: 4px
+  display: grid
+  font-size: 18px
+  font-smoothing: antialiased
+  height: 60px
+  padding: 0 20px
+
+  width: 100%
+  &::placeholder
+    color: #B3BAC5
+  &:focus::placeholder
+    color: #B3BAC5
+
+.stepThree
+  align-content: center
+  display: grid
+  height: 100%
+  justify-items: center
+
+.stepThreeLogo
+  height: 50px
+  margin-bottom: 24px
+  width: 50px
+
+.stepThreeTitle
+  color: $textColorTwo
+  font-size: 30px
+  font-weight: 800
+  margin-bottom: 8px
+
+.stepThreeText
+  color: $textColorTwo
+  font-size: 24px
+  margin-bottom: 40px

@@ -91,13 +91,10 @@ const HeaderApp = () => {
             >
               <ul className={styles.userMenu}>
                 <li>
-                  <Link href=""><a>Account</a></Link>
+                  <Link href="/app/account"><a>Account</a></Link>
                 </li>
                 <li>
-                  <Link href=""><a>Billing</a></Link>
-                </li>
-                <li>
-                  <Link href=""><a>Settings</a></Link>
+                  <Link href="/app/billing"><a>Billing</a></Link>
                 </li>
               </ul>
               <a href="mailto:contact@myfomo.io">Need help ?</a>

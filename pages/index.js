@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { Link as LinkScroll, Element as ElementScroll } from 'react-scroll'
 
 import Button from '@/components/Button'
+import Plans from '@/components/Plans'
 
 import styles from '@/styles/pages/index.module.sass'
 
@@ -264,39 +265,12 @@ const Index = () => {
             <div className={styles.container}>
               <h3 className={styles.plansTitle}>Choose the plan that’s right<br/>for your business</h3>
               <span className={styles.plansSubtitle}>Boost productivity and reshape remote interactions.</span>
-              <ul className={styles.plansList}>
-                <li className={styles.planBusiness}>
-                  <div className={styles.planColorBanner} />
-                  <div className={styles.planContent}>
-                    <p className={styles.planTitle}>Business</p>
-                    <div className={styles.planPrice}>
-                      <p className={styles.planPriceValue}>$30</p>
-                      <p className={styles.planPriceText}>per user/month<br/><span>billed annually</span></p>
-                    </div>
-                    <ul className={styles.planDetails}>
-                      <li className={styles.planDetailsItem}>
-                        <img src="/assets/home/planCheckSecondary.svg" />
-                        <p>Sharing one to one</p>
-                      </li>
-                      <li className={styles.planDetailsItem}>
-                        <img src="/assets/home/planCheckSecondary.svg" />
-                        <p>1 logo</p>
-                      </li>
-                      <li className={styles.planDetailsItem}>
-                        <img src="/assets/home/planCheckSecondary.svg" />
-                        <p>Simple analytics</p>
-                      </li>
-                      <li className={styles.planDetailsItem}>
-                        <img src="/assets/home/planCheckSecondary.svg" />
-                        <p>Reply by email or video</p>
-                      </li>
-                      <li className={styles.planDetailsItem}>
-                        <img src="/assets/home/planCheckSecondary.svg" />
-                        <p>CTA</p>
-                      </li>
-                    </ul>
+              <Plans
+                renderAction={(plan) => (
+                  <>
                     <Button
-                      color="secondary"
+                      color={plan.name === 'Business' ? 'secondary' : 'primary'}
+                      className={styles.planButton}
                       href="/signup"
                       type="link"
                       width={160}
@@ -304,72 +278,9 @@ const Index = () => {
                       Try it free
                     </Button>
                     <p className={styles.creditCardNotRequired}>No credit card required</p>
-                  </div>
-                </li>
-                <li className={styles.planTeams}>
-                  <div className={styles.planColorBanner} />
-                  <div className={styles.planContent}>
-                    <p className={styles.planTitle}>Pro</p>
-                    <div className={styles.planPrice}>
-                      <p className={styles.planPriceValue}>$95</p>
-                      <p className={styles.planPriceText}>per user/month<br/><span>billed annually</span></p>
-                    </div>
-                    <ul className={styles.planDetails}>
-                      <li className={styles.planDetailsItem}>
-                        <img src="/assets/home/planCheckPrimary.svg" />
-                        <p>Mass sending</p>
-                      </li>
-                      <li className={styles.planDetailsItem}>
-                        <img src="/assets/home/planCheckPrimary.svg" />
-                        <p>2 logos</p>
-                      </li>
-                      <li className={styles.planDetailsItem}>
-                        <img src="/assets/home/planCheckPrimary.svg" />
-                        <p>Full analytics</p>
-                      </li>
-                      <li className={styles.planDetailsItem}>
-                        <img src="/assets/home/planCheckPrimary.svg" />
-                        <p>Customized automation for mass sending</p>
-                      </li>
-                      <li className={styles.planDetailsItem}>
-                        <img src="/assets/home/planCheckPrimary.svg" />
-                        <p>Integrations</p>
-                      </li>
-                    </ul>
-                    <Button
-                      href="mailto:contact@myfomo.io"
-                      type="link"
-                      width={160}
-                    >
-                      Try it free
-                    </Button>
-                    <p className={styles.creditCardNotRequired}>No credit card required</p>
-                  </div>
-                </li>
-                <li>
-                  <div className={styles.planContent}>
-                    <p className={styles.planTitle}>5+ Users Enterprise</p>
-                    <div className={styles.planPrice}>
-                      <p className={styles.planPriceValue}>Contact us</p>
-                    </div>
-                    <div className={styles.planDetails}>
-                      <div className={styles.advanced}>
-                        <img src="/logo-circle.svg" />
-                        <p>Advanced features</p>
-                      </div>
-                    </div>
-                    <Button
-                      href="mailto:contact@myfomo.io"
-                      outline={true}
-                      type="link"
-                      width={160}
-                    >
-                      Contact us
-                    </Button>
-                    <p className={styles.creditCardNotRequired}></p>
-                  </div>
-                </li>
-              </ul>
+                  </>
+                )}
+              />
             </div>
           </section>
         </ElementScroll>

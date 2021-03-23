@@ -9,6 +9,8 @@
     "start": "NODE_ENV=production next start -p 7031"
   },
   "dependencies": {
+    "@stripe/react-stripe-js": "^1.4.0",
+    "@stripe/stripe-js": "^1.13.1",
     "axios": "^0.21.1",
     "cookie": "^0.4.1",
     "countries-list": "^2.5.6",

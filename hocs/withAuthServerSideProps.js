@@ -2,6 +2,7 @@ import cookie from 'cookie'
 import jwtDecode from 'jwt-decode'
 
 import { mainAPI } from '@/plugins/axios'
+import dayjs from '@/plugins/dayjs'
 
 const withAuthServerSideProps = (serverSidePropsFunc) => {
   return async (ctx) => {
@@ -14,6 +15,11 @@ const withAuthServerSideProps = (serverSidePropsFunc) => {
         user = data
         if ((!user.firstName || !user.lastName) && !ctx.req.url.includes('details')) {
           ctx.res.writeHead(302, { Location: '/signup/details' })
+          ctx.res.end()
+          return { props: {} }
+        }
+        if (dayjs().diff(dayjs(user.createdAt), 'day') > 14 && (!user.subscription || user.subscription.status !== 'active') && !ctx.req.url.includes('endTrial=true')) {
+          ctx.res.writeHead(302, { Location: '/app?endTrial=true' })
           ctx.res.end()
           return { props: {} }
         }
