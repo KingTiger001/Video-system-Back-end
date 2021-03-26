@@ -8,7 +8,7 @@ import ToolLogo from './ToolLogo'
 import ToolRecord from './ToolRecord'
 import ToolVideos from './ToolVideos'
 
-const Tools = () => {
+const Tools = ({ me }) => {
   const dispatch = useDispatch()
   const isPlaying = useSelector(state => state.campaign.isPlaying)
   const tool = useSelector(state => state.campaign.tool)
@@ -80,8 +80,8 @@ const Tools = () => {
           />
           <ToolRecord />
           <ToolVideos />
-          <ToolHelloScreen />
-          <ToolEndScreen />
+          <ToolHelloScreen me={me} />
+          <ToolEndScreen me={me} />
           <ToolLogo />
         </div>
       }

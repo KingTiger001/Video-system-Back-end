@@ -13,7 +13,7 @@ import PopupDeleteDraftHelloScreen from '@/components/Popups/PopupDeleteDraftHel
 
 import styles from '@/styles/components/Campaign/Tools.module.sass'
 
-const ToolHelloScreen = () => {
+const ToolHelloScreen = ({ me }) => {
   const dispatch = useDispatch()
   const popup = useSelector(state => state.popup)
   const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
@@ -118,6 +118,7 @@ const ToolHelloScreen = () => {
               <label className={styles.toolLabel}>Text line 1</label>
               <InputWithTools
                 dispatchType="CHANGE_HELLO_SCREEN"
+                me={me}
                 object={helloScreen}
                 objectName="helloScreen"
                 property="title"
@@ -129,6 +130,7 @@ const ToolHelloScreen = () => {
               <label className={styles.toolLabel}>Text line 2</label>
               <InputWithTools
                 dispatchType="CHANGE_HELLO_SCREEN"
+                me={me}
                 object={helloScreen}
                 objectName="helloScreen"
                 property="subtitle"

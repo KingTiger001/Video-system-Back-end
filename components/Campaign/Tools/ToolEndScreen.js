@@ -13,7 +13,7 @@ import PopupDeleteDraftEndScreen from '@/components/Popups/PopupDeleteDraftEndSc
 
 import styles from '@/styles/components/Campaign/Tools.module.sass'
 
-const ToolEndScreen = () => {
+const ToolEndScreen = ({ me }) => {
   const dispatch = useDispatch()
   const popup = useSelector(state => state.popup)
   const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
@@ -161,6 +161,7 @@ const ToolEndScreen = () => {
               <label className={styles.toolLabel}>Text line 1</label>
               <InputWithTools
                 dispatchType="CHANGE_END_SCREEN"
+                me={me}
                 object={endScreen}
                 objectName="endScreen"
                 property="title"
@@ -172,6 +173,7 @@ const ToolEndScreen = () => {
               <label className={styles.toolLabel}>Text line 2</label>
               <InputWithTools
                 dispatchType="CHANGE_END_SCREEN"
+                me={me}
                 object={endScreen}
                 objectName="endScreen"
                 property="subtitle"
@@ -198,39 +200,41 @@ const ToolEndScreen = () => {
             </div>
 
             <p className={styles.toolSubtitle}>Add links</p>
-            <div className={styles.toolSection}>
-              <label className={styles.toolLabel}>Main link: website, ...</label>
-              <div className={styles.toolInputGrid}>
-                <input
-                  className={styles.toolInput}
-                  onChange={(e) => dispatch({
-                    type: 'CHANGE_END_SCREEN',
-                    data: {
-                      button: {
-                        ...endScreen.button,
-                        value: e.target.value,
-                      }
-                    },
-                  })}
-                  placeholder="Text button"
-                  value={endScreen.button ? endScreen.button.value : ''}
-                />
-                <input
-                  className={styles.toolInput}
-                  onChange={(e) => dispatch({
-                    type: 'CHANGE_END_SCREEN',
-                    data: {
-                      button: {
-                        ...endScreen.button,
-                        href: e.target.value,
-                      }
-                    },
-                  })}
-                  placeholder="Copy link"
-                  value={endScreen.button ? endScreen.button.href : ''}
-                />
+            { (me.freeTrial || me.subscription.status === 'active') &&
+              <div className={styles.toolSection}>
+                <label className={styles.toolLabel}>CTA</label>
+                <div className={styles.toolInputGrid}>
+                  <input
+                    className={styles.toolInput}
+                    onChange={(e) => dispatch({
+                      type: 'CHANGE_END_SCREEN',
+                      data: {
+                        button: {
+                          ...endScreen.button,
+                          value: e.target.value,
+                        }
+                      },
+                    })}
+                    placeholder="Text button"
+                    value={endScreen.button ? endScreen.button.value : ''}
+                  />
+                  <input
+                    className={styles.toolInput}
+                    onChange={(e) => dispatch({
+                      type: 'CHANGE_END_SCREEN',
+                      data: {
+                        button: {
+                          ...endScreen.button,
+                          href: e.target.value,
+                        }
+                      },
+                    })}
+                    placeholder="Copy link"
+                    value={endScreen.button ? endScreen.button.href : ''}
+                  />
+                </div>
               </div>
-            </div>
+            }
             <div className={styles.toolSection}>
               <label className={styles.toolLabel}>Email</label>
               <InputWithTools
@@ -295,7 +299,6 @@ const ToolEndScreen = () => {
                 </p>
               </div>
             </div> */}
-            {error && <p className={styles.error}>{error}</p>}
             <Button
               onClick={addEndScreenToLibrary}
               outline={true}

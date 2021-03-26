@@ -53,6 +53,7 @@ const Subscribe = ({ onClose, onDone, me: meProps }) => {
   const [checkoutLoading, setCheckoutLoading] = useState(false)
 
   const handleSelectPlan = (plan) => {
+    console.log(plan)
     setPlan(plan)
     setStep(2)
   }
@@ -100,6 +101,7 @@ const Subscribe = ({ onClose, onDone, me: meProps }) => {
         customerId,
         paymentMethodId: paymentMethod.id,
         priceId: plan.price.id,
+        level: plan.metadata.level,
       })
 
       return handlePaymentThatRequiresCustomerAction({
@@ -354,7 +356,18 @@ const Subscribe = ({ onClose, onDone, me: meProps }) => {
         { step <= 2 &&
           <div className={styles.footer}>
             <div>
-              { step > 1 && <Button outline={true} onClick={() => setStep(step - 1)}>Back</Button> }
+              { step > 1 && 
+                <Button
+                  onClick={() => {
+                    if (!checkoutLoading) {
+                      setStep(step - 1)
+                    }
+                  }}
+                  outline={true}
+                >
+                  Back
+                </Button>
+              }
             </div>
             <div>
               { step === 2 && 

@@ -237,7 +237,7 @@ const Campaign = ({ me }) => {
       </div>
 
       <div className={styles.main}>
-        <Tools />
+        <Tools me={me} />
 
         <Player />
       </div>

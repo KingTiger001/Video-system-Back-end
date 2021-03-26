@@ -278,12 +278,16 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
         className={styles.contactsItem}
         key={contact._id}
       >
-        <input
-          checked={contactsSelected.includes(contact._id)}
-          onChange={handleSelectedContact}
-          type="checkbox"
-          value={contact._id}
-        />
+        <div>
+          { (me.freeTrial || me.subscription.level !== 'business' || (me.subscription.level === 'business' && (contactsSelected.length < 1 || contactsSelected.includes(contact._id)))) &&
+            <input
+              checked={contactsSelected.includes(contact._id)}
+              onChange={handleSelectedContact}
+              type="checkbox"
+              value={contact._id}
+            />
+          }
+        </div>
         <p>{contact.firstName}</p>
         <p>{contact.company}</p>
         <p>{contact.job}</p>
@@ -411,12 +415,14 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
               <div>
                 <div className={styles.detailsMessageHeader}>
                   <label>Your message*</label>
-                  <span
-                    className={styles.addVariable}
-                    onClick={() => showPopupVariables(true)}
-                  >
-                    Add variable
-                  </span>
+                  { (me.freeTrial || me.subscription.level === 'pro') &&
+                    <span
+                      className={styles.addVariable}
+                      onClick={() => showPopupVariables(true)}
+                    >
+                      Add variable
+                    </span>
+                  }
                   { displayPopupVariable &&
                     <div
                       className={styles.popupVariables}
@@ -532,29 +538,31 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
                   {(contacts.totalDocs <= 0 || (!contacts.totalDocs && contacts.length <= 0)) && renderContact()}
                 </div>
               </div>
-              <div>
-                <div className={styles.sectionHeaderLists}>
-                  <p className={styles.title}>Add from your lists</p>
-                  <div className={styles.search}>
-                    <img src="/assets/common/search.svg" />
-                    <input
-                      placeholder="Search"
-                      onChange={(e) => searchLists(e.target.value)}
-                    />
+              { (me.freeTrial || me.subscription.level === 'pro') &&
+                <div>
+                  <div className={styles.sectionHeaderLists}>
+                    <p className={styles.title}>Add from your lists</p>
+                    <div className={styles.search}>
+                      <img src="/assets/common/search.svg" />
+                      <input
+                        placeholder="Search"
+                        onChange={(e) => searchLists(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  <div className={styles.listsHeader}>
+                    <div />
+                    <p>ID</p>
+                    <p>Name</p>
+                    <p>Number of contacts</p>
+                  </div>
+                  <div className={styles.listsList}>
+                    {lists.totalDocs > 0 && lists.docs.map(list => renderList(list))}
+                    {!lists.totalDocs && lists.length > 0 && lists.map(list => renderList(list))}
+                    {(lists.totalDocs <= 0 || (!lists.totalDocs && lists.length <= 0)) && renderList()}
                   </div>
                 </div>
-                <div className={styles.listsHeader}>
-                  <div />
-                  <p>ID</p>
-                  <p>Name</p>
-                  <p>Number of contacts</p>
-                </div>
-                <div className={styles.listsList}>
-                  {lists.totalDocs > 0 && lists.docs.map(list => renderList(list))}
-                  {!lists.totalDocs && lists.length > 0 && lists.map(list => renderList(list))}
-                  {(lists.totalDocs <= 0 || (!lists.totalDocs && lists.length <= 0)) && renderList()}
-                </div>
-              </div>
+              }
               {stepTwoError && <p className={styles.error}>{stepTwoError}</p>}
             </div>
           }

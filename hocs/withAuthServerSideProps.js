@@ -17,9 +17,8 @@ const withAuthServerSideProps = (serverSidePropsFunc) => {
           ctx.res.writeHead(302, { Location: '/signup/details' })
           ctx.res.end()
           return { props: {} }
-        }
-        if (dayjs().diff(dayjs(user.createdAt), 'day') > 14 && (!user.subscription || user.subscription.status !== 'active') && !ctx.req.url.includes('endTrial=true')) {
-          ctx.res.writeHead(302, { Location: '/app?endTrial=true' })
+        } else if (user.firstName && user.lastName && dayjs().diff(dayjs(user.createdAt), 'day') > 14 && (!user.subscription || user.subscription.status !== 'active') && !ctx.req.url.includes('expired=true')) {
+          ctx.res.writeHead(302, { Location: '/app?expired=true' })
           ctx.res.end()
           return { props: {} }
         }

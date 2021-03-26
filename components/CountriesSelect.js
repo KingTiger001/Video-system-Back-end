@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import styles from '@/styles/components/CountriesSelect.module.sass'
 
 const CountriesSelect = ({ onChange, defaultCountrySelected, ...props }) => {
-  const [countrySelected, setCountry] = useState('')
+  const [countrySelected, setCountrySelected] = useState('')
   const [isShow, show] = useState(false)
 
   const wrapperRef = useRef(null);
@@ -23,11 +23,12 @@ const CountriesSelect = ({ onChange, defaultCountrySelected, ...props }) => {
   const orderedCountries = Object.values(countries).sort((a, b) => a.name.localeCompare(b.name))
 
   useEffect(() => {
-    setCountry(orderedCountries.find(c => c.name === defaultCountrySelected).name)
+    const country = orderedCountries.find(c => c.name === defaultCountrySelected)
+    setCountrySelected(country ? country.name : '')
   }, [])
 
   const selectCountry = (country) => {
-    setCountry(country.name)
+    setCountrySelected(country.name)
     show(false)
     onChange(country.name)
   }

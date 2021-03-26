@@ -8,6 +8,7 @@ import toolsStyles from '@/styles/components/Campaign/Tools.module.sass'
 
 const InputWithTools = ({
   dispatchType,
+  me,
   object,
   property,
   toolStyle = false,
@@ -35,7 +36,7 @@ const InputWithTools = ({
           value={object[property].value}
         />
         <div className={styles.tools}>
-          { toolVariables && 
+          { toolVariables && (me.freeTrial || me.subscription.level === 'pro') &&
             <img
               className={styles.varsIcon}
               onClick={() => dispatch({

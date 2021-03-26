@@ -8,8 +8,8 @@ export default function AppLayout ({ children }) {
   return (
     <div className={styles.layout}>
       <div className={styles.sidebar}>
-        <Link href="/app">
-          <a className={router.route === '/app' ? styles.selected : ''}>Account</a>
+        <Link href="/app/account">
+          <a className={router.route === '/app/account' ? styles.selected : ''}>Account</a>
         </Link>
         <Link href="/app/billing">
           <a className={router.route === '/app/billing' ? styles.selected : ''}>Billing</a>

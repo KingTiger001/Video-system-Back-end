@@ -6,6 +6,7 @@ import withAuthServerSideProps from '@/hocs/withAuthServerSideProps'
 
 import { mainAPI } from '@/plugins/axios'
 
+import AccountLayout from '@/layouts/AccountLayout'
 import AppLayout from '@/layouts/AppLayout'
 
 import Button from '@/components/Button'
@@ -16,7 +17,6 @@ import layoutStyles from '@/styles/layouts/App.module.sass'
 import styles from '@/styles/pages/app/account.module.sass'
 
 const Account = ({ me }) => {
-
   const [account, setAccount] = useState(me)
   const [email, setEmail] = useState({ value: me.email })
   const [error, setError] = useState(null)
@@ -66,7 +66,7 @@ const Account = ({ me }) => {
         <title>Account | FOMO</title>
       </Head>
 
-      <div className={layoutStyles.container}>
+      <AccountLayout>
         <div className={layoutStyles.header}>
           <div className={layoutStyles.headerTop}>
             <h1 className={layoutStyles.headerTitle}>Edit your account</h1>
@@ -207,10 +207,11 @@ const Account = ({ me }) => {
             <Button loading={loading}>Update infos</Button>
           </div>
         </form>
-      </div>
+        
+      </AccountLayout>
     </AppLayout>
   )
-}
+};
 
 export default Account
 export const getServerSideProps = withAuthServerSideProps()

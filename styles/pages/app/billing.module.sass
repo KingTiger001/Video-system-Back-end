@@ -1,0 +1,49 @@
+@import '../../_variables.sass'
+  
+.selectedPlan
+  align-items: center
+  background: #fff
+  border: 1px solid rgba(95,89,247,0.2)
+  border-radius: 4px
+  box-shadow: 0 9px 31px 0 rgba(0,0,0,0.03)
+  display: grid
+  grid-gap: 20px
+  justify-content: space-between
+  margin-bottom: 40px
+  padding: 40px
+  max-width: 500px
+.planBusiness
+  .selectedPlanPriceValue
+    color: $secondaryColor
+.planPro
+  .selectedPlanPriceValue
+    color: $primaryColor
+.selectedPlanPrice
+  align-items: flex-start
+  display: grid
+  grid-gap: 5px
+  grid-template-columns: auto 1fr
+.selectedPlanPriceValue
+  font-family: 'hk_groteskbold'
+  font-size: 40px
+  line-height: 33px
+.selectedPlanPriceText
+  font-size: 14px
+  line-height: 17px
+  span
+    color: #B3BAC5
+.selectedPlanName
+  color: $textColorTwo
+  font-size: 20px
+  font-weight: 700
+.anotherPlan
+  grid-column: 2
+  grid-row-start: 1
+  grid-row-end: 3
+.cancelAt
+  color: red
+  font-weight: 500
+  grid-column: 2
+  grid-row-start: 1
+  grid-row-end: 3
+  line-height: 20px
