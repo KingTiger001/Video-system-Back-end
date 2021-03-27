@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 
 import styles from '@/styles/components/Campaign/Timeline.module.sass'
 
@@ -16,6 +16,17 @@ const Timeline = () => {
   const videoRef = useSelector(state => state.campaign.videoRef)
 
   const ref = useRef()
+  useEffect(() => {
+    const handleMouseUp = (e) => {
+      if (ref.current) {
+        dispatch({ type: 'TIMELINE_DRAGGABLE', data: false })
+      }
+    }
+    document.addEventListener('mouseup', handleMouseUp);
+    return () => {
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [ref]);
 
   const seekTo = (e) => {
     const rect = e.currentTarget.getBoundingClientRect()

@@ -32,6 +32,30 @@ const VideoPlayer = ({ data = {}, onPause = () => {}, onPlay = () => {} }) => {
   const { height } = useVideoResize({ ref: playerRef, autoHeight: true })
 
   useEffect(() => {
+    const handleMouseUp = (e) => {
+      if (timelineRef.current) {
+        dispatch({ type: 'videoPlayer/TIMELINE_DRAGGABLE', data: false })
+      }
+    }
+    document.addEventListener('mouseup', handleMouseUp);
+    return () => {
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [timelineRef]);
+
+  useEffect(() => {
+    const handleMouseUp = (e) => {
+      if (volumeRef.current) {
+        dispatch({ type: 'videoPlayer/VOLUME_DRAGGABLE', data: false })
+      }
+    }
+    document.addEventListener('mouseup', handleMouseUp);
+    return () => {
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [volumeRef]);
+
+  useEffect(() => {
     let interval = null;
     if (
       ((progression > helloScreen.duration) && (progression < (duration - endScreen.duration)) && videoSeeking && videoRef.currentTime !== 0)
