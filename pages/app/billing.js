@@ -11,6 +11,7 @@ import dayjs from '@/plugins/dayjs'
 import withAuthServerSideProps from '@/hocs/withAuthServerSideProps'
 
 import Button from '@/components/Button'
+import Subscribe from '@/components/Subscribe'
 
 import layoutStyles from '@/styles/layouts/App.module.sass'
 import styles from '@/styles/pages/app/billing.module.sass'
@@ -23,9 +24,9 @@ const Billing = ({ products, me: meProps }) => {
   const showPopup = (popupProps) => dispatch({ type: 'SHOW_POPUP', ...popupProps })
   const popup = useSelector(state => state.popup)
 
+  const [displaySubscribe, showSubscribe] = useState(false)
   const [plan, setPlan] = useState(null)
   const [me, setMe] = useState(meProps)
-
 
   const getMe = async () => {
     const { data } = await mainAPI.get('/users/me')
@@ -33,8 +34,8 @@ const Billing = ({ products, me: meProps }) => {
   }
 
   useEffect(() => {
-    setPlan(products.find(product => product.price.id === me.subscription.stripePrice))
-  }, [])
+    setPlan(me.subscription && products.find(product => product.price.id === me.subscription.stripePrice))
+  }, [me])
 
   return (
     <AppLayout>
@@ -81,6 +82,27 @@ const Billing = ({ products, me: meProps }) => {
                 <p className={styles.cancelAt}>End of subscription: <br />{dayjs(me.subscription.cancelAt * 1000).format('MM/DD/YYYY')}</p>
               }
             </div>
+          }
+          { me.freeTrial && 
+            <div className={`${styles.selectedPlan} ${styles.freeTrial}`}>
+              <p className={styles.selectedPlanName}>Free trial</p>
+              <Button
+                className={styles.anotherPlan}
+                onClick={() => showSubscribe(true)}
+                outline={true}
+              >
+                Subscribe
+              </Button>
+            </div>
+          }
+          { displaySubscribe &&
+            <Subscribe
+              onClose={() => showSubscribe(false)}
+              onDone={(value) => {
+                setMe(value)
+              }}
+              me={me}
+            />
           }
         </div>
       </AccountLayout>

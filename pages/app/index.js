@@ -100,7 +100,7 @@ const Dashboard = ({
       </Head>
 
       <div className={styles.container}>
-        <h1 className={styles.title}>Hello {me.firstName} 👋</h1>
+        <h1 className={styles.title}>Hello {me.firstName}</h1>
         { (!me.emailConfirmed || contactsCount <= 0) && 
           <div className={styles.welcome}>
             <p className={styles.welcomeTitle}>Welcome to your dasboard !</p>
