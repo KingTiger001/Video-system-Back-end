@@ -45,7 +45,7 @@ const Dashboard = ({
   }
 
   const sendEmailConfirmation = async () => {
-    if (dayjs(me.emailConfirmationExpires).diff(dayjs(), 'minute') > 5) {
+    if (!me.emailConfirmationExpires || dayjs(me.emailConfirmationExpires).diff(dayjs(), 'minute') > 5) {
       await mainAPI.post('/auth/email/confirmation/new', { userId: me._id })
     } 
     toast.success('Email sent.')
