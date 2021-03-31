@@ -14,6 +14,7 @@ const PopupUploadVideo = ({ onDone }) => {
   const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
   const popup = useSelector(state => state.popup)
 
+  const [error, setError] = useState('')
   const [isFinished, setIsFinished] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
@@ -22,6 +23,7 @@ const PopupUploadVideo = ({ onDone }) => {
   const upload = async (e) => {
     e.preventDefault()
     try {
+      setError('')
       setIsUploading(true)
       // create a video
       const { data: video } = await mainAPI.post('/videos', {
@@ -50,7 +52,10 @@ const PopupUploadVideo = ({ onDone }) => {
       onDone()
       setIsFinished(true)
     } catch (err) {
-      console.log(err)
+      const code = err.response && err.response.data
+      if (code === 'Upload.incorrectFiletype') {
+        setError('Incorrect file type. You must upload v')
+      }
     } finally {
       setIsUploading(false)
       setUploadProgress(0)
@@ -68,12 +73,14 @@ const PopupUploadVideo = ({ onDone }) => {
           onSubmit={upload}
           className={styles.form}
         >
+          {popup.from === 'recorder' && <p className={styles.message}>You just recorded a video. To save the video give it a name.</p>}
           <Input
             onChange={(e) => setVideoName(e.target.value)}
             placeholder="Video name*"
             type="text"
             required
           />
+          { error && <p className={styles.error}>{error}</p> }
           <Button>Upload</Button>
           <p
             onClick={() => hidePopup()}

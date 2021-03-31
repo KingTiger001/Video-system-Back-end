@@ -33,6 +33,7 @@ const ToolRecord = () => {
           onDone={(file) => showPopup({
             display: 'UPLOAD_VIDEO',
             data: file,
+            from: 'recorder',
           })}
         />
       }
@@ -51,6 +52,7 @@ const ToolRecord = () => {
           showPopup({
             display: 'UPLOAD_VIDEO',
             data: e.target.files[0],
+            from: 'import',
           })
           e.target.value = null
         }}

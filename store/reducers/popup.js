@@ -10,6 +10,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         display: action.display,
         data: action.data,
+        from: action.from,
       }
     case 'HIDE_POPUP':
       return initialState
