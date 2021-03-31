@@ -37,7 +37,7 @@ const HelloScreen = ({ contact, data = {} }) => {
       return text
     }
     matches.map(match => {
-      text = text.replace(match, contact[match.replace(/{|}/g, '')])
+      text = text.replace(match, contact[match.replace(/{|}/g, '')] || '')
     })
     return text
   }

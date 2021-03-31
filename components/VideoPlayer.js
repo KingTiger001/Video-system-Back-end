@@ -11,7 +11,7 @@ import Logo from '@/components/Campaign/Logo'
 
 import styles from '@/styles/components/VideoPlayer.module.sass'
 
-const VideoPlayer = ({ data = {}, onPause = () => {}, onPlay = () => {} }) => {
+const VideoPlayer = ({ contact, data = {}, onPause = () => {}, onPlay = () => {} }) => {
   const dispatch = useDispatch()
 
   const { endScreen, helloScreen, logo, video } = data
@@ -77,7 +77,6 @@ const VideoPlayer = ({ data = {}, onPause = () => {}, onPlay = () => {} }) => {
         });
       }, 50);
     }
-    console.log('prog', (progression - helloScreen.duration) / 1000, videoRef.currentTime, videoRef.duration)
     if (progression >= duration) {
       dispatch({ type: 'videoPlayer/PAUSE' })
     }
@@ -211,8 +210,8 @@ const VideoPlayer = ({ data = {}, onPause = () => {}, onPlay = () => {} }) => {
           // }}
           width="100%"
         />
-        {helloScreen && Object.keys(helloScreen).length > 0 && progression < helloScreen.duration && <HelloScreen data={helloScreen}/>}
-        {endScreen && Object.keys(endScreen).length > 0 && progression >= duration - endScreen.duration && <EndScreen data={endScreen}/>}
+        {helloScreen && Object.keys(helloScreen).length > 0 && progression < helloScreen.duration && <HelloScreen contact={contact} data={helloScreen}/>}
+        {endScreen && Object.keys(endScreen).length > 0 && progression >= duration - endScreen.duration && <EndScreen contact={contact} data={endScreen}/>}
         <Logo data={logo} />
       </div>
       <div
