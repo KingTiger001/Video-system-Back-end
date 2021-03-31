@@ -24,7 +24,6 @@ const ToolLogo = () => {
     const formData = new FormData()
     formData.append('file', file)
     formData.append('folder', 'logos')
-    formData.append('height', 300)
     formData.append('width', 300)
     try {
       setUploadloading(true)
@@ -88,12 +87,18 @@ const ToolLogo = () => {
           className={styles.logo}
           htmlFor="logo"
         >
+          { !uploadloading && !logo.value &&
+            <img
+              className={styles.add}
+              src="/assets/common/add.svg"
+            />
+          }
           { uploadloading &&
             <div className={styles.loading}>
               <img src="/assets/common/loader.svg" />
             </div>
           }
-          { logo.value &&  <img className={styles.image} src={logo.value} /> }
+          { logo.value && <img className={styles.image} src={logo.value} /> }
         </label>
         <input
           accept="image/*"
@@ -103,7 +108,7 @@ const ToolLogo = () => {
           className={styles.logoInput}
         />
         { logo.value && <p className={styles.logoRemove} onClick={removeLogo}>Remove</p> }
-        <p className={styles.logoRecoSize}>(Recommended size: 300x300)</p>
+        {/* <p className={styles.logoRecoSize}>(Recommended size: 300x300)</p> */}
         { error && <p className={styles.error}>{error}</p> }
       </div>
       <div className={styles.toolSection}>

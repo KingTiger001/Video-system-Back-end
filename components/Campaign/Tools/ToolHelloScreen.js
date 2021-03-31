@@ -279,7 +279,7 @@ const ToolHelloScreen = ({ me }) => {
                   }
                 </div>
                 :
-                <p className={styles.toolDescription}>Here you will find your lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt</p>
+                <p className={styles.toolDescription}>Here you will find your start screens created. Start by creating one by clicking just above!</p>
             }
           </div>
       }
