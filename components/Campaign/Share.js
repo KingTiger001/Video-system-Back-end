@@ -238,8 +238,8 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
     const formData = new FormData()
     formData.append('file', file)
     formData.append('folder', 'thumbnails')
-    formData.append('height', 720)
-    formData.append('width', 1280)
+    formData.append('height', 450)
+    formData.append('width', 800)
     try {
       setThumbnailLoading(true)
       const { data: url } = await mediaAPI.post('/images', formData)
@@ -492,7 +492,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
                     Remove thumbnail
                   </p>
                 }
-                <p className={styles.uploadThumbnailRecoSize}>(Recommended size: 1280x720)</p>
+                <p className={styles.uploadThumbnailRecoSize}>(Recommended format: 16/9)</p>
               </div>
               <p className={styles.error}>{stepOneError}</p>
             </form>
