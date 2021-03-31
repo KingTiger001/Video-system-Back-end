@@ -46,7 +46,7 @@ const Tools = ({ me }) => {
           }}
         >
           <img src={`/assets/campaign/${tool === 2 ? 'toolVideosSelected' : 'toolVideos'}.svg`} />
-          <p>Add video</p>
+          <p>Video</p>
         </li>
         <li
           className={`${styles.tool} ${tool === 3 ? styles.toolSelected : ''}`}

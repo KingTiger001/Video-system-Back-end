@@ -14,7 +14,7 @@ import Input from '@/components/Input'
 
 import styles from '@/styles/layouts/Signup.module.sass'
 
-const SignupDetails = ({ user }) => {
+const SignupDetails = () => {
   const [company, setCompany] = useState('')
   const [country, setCountry] = useState('')
   const [error, setError] = useState('')

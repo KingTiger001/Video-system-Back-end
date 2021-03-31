@@ -17,7 +17,7 @@ export default function SignupLayout ({ children }) {
               </a>
             </Link>
             <p className={styles.onboardingTitle}>Easy as<br/>1, 2, 3</p>
-            <p className={styles.onboardingSubtitle}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt</p>
+            <p className={styles.onboardingSubtitle}>Start your 14 days free trial.</p>
           </div>
         </div>
 

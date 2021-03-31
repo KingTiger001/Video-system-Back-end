@@ -201,9 +201,6 @@ const Campaign = ({ me }) => {
                 <li>
                   <a href="mailto:contact@myfomo.io">Need help ?</a>
                 </li>
-                <li>
-                  <a>My Profile</a>
-                </li>
               </ul>
             </div>
           }

@@ -53,7 +53,6 @@ const Subscribe = ({ onClose, onDone, me: meProps }) => {
   const [checkoutLoading, setCheckoutLoading] = useState(false)
 
   const handleSelectPlan = (plan) => {
-    console.log(plan)
     setPlan(plan)
     setStep(2)
   }
