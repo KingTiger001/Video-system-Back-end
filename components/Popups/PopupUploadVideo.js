@@ -81,7 +81,7 @@ const PopupUploadVideo = ({ onDone }) => {
             required
           />
           { error && <p className={styles.error}>{error}</p> }
-          <Button>Upload</Button>
+          <Button>Save</Button>
           <p
             onClick={() => hidePopup()}
             className={styles.cancel}
@@ -100,7 +100,7 @@ const PopupUploadVideo = ({ onDone }) => {
       }
       { !isUploading && isFinished &&
         <div className={styles.finish}>
-          <p>You video has been uploaded</p>
+          <p>Your video has been uploaded</p>
           <Button onClick={hidePopup}>
             Ok
           </Button>

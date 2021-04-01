@@ -108,18 +108,14 @@ const Dashboard = ({
             <ul className={styles.welcomeList}>
               { !me.emailConfirmed && 
                 <li className={styles.welcomeListItem}>
-                  <div>
-                    <img src="/assets/common/closeG.svg" />
-                  </div>
+                  <div />
                   <p>Verify your email address</p>
                   <span>We sent an email with a confirmation link to your email address. In order to complete the sign-up process, please click on the confirmation link. If you didn't receive it, <a onClick={sendEmailConfirmation}>click here to resend activation link</a></span>
                 </li>
               }
               { contactsCount <= 0 &&
                 <li className={styles.welcomeListItem}>
-                  <div>
-                    <img src="/assets/common/closeG.svg" />
-                  </div>
+                  <div />
                   <p>Import your first contacts</p>
                   <span>You can import your contacts now or later.</span>
                 </li>
