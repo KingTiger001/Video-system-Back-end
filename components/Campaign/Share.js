@@ -238,7 +238,6 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
     const formData = new FormData()
     formData.append('file', file)
     formData.append('folder', 'thumbnails')
-    formData.append('height', 450)
     formData.append('width', 800)
     try {
       setThumbnailLoading(true)
