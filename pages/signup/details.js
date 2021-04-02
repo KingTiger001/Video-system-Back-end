@@ -1,3 +1,4 @@
+import jscookie from 'js-cookie'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
@@ -25,6 +26,11 @@ const SignupDetails = () => {
   const [phone, setPhone] = useState('')
 
   const router = useRouter()
+
+  const logout = () => {
+    router.push('/')
+    jscookie.remove('fo_sas_tk')
+  }
 
   const updateProfile = async (e) => {
     e.preventDefault()
@@ -111,9 +117,16 @@ const SignupDetails = () => {
           loading={loading}
           width="100%"
         >
-          Sign Up
+          Confirm
         </Button>
       </form>
+
+      <p
+        className={styles.logout}
+        onClick={logout}
+      >
+        Log out
+      </p>
     </SignupLayout>
   )
 }

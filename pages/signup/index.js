@@ -43,7 +43,7 @@ const Signup = () => {
       } catch (err) {
         const code = err.response && err.response.data
         if (code === 'Auth.signup.userExist') {
-          setError('An user already use this email address.')
+          setError('An user already exist with this email address.')
         } else {
           setError('An error occurred.')
         }
