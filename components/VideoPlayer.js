@@ -26,6 +26,8 @@ const VideoPlayer = ({ contact, data = {}, onPause = () => {}, onPlay = () => {}
   const volumeDraggable = useSelector(state => state.videoPlayer.volumeDraggable)
   const volumeMuted = useSelector(state => state.videoPlayer.volumeMuted)
 
+  const [autoPlayFlag, setAutoPlayFlag] = useState(false)
+
   const playerRef = useRef()
   const timelineRef = useRef()
   const volumeRef = useRef()
@@ -152,6 +154,22 @@ const VideoPlayer = ({ contact, data = {}, onPause = () => {}, onPlay = () => {}
     }
   }
 
+  const playOrPause = () => {
+    if (!autoPlayFlag) {
+      videoRef.muted = true
+      videoRef.play().then(() => {
+        videoRef.pause()
+        videoRef.muted = false
+      })
+      setAutoPlayFlag(true)
+    }
+    dispatch({ type: isPlaying ? 'videoPlayer/PAUSE' : 'videoPlayer/PLAY' })
+    if (progression > helloScreen.duration && progression < duration - endScreen.duration) {
+      isPlaying ? videoRef.pause() : videoRef.play()
+      isPlaying ? onPause() : onPlay()
+    }
+  }
+
   const setVolume = (e) => {
     const rect = volumeRef.current.getBoundingClientRect()
     const position = e.clientX - rect.left
@@ -189,13 +207,7 @@ const VideoPlayer = ({ contact, data = {}, onPause = () => {}, onPlay = () => {}
     >
       <div
         className={styles.player}
-        onClick={async () => {
-          dispatch({ type: isPlaying ? 'videoPlayer/PAUSE' : 'videoPlayer/PLAY' })
-          if (progression > helloScreen.duration && progression < duration - endScreen.duration) {
-            isPlaying ? videoRef.pause() : videoRef.play()
-            isPlaying ? onPause() : onPlay()
-          }
-        }}
+        onClick={playOrPause}
         ref={playerRef}
         style={{ height }}
       >
@@ -234,13 +246,7 @@ const VideoPlayer = ({ contact, data = {}, onPause = () => {}, onPlay = () => {}
         </div>
         <img
           className={styles.playPause}
-          onClick={async () => {
-            dispatch({ type: isPlaying ? 'videoPlayer/PAUSE' : 'videoPlayer/PLAY' })
-            if (progression > helloScreen.duration && progression < duration - endScreen.duration) {
-              isPlaying ? videoRef.pause() : videoRef.play()
-              isPlaying ? onPause() : onPlay()
-            }
-          }}
+          onClick={playOrPause}
           src={isPlaying ? '/assets/video/pauseW.svg' : '/assets/video/playW.svg'}
         />
         <div className={styles.volume}>
