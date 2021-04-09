@@ -215,7 +215,7 @@ const VideoPlayer = ({ contact, data = {}, onPause = () => {}, onPlay = () => {}
           className={styles.videoElement}
           height="100%"
           key={video.url}
-          playsinline
+          playsinline={true}
           ref={videoRefCb}
           src={video.url}
           // style={{
