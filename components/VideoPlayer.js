@@ -66,10 +66,13 @@ const VideoPlayer = ({ contact, data = {}, onPause = () => {}, onPlay = () => {}
       clearInterval(interval)
     } else if ((progression > helloScreen.duration) && (progression < (duration - endScreen.duration)) && isPlaying) {
       interval = setInterval(() => {
-        dispatch({
-          type: 'videoPlayer/SET_PROGRESSION',
-          data: helloScreen.duration + (videoRef.currentTime * 1000),
-        });
+        const videoProg = helloScreen.duration + videoRef.currentTime * 1000
+        if (videoProg > progression) {
+          dispatch({
+            type: 'videoPlayer/SET_PROGRESSION',
+            data: videoProg,
+          });
+        }
       }, 50);
     } else if (isPlaying) {
       interval = setInterval(() => {
@@ -105,6 +108,29 @@ const VideoPlayer = ({ contact, data = {}, onPause = () => {}, onPlay = () => {}
       clearInterval(interval)
     };
   }, [isPlaying, progression, videoSeeking])
+    
+    // play the video on component did mount
+    useEffect(() => {
+      tryToPlayVideo()
+    }, [videoRef.play])
+    
+  
+    const tryToPlayVideo = () => {
+      if (videoRef.play) {
+        videoRef.muted = true
+        videoRef
+          .play()
+          .then(() => {
+            videoRef.pause()
+            videoRef.muted = false
+          })
+          .catch(err => {
+            console.log("can't play video ")
+            console.log(err)
+          })
+      }
+    }
+    
   
   useEffect(() => {
     return () => {
@@ -146,7 +172,7 @@ const VideoPlayer = ({ contact, data = {}, onPause = () => {}, onPlay = () => {}
   const seekTo = (e) => {
     const rect = timelineRef.current.getBoundingClientRect()
     const position = e.clientX - rect.left
-    const progression = position / timelineRef.current.offsetWidth * duration
+    const progression = (position / timelineRef.current.offsetWidth) * duration
     dispatch({ type: 'videoPlayer/SET_PROGRESSION', data: progression })
     if (Object.keys(videoRef).length > 0) {
       const currentTime = (progression - helloScreen.duration) / 1000
@@ -156,11 +182,7 @@ const VideoPlayer = ({ contact, data = {}, onPause = () => {}, onPlay = () => {}
 
   const playOrPause = () => {
     if (!autoPlayFlag) {
-      videoRef.muted = true
-      videoRef.play().then(() => {
-        videoRef.pause()
-        videoRef.muted = false
-      })
+      tryToPlayVideo()
       setAutoPlayFlag(true)
     }
     dispatch({ type: isPlaying ? 'videoPlayer/PAUSE' : 'videoPlayer/PLAY' })
@@ -214,14 +236,12 @@ const VideoPlayer = ({ contact, data = {}, onPause = () => {}, onPlay = () => {}
         <video
           className={styles.videoElement}
           height="100%"
+          width="100%"
           key={video.url}
           playsInline={true}
           ref={videoRefCb}
+          preload="auto"
           src={video.url}
-          // style={{
-          //   display: progression > helloScreen.duration && progression < duration - endScreen.duration ? 'block' : 'none'
-          // }}
-          width="100%"
         />
         {helloScreen && Object.keys(helloScreen).length > 0 && progression < helloScreen.duration && <HelloScreen contact={contact} data={helloScreen}/>}
         {endScreen && Object.keys(endScreen).length > 0 && progression >= duration - endScreen.duration && <EndScreen contact={contact} data={endScreen}/>}
