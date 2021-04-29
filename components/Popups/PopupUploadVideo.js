@@ -54,7 +54,7 @@ const PopupUploadVideo = ({ onDone }) => {
     } catch (err) {
       const code = err.response && err.response.data
       if (code === 'Upload.incorrectFiletype') {
-        setError('Incorrect file type. You must upload v')
+        setError('Incorrect filetype <br/> Please use an accepted format (webm, mp4, avi, mov)')
       }
     } finally {
       setIsUploading(false)
