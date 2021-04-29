@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Button from '@/components/Button'
@@ -16,6 +16,8 @@ const ToolRecord = () => {
   const preview = useSelector(state => state.campaign.preview)
 
   const [displayVideoRecorder, showVideoRecorder] = useState(false)
+
+  const isSafari = useMemo(() => /apple/i.test(navigator.vendor), [])
 
   return tool === 1 && (
     <div
@@ -44,9 +46,32 @@ const ToolRecord = () => {
       />
       <p className={styles.toolRecordName}>Record</p>
       <p className={styles.toolRecordText}>Start recording your video and personalize it with custom screens</p>
-      <Button onClick={() => showVideoRecorder(true)}>
-        Start recording
-      </Button>
+      
+      {isSafari ? (
+          <div>
+            <p className={styles.unsuportedBrowser}>
+              Unsupported browser to <br/> record a video
+              <br />
+              Please use
+              <a href="https://www.google.com/intl/fr/chrome/" target="_blank">
+                {` Chrome `}
+              </a>
+              or
+              <a
+                href="https://www.mozilla.org/fr/firefox/windows/"
+                target="_blank"
+              >
+                {` Firefox `}
+              </a>
+              to create campaigns
+            </p>
+          </div>
+      ) : (
+          <Button onClick={() => showVideoRecorder(true)}>
+            Start recording
+          </Button>
+      )}
+      
       <ImportButton
         onChange={(e) => {
           showPopup({
