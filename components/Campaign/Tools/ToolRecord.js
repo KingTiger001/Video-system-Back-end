@@ -17,11 +17,7 @@ const ToolRecord = () => {
 
   const [displayVideoRecorder, showVideoRecorder] = useState(false)
 
-  useEffect(() => {
-    setIsSafari(/apple/i.test(navigator.vendor));
-  }, []);
-
-  const [isSafari, setIsSafari] = useState(false);
+  const isSafari = useMemo(() => /apple/i.test(navigator.vendor), [])
 
   return tool === 1 && (
     <div
