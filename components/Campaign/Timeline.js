@@ -51,7 +51,7 @@ const Timeline = () => {
       onMouseMove={(e) => timelineDraggable && seekTo(e)}
       ref={ref}
       style={{
-        gridTemplateColumns: `${helloScreen.duration ? `${(helloScreen.duration / duration) * 100}%` : ''} ${Object.keys(video).length > 0 ? '1fr' : ''} ${endScreen.duration ? `${(endScreen.duration / duration) * 100}%` : ''}`
+        gridTemplateColumns: `${helloScreen.duration ? `auto` : ''} ${Object.keys(video).length > 0 ? '1fr' : ''} ${endScreen.duration ? `auto` : ''}`
       }}
     >
       <span

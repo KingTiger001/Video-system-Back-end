@@ -181,24 +181,7 @@ const ToolEndScreen = ({ me }) => {
                 toolVariables={true}
               />
             </div>
-            <div className={styles.toolSection}>
-              <label className={styles.toolLabel}>Duration (in seconds)</label>
-              <InputNumber
-                className={styles.toolInput}
-                initialValue={endScreen.duration / 1000}
-                onChange={(value) => {
-                  dispatch({
-                    type: 'CHANGE_END_SCREEN',
-                    data: {
-                      duration: parseFloat(value * 1000, 10)
-                    },
-                  })
-                  dispatch({ type: 'CALC_DURATION' })
-                }}
-                max={10}
-              />
-            </div>
-
+           
             <p className={styles.toolSubtitle}>Add links</p>
             { (me.freeTrial || me.subscription.status === 'active') &&
               <div className={styles.toolSection}>
