@@ -1,7 +1,7 @@
 ## Déployer en staging
 - Se placer à la racine du projet et build avec la commande suivante: ```docker build -f config/dockerfiles/dockerfile.staging -t registry.gitlab.com/teaps1/fomo/saas:staging . && docker push registry.gitlab.com/teaps1/fomo/saas:staging```
 - Se connecter au servur ```ssh -i "fomo.pem" ec2-user@ec2-34-193-119-23.compute-1.amazonaws.com```
-- Mettre à jour les images docker des projets modifiés (ex: ```docker pull registry.gitlab.com/teaps1/fomo/api:staging```)
+- Mettre à jour les images docker des projets modifiés (ex: ```docker pull registry.gitlab.com/teaps1/fomo/saas:staging```)
 - Enfin terminer par ```docker-compose up -d```
 
 
