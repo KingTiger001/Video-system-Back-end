@@ -27,14 +27,21 @@ const ToolEndScreen = ({ me }) => {
   const previewEndScreen = useSelector(state => state.campaign.previewEndScreen)
 
   const [displayFormEndScreen, showFormEndScreen] = useState(false)
+  const [editMode, setEditMode] = useState(false)
 
   const addEndScreenToLibrary = async () => {
     try {
       const data = { ...endScreen }
-      delete data._id
-      await mainAPI.post('/endScreens', data)
-      toast.success('End screen added to the library.')
+      if (!editMode) {
+        delete data._id
+        await mainAPI.post(`/endScreens`, data)
+        toast.success(`End screen added to the library.`)
+      } else {
+        await mainAPI.patch(`/endScreens/${data._id}`, data)
+        toast.success(`End screen ${data.name} updated.`)
+      }
       getEndScreenList()
+      showFormEndScreen(false)
     } catch (err) {
       console.log(err)
     }
@@ -303,6 +310,7 @@ const ToolEndScreen = ({ me }) => {
                 })
                 dispatch({ type: 'CALC_DURATION' })
                 showFormEndScreen(true)
+                setEditMode(false)
               }}
             >
               <img src="/assets/campaign/add.svg" />
@@ -332,6 +340,7 @@ const ToolEndScreen = ({ me }) => {
                         data: {},
                       })
                       showFormEndScreen(true)
+                      setEditMode(true)
                     }}
                   >
                     <img src="/assets/campaign/libraryEdit.svg" />
@@ -387,6 +396,7 @@ const ToolEndScreen = ({ me }) => {
                               })
                               dispatch({ type: 'CALC_DURATION' })
                               showFormEndScreen(true)
+                              setEditMode(true)
                             }}
                           />
                           <p>Select</p>

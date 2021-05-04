@@ -27,14 +27,21 @@ const ToolHelloScreen = ({ me }) => {
   const previewHelloScreen = useSelector(state => state.campaign.previewHelloScreen)
 
   const [displayFormHelloScreen, showFormHelloScreen] = useState(false)
+  const [editMode, setEditMode] = useState(false)
 
   const addHelloScreenToLibrary = async () => {
     try {
       const data = { ...helloScreen }
-      delete data._id
-      await mainAPI.post('/helloScreens', data)
-      toast.success('Start screen added to the library.')
+      if (!editMode) {
+        delete data._id
+        await mainAPI.post(`/helloScreens`, data)
+        toast.success(`Start screen added to the library.`)
+      } else {
+        await mainAPI.patch(`/helloScreens/${data._id}`, data)
+        toast.success(`Start screen ${data.name} updated.`)
+      }
       getHelloScreenList()
+      showFormHelloScreen(false)
     } catch (err) {
       console.log(err)
     }
@@ -159,8 +166,8 @@ const ToolHelloScreen = ({ me }) => {
                 })
                 dispatch({ type: 'CALC_DURATION' })
                 showFormHelloScreen(true)
-              }}
-            >
+                setEditMode(false)
+              }}>
               <img src="/assets/campaign/add.svg" />
               <p>Create Start Screen</p>
             </div>
@@ -188,8 +195,8 @@ const ToolHelloScreen = ({ me }) => {
                         data: {},
                       })
                       showFormHelloScreen(true)
-                    }}
-                  >
+                      setEditMode(true)
+                    }}>
                     <img src="/assets/campaign/libraryEdit.svg" />
                     <p>Edit</p>
                   </div>
@@ -242,6 +249,7 @@ const ToolHelloScreen = ({ me }) => {
                             })
                             dispatch({ type: 'CALC_DURATION' })
                             showFormHelloScreen(true)
+                            setEditMode(true)
                           }}
                         >
                           <img src="/assets/campaign/librarySelect.svg" />
