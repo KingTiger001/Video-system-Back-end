@@ -12,8 +12,8 @@ const PopupContactListCreate = ({ onDone }) => {
     if (!loading) {
       try {
         setLoading(true)
-        await mainAPI.post('/contactLists', data)
-        onDone()
+        const list = await mainAPI.post('/contactLists', data)
+        onDone(list)
       } catch (err) {
         setLoading(false)
         console.log(err)
