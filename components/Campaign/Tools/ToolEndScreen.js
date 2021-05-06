@@ -31,14 +31,17 @@ const ToolEndScreen = ({ me }) => {
 
   const addEndScreenToLibrary = async () => {
     try {
-      const data = { ...endScreen }
+      
       if (!editMode) {
-        delete data._id
-        await mainAPI.post(`/endScreens`, data)
+       const {data} = await mainAPI.post(`/endScreens`, endScreen)
+       dispatch({
+        type: 'CHANGE_END_SCREEN',
+        data
+      })
         toast.success(`End screen added to the library.`)
       } else {
-        await mainAPI.patch(`/endScreens/${data._id}`, data)
-        toast.success(`End screen ${data.name} updated.`)
+        await mainAPI.patch(`/endScreens/${endScreen._id}`, endScreen)
+        toast.success(`End screen ${endScreen.name} updated.`)
       }
       getEndScreenList()
       showFormEndScreen(false)
@@ -395,8 +398,6 @@ const ToolEndScreen = ({ me }) => {
                                 data: {},
                               })
                               dispatch({ type: 'CALC_DURATION' })
-                              showFormEndScreen(true)
-                              setEditMode(true)
                             }}
                           />
                           <p>Select</p>

@@ -31,14 +31,17 @@ const ToolHelloScreen = ({ me }) => {
 
   const addHelloScreenToLibrary = async () => {
     try {
-      const data = { ...helloScreen }
+ 
       if (!editMode) {
-        delete data._id
-        await mainAPI.post(`/helloScreens`, data)
+        const { data } = await mainAPI.post(`/helloScreens`, helloScreen)
+        dispatch({
+          type: 'CHANGE_HELLO_SCREEN',
+          data,
+        })
         toast.success(`Start screen added to the library.`)
       } else {
-        await mainAPI.patch(`/helloScreens/${data._id}`, data)
-        toast.success(`Start screen ${data.name} updated.`)
+        await mainAPI.patch(`/helloScreens/${helloScreen._id}`, helloScreen)
+        toast.success(`Start screen ${helloScreen.name} updated.`)
       }
       getHelloScreenList()
       showFormHelloScreen(false)
@@ -248,8 +251,6 @@ const ToolHelloScreen = ({ me }) => {
                               data: {},
                             })
                             dispatch({ type: 'CALC_DURATION' })
-                            showFormHelloScreen(true)
-                            setEditMode(true)
                           }}
                         >
                           <img src="/assets/campaign/librarySelect.svg" />
