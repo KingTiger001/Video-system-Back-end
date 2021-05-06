@@ -144,7 +144,6 @@ const Contacts = ({ initialContacts, me }) => {
       {popup.display === 'CONTACT_LIST_SELECT' && (
         <PopupContactListSelect
           onDone={(selectedLists) => {
-            console.log('selectedLists', selectedLists)
             var counter = selectedLists.length
             selectedLists.forEach((list) => {
               mainAPI
@@ -222,7 +221,7 @@ const Contacts = ({ initialContacts, me }) => {
                   Add to list
                 </Button>
                 {showListOptions && selectedContact.length > 0 && (
-                  <div class={layoutStyles.buttonPopup}>
+                  <div className={layoutStyles.buttonPopup}>
                     <Button
                       onClick={() =>
                         showPopup({ display: 'CONTACT_LIST_CREATE' })
@@ -258,7 +257,7 @@ const Contacts = ({ initialContacts, me }) => {
                   Add contact
                 </Button>
                 {showContactOptions && (
-                  <div class={layoutStyles.buttonPopup}>
+                  <div className={layoutStyles.buttonPopup}>
                     <Button
                       size="small"
                       onClick={() => showPopup({ display: 'ADD_CONTACT' })}

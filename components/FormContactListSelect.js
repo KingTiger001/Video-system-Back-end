@@ -18,7 +18,7 @@ const FormContactListSelect = ({
   const dispatch = useDispatch()
   const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
 
-  const [selectedOptions, setForm] = useState([])
+  const [selectedOptions, setSelectedOptions] = useState([])
 
   const submit = (e) => {
     e.preventDefault()
@@ -39,7 +39,7 @@ const FormContactListSelect = ({
           defaultValue={[options[0]]}
           isMulti
           options={options}
-          onChange={setForm}
+          onChange={setSelectedOptions}
         />
       </div>
       <Button loading={loading}>{buttonText}</Button>

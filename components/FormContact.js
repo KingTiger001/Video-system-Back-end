@@ -3,18 +3,39 @@ import { useDispatch } from 'react-redux'
 
 import Button from './Button'
 import Input from './Input'
-
+import Select from 'react-select'
+import makeAnimated from 'react-select/animated'
 import styles from '@/styles/components/FormContact.module.sass'
 
-const FormContact = ({ buttonText, data = {}, loading, onSubmit }) => {
+const animatedComponents = makeAnimated()
+const customStyles = {
+  control: base => ({
+    ...base,
+    height: 55,
+    minHeight: 55
+  })
+};
+
+const FormContact = ({ buttonText, data = {}, loading, onSubmit, includeLists }) => {
   const dispatch = useDispatch()
   const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
 
-  const [form, setForm] = useState(data)
+  const [form, setForm] = useState(data.contact ?? {})
+  const [selectedOptions, setSelectedOptions] = useState([])
+
+  const options = includeLists
+    ? data.lists.map((list) => {
+        return { value: list, label: list.name }
+      })
+    : []
 
   const submit = (e) => {
     e.preventDefault()
-    onSubmit(form)
+    const data = {
+      contact: form,
+      lists: selectedOptions.map((option) => option.value),
+    }
+    onSubmit(data)
   }
 
   return (
@@ -103,6 +124,19 @@ const FormContact = ({ buttonText, data = {}, loading, onSubmit }) => {
           value={form.phone}
         />
       </div>
+      {includeLists && (
+        <div>
+          <label className={styles.label}>Add to existing lists</label>
+          <Select
+            closeMenuOnSelect={false}
+            components={animatedComponents}
+            isMulti
+            options={options}      
+            styles={customStyles}
+            onChange={setSelectedOptions}
+          />
+        </div>
+      )}
       <Button loading={loading}>{buttonText}</Button>
       <p
         onClick={hidePopup}

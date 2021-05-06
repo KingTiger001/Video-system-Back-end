@@ -31,7 +31,7 @@ const PopupContactListAddContact = ({ me, onDone }) => {
     if (!loading) {
       try {
         setLoading(true)
-        const { data: contact } = await mainAPI.post('/contacts', [data])
+        const { data: contact } = await mainAPI.post('/contacts', [data.contact])
         updateList([contact._id])
       } catch (err) {
         setLoading(false)
