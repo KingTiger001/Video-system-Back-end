@@ -82,7 +82,7 @@ const ToolLogo = () => {
     >
       <p className={styles.toolTitle}>Logo</p>
       <div className={styles.toolSection}>
-        <label className={styles.toolLabel}>Image</label>
+        <label className={styles.toolLabel}>Add Logo</label>
         <label
           className={styles.logo}
           htmlFor="logo"
@@ -119,13 +119,13 @@ const ToolLogo = () => {
           onChange={(value) => dispatch({
             type: 'CHANGE_LOGO',
             data: {
-              size: parseInt(value, 10),
+              size: parseInt(value>100, 10),
             },
           })}
         />
       </div>
       <div className={styles.toolSection}>
-        <label className={styles.toolLabel}>Placement</label>
+        <label className={styles.toolLabel}>Logo Placement</label>
         <div className={styles.placement}>
           <div
             className={`${logo.placement === 'top-left' ? styles.selected : ''}`}
