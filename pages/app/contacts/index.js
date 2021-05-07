@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 
@@ -62,6 +62,10 @@ const Contacts = ({ initialContacts, me }) => {
     const { data } = await mainAPI.get(`/contacts/search?query=${query}`)
     setContacts(data)
   }
+
+  const deleteRef= useRef(null);
+  const contactRef= useRef(null);
+  const listRef= useRef(null);
 
   const renderContact = (contact = {}) => (
     <ListItem
@@ -130,8 +134,10 @@ const Contacts = ({ initialContacts, me }) => {
   }, [showContactOptions, showListOptions])
 
   const hidePopupButtons = (e) => {
-    setShowContactOptions(false)
-    setShowListOptions(false)
+    if(!contactRef.current.contains(e.target))
+      setShowContactOptions(false)
+    if(!listRef.current.contains(e.target))
+      setShowListOptions(false)
   }
 
   return (
@@ -157,7 +163,7 @@ const Contacts = ({ initialContacts, me }) => {
       )}
       {popup.display === 'CONTACT_LIST_SELECT' && (
         <PopupContactListSelect
-          onDone={(selectedLists) => {
+          onDone={async (selectedLists) => {
             const promises = selectedLists.map((list) =>
               mainAPI.post(`/contactLists/${list._id}/contacts`, {
                 contactsId: selectedContact,
@@ -217,7 +223,7 @@ const Contacts = ({ initialContacts, me }) => {
           <div className={layoutStyles.headerTop}>
             <h1 className={layoutStyles.headerTitle}>Contacts <span>({ searchQuery ? contacts.length : contacts.totalDocs })</span></h1>
             <div className={layoutStyles.headerActions}>
-              <div className={layoutStyles.buttonContainer}>
+              <div className={layoutStyles.buttonContainer} ref={deleteRef}>
                 {selectedContact.length >0 && (
                   <Button
                     onClick={() => showPopup({
@@ -230,12 +236,11 @@ const Contacts = ({ initialContacts, me }) => {
                   </Button>
                 )}
               </div>
-              <div className={layoutStyles.buttonContainer}>
+              <div className={layoutStyles.buttonContainer} ref={listRef}>
                 <Button
                   onClick={() =>
                     selectedContact.length &&
-                    (setShowContactOptions(false) ||
-                      setShowListOptions(!showListOptions))
+                    setShowListOptions(!showListOptions)
                   }
                   size="small"
                   outline
@@ -268,11 +273,9 @@ const Contacts = ({ initialContacts, me }) => {
                   </div>
                 )}
               </div>
-
-              <div className={layoutStyles.buttonContainer}>
+              <div className={layoutStyles.buttonContainer} ref={contactRef}>
                 <Button
-                  onClick={() =>
-                    setShowListOptions(false) ||
+                  onClick={() => 
                     setShowContactOptions(!showContactOptions)
                   }
                   size="small"
