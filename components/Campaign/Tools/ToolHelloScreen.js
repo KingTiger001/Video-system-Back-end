@@ -27,14 +27,24 @@ const ToolHelloScreen = ({ me }) => {
   const previewHelloScreen = useSelector(state => state.campaign.previewHelloScreen)
 
   const [displayFormHelloScreen, showFormHelloScreen] = useState(false)
+  const [editMode, setEditMode] = useState(false)
 
   const addHelloScreenToLibrary = async () => {
     try {
-      const data = { ...helloScreen }
-      delete data._id
-      await mainAPI.post('/helloScreens', data)
-      toast.success('Start screen added to the library.')
+ 
+      if (!editMode) {
+        const { data } = await mainAPI.post(`/helloScreens`, helloScreen)
+        dispatch({
+          type: 'CHANGE_HELLO_SCREEN',
+          data,
+        })
+        toast.success(`Start screen added to the library.`)
+      } else {
+        await mainAPI.patch(`/helloScreens/${helloScreen._id}`, helloScreen)
+        toast.success(`Start screen ${helloScreen.name} updated.`)
+      }
       getHelloScreenList()
+      showFormHelloScreen(false)
     } catch (err) {
       console.log(err)
     }
@@ -159,8 +169,8 @@ const ToolHelloScreen = ({ me }) => {
                 })
                 dispatch({ type: 'CALC_DURATION' })
                 showFormHelloScreen(true)
-              }}
-            >
+                setEditMode(false)
+              }}>
               <img src="/assets/campaign/add.svg" />
               <p>Create Start Screen</p>
             </div>
@@ -188,8 +198,8 @@ const ToolHelloScreen = ({ me }) => {
                         data: {},
                       })
                       showFormHelloScreen(true)
-                    }}
-                  >
+                      setEditMode(true)
+                    }}>
                     <img src="/assets/campaign/libraryEdit.svg" />
                     <p>Edit</p>
                   </div>
@@ -241,7 +251,6 @@ const ToolHelloScreen = ({ me }) => {
                               data: {},
                             })
                             dispatch({ type: 'CALC_DURATION' })
-                            showFormHelloScreen(true)
                           }}
                         >
                           <img src="/assets/campaign/librarySelect.svg" />

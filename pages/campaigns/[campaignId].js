@@ -21,7 +21,12 @@ const Campaign = ({ campaign }) => {
   const viewDurationRef = useRef()
   const [isPlaying, setIsPlaying] = useState(false)
 
-  const contact = campaign.share.contacts.find(c => c._id === contactId)
+  let contact = campaign.share.contacts.find((c) => c._id === contactId)
+
+  if (contact == null)
+    campaign.share.lists.forEach((item) => {
+      if (contact == null) contact = item.list.find((c) => c._id === contactId)
+    }) 
 
   useEffect(() => {
     sessionId.current = Math.floor(Math.random() * Date.now())
