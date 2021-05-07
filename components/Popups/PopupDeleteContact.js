@@ -28,14 +28,15 @@ const PopupDeleteContact = ({ me, onDone }) => {
             },
           })
         )
-        Promise.all(promises).then(onDone)
+        await Promise.all(promises)
+        onDone()
       } catch (err) {
         setLoading(false)
       }
     }
   }
 
-  const title = `Delete ${popup.data.length === 1 ? 'a contact' : 'contacts'}`
+  const title = `Delete ${popup.data.length === 1 ? 'contact' : 'contacts'}`
   const desc = `Are you sure you want to delete ${
     popup.data.length === 1 ? 'this contact' : 'these contacts'
   }?`

@@ -83,7 +83,7 @@ const PopupImportContacts = ({ listId, me, onDone }) => {
 
     const selectedList = selectedOptions.map((op) => op.value)
 
-    let selectedListsIds = selectedList.map((list) => list._id)
+    const selectedListsIds = selectedList.map((list) => list._id)
     if (listId) selectedListsIds.push(listId)
 
     const promises = selectedListsIds.map((listid) =>

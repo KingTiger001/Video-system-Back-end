@@ -120,6 +120,20 @@ const Contacts = ({ initialContacts, me }) => {
     setSelectedContact(e.target.checked ? contacts.docs.map((e) => e._id) : [])
   }
 
+  useEffect(() => {
+    if (showContactOptions || showListOptions)
+      document.body.addEventListener('click', hidePopupButtons)
+    else document.body.removeEventListener('click', hidePopupButtons)
+    return () => {
+      document.body.removeEventListener('click', hidePopupButtons)
+    }
+  }, [showContactOptions, showListOptions])
+
+  const hidePopupButtons = (e) => {
+    setShowContactOptions(false)
+    setShowListOptions(false)
+  }
+
   return (
     <AppLayout>
       <Head>
@@ -150,10 +164,9 @@ const Contacts = ({ initialContacts, me }) => {
                 ownerId: me._id,
               })
             )
-            Promise.all(promises).then(() => {
-              hidePopup()
-              toast.success('List Saved.')
-            })
+            await Promise.all(promises)
+            hidePopup()
+            toast.success('List Saved.')
           }}
         />
       )}

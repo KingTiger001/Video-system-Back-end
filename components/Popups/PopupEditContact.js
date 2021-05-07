@@ -38,7 +38,8 @@ const PopupEditContact = ({ me, onDone }) => {
             ownerId: me._id,
           })
         )
-        Promise.all(promises).then(onDone)
+        await Promise.all(promises)
+        onDone()
       } catch (err) {
         setLoading(false)
         console.log(err)

@@ -23,7 +23,8 @@ const PopupAddContact = ({ onDone }) => {
             ownerId: me,
           })
         )
-        Promise.all(promises).then(onDone)
+        await Promise.all(promises)
+        onDone()
       } catch (err) {
         setLoading(false)
         console.log(err)
