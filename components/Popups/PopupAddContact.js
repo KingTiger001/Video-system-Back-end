@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { mainAPI } from '@/plugins/axios'
 
@@ -8,11 +8,22 @@ import Popup from './Popup'
 const PopupAddContact = ({ onDone }) => {
   const [loading, setLoading] = useState(false)
 
-  const addContact = async (data) => {
+  const addContact = async (form) => {
+    const { contact, lists } = form
     if (!loading) {
       try {
         setLoading(true)
-        await mainAPI.post('/contacts', [data])
+        const { data: savedContacts } = await mainAPI.post('/contacts', [
+          contact,
+        ])
+        const me = savedContacts[0].owner
+        const promises = lists.map((list) =>
+          mainAPI.post(`/contactLists/${list._id}/contacts`, {
+            contactsId: savedContacts.map((c) => c._id),
+            ownerId: me,
+          })
+        )
+        await Promise.all(promises)
         onDone()
       } catch (err) {
         setLoading(false)
@@ -20,6 +31,18 @@ const PopupAddContact = ({ onDone }) => {
       }
     }
   }
+
+  const [dataList, setDataList] = useState([])
+  useEffect(() => {
+    async function getList() {
+      const { data } = await mainAPI.get(
+        `/users/me/contactLists?limit=1000&page=1`
+      )
+      setLoading(false)
+      setDataList(data.docs)
+    }
+    getList()
+  }, [])
 
   return (
     <Popup
@@ -29,6 +52,8 @@ const PopupAddContact = ({ onDone }) => {
         buttonText="Add"
         loading={loading}
         onSubmit={addContact}
+        data={{ lists: dataList }}
+        includeLists
       />
     </Popup>
   )
