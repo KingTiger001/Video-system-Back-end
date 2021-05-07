@@ -81,7 +81,7 @@ const Contacts = ({ initialContacts, me }) => {
           <li
             onClick={() => showPopup({
               display: 'DELETE_CONTACT',
-              data: contact,
+              data: [contact._id],
             })}
           >
             <p>Delete</p>
@@ -144,21 +144,16 @@ const Contacts = ({ initialContacts, me }) => {
       {popup.display === 'CONTACT_LIST_SELECT' && (
         <PopupContactListSelect
           onDone={(selectedLists) => {
-            var counter = selectedLists.length
-            selectedLists.forEach((list) => {
-              mainAPI
-                .post(`/contactLists/${list._id}/contacts`, {
-                  contactsId: selectedContact,
-                  ownerId: me._id,
-                })
-                .then(() => {
-                  counter--
-                  if (counter == 0) {
-                    hidePopup()
-                    toast.success('List Saved.')
-                  }
-                })
-            }) 
+            const promises = selectedLists.map((list) =>
+              mainAPI.post(`/contactLists/${list._id}/contacts`, {
+                contactsId: selectedContact,
+                ownerId: me._id,
+              })
+            )
+            Promise.all(promises).then(() => {
+              hidePopup()
+              toast.success('List Saved.')
+            })
           }}
         />
       )}
@@ -181,15 +176,17 @@ const Contacts = ({ initialContacts, me }) => {
           }}
         />
       }
-      { popup.display === 'DELETE_CONTACT' && 
+       {(popup.display === 'DELETE_CONTACT' ||
+        popup.display === 'DELETE_MULTIPLE_CONTACT') && (
         <PopupDeleteContact
           me={me}
           onDone={() => {
             getContacts()
             hidePopup()
+            setSelectedContact([])
             toast.success('Contact deleted.')
           }}
-        />
+        />)
       }
       { popup.display === 'IMPORT_CONTACTS' && 
         <PopupImportContacts
@@ -207,7 +204,19 @@ const Contacts = ({ initialContacts, me }) => {
           <div className={layoutStyles.headerTop}>
             <h1 className={layoutStyles.headerTitle}>Contacts <span>({ searchQuery ? contacts.length : contacts.totalDocs })</span></h1>
             <div className={layoutStyles.headerActions}>
-
+              <div className={layoutStyles.buttonContainer}>
+                {selectedContact.length >0 && (
+                  <Button
+                    onClick={() => showPopup({
+                      display: 'DELETE_MULTIPLE_CONTACT',
+                      data: selectedContact,
+                    })}
+                    size="small"
+                    color={'danger'}>
+                    delete
+                  </Button>
+                )}
+              </div>
               <div className={layoutStyles.buttonContainer}>
                 <Button
                   onClick={() =>
@@ -246,6 +255,7 @@ const Contacts = ({ initialContacts, me }) => {
                   </div>
                 )}
               </div>
+
               <div className={layoutStyles.buttonContainer}>
                 <Button
                   onClick={() =>

@@ -16,28 +16,35 @@ const PopupDeleteContact = ({ me, onDone }) => {
 
   const popup = useSelector(state => state.popup)
 
-  const deleteContact = async (e) => {
+  const deleteContacts = async (e) => {
     e.preventDefault()
     if (!loading) {
       try {
         setLoading(true)
-        await mainAPI.delete(`/contacts/${popup.data._id}`, {
-          data: {
-            ownerId: me._id,
-          },
-        })
-        onDone()
+        const promises = popup.data.map((id) =>
+          mainAPI.delete(`/contacts/${id}`, {
+            data: {
+              ownerId: me._id,
+            },
+          })
+        )
+        Promise.all(promises).then(onDone)
       } catch (err) {
         setLoading(false)
       }
     }
   }
 
+  const title = `Delete ${popup.data.length === 1 ? 'a contact' : 'contacts'}`
+  const desc = `Are you sure you want to delete ${
+    popup.data.length === 1 ? 'this contact' : 'these contacts'
+  }?`
+ 
   return (
     <Popup
-      title="Delete a contact"
-    >
-      <p>Are you sure you want to delete this contact?</p>
+      title={title}
+      >
+      <p>{desc}</p>
       <div className={styles.actions}>
         <Button
           outline={true}
@@ -46,7 +53,7 @@ const PopupDeleteContact = ({ me, onDone }) => {
           Cancel
         </Button>
         <Button
-          onClick={deleteContact}
+          onClick={deleteContacts}
           loading={loading}
         >
           Confirm

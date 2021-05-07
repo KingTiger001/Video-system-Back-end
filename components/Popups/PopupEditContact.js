@@ -32,23 +32,13 @@ const PopupEditContact = ({ me, onDone }) => {
           ownerId: me._id,
         })
 
-        if (!lists.length) onDone()
-        else {
-          var counter = lists.length
-          lists.forEach((list) => {
-            mainAPI
-              .post(`/contactLists/${list._id}/contacts`, {
-                contactsId: [contact._id],
-                ownerId: me._id,
-              })
-              .then(() => {
-                counter--
-                if (counter == 0) {
-                  onDone()
-                }
-              })
+        const promises = lists.map((list) =>
+          mainAPI.post(`/contactLists/${list._id}/contacts`, {
+            contactsId: [contact._id],
+            ownerId: me._id,
           })
-        }
+        )
+        Promise.all(promises).then(onDone)
       } catch (err) {
         setLoading(false)
         console.log(err)

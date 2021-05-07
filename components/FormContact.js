@@ -11,7 +11,6 @@ const animatedComponents = makeAnimated()
 const customStyles = {
   control: base => ({
     ...base,
-    height: 55,
     minHeight: 55
   })
 };
@@ -24,9 +23,7 @@ const FormContact = ({ buttonText, data = {}, loading, onSubmit, includeLists })
   const [selectedOptions, setSelectedOptions] = useState([])
 
   const options = includeLists
-    ? data.lists.map((list) => {
-        return { value: list, label: list.name }
-      })
+    ? data.lists.map((list) => ({ value: list, label: list.name }))
     : []
 
   const submit = (e) => {
@@ -129,7 +126,7 @@ const FormContact = ({ buttonText, data = {}, loading, onSubmit, includeLists })
           <label className={styles.label}>Add to existing lists</label>
           <Select
             closeMenuOnSelect={false}
-            components={animatedComponents}
+            components={animatedComponents} 
             isMulti
             options={options}      
             styles={customStyles}

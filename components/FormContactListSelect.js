@@ -26,9 +26,8 @@ const FormContactListSelect = ({
     onSubmit(selectedLists)
   }
 
-  const options = data.map((list) => {
-    return { value: list, label: list.name }
-  })
+  const options = data.map((list) => ({ value: list, label: list.name }))
+  
   return (
     <form className={styles.form} onSubmit={submit}>
       <div>

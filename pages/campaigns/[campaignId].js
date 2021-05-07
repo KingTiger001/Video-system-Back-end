@@ -21,7 +21,7 @@ const Campaign = ({ campaign }) => {
   const viewDurationRef = useRef()
   const [isPlaying, setIsPlaying] = useState(false)
 
-  var contact = campaign.share.contacts.find((c) => c._id === contactId)
+  let contact = campaign.share.contacts.find((c) => c._id === contactId)
 
   if (contact == null)
     campaign.share.lists.forEach((item) => {

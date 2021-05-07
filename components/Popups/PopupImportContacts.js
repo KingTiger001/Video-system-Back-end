@@ -1,12 +1,21 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { mainAPI } from '@/plugins/axios'
 
 import Button from '@/components/Button'
 import Popup from './Popup'
-
+import Select from 'react-select'
+import makeAnimated from 'react-select/animated' 
 import styles from '@/styles/components/Popups/PopupImportContacts.module.sass'
+
+const animatedComponents = makeAnimated()
+const customStyles = {
+  control: base => ({
+    ...base,
+    minHeight: 55
+  })
+};
 
 const PopupImportContacts = ({ listId, me, onDone }) => {
   const dispatch = useDispatch()
@@ -16,7 +25,7 @@ const PopupImportContacts = ({ listId, me, onDone }) => {
   const { columns, columnsMatching, columnsFound, contacts = [] } = popup.data
 
   const [columnsMatchingComplete, setColumnsMatchingComplete] = useState(popup.data.columnsMatching)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   const isColumnMissing = Object.keys(columnsMatching).find(key => columnsMatching[key] === null)
 
@@ -25,6 +34,20 @@ const PopupImportContacts = ({ listId, me, onDone }) => {
     for (var i = 0; i < splitStr.length; i++) splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1)
     return splitStr.join(' ')
   }
+  const [selectedOptions, setSelectedOptions] = useState([])
+  const [options, setOptions] = useState([]) 
+
+  useEffect(() => {
+    if (listId) return
+    async function getList() {
+      const { data } = await mainAPI.get(
+        `/users/me/contactLists?limit=1000&page=1`
+      )
+      setLoading(false)
+      setOptions(data.docs.map((list) => ({ value: list, label: list.name })))
+    }
+    getList()
+  }, [])
 
   const importContacts = async (e) => {
     e.preventDefault();
@@ -43,10 +66,12 @@ const PopupImportContacts = ({ listId, me, onDone }) => {
           .reduce((obj, item) => ({ ...obj, [Object.keys(item)[0]]: Object.values(item)[0] }), {})
         return contactFormatted
       })
-      const { data: contactsCreated } = await mainAPI.post('/contacts', contactsFormatted)
-      if (listId) {
-        await addImportedContactsInList(contactsCreated)
-      }
+      const { data: contactsCreated } = await mainAPI.post(
+        '/contacts',
+        contactsFormatted
+      ) 
+      await addImportedContactsInList(contactsCreated)
+
     } catch (err) {
       setLoading(false)
     }
@@ -55,7 +80,19 @@ const PopupImportContacts = ({ listId, me, onDone }) => {
 
   const addImportedContactsInList = async (contacts) => {
     const contactsId = contacts.map(c => c._id)
-    await mainAPI.post(`/contactLists/${listId}/contacts`, { contactsId, ownerId: me._id })
+
+    const selectedList = selectedOptions.map((op) => op.value)
+
+    let selectedListsIds = selectedList.map((list) => list._id)
+    if (listId) selectedListsIds.push(listId)
+
+    const promises = selectedListsIds.map((listid) =>
+      mainAPI.post(`/contactLists/${listid}/contacts`, {
+        contactsId,
+        ownerId: me._id,
+      })
+    )
+    await Promise.all(promises)
   }
 
   return (
@@ -99,6 +136,19 @@ const PopupImportContacts = ({ listId, me, onDone }) => {
               </div>
             </div>
           }
+          {!listId && (
+            <div> 
+              <label className={styles.columnsAddToList}>Add to existing lists</label>
+              <Select
+                closeMenuOnSelect={false}
+                components={animatedComponents}
+                isMulti
+                options={options}
+                styles={customStyles}
+                onChange={setSelectedOptions}
+              />
+            </div>
+          )}    
           <div className={styles.footer}>
             <Button loading={loading}>Import</Button>
             <p

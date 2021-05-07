@@ -9,32 +9,21 @@ const PopupAddContact = ({ onDone }) => {
   const [loading, setLoading] = useState(false)
 
   const addContact = async (form) => {
-        const {contact,lists} = form
+    const { contact, lists } = form
     if (!loading) {
       try {
         setLoading(true)
         const { data: savedContacts } = await mainAPI.post('/contacts', [
           contact,
         ])
-
-        if (!lists.length || !savedContacts.length) onDone()
-        else {
-          var counter = lists.length
-          const me = savedContacts[0].owner
-          lists.forEach((list) => {
-            mainAPI
-              .post(`/contactLists/${list._id}/contacts`, {
-                contactsId: savedContacts.map((c) => c._id),
-                ownerId: me,
-              })
-              .then(() => {
-                counter--
-                if (counter == 0) {
-                  onDone()
-                }
-              })
+        const me = savedContacts[0].owner
+        const promises = lists.map((list) =>
+          mainAPI.post(`/contactLists/${list._id}/contacts`, {
+            contactsId: savedContacts.map((c) => c._id),
+            ownerId: me,
           })
-        }
+        )
+        Promise.all(promises).then(onDone)
       } catch (err) {
         setLoading(false)
         console.log(err)
