@@ -119,7 +119,7 @@ const ToolLogo = () => {
           onChange={(value) => dispatch({
             type: 'CHANGE_LOGO',
             data: {
-              size: parseInt(value>100, 10),
+              size: parseInt(Math.min(value,200), 10),
             },
           })}
         />
