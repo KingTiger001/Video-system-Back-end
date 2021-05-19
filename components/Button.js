@@ -17,6 +17,7 @@ const Button = ({
   target, 
   textColor, 
   type = 'button',
+  disabled,
   width,
 }) => {
   const [fileInputKey, setfileInputKey] = useState(Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5))
@@ -24,14 +25,15 @@ const Button = ({
     case 'button':
       return (
         <button
-          className={`${className} ${styles.button} ${styles[`${color}Color`]} ${outline ? styles.outline : ''} ${loading ? styles.loading : ''} ${textColor ? styles[`${textColor}TextColor`] : ''} ${size ? styles[`${size}Size`] : ''}`}
+          className={`${className} ${styles.button} ${styles[`${color}Color`]} ${outline ? styles.outline : ''} ${loading ? styles.loading : ''} ${textColor ? styles[`${textColor}TextColor`] : ''} ${size ? styles[`${size}Size`] : ''} ${disabled ? styles[`disabled`] : ''} `}
           style={{
             ...(width && { width }),
             ...style,
           }}
+          disabled={disabled}
           onClick={onClick}
         >
-          <span>{ children }</span>
+          <span style={{display:'flex' , alignItems:'center'}}>{ children }</span>
         </button>
       )
     case 'div':

@@ -61,7 +61,7 @@ const Analytics = ({ initialAnalytics }) => {
                 },
               })}
             >
-              {analytics[analytic._id].displayReport ? 'Close report' : 'Open report'}
+              {analytics[analytic._id].displayReport ? 'Close Analytics' : 'Analytics'}
             </button>
           </div>
         )}

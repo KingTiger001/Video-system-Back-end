@@ -82,7 +82,7 @@ const ToolRecord = () => {
           e.target.value = null
         }}
       >
-        Import video
+        Upload video
       </ImportButton>
     </div>
   )

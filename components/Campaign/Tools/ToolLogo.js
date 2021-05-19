@@ -8,6 +8,22 @@ import Button from '@/components/Button'
 import InputNumber from '@/components/InputNumber'
 
 import styles from '@/styles/components/Campaign/Tools.module.sass'
+import InputRange from 'react-input-range'
+import 'react-input-range/lib/css/index.css'
+import styled from 'styled-components'
+
+const RangeSliderContainer = styled.div`
+  .input-range__track--active,
+  
+  .input-range__slider {
+    background: ${(props) => props.color};
+    border-color: ${(props) => props.color};
+  }
+  .input-range {
+    border: 50px;
+  }
+`
+
 
 const ToolLogo = () => {
   const dispatch = useDispatch()
@@ -113,16 +129,23 @@ const ToolLogo = () => {
       </div>
       <div className={styles.toolSection}>
         <label className={styles.toolLabel}>Size</label>
-        <InputNumber
-          initialValue={logo.size}
-          className={styles.toolInput}
-          onChange={(value) => dispatch({
-            type: 'CHANGE_LOGO',
-            data: {
-              size: parseInt(Math.min(value,200), 10),
-            },
-          })}
-        />
+        <div className={styles.toolSlider}>
+            <RangeSliderContainer color={'#5F59F7'}>
+              <InputRange
+                maxValue={100}
+                minValue={0}
+                value={logo.size}
+                onChange={(value) => {
+                  dispatch({
+                    type: 'CHANGE_LOGO',
+                    data: {
+                      size: parseInt(value, 10),
+                    },
+                  })
+                }}
+              />
+            </RangeSliderContainer>
+          </div>
       </div>
       <div className={styles.toolSection}>
         <label className={styles.toolLabel}>Logo Placement</label>

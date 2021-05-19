@@ -99,19 +99,22 @@ const Campaign = ({ campaign }) => {
         </div>
       </div>
       <div className={styles.content}>
-        <h1 className={styles.title}>{campaign.user.firstName} from {campaign.user.company} sent you a video message</h1>
+        <div className={styles.reply}>
+          <h1 className={styles.title}>
+            {campaign.user.firstName} from {campaign.user.company} <br />
+            <p>sent you a video message</p>
+          </h1>
+          <Button onClick={reply}>
+            <img src="/assets/common/reply.svg" style={{ marginRight: 5 }} />
+            Reply to {campaign.user.firstName}
+          </Button>
+        </div>
         <VideoPlayer
           contact={contact}
           data={campaign}
           onPlay={() => setIsPlaying(true)}
           onPause={() => setIsPlaying(false)}
         />
-        <div className={styles.reply}>
-          <Button onClick={reply}>
-            Reply
-          </Button>
-          <p>You can reply to {campaign.user.firstName}</p>
-        </div>
       </div>
     </div>
   )

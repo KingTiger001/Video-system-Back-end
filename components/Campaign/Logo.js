@@ -6,8 +6,8 @@ const Logo = ({ data = {} }) => {
       <div
         className={`${styles.logo} ${styles[data.placement]}`}
         style={{
-          height: data.size,
-          width: data.size,
+          width: `${(data.size / 4)}%`, 
+          height: `${(data.size / 4)}%`, 
         }}
       >
         <img src={data.value} />
