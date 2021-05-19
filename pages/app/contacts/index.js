@@ -223,19 +223,6 @@ const Contacts = ({ initialContacts, me }) => {
           <div className={layoutStyles.headerTop}>
             <h1 className={layoutStyles.headerTitle}>Contacts <span>({ searchQuery ? contacts.length : contacts.totalDocs })</span></h1>
             <div className={layoutStyles.headerActions}>
-              <div className={layoutStyles.buttonContainer} ref={deleteRef}>
-                {selectedContact.length >0 && (
-                  <Button
-                    onClick={() => showPopup({
-                      display: 'DELETE_MULTIPLE_CONTACT',
-                      data: selectedContact,
-                    })}
-                    size="small"
-                    color={'danger'}>
-                    delete
-                  </Button>
-                )}
-              </div>
               <div className={layoutStyles.buttonContainer} ref={listRef}>
                 <Button
                   onClick={() =>
@@ -275,9 +262,7 @@ const Contacts = ({ initialContacts, me }) => {
               </div>
               <div className={layoutStyles.buttonContainer} ref={contactRef}>
                 <Button
-                  onClick={() => 
-                    setShowContactOptions(!showContactOptions)
-                  }
+                  onClick={() => setShowContactOptions(!showContactOptions)}
                   size="small"
                   outline>
                   Add contact
@@ -303,6 +288,21 @@ const Contacts = ({ initialContacts, me }) => {
                       Import csv
                     </Button>
                   </div>
+                )}
+              </div>
+              <div className={layoutStyles.buttonContainer} ref={deleteRef}>
+                {selectedContact.length > 0 && (
+                  <Button
+                    onClick={() =>
+                      showPopup({
+                        display: 'DELETE_MULTIPLE_CONTACT',
+                        data: selectedContact,
+                      })
+                    }
+                    size="small"
+                    color={'danger'}>
+                    delete
+                  </Button>
                 )}
               </div>
             </div>

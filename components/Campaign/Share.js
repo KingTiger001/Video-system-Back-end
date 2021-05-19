@@ -9,23 +9,199 @@ import PopupAddContact from '@/components/Popups/PopupAddContact'
 import PopupImportContacts from '@/components/Popups/PopupImportContacts'
 import PopupQuitShare from '@/components/Popups/PopupQuitShare'
 
+import { MsalProvider, useIsAuthenticated, useMsal } from '@azure/msal-react'
+import { PublicClientApplication } from '@azure/msal-browser'
+import { requestScopes, msalConfig } from 'config/MsConfig'
+
 import styles from '@/styles/components/Campaign/Share.module.sass'
 
+const providers = {
+  GOOGLE: 'GOOGLE',
+  MICROSOFT: 'MICROSOFT',
+  FOMO: 'FOMO',
+}
+
+const RenderStepTree = ({ setSendVia, sendVia }) => {
+  const { instance: outlookInstance } = useMsal()
+  const [msAccesToken, setMsAccessToken] = useState(undefined)
+  const isOutlookAuthentified = useIsAuthenticated()
+
+  const [gAccesToken, setGAccessToken] = useState(undefined)
+  const isGoogleAuthentified = false
+
+  const [stepThreeError, setStepThreeError] = useState('')
+
+  const handleOutlookLogin = (outlookInstance) => {
+    outlookInstance
+      .loginPopup(requestScopes)
+      .then(() => {
+        setSendVia({
+          ...sendVia,
+          provider: providers.MICROSOFT,
+          email: outlookInstance.getAllAccounts()[0].username,
+        })
+      })
+      .catch((e) => {
+        setStepThreeError(e)
+        console.error(e)
+      })
+  }
+
+  //requestin accesstokens
+  useEffect(() => {
+    if (isOutlookAuthentified) refreshOutlookToken()
+  }, [isOutlookAuthentified])
+
+  useEffect(() => {
+    if (isGoogleAuthentified) refreshGmailToken()
+  }, [isGoogleAuthentified])
+
+  // accesstokens
+  useEffect(() => {
+    if (msAccesToken && sendVia.provider === providers.MICROSOFT)
+      setSendVia({ ...sendVia, accessToken: msAccesToken })
+    if (gAccesToken && sendVia.provider === providers.GOOGLE)
+      setSendVia({ ...sendVia, accessToken: msAccesToken })
+  }, [msAccesToken, gAccesToken])
+
+  const refreshGmailToken = () => {
+    console.log('not implemented yet')
+  }
+
+  const refreshOutlookToken = () => {
+    outlookInstance
+      .acquireTokenSilent({
+        account: outlookInstance.getAllAccounts()[0],
+        scopes: requestScopes.scopes,
+      })
+      .then((response) => {
+        console.log(response)
+        setMsAccessToken(response.accessToken)
+      })
+      .catch((e) => {
+        outlookInstance
+          .acquireTokenPopup(requestScopes)
+          .then((response) => {
+            setMsAccessToken(response.accessToken)
+          })
+          .catch((e) => {
+            setStepThreeError(e)
+            console.error(e)
+          })
+      })
+  }
+
+  const changeProvider = (event) => {
+    event.target.value === providers.GOOGLE &&
+      setSendVia({
+        accessToken: gAccesToken,
+        provider: event.target.value,
+        email: 'test@gmail.com',
+      })
+    event.target.value === providers.MICROSOFT &&
+      setSendVia({
+        accessToken: msAccesToken,
+        provider: event.target.value,
+        email: outlookInstance.getAllAccounts()[0].username,
+      })
+    event.target.value === providers.FOMO &&
+      setSendVia({
+        accessToken: '',
+        provider: event.target.value,
+        email: 'noreply@myfomo.io',
+      })
+  }
+
+  return (
+    <div className={styles.stepThree}>
+      <div>
+        <p className={styles.mailHeader}>
+          Choose how you want to send your Email.
+        </p>
+        <div className={styles.mailContainer}>
+          <p className={styles.mailTitle}>
+            You can connect your email address to send your video message
+          </p>
+          <div className={styles.mailOption}>
+            <input
+              name="email"
+              type="radio"
+              value={providers.GOOGLE}
+              disabled={!gAccesToken}
+              onClick={changeProvider}
+              checked={sendVia.provider === providers.GOOGLE}
+            />
+            <img
+              className={styles.mailLogo}
+              src="/assets/socials/gmail_icon.svg"
+            />
+            {true ? (
+              <a href="#">
+                <b>Sign in with Gmail</b>
+              </a>
+            ) : (
+              <b>test.femo@gmail.com</b>
+            )}
+          </div>
+          <div className={styles.mailOption}>
+            <input
+              name="email"
+              type="radio"
+              value={providers.MICROSOFT}
+              disabled={!msAccesToken}
+              onClick={changeProvider}
+              checked={sendVia.provider === providers.MICROSOFT}
+            />
+            <img
+              className={styles.mailLogo}
+              src="/assets/socials/outlook_icon.svg"></img>
+            {!isOutlookAuthentified ? (
+              <a href="#" onClick={() => handleOutlookLogin(outlookInstance)}>
+                <b>Sign in with Outlook</b>
+              </a>
+            ) : (
+              <b>{outlookInstance.getAllAccounts()[0].username}</b>
+            )}
+          </div>
+        </div>
+        <div className={styles.mailContainer}>
+          <p className={styles.mailTitle}>
+            You can use Fomo to send your video message
+          </p>
+          <div className={styles.mailOption}>
+            <input
+              name="email"
+              type="radio"
+              value={providers.FOMO}
+              onClick={changeProvider}
+              checked={sendVia.provider === providers.FOMO}
+            />
+            <img className={styles.mailLogo} src="/logo-circle.svg"></img>
+            <b>Fomo</b>
+          </div>
+        </div>
+      </div>
+      {stepThreeError && <p className={styles.error}>{stepThreeError}</p>}
+    </div>
+  )
+}
+
 const Share = ({ campaignId, onClose, onDone, me }) => {
-  const FROM = `${me.firstName} ${me.lastName} via FOMO`
+  const _FROM = `${me.firstName} ${me.lastName} `
   const SUBJECT = `${me.firstName} from ${me.company} sent you a video message`
 
   const dispatch = useDispatch()
-  
-  const popup = useSelector(state => state.popup)
+
+  const popup = useSelector((state) => state.popup)
   const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
-  const showPopup = (popupProps) => dispatch({ type: 'SHOW_POPUP', ...popupProps })
-  
+  const showPopup = (popupProps) =>
+    dispatch({ type: 'SHOW_POPUP', ...popupProps })
+
   const [campaign, setCampaign] = useState({})
   const [contacts, setContacts] = useState({})
   const [contactsSelected, setContactsSelected] = useState([])
   const [formDetails, setFormDetails] = useState({
-    from: FROM,
+    from: `${_FROM} via FOMO`,
     message: '',
     subject: SUBJECT,
   })
@@ -36,7 +212,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
   const [step, setStep] = useState(1)
   const [stepOneError, setStepOneError] = useState('')
   const [stepTwoError, setStepTwoError] = useState('')
-  const [stepThreeError, setStepThreeError] = useState('')
+  const [stepFourError, setStepFourError] = useState('')
   const [thumbnailLoading, setThumbnailLoading] = useState(false)
 
   const [displayPopupVariable, showPopupVariables] = useState(false)
@@ -46,10 +222,20 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
   const textareaMessageRef = useRef(null)
   const variablesPopupRef = useRef(null)
 
+  const msalInstance = new PublicClientApplication(msalConfig)
+  const [sendVia, setSendVia] = useState({
+    provider: providers.FOMO,
+    email: 'noreply@myfomo.io',
+    accessToken: '',
+  })
+
   // Close click outside text style
   useEffect(() => {
     function handleClickOutside(event) {
-      if (variablesPopupRef.current && !variablesPopupRef.current.contains(event.target)) {
+      if (
+        variablesPopupRef.current &&
+        !variablesPopupRef.current.contains(event.target)
+      ) {
         setVariable(false)
         showPopupVariables(false)
       }
@@ -57,7 +243,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
     document.addEventListener('mousedown', handleClickOutside)
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
-    };
+    }
   }, [variablesPopupRef])
 
   // mounted
@@ -65,33 +251,61 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
     getCampaign()
     getContacts()
     getLists()
-  }, []);
+    getLastUsedProvider()
+  }, [])
 
   useEffect(() => {
-    if (campaign.share && campaign.share.contacts && campaign.share.lists && (campaign.share.contacts.length > 0 || campaign.share.lists.length > 0)) {
+    setFormDetails({
+      ...formDetails,
+      from: `${_FROM} via ${
+        sendVia.provider === providers.FOMO ? providers.FOMO : sendVia.email
+      }`,
+    })
+  }, [sendVia])
+
+  useEffect(() => {
+    if (
+      campaign.share &&
+      campaign.share.contacts &&
+      campaign.share.lists &&
+      (campaign.share.contacts.length > 0 || campaign.share.lists.length > 0)
+    ) {
       setStep(3)
-    } else if (campaign.share && campaign.share.from && campaign.share.message && campaign.share.subject) {
+    } else if (
+      campaign.share &&
+      campaign.share.from &&
+      campaign.share.message &&
+      campaign.share.subject
+    ) {
       setStep(2)
     }
-  }, [mounted]);
+  }, [mounted])
 
   const getCampaign = async () => {
     const { data: campaign } = await mainAPI.get(`/campaigns/${campaignId}`)
     if (campaign.share && campaign.share.contacts) {
-      campaign.share.contacts = campaign.share.contacts.map(c => c._id)
+      campaign.share.contacts = campaign.share.contacts.map((c) => c._id)
     }
     setCampaign(campaign)
     setFormDetails({
-      from: FROM,
+      from: `${_FROM} via FOMO`,
       message: campaign.share ? campaign.share.message : '',
       subject: SUBJECT,
     })
-    setContactsSelected(campaign.share && campaign.share.contacts ? campaign.share.contacts : [])
-    setListsSelected(campaign.share && campaign.share.lists ? campaign.share.lists : [])
+    if (campaign.share.sendVia) setSendVia(campaign.share.sendVia)
+
+    setContactsSelected(
+      campaign.share && campaign.share.contacts ? campaign.share.contacts : []
+    )
+    setListsSelected(
+      campaign.share && campaign.share.lists ? campaign.share.lists : []
+    )
     setMounted(true)
   }
   const getContacts = async () => {
-    const { data: contacts } = await mainAPI.get(`/users/me/contacts?pagination=false`)
+    const { data: contacts } = await mainAPI.get(
+      `/users/me/contacts?pagination=false`
+    )
     setContacts(contacts)
   }
   const searchContacts = async (query) => {
@@ -103,9 +317,17 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
   }
 
   const getLists = async () => {
-    const { data: lists } = await mainAPI.get(`/users/me/contactLists?pagination=false`)
+    const { data: lists } = await mainAPI.get(
+      `/users/me/contactLists?pagination=false`
+    )
     setLists(lists)
   }
+
+  const getLastUsedProvider = async () => {
+    const lastProvider = localStorage.getItem('lastProvider')
+    if (lastProvider) setSendVia(JSON.parse(lastProvider))
+  }
+
   const searchLists = async (query) => {
     if (!query) {
       return getLists()
@@ -124,23 +346,19 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
   const handleSelectedContact = (e) => {
     const contactId = e.target.value
     if (contactsSelected.includes(contactId)) {
-      return setContactsSelected(contactsSelected.filter(c => c !== contactId))
+      return setContactsSelected(
+        contactsSelected.filter((c) => c !== contactId)
+      )
     }
-    setContactsSelected([
-      ...contactsSelected,
-      e.target.value,
-    ])
+    setContactsSelected([...contactsSelected, e.target.value])
   }
 
   const handleSelectedList = (e) => {
     const listId = e.target.value
     if (listsSelected.includes(listId)) {
-      return setListsSelected(listsSelected.filter(l => l !== listId))
+      return setListsSelected(listsSelected.filter((l) => l !== listId))
     }
-    setListsSelected([
-      ...listsSelected,
-      e.target.value,
-    ])
+    setListsSelected([...listsSelected, e.target.value])
   }
 
   const insertVariableInMessage = () => {
@@ -148,7 +366,10 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
     const value = textareaMessageRef.current.value
     setFormDetails({
       ...formDetails,
-      message: `${value.substring(0, cursorPosition)}{{${variable}}}${value.substring(cursorPosition, value.length)}`,
+      message: `${value.substring(
+        0,
+        cursorPosition
+      )}{{${variable}}}${value.substring(cursorPosition, value.length)}`,
     })
     showPopupVariables(false)
     setVariable('firstName')
@@ -163,6 +384,9 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
         case 2:
           await stepTwo()
           break
+        case 3:
+          await stepThree()
+          break
       }
       setStep(step + 1)
     } catch (err) {
@@ -176,7 +400,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
       await mainAPI.post('/campaigns/share', { campaign })
       onDone()
     } catch (err) {
-      setStepThreeError('An error has occured.')
+      setStepFourError('An error has occured.')
     } finally {
       setShareLoading(false)
     }
@@ -187,12 +411,15 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
       throw formDetailsRef.current.reportValidity()
     }
     try {
-      const { data: campaignUpdated } = await mainAPI.patch(`/campaigns/${campaignId}`, {
-        share: {
-          ...campaign.share,
-          ...formDetails,
+      const { data: campaignUpdated } = await mainAPI.patch(
+        `/campaigns/${campaignId}`,
+        {
+          share: {
+            ...campaign.share,
+            ...formDetails,
+          },
         }
-      })
+      )
       setCampaign(campaignUpdated)
     } catch (err) {
       throw setStepOneError('An error has occured.')
@@ -205,13 +432,16 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
       if (contactsSelected.length <= 0 && listsSelected.length <= 0) {
         throw new Error('You need at least one contact or one list selected.')
       }
-      const { data: campaignUpdated } = await mainAPI.patch(`/campaigns/${campaignId}`, {
-        share: {
-          ...campaign.share,
-          contacts: contactsSelected,
-          lists: listsSelected,
+      const { data: campaignUpdated } = await mainAPI.patch(
+        `/campaigns/${campaignId}`,
+        {
+          share: {
+            ...campaign.share,
+            contacts: contactsSelected,
+            lists: listsSelected,
+          },
         }
-      })
+      )
       setCampaign(campaignUpdated)
     } catch (err) {
       console.log(err)
@@ -219,18 +449,39 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
     }
   }
 
+  const stepThree = async () => {
+    try {
+      const { data: campaignUpdated } = await mainAPI.patch(
+        `/campaigns/${campaignId}`,
+        {
+          share: {
+            ...campaign.share,
+            sendVia,
+            ...formDetails,
+          },
+        }
+      )
+      setCampaign(campaignUpdated)
+      localStorage.setItem('lastProvider', JSON.stringify(sendVia))
+    } catch (err) {
+      throw setStepOneError('An error has occured.')
+    }
+  }
   const removeThumbnail = async () => {
     await mediaAPI.delete('/', {
       data: {
         url: campaign.share.thumbnail,
       },
     })
-    const { data: campaignUpdated } = await mainAPI.patch(`/campaigns/${campaignId}`, {
-      share: {
-        ...campaign.share,
-        thumbnail: null,
+    const { data: campaignUpdated } = await mainAPI.patch(
+      `/campaigns/${campaignId}`,
+      {
+        share: {
+          ...campaign.share,
+          thumbnail: null,
+        },
       }
-    })
+    )
     setCampaign(campaignUpdated)
   }
 
@@ -249,12 +500,15 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
           },
         })
       }
-      const { data: campaignUpdated } = await mainAPI.patch(`/campaigns/${campaignId}`, {
-        share: {
-          ...campaign.share,
-          thumbnail: url,
+      const { data: campaignUpdated } = await mainAPI.patch(
+        `/campaigns/${campaignId}`,
+        {
+          share: {
+            ...campaign.share,
+            thumbnail: url,
+          },
         }
-      })
+      )
       setCampaign(campaignUpdated)
     } catch (err) {
       console.log(err)
@@ -270,41 +524,37 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
     }
   }
 
-  const renderContact = (contact) => (
-    contact
-      ?
-      <div
-        className={styles.contactsItem}
-        key={contact._id}
-      >
+  const renderContact = (contact) =>
+    contact ? (
+      <div className={styles.contactsItem} key={contact._id}>
         <div>
-          { (me.freeTrial || me.subscription.level !== 'business' || (me.subscription.level === 'business' && (contactsSelected.length < 1 || contactsSelected.includes(contact._id)))) &&
+          {(me.freeTrial ||
+            me.subscription.level !== 'business' ||
+            (me.subscription.level === 'business' &&
+              (contactsSelected.length < 1 ||
+                contactsSelected.includes(contact._id)))) && (
             <input
               checked={contactsSelected.includes(contact._id)}
               onChange={handleSelectedContact}
               type="checkbox"
               value={contact._id}
             />
-          }
+          )}
         </div>
         <p>{contact.firstName}</p>
         <p>{contact.company}</p>
         <p>{contact.job}</p>
         <p>{contact.email}</p>
       </div>
-      :
+    ) : (
       <div className={`${styles.contactsItem} ${styles.empty}`}>
         <p>No contacts found</p>
       </div>
-  )
+    )
 
-  const renderList = (list) => (
-    list
-      ?
-      <div
-        className={styles.listsItem}
-        key={list._id}
-      >
+  const renderList = (list) =>
+    list ? (
+      <div className={styles.listsItem} key={list._id}>
         <input
           checked={listsSelected.includes(list._id)}
           onChange={handleSelectedList}
@@ -315,318 +565,362 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
         <p>{list.name}</p>
         <p>{list.list.length} contacts</p>
       </div>
-      :
+    ) : (
       <div className={`${styles.listsItem} ${styles.empty}`}>
         <p>No lists found</p>
       </div>
-  )
-  
-  return (
-    <div className={styles.shareCampaign}>
-      { popup.display === 'ADD_CONTACT' && 
-        <PopupAddContact
-          onDone={() => {
-            getContacts()
-            hidePopup()
-            toast.success('Contact added.')
-          }}
-        />
-      }
-      { popup.display === 'IMPORT_CONTACTS' && 
-        <PopupImportContacts
-          me={me}
-          onDone={() => {
-            getContacts()
-            hidePopup()
-            toast.success('Contacts imported.')
-          }}
-        />
-      }
-      { popup.display === 'QUIT_SHARE' && 
-        <PopupQuitShare
-          onDone={() => {
-            onClose()
-            hidePopup()
-          }}
-        />
-      }
+    )
 
-      <div className={styles.backdrop} />
-      <div className={styles.box}>
-        <div className={styles.header}>
-          <p className={styles.headerTitle}>Your campaign video</p>
-          <img
-            onClick={() => showPopup({ display: 'QUIT_SHARE' })}
-            src="/assets/common/close.svg"
+  return (
+    <MsalProvider instance={msalInstance}>
+      <div className={styles.shareCampaign}>
+        {popup.display === 'ADD_CONTACT' && (
+          <PopupAddContact
+            onDone={() => {
+              getContacts()
+              hidePopup()
+              toast.success('Contact added.')
+            }}
           />
-        </div>
-        <div className={styles.steps}>
-          <div className={`${styles.step} ${step === 1 ? styles.current : ''} ${step > 1 ? styles.valid : ''}`}>
-            <p>Details</p>
-            <div className={styles.stepStatus}>
-              <img src="/assets/common/doneWhite.svg" />
+        )}
+        {popup.display === 'IMPORT_CONTACTS' && (
+          <PopupImportContacts
+            me={me}
+            onDone={() => {
+              getContacts()
+              hidePopup()
+              toast.success('Contacts imported.')
+            }}
+          />
+        )}
+        {popup.display === 'QUIT_SHARE' && (
+          <PopupQuitShare
+            onDone={() => {
+              onClose()
+              hidePopup()
+            }}
+          />
+        )}
+
+        <div className={styles.backdrop} />
+        <div className={styles.box}>
+          <div className={styles.header}>
+            <p className={styles.headerTitle}>Your video campaign</p>
+            <img
+              onClick={() => showPopup({ display: 'QUIT_SHARE' })}
+              src="/assets/common/close.svg"
+            />
+          </div>
+          <div className={styles.steps}>
+            <div
+              className={`${styles.step} ${step === 1 ? styles.current : ''} ${
+                step > 1 ? styles.valid : ''
+              }`}>
+              <p>Message</p>
+              <div className={styles.stepStatus}>
+                <img src="/assets/common/doneWhite.svg" />
+              </div>
+            </div>
+            <div
+              className={`${styles.step} ${step === 2 ? styles.current : ''} ${
+                step > 2 ? styles.valid : ''
+              }`}>
+              <p>Contacts</p>
+              <div className={styles.stepStatus}>
+                <img src="/assets/common/doneWhite.svg" />
+              </div>
+            </div>
+            <div
+              className={`${styles.step} ${step === 3 ? styles.current : ''} ${
+                step > 3 ? styles.valid : ''
+              }`}>
+              <p>Send via</p>
+              <div className={styles.stepStatus}>
+                <img src="/assets/common/doneWhite.svg" />
+              </div>
+            </div>
+            <div
+              className={`${styles.step} ${step === 4 ? styles.current : ''}`}>
+              <p>Confirmation</p>
+              <div className={styles.stepStatus}>
+                <img src="/assets/common/doneWhite.svg" />
+              </div>
             </div>
           </div>
-          <div className={`${styles.step} ${step === 2 ? styles.current : ''} ${step > 2 ? styles.valid : ''}`}>
-            <p>Contacts</p>
-            <div className={styles.stepStatus}>
-              <img src="/assets/common/doneWhite.svg" />
-            </div>
-          </div>
-          <div className={`${styles.step} ${step === 3 ? styles.current : ''}`}>
-            <p>Confirmation</p>
-            <div className={styles.stepStatus}>
-              <img src="/assets/common/doneWhite.svg" />
-            </div>
-          </div>
-        </div>
-        <div className={styles.content}>
-          { step === 1 && 
-            <form
-              className={styles.stepOne}
-              ref={formDetailsRef}
-            >
-              <p className={styles.title}>Details</p>
-              {/* <div>
-                <label>Subject*</label>
-                <input
-                  onChange={(e) => setFormDetails({
-                    ...formDetails,
-                    subject: e.target.value,
-                  })}
-                  required
-                  type="text"
-                  value={formDetails.subject}
-                />
-              </div>
-              <div>
-                <label>From*</label>
-                <input
-                  onChange={(e) => setFormDetails({
-                    ...formDetails,
-                    from: e.target.value,
-                  })}
-                  required
-                  type="text"
-                  value={formDetails.from}
-                />
-              </div> */}
-              <div>
-                <div className={styles.detailsMessageHeader}>
-                  <label>Your message*</label>
-                  { (me.freeTrial || me.subscription.level === 'pro') &&
-                    <span
-                      className={styles.addVariable}
-                      onClick={() => showPopupVariables(true)}
-                    >
-                      Add variable
-                    </span>
-                  }
-                  { displayPopupVariable &&
-                    <div
-                      className={styles.popupVariables}
-                      ref={variablesPopupRef}
-                    >
-                      <label>Variables</label>
-                      <select
-                        onChange={(e) => setVariable(e.target.value)}
-                        defaultValue={variable}
-                      >
-                        <option value="firstName">First name</option>
-                        <option value="lastName">Last name</option>
-                        <option value="job">Job title</option>
-                        <option value="company">Company</option>
-                        <option value="city">City</option>
-                        <option value="email">Email</option>
-                        <option value="phone">Phone number</option>
-                      </select>
-                      <Button
-                        onClick={() => insertVariableInMessage(variable)}
-                        size="small"
-                        type="div"
-                      >
-                        Add
-                      </Button>
-                    </div>
-                  }
-                </div>
-                <textarea
-                  onChange={(e) => setFormDetails({
-                    ...formDetails,
-                    message: e.target.value,
-                  })}
-                  ref={textareaMessageRef}
-                  required
-                  type="text"
-                  value={formDetails.message}
-                />
-              </div>
-              <div className={styles.uploadThumbnail}>
-                <label>Thumbnail</label>
-                <p className={styles.text}>Import an image that previews the content of your video.<br/>If you don't import a thumbnail, a default image will be included.</p>
-                <label
-                  className={styles.uploadThumbnailArea}
-                  htmlFor="thumbnail"
-                >
-                  <img src="/assets/common/thumbnail.svg" />
-                  { !thumbnailLoading && <p>Download image</p> }
-                  { thumbnailLoading && <p>Downloading...</p> }
-                </label>
-                <input
-                  accept="image/*"
-                  id="thumbnail"
-                  type="file"
-                  onChange={(e) => uploadThumbnail(e.target.files[0])}
-                  className={styles.uploadThumbnailInput}
-                />
-                <img
-                  className={styles.uploadThumbnailPreview}
-                  src={campaign.share && campaign.share.thumbnail ? campaign.share.thumbnail : '/assets/video/defaultThumbnail.jpg'}
-                />
-                { campaign.share && campaign.share.thumbnail &&
-                  <p
-                    className={styles.removeThumbnail}
-                    onClick={removeThumbnail}
-                  >
-                    Remove thumbnail
-                  </p>
-                }
-                <p className={styles.uploadThumbnailRecoSize}>(Recommended format: 16/9)</p>
-              </div>
-              <p className={styles.error}>{stepOneError}</p>
-            </form>
-          }
-          { step === 2 &&
-            <div className={styles.stepTwo}>
-              <div>
-                <div className={styles.sectionHeaderContacts}>
-                  <p className={styles.title}>Add from your contacts</p>
-                  <div className={styles.search}>
-                    <img src="/assets/common/search.svg" />
-                    <input
-                      placeholder="Search"
-                      onChange={(e) => searchContacts(e.target.value)}
-                    />
-                  </div>
-                  <Button
-                    onClick={() => showPopup({ display: 'ADD_CONTACT' })}
-                    outline={true}
-                    size="small"
-                  >
-                    Add contact
-                  </Button>
-                  <Button
-                    color="secondary"
-                    onChange={extractDataFromCSV}
-                    size="small"
-                    type="file"
-                  >
-                    Import contacts
-                  </Button>
-                </div>
-                <div className={styles.contactsHeader}>
-                  <div />
-                  <p>First name</p>
-                  <p>Company</p>
-                  <p>Job Title</p>
-                  <p>Email</p>
-                </div>
-                <div className={styles.contactsList}>
-                  {contacts.totalDocs > 0 && contacts.docs.map(contact => renderContact(contact))}
-                  {!contacts.totalDocs && contacts.length > 0 && contacts.map(contact => renderContact(contact))}
-                  {(contacts.totalDocs <= 0 || (!contacts.totalDocs && contacts.length <= 0)) && renderContact()}
-                </div>
-              </div>
-              { (me.freeTrial || me.subscription.level === 'pro') &&
+          <div className={styles.content}>
+            {step === 1 && (
+              <form className={styles.stepOne} ref={formDetailsRef}>
+                <p className={styles.title}>Message</p>
                 <div>
-                  <div className={styles.sectionHeaderLists}>
-                    <p className={styles.title}>Add from your lists</p>
+                  <div className={styles.detailsMessageHeader}>
+                    <label>Your message</label>
+                    {(me.freeTrial || me.subscription.level === 'pro') && (
+                      <span
+                        className={styles.addVariable}
+                        onClick={() => showPopupVariables(true)}>
+                        Add variable
+                      </span>
+                    )}
+                    {displayPopupVariable && (
+                      <div
+                        className={styles.popupVariables}
+                        ref={variablesPopupRef}>
+                        <label>Variables</label>
+                        <select
+                          onChange={(e) => setVariable(e.target.value)}
+                          defaultValue={variable}>
+                          <option value="firstName">First name</option>
+                          <option value="lastName">Last name</option>
+                          <option value="job">Job title</option>
+                          <option value="company">Company</option>
+                          <option value="city">City</option>
+                          <option value="email">Email</option>
+                          <option value="phone">Phone number</option>
+                        </select>
+                        <Button
+                          onClick={() => insertVariableInMessage(variable)}
+                          size="small"
+                          type="div">
+                          Add
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                  <textarea
+                    onChange={(e) =>
+                      setFormDetails({
+                        ...formDetails,
+                        message: e.target.value,
+                      })
+                    }
+                    ref={textareaMessageRef}
+                    type="text"
+                    value={formDetails.message}
+                  />
+                </div>
+                <div className={styles.uploadThumbnail}>
+                  <label>Thumbnail</label>
+                  <p className={styles.text}>
+                    You can upload an image, your logo for example, that will
+                    appear in your email.
+                    <br /> By default there will be no image.
+                  </p>
+                  <label
+                    className={styles.uploadThumbnailArea}
+                    htmlFor="thumbnail">
+                    <img src="/assets/common/thumbnail.svg" />
+                    {!thumbnailLoading && <p>Download image</p>}
+                    {thumbnailLoading && <p>Downloading...</p>}
+                  </label>
+                  <input
+                    accept="image/*"
+                    id="thumbnail"
+                    type="file"
+                    onChange={(e) => uploadThumbnail(e.target.files[0])}
+                    className={styles.uploadThumbnailInput}
+                  />
+                  {campaign.share && campaign.share.thumbnail && (
+                    <div>
+                      <img
+                        className={styles.uploadThumbnailPreview}
+                        src={campaign.share.thumbnail}
+                      />
+                      <p
+                        className={styles.removeThumbnail}
+                        onClick={removeThumbnail}>
+                        Remove thumbnail
+                      </p>
+                    </div>
+                  )}
+                  <p className={styles.uploadThumbnailRecoSize}>
+                    (Recommended format: 16/9)
+                  </p>
+                </div>
+                <p className={styles.error}>{stepOneError}</p>
+              </form>
+            )}
+            {step === 2 && (
+              <div className={styles.stepTwo}>
+                <div>
+                  <div className={styles.sectionHeaderContacts}>
+                    <p className={styles.title}>Add from your contacts</p>
                     <div className={styles.search}>
                       <img src="/assets/common/search.svg" />
                       <input
                         placeholder="Search"
-                        onChange={(e) => searchLists(e.target.value)}
+                        onChange={(e) => searchContacts(e.target.value)}
                       />
                     </div>
+                    <Button
+                      onClick={() => showPopup({ display: 'ADD_CONTACT' })}
+                      outline={true}
+                      size="small">
+                      Add contact
+                    </Button>
+                    <Button
+                      color="secondary"
+                      onChange={extractDataFromCSV}
+                      size="small"
+                      type="file">
+                      Import contacts
+                    </Button>
                   </div>
-                  <div className={styles.listsHeader}>
+                  <div className={styles.contactsHeader}>
                     <div />
-                    <p>ID</p>
-                    <p>Name</p>
-                    <p>Number of contacts</p>
+                    <p>First name</p>
+                    <p>Company</p>
+                    <p>Job Title</p>
+                    <p>Email</p>
                   </div>
-                  <div className={styles.listsList}>
-                    {lists.totalDocs > 0 && lists.docs.map(list => renderList(list))}
-                    {!lists.totalDocs && lists.length > 0 && lists.map(list => renderList(list))}
-                    {(lists.totalDocs <= 0 || (!lists.totalDocs && lists.length <= 0)) && renderList()}
-                  </div>
-                </div>
-              }
-              {stepTwoError && <p className={styles.error}>{stepTwoError}</p>}
-            </div>
-          }
-          { step === 3 &&
-            <div className={styles.stepThree}>
-              <p className={styles.title}>Your video is ready to send.</p>
-              <p className={styles.text}>Review the summary below before sending your video.</p>
-              <div className={styles.summary}>
-                <div className={styles.summaryItem}>
-                  <div className={styles.summaryItemHeader}>
-                    <div className={styles.summaryChecked}>
-                      <img src="/assets/common/doneWhite.svg" />
-                    </div>
-                    <p>Details</p>
-                    <span onClick={() => setStep(1)}>Return to this step</span>
-                  </div>
-                  <div className={styles.summaryItemContent}>
-                    <p><b>Subject: </b>{campaign.share.subject}</p>
-                    <p><b>From: </b>{campaign.share.from}</p>
-                    <p><b>Message: </b>{campaign.share.message}</p>
-                    <div>
-                      <p><b>Thumbnail: </b></p>
-                      <img
-                        className={styles.summaryThumbnailPreview}
-                        src={campaign.share && campaign.share.thumbnail ? campaign.share.thumbnail : '/assets/video/defaultThumbnail.jpg'}
-                      />
-                    </div>
+                  <div className={styles.contactsList}>
+                    {contacts.totalDocs > 0 &&
+                      contacts.docs.map((contact) => renderContact(contact))}
+                    {!contacts.totalDocs &&
+                      contacts.length > 0 &&
+                      contacts.map((contact) => renderContact(contact))}
+                    {(contacts.totalDocs <= 0 ||
+                      (!contacts.totalDocs && contacts.length <= 0)) &&
+                      renderContact()}
                   </div>
                 </div>
-                <div className={styles.summaryItem}>
-                  <div className={styles.summaryItemHeader}>
-                    <div className={styles.summaryChecked}>
-                      <img src="/assets/common/doneWhite.svg" />
+                {(me.freeTrial || me.subscription.level === 'pro') && (
+                  <div>
+                    <div className={styles.sectionHeaderLists}>
+                      <p className={styles.title}>Add from your lists</p>
+                      <div className={styles.search}>
+                        <img src="/assets/common/search.svg" />
+                        <input
+                          placeholder="Search"
+                          onChange={(e) => searchLists(e.target.value)}
+                        />
+                      </div>
                     </div>
-                    <p>Contacts</p>
-                    <span onClick={() => setStep(2)}>Return to this step</span>
+                    <div className={styles.listsHeader}>
+                      <div />
+                      <p>ID</p>
+                      <p>Name</p>
+                      <p>Number of contacts</p>
+                    </div>
+                    <div className={styles.listsList}>
+                      {lists.totalDocs > 0 &&
+                        lists.docs.map((list) => renderList(list))}
+                      {!lists.totalDocs &&
+                        lists.length > 0 &&
+                        lists.map((list) => renderList(list))}
+                      {(lists.totalDocs <= 0 ||
+                        (!lists.totalDocs && lists.length <= 0)) &&
+                        renderList()}
+                    </div>
                   </div>
-                  <div className={styles.summaryItemContent}>
-                    <p><b>Contacts: </b>{campaign.share.contacts.length} selected</p>
-                    <p><b>Lists: </b>{campaign.share.lists.length} selected</p>
-                  </div>
-                </div>
+                )}
+                {stepTwoError && <p className={styles.error}>{stepTwoError}</p>}
               </div>
-              {stepThreeError && <p className={styles.error}>{stepThreeError}</p>}
-            </div>
-          }
-        </div>
-        <div className={styles.footer}>
-          <div>
-            { step > 1 && <Button outline={true} onClick={() => setStep(step - 1)}>Back</Button> }
+            )}
+            {step === 3 && (
+              <RenderStepTree sendVia={sendVia} setSendVia={setSendVia} />
+            )}
+            {step === 4 && (
+              <div className={styles.stepFour}>
+                <p className={styles.title}>Your video is ready to be sent.</p>
+                <p className={styles.text}>
+                  Review the summary below before sending your video.
+                </p>
+                <div className={styles.summary}>
+                  <div className={styles.summaryItem}>
+                    <div className={styles.summaryItemHeader}>
+                      <div className={styles.summaryChecked}>
+                        <img src="/assets/common/doneWhite.svg" />
+                      </div>
+                      <p>Message</p>
+                      <span onClick={() => setStep(1)}>
+                        Return to this step
+                      </span>
+                    </div>
+                    <div className={styles.summaryItemContent}>
+                      <p>
+                        <b>Subject: </b>
+                        {campaign.share.subject}
+                      </p>
+                      <p>
+                        <b>From: </b>
+                        {campaign.share.from}
+                      </p>
+                      <p>
+                        <b>Message: </b>
+                        {(campaign.share.message &&
+                          campaign.share.message.trim()) ||
+                          'none'}
+                      </p>
+                      <div>
+                        <b>Thumbnail: </b>
+                        {campaign.share && campaign.share.thumbnail ? (
+                          <div>
+                            <br />
+                            <img
+                              className={styles.summaryThumbnailPreview}
+                              src={campaign.share.thumbnail}
+                            />
+                          </div>
+                        ) : (
+                          'none'
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <div className={styles.summaryItem}>
+                    <div className={styles.summaryItemHeader}>
+                      <div className={styles.summaryChecked}>
+                        <img src="/assets/common/doneWhite.svg" />
+                      </div>
+                      <p>Contacts</p>
+                      <span onClick={() => setStep(2)}>
+                        Return to this step
+                      </span>
+                    </div>
+                    <div className={styles.summaryItemContent}>
+                      <p>
+                        <b>Contacts: </b>
+                        {campaign.share.contacts.length} selected
+                      </p>
+                      <p>
+                        <b>Lists: </b>
+                        {campaign.share.lists.length} selected
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                {stepFourError && (
+                  <p className={styles.error}>{stepFourError}</p>
+                )}
+              </div>
+            )}
           </div>
-          <div>
-            { step < 3 && <Button onClick={next}>Next</Button> }
-            { step === 3 && 
-              <Button
-                loading={shareLoading}
-                onClick={share}
-              >
-                Share
-              </Button>
-            }
+          <div className={styles.footer}>
+            <div>
+              {step > 1 && (
+                <Button outline={true} onClick={() => setStep(step - 1)}>
+                  Back
+                </Button>
+              )}
+            </div>
+            <div>
+              {step < 4 && (
+                <Button
+                  disabled={step == 3 && !sendVia.provider}
+                  onClick={next}>
+                  Next
+                </Button>
+              )}
+              {step === 4 && (
+                <Button loading={shareLoading} onClick={share}>
+                  Share
+                </Button>
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </MsalProvider>
   )
 }
 

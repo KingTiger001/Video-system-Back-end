@@ -90,7 +90,7 @@ const Campaigns = ({ initialCampaignsDraft, initialCampaignsShared, me }) => {
           }
           { campaign.status === 'shared' &&
             <Link href={`/app/analytics?c=${campaign._id}`}>
-              <a>Report</a>
+              <a>Analytics</a>
             </Link>
           }
           { campaign.status === 'shared' &&
