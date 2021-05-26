@@ -28,7 +28,7 @@ const SignupDetails = () => {
   const router = useRouter()
 
   const logout = () => {
-    router.push('/')
+    router.push(process.env.NEXT_PUBLIC_STATIC_PAGE)
     jscookie.remove('fo_sas_tk')
   }
 

@@ -20,7 +20,7 @@ const Tools = ({ me }) => {
       dispatch({ type: 'PAUSE' })
       videoRef.pause()
     }
-    tool === clickedTool ? dispatch({ type: 'HIDE_PREVIEW' }) : dispatch({ type: 'SHOW_PREVIEW', data: { element } })
+    if (clickedTool != 5) dispatch({ type: 'SHOW_PREVIEW', data: { element } })
   }
 
   const closeToolbox = () => {

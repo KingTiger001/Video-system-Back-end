@@ -14,6 +14,8 @@ import { PublicClientApplication } from '@azure/msal-browser'
 import { requestScopes, msalConfig } from 'config/MsConfig'
 
 import styles from '@/styles/components/Campaign/Share.module.sass'
+import { useGoogleLogin } from 'react-google-login'
+import { googleConfig } from 'config/GoogleConfig'
 
 const providers = {
   GOOGLE: 'GOOGLE',
@@ -26,8 +28,12 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
   const [msAccesToken, setMsAccessToken] = useState(undefined)
   const isOutlookAuthentified = useIsAuthenticated()
 
-  const [gAccesToken, setGAccessToken] = useState(undefined)
-  const isGoogleAuthentified = false
+  const [googleCredentials, setGoogleCredentials] = useState(undefined)
+  const [googleProfile, setGoogleProfile] = useState(undefined)
+  const { signIn: handleGmailSignIn } = useGoogleLogin({
+    onSuccess: (session) => refreshGmailToken(session),
+    ...googleConfig,
+  })
 
   const [stepThreeError, setStepThreeError] = useState('')
 
@@ -38,7 +44,8 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
         setSendVia({
           ...sendVia,
           provider: providers.MICROSOFT,
-          email: outlookInstance.getAllAccounts()[0].username,
+          // email: outlookInstance.getAllAccounts()[0].username, 
+          // maybe delete it all
         })
       })
       .catch((e) => {
@@ -47,25 +54,38 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
       })
   }
 
-  //requestin accesstokens
+  //request accesstokens
   useEffect(() => {
     if (isOutlookAuthentified) refreshOutlookToken()
   }, [isOutlookAuthentified])
 
-  useEffect(() => {
-    if (isGoogleAuthentified) refreshGmailToken()
-  }, [isGoogleAuthentified])
+  // OnTokensChange
+  useEffect(() => { 
+    if (msAccesToken)
+      setSendVia({
+        ...sendVia,
+        microsoft: { ...sendVia.microsoft, accessToken: msAccesToken },
+      })
+    if (googleCredentials)
+      setSendVia({
+        ...sendVia,
+        google: { ...sendVia.google, credentials: googleCredentials },
+      })
+  }, [msAccesToken, googleCredentials])
 
-  // accesstokens
-  useEffect(() => {
-    if (msAccesToken && sendVia.provider === providers.MICROSOFT)
-      setSendVia({ ...sendVia, accessToken: msAccesToken })
-    if (gAccesToken && sendVia.provider === providers.GOOGLE)
-      setSendVia({ ...sendVia, accessToken: msAccesToken })
-  }, [msAccesToken, gAccesToken])
+  const refreshGmailToken = async (session) => {
+    if (session.code) {
+      const { data } = await mainAPI.post(`/campaigns/googleToken`, {
+        code: session.code,
+      })
 
-  const refreshGmailToken = () => {
-    console.log('not implemented yet')
+      const { profile, credentials } = data
+
+      setGoogleCredentials(credentials)
+      setGoogleProfile(profile)
+    } else {
+      setGoogleProfile(session.profileObj)
+    }
   }
 
   const refreshOutlookToken = () => {
@@ -74,16 +94,11 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
         account: outlookInstance.getAllAccounts()[0],
         scopes: requestScopes.scopes,
       })
-      .then((response) => {
-        console.log(response)
-        setMsAccessToken(response.accessToken)
-      })
+      .then((response) => setMsAccessToken(response.accessToken))
       .catch((e) => {
         outlookInstance
           .acquireTokenPopup(requestScopes)
-          .then((response) => {
-            setMsAccessToken(response.accessToken)
-          })
+          .then((response) => setMsAccessToken(response.accessToken))
           .catch((e) => {
             setStepThreeError(e)
             console.error(e)
@@ -94,21 +109,24 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
   const changeProvider = (event) => {
     event.target.value === providers.GOOGLE &&
       setSendVia({
-        accessToken: gAccesToken,
-        provider: event.target.value,
-        email: 'test@gmail.com',
+        ...sendVia,
+        provider: providers.GOOGLE,
+        google: { credentials: googleCredentials , email: googleProfile.email },
       })
     event.target.value === providers.MICROSOFT &&
       setSendVia({
-        accessToken: msAccesToken,
-        provider: event.target.value,
-        email: outlookInstance.getAllAccounts()[0].username,
+        ...sendVia,
+        provider: providers.MICROSOFT,
+        microsoft: {
+          accessToken: msAccesToken,
+          email: outlookInstance.getAllAccounts()[0].username,
+        },
       })
     event.target.value === providers.FOMO &&
       setSendVia({
-        accessToken: '',
-        provider: event.target.value,
-        email: 'noreply@myfomo.io',
+        ...sendVia,
+        provider: providers.FOMO,
+        fomo: { email: 'noreply@myfomo.io' },
       })
   }
 
@@ -127,7 +145,7 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
               name="email"
               type="radio"
               value={providers.GOOGLE}
-              disabled={!gAccesToken}
+              disabled={!(googleProfile && sendVia.google)}
               onClick={changeProvider}
               checked={sendVia.provider === providers.GOOGLE}
             />
@@ -135,12 +153,12 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
               className={styles.mailLogo}
               src="/assets/socials/gmail_icon.svg"
             />
-            {true ? (
-              <a href="#">
+            {!googleProfile ? (
+              <a href="#" onClick={() => handleGmailSignIn()}>
                 <b>Sign in with Gmail</b>
               </a>
             ) : (
-              <b>test.femo@gmail.com</b>
+              <b>{googleProfile.email}</b>
             )}
           </div>
           <div className={styles.mailOption}>
@@ -149,12 +167,13 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
               type="radio"
               value={providers.MICROSOFT}
               disabled={!msAccesToken}
+              disabled={!(msAccesToken && sendVia.microsoft)}
               onClick={changeProvider}
               checked={sendVia.provider === providers.MICROSOFT}
             />
             <img
               className={styles.mailLogo}
-              src="/assets/socials/outlook_icon.svg"></img>
+              src="/assets/socials/outlook_icon.svg"/>
             {!isOutlookAuthentified ? (
               <a href="#" onClick={() => handleOutlookLogin(outlookInstance)}>
                 <b>Sign in with Outlook</b>
@@ -225,8 +244,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
   const msalInstance = new PublicClientApplication(msalConfig)
   const [sendVia, setSendVia] = useState({
     provider: providers.FOMO,
-    email: 'noreply@myfomo.io',
-    accessToken: '',
+    fomo: { email: 'noreply@myfomo.io' },
   })
 
   // Close click outside text style
@@ -324,8 +342,8 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
   }
 
   const getLastUsedProvider = async () => {
-    const lastProvider = localStorage.getItem('lastProvider')
-    if (lastProvider) setSendVia(JSON.parse(lastProvider))
+    const lastSendVia = localStorage.getItem('sendVia')
+    if (lastSendVia) setSendVia(JSON.parse(lastSendVia))
   }
 
   const searchLists = async (query) => {
@@ -397,7 +415,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
   const share = async () => {
     try {
       setShareLoading(true)
-      await mainAPI.post('/campaigns/share', { campaign })
+      await mainAPI.post('/campaigns/share', { campaign, sendVia })
       onDone()
     } catch (err) {
       setStepFourError('An error has occured.')
@@ -420,7 +438,12 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
           },
         }
       )
-      setCampaign(campaignUpdated)
+      setCampaign({
+        ...campaign,
+        share: {
+          ...campaignUpdated.share,
+        },
+      })
     } catch (err) {
       throw setStepOneError('An error has occured.')
     }
@@ -442,7 +465,12 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
           },
         }
       )
-      setCampaign(campaignUpdated)
+      setCampaign({
+        ...campaign,
+        share: {
+          ...campaignUpdated.share,
+        },
+      })
     } catch (err) {
       console.log(err)
       throw setStepTwoError(err.message || 'An error has occured.')
@@ -451,18 +479,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
 
   const stepThree = async () => {
     try {
-      const { data: campaignUpdated } = await mainAPI.patch(
-        `/campaigns/${campaignId}`,
-        {
-          share: {
-            ...campaign.share,
-            sendVia,
-            ...formDetails,
-          },
-        }
-      )
-      setCampaign(campaignUpdated)
-      localStorage.setItem('lastProvider', JSON.stringify(sendVia))
+      localStorage.setItem('sendVia', JSON.stringify(sendVia))
     } catch (err) {
       throw setStepOneError('An error has occured.')
     }
@@ -482,7 +499,12 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
         },
       }
     )
-    setCampaign(campaignUpdated)
+    setCampaign({
+      ...campaign,
+      share: {
+        ...campaignUpdated.share,
+      },
+    })
   }
 
   const uploadThumbnail = async (file) => {
@@ -509,7 +531,12 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
           },
         }
       )
-      setCampaign(campaignUpdated)
+      setCampaign({
+        ...campaign,
+        share: {
+          ...campaignUpdated.share,
+        },
+      })
     } catch (err) {
       console.log(err)
       const code = err.response && err.response.data
