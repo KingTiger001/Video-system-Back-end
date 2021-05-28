@@ -6,7 +6,7 @@ export default function AuthLayout ({ children }) {
   return (
     <div className={styles.layout}>
       <main className={styles.content}>
-        <Link href="/">
+        <Link href={process.env.NEXT_PUBLIC_STATIC_PAGE}>
           <a>
             <img
               className={styles.logo}

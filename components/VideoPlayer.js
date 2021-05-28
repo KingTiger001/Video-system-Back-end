@@ -27,6 +27,7 @@ const VideoPlayer = ({ contact, data = {}, onPause = () => {}, onPlay = () => {}
   const volumeMuted = useSelector(state => state.videoPlayer.volumeMuted)
 
   const [autoPlayFlag, setAutoPlayFlag] = useState(false)
+  const [replay, setReplay] = useState(false)
 
   const playerRef = useRef()
   const timelineRef = useRef()
@@ -82,8 +83,8 @@ const VideoPlayer = ({ contact, data = {}, onPause = () => {}, onPlay = () => {}
         });
       }, 50);
     }
-    if (progression >= duration) {
-      dispatch({ type: 'videoPlayer/PAUSE' })
+    if (progression > duration) {
+      finish() 
     }
     if (progression < 0) {
       dispatch({
@@ -108,29 +109,41 @@ const VideoPlayer = ({ contact, data = {}, onPause = () => {}, onPlay = () => {}
       clearInterval(interval)
     };
   }, [isPlaying, progression, videoSeeking])
-    
-    // play the video on component did mount
-    useEffect(() => {
-      tryToPlayVideo()
-    }, [videoRef.play])
-    
-  
-    const tryToPlayVideo = () => {
-      if (videoRef.play) {
-        videoRef.muted = true
-        videoRef
-          .play()
-          .then(() => {
-            videoRef.pause()
-            videoRef.muted = false
-          })
-          .catch(err => {
-            console.log("can't play video ")
-            console.log(err)
-          })
-      }
+   
+  // play the video on component did mount
+  useEffect(() => {
+    tryToPlayVideo()
+  }, [videoRef.play])
+
+  const finish = () => {
+    dispatch({ type: 'videoPlayer/PAUSE' })
+    setReplay(true)
+  }
+
+  const restart = () => {
+    setReplay(false)
+    setTimeout(() => {
+      dispatch({ type: 'videoPlayer/SET_PROGRESSION', data: 0 })
+      playOrPause()
+    }, 1200)
+  }
+
+  const tryToPlayVideo = () => {
+    if (videoRef.play) {
+      videoRef.muted = true
+      videoRef
+        .play()
+        .then(() => {
+          videoRef.pause()
+          videoRef.muted = false
+        })
+        .catch(err => {
+          console.log("can't play video ")
+          console.log(err)
+        })
     }
-    
+  }
+
   
   useEffect(() => {
     return () => {
@@ -267,8 +280,14 @@ const VideoPlayer = ({ contact, data = {}, onPause = () => {}, onPlay = () => {}
         </div>
         <img
           className={styles.playPause}
-          onClick={playOrPause}
-          src={isPlaying ? '/assets/video/pauseW.svg' : '/assets/video/playW.svg'}
+          onClick={replay ? restart : playOrPause}
+          src={
+            replay
+              ? '/assets/video/replayW.svg'
+              : isPlaying
+              ? '/assets/video/pauseW.svg'
+              : '/assets/video/playW.svg'
+          }
         />
         <div className={styles.volume}>
           <div

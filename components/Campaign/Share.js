@@ -49,7 +49,7 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
         })
       })
       .catch((e) => {
-        setStepThreeError(e)
+        setStepThreeError("Error occurred")
         console.error(e)
       })
   }
@@ -64,12 +64,15 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
     if (msAccesToken)
       setSendVia({
         ...sendVia,
-        microsoft: { ...sendVia.microsoft, accessToken: msAccesToken },
+        microsoft: { 
+          accessToken: msAccesToken,
+          email: outlookInstance.getAllAccounts()[0].username,
+        },
       })
     if (googleCredentials)
       setSendVia({
         ...sendVia,
-        google: { ...sendVia.google, credentials: googleCredentials },
+        google: { credentials: googleCredentials, email: googleProfile.email },
       })
   }, [msAccesToken, googleCredentials])
 
@@ -147,13 +150,17 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
               value={providers.GOOGLE}
               disabled={!(googleProfile && sendVia.google)}
               onClick={changeProvider}
-              checked={sendVia.provider === providers.GOOGLE}
+              checked={
+                googleProfile &&
+                sendVia.google &&
+                sendVia.provider === providers.GOOGLE
+              }
             />
             <img
               className={styles.mailLogo}
               src="/assets/socials/gmail_icon.svg"
             />
-            {!googleProfile ? (
+            {!(googleProfile && sendVia.google) ? (
               <a href="#" onClick={() => handleGmailSignIn()}>
                 <b>Sign in with Gmail</b>
               </a>
@@ -166,15 +173,18 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
               name="email"
               type="radio"
               value={providers.MICROSOFT}
-              disabled={!msAccesToken}
-              disabled={!(msAccesToken && sendVia.microsoft)}
+              disabled={!(isOutlookAuthentified && sendVia.microsoft)}
               onClick={changeProvider}
-              checked={sendVia.provider === providers.MICROSOFT}
+              checked={
+                isOutlookAuthentified &&
+                sendVia.microsoft &&
+                sendVia.provider === providers.MICROSOFT
+              }
             />
             <img
               className={styles.mailLogo}
               src="/assets/socials/outlook_icon.svg"/>
-            {!isOutlookAuthentified ? (
+            {!(isOutlookAuthentified && sendVia.microsoft) ? (
               <a href="#" onClick={() => handleOutlookLogin(outlookInstance)}>
                 <b>Sign in with Outlook</b>
               </a>
@@ -273,11 +283,15 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
   }, [])
 
   useEffect(() => {
+    const via =
+      sendVia.provider === providers.GOOGLE && sendVia.google
+        ? sendVia.google.email
+        : sendVia.provider === providers.MICROSOFT && sendVia.microsoft
+        ? sendVia.microsoft.email
+        : providers.FOMO
     setFormDetails({
       ...formDetails,
-      from: `${_FROM} via ${
-        sendVia.provider === providers.FOMO ? providers.FOMO : sendVia.email
-      }`,
+      from: `${_FROM} via ${via}`,
     })
   }, [sendVia])
 
@@ -870,7 +884,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
                       </p>
                       <p>
                         <b>From: </b>
-                        {campaign.share.from}
+                        {formDetails.from}
                       </p>
                       <p>
                         <b>Message: </b>

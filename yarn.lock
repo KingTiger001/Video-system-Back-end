@@ -4527,6 +4527,11 @@ react-beforeunload@^2.4.0:
     prop-types "^15.7.2"
     use-latest "^1.2.0"
 
+react-collapse@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/react-collapse/-/react-collapse-5.1.0.tgz#36f69ecb0fe797f976aaf5e4f2b2c248d2760140"
+  integrity sha512-5v0ywsn9HjiR/odNzbRDs0RZfrnbdSippJebWOBCFFDA12Vx8DddrbI4qWVf1P2wTiVagrpcSy07AU0b6+gM9Q==
+
 react-color@^2.18.1:
   version "2.18.1"
   resolved "https://registry.yarnpkg.com/react-color/-/react-color-2.18.1.tgz#2cda8cc8e06a9e2c52ad391a30ddad31972472f4"

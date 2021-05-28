@@ -8,6 +8,7 @@ import Button from '@/components/Button'
 import Plans from '@/components/Plans'
 
 import styles from '@/styles/pages/index.module.sass'
+import withAuthServerSideProps from '@/hocs/withAuthServerSideProps'
 
 const Index = () => {
   const [isHeaderSticky, setIsHeaderSticky] = useState(false)
@@ -377,3 +378,15 @@ const Index = () => {
 }
 
 export default Index
+
+// permanently stop rendering this page, redirect to the static page of the Web feed
+export const getServerSideProps = withAuthServerSideProps((ctx, user) => {
+  if (user) {
+    ctx.res.writeHead(302, { Location: '/app' })
+    ctx.res.end()
+  } else {
+    ctx.res.writeHead(302, { Location: process.env.NEXT_PUBLIC_STATIC_PAGE })
+    ctx.res.end()
+  }
+  return false
+})
