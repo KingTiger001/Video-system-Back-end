@@ -117,13 +117,13 @@ const Player = () => {
                 height="100%"
                 width="100%"
               >
-                {previewVideo.url && <source src={previewVideo.url} type="video/mp4" />}
+                <source src={previewVideo.url || video.url} type="video/mp4" />
                 Sorry, your browser doesn't support embedded videos.
               </video>
             }
             { preview.element === 'helloScreen' && <HelloScreen data={Object.keys(previewHelloScreen).length > 0 ? previewHelloScreen : helloScreen} />}
             { preview.element === 'endScreen' && <EndScreen data={Object.keys(previewEndScreen).length > 0 ? previewEndScreen : endScreen} /> }
-            { preview.element === 'logo' && <Logo data={logo} /> }
+            {logo && <Logo data={logo}/>}
           </div>
         }
         <div style={{ display: preview.show ? 'none' : 'block' }}> 
