@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
 
 import { mainAPI, mediaAPI } from '@/plugins/axios'
 
@@ -16,6 +17,8 @@ import { requestScopes, msalConfig } from 'config/MsConfig'
 import styles from '@/styles/components/Campaign/Share.module.sass'
 import { useGoogleLogin } from 'react-google-login'
 import { googleConfig } from 'config/GoogleConfig'
+import { Collapse } from 'react-collapse'
+import 'react-tabs/style/react-tabs.css'
 
 const providers = {
   GOOGLE: 'GOOGLE',
@@ -44,12 +47,12 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
         setSendVia({
           ...sendVia,
           provider: providers.MICROSOFT,
-          // email: outlookInstance.getAllAccounts()[0].username, 
+          // email: outlookInstance.getAllAccounts()[0].username,
           // maybe delete it all
         })
       })
       .catch((e) => {
-        setStepThreeError("Error occurred")
+        setStepThreeError('Error occurred')
         console.error(e)
       })
   }
@@ -84,8 +87,8 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
 
       const { profile, credentials } = data
 
-      setGoogleCredentials(credentials)
       setGoogleProfile(profile)
+      setGoogleCredentials(credentials)
     } else {
       setGoogleProfile(session.profileObj)
     }
@@ -330,7 +333,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
       campaign.share && campaign.share.contacts ? campaign.share.contacts : []
     )
     setListsSelected(
-      campaign.share && campaign.share.lists ? campaign.share.lists : []
+      campaign.share && campaign.share.lists ? campaign.share.lists.map(l=> l._id) : []
     )
     setMounted(true)
   }
@@ -497,6 +500,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
     } catch (err) {
       throw setStepOneError('An error has occured.')
     }
+    getCampaign()
   }
   const removeThumbnail = async () => {
     await mediaAPI.delete('/', {
@@ -565,15 +569,14 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
     }
   }
 
-  const renderContact = (contact) =>
+  const renderContact = (contact, checked = true) =>
     contact ? (
       <div className={styles.contactsItem} key={contact._id}>
-        <div>
-          {(me.freeTrial ||
-            me.subscription.level !== 'business' ||
-            (me.subscription.level === 'business' &&
-              (contactsSelected.length < 1 ||
-                contactsSelected.includes(contact._id)))) && (
+        {(me.freeTrial ||
+          me.subscription.level !== 'business' ||
+          (me.subscription.level === 'business' &&
+            (contactsSelected.length < 1 ||
+              contactsSelected.includes(contact._id)))) && checked && (
             <input
               checked={contactsSelected.includes(contact._id)}
               onChange={handleSelectedContact}
@@ -581,11 +584,10 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
               value={contact._id}
             />
           )}
-        </div>
-        <p>{contact.firstName}</p>
+        <p>{contact.firstName} {contact.lastName}</p>
+        <p>{contact.email}</p>
         <p>{contact.company}</p>
         <p>{contact.job}</p>
-        <p>{contact.email}</p>
       </div>
     ) : (
       <div className={`${styles.contactsItem} ${styles.empty}`}>
@@ -593,24 +595,197 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
       </div>
     )
 
-  const renderList = (list) =>
-    list ? (
-      <div className={styles.listsItem} key={list._id}>
-        <input
-          checked={listsSelected.includes(list._id)}
-          onChange={handleSelectedList}
-          type="checkbox"
-          value={list._id}
-        />
-        <p>#{list.uniqueId}</p>
-        <p>{list.name}</p>
-        <p>{list.list.length} contacts</p>
+  const [show, setShow] = useState(undefined)
+  const [listContent, setListContent] = useState({})
+
+  const getContactList = async (id) => {
+    const { data } = await mainAPI.get(`/contactLists/${id}`)
+    setListContent(data)
+  }
+
+  const showList = (id) => {
+    if (id === show) setShow(null)
+    else {
+      setShow(id)
+      setListContent(null)
+      getContactList(id)
+    }
+  }
+
+  const renderList = (list) => {
+    return list ? (
+      <div>
+        <div className={styles.listsItem} key={list._id}>
+          <input
+            checked={listsSelected.includes(list._id)}
+            onChange={handleSelectedList}
+            type="checkbox"
+            value={list._id}
+          />
+          <p>#{list.uniqueId}</p>
+          <p>{list.name}</p>
+          <p className={styles.contactCount} href="#" onClick={() => showList(list._id)}>
+            {list.list.length} contacts
+          </p>
+        </div>
+
+        <Collapse isOpened={show === list._id && listContent}>
+          <div className={styles.listsItemSubRow}>
+            {listContent &&
+              listContent.list &&
+              listContent.list.map((contact) => renderContact(contact,false))}
+          </div>
+        </Collapse>
       </div>
     ) : (
       <div className={`${styles.listsItem} ${styles.empty}`}>
         <p>No lists found</p>
       </div>
     )
+  }
+
+  const RenderStepTwo = () => {
+    // TODO: reduce this if possible
+    const sortBySelected = (contacts) => {
+      const selected = contacts.filter(
+        (contact) =>
+          contactsSelected.length && contactsSelected.includes(contact._id)
+      )
+      const inselected = contacts.filter(
+        (contact) => !selected.includes(contact)
+      )
+      return [...selected, ...inselected]
+    }
+
+    return (
+      <div className={styles.stepTwo}>
+        <div>
+          <Tabs>
+            <TabList>
+              <Tab>
+                <span className={styles.sectionHeaderOption}>Contacts</span>
+              </Tab>
+              <Tab>
+                <span className={styles.sectionHeaderOption}>Lists</span>
+              </Tab>
+            </TabList>
+
+            <TabPanel>
+              <div className={styles.sectionHeaderButton}>
+                <div className={styles.search}>
+                  <img src="/assets/common/search.svg" />
+                  <input
+                    placeholder="Search"
+                    onChange={(e) => searchContacts(e.target.value)}
+                  />
+                </div>
+                <Button
+                  onClick={() => showPopup({ display: 'ADD_CONTACT' })}
+                  outline={true}
+                  size="small"
+                >
+                  Create contact
+                </Button>
+                <Button
+                  color="secondary"
+                  onChange={extractDataFromCSV}
+                  size="small"
+                  type="file"
+                >
+                  Import contacts
+                </Button>
+              </div>
+              <div className={styles.contactsHeader}>
+                <input
+                  checked={
+                    (contacts.docs ?? contacts).length ===
+                    contactsSelected.length
+                  }
+                  onChange={(e) => {
+                    setContactsSelected(
+                      e.target.checked
+                        ? (contacts.docs ?? contacts).map((c) => c._id)
+                        : []
+                    )
+                  }}
+                  type="checkbox"
+                />
+                <p>Full name</p>
+                <p>Email</p>
+                <p>Company</p>
+                <p>Job Title</p>
+              </div>
+              <div className={styles.contactsList}>
+                {contacts.totalDocs > 0 &&
+                  sortBySelected(contacts.docs).map((contact) =>
+                    renderContact(contact)
+                  )}
+                {!contacts.totalDocs &&
+                  contacts.length > 0 &&
+                  sortBySelected(contacts).map((contact) =>
+                    renderContact(contact)
+                  )}
+                {(contacts.totalDocs <= 0 ||
+                  (!contacts.totalDocs && contacts.length <= 0)) &&
+                  renderContact()}
+              </div>
+            </TabPanel>
+            <TabPanel>
+              <div className={styles.sectionHeaderButton}>
+                <div className={styles.search}>
+                  <img src="/assets/common/search.svg" />
+                  <input
+                    placeholder="Search"
+                    onChange={(e) => searchLists(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className={styles.listsHeader}>
+                <div />
+                <p>ID</p>
+                <p>Name</p>
+                <p>Number of contacts</p>
+              </div>
+              <div className={styles.listsList}>
+                {lists.totalDocs > 0 &&
+                  lists.docs.map((list) => renderList(list))}
+                {!lists.totalDocs &&
+                  lists.length > 0 &&
+                  lists.map((list) => renderList(list))}
+                {(lists.totalDocs <= 0 ||
+                  (!lists.totalDocs && lists.length <= 0)) &&
+                  renderList()}
+              </div>
+            </TabPanel>
+          </Tabs>
+        </div>
+
+        {stepTwoError && <p className={styles.error}>{stepTwoError}</p>}
+      </div>
+    )
+  }
+
+  const countContact = () => {
+    let listsIds = []
+    campaign.share.lists.forEach((l) => {
+      if (l.list)
+        listsIds = [...listsIds, ...l.list.map((contact) => contact._id)]
+    })
+    const contacts = [...campaign.share.contacts, ...listsIds].filter(
+      (value, index, self) => self.indexOf(value) === index
+    )
+    return contacts.length
+  }
+  const getListNames = () => {
+    const limits = 10;
+    let listName = []
+    campaign.share.lists.forEach((l) => {
+      if (l.name) listName = [...listName, l.name]
+    })
+    return (
+      listName.slice(0, limits).join(', ') + (listName.length > limits ? ', ...' : '')
+    )
+  }
 
   return (
     <MsalProvider instance={msalInstance}>
@@ -619,6 +794,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
           <PopupAddContact
             onDone={() => {
               getContacts()
+              getLists()
               hidePopup()
               toast.success('Contact added.')
             }}
@@ -629,6 +805,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
             me={me}
             onDone={() => {
               getContacts()
+              getLists()
               hidePopup()
               toast.success('Contacts imported.')
             }}
@@ -780,83 +957,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
                 <p className={styles.error}>{stepOneError}</p>
               </form>
             )}
-            {step === 2 && (
-              <div className={styles.stepTwo}>
-                <div>
-                  <div className={styles.sectionHeaderContacts}>
-                    <p className={styles.title}>Add from your contacts</p>
-                    <div className={styles.search}>
-                      <img src="/assets/common/search.svg" />
-                      <input
-                        placeholder="Search"
-                        onChange={(e) => searchContacts(e.target.value)}
-                      />
-                    </div>
-                    <Button
-                      onClick={() => showPopup({ display: 'ADD_CONTACT' })}
-                      outline={true}
-                      size="small">
-                      Add contact
-                    </Button>
-                    <Button
-                      color="secondary"
-                      onChange={extractDataFromCSV}
-                      size="small"
-                      type="file">
-                      Import contacts
-                    </Button>
-                  </div>
-                  <div className={styles.contactsHeader}>
-                    <div />
-                    <p>First name</p>
-                    <p>Company</p>
-                    <p>Job Title</p>
-                    <p>Email</p>
-                  </div>
-                  <div className={styles.contactsList}>
-                    {contacts.totalDocs > 0 &&
-                      contacts.docs.map((contact) => renderContact(contact))}
-                    {!contacts.totalDocs &&
-                      contacts.length > 0 &&
-                      contacts.map((contact) => renderContact(contact))}
-                    {(contacts.totalDocs <= 0 ||
-                      (!contacts.totalDocs && contacts.length <= 0)) &&
-                      renderContact()}
-                  </div>
-                </div>
-                {(me.freeTrial || me.subscription.level === 'pro') && (
-                  <div>
-                    <div className={styles.sectionHeaderLists}>
-                      <p className={styles.title}>Add from your lists</p>
-                      <div className={styles.search}>
-                        <img src="/assets/common/search.svg" />
-                        <input
-                          placeholder="Search"
-                          onChange={(e) => searchLists(e.target.value)}
-                        />
-                      </div>
-                    </div>
-                    <div className={styles.listsHeader}>
-                      <div />
-                      <p>ID</p>
-                      <p>Name</p>
-                      <p>Number of contacts</p>
-                    </div>
-                    <div className={styles.listsList}>
-                      {lists.totalDocs > 0 &&
-                        lists.docs.map((list) => renderList(list))}
-                      {!lists.totalDocs &&
-                        lists.length > 0 &&
-                        lists.map((list) => renderList(list))}
-                      {(lists.totalDocs <= 0 ||
-                        (!lists.totalDocs && lists.length <= 0)) &&
-                        renderList()}
-                    </div>
-                  </div>
-                )}
-                {stepTwoError && <p className={styles.error}>{stepTwoError}</p>}
-              </div>
-            )}
+            {step === 2 && RenderStepTwo()}
             {step === 3 && (
               <RenderStepTree sendVia={sendVia} setSendVia={setSendVia} />
             )}
@@ -921,11 +1022,12 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
                     <div className={styles.summaryItemContent}>
                       <p>
                         <b>Contacts: </b>
-                        {campaign.share.contacts.length} selected
+                        {countContact()} selected
                       </p>
                       <p>
                         <b>Lists: </b>
-                        {campaign.share.lists.length} selected
+                        {campaign.share.lists.length} selected 
+                        {campaign.share.lists.length <10 && ` ( ${getListNames()} )`} 
                       </p>
                     </div>
                   </div>

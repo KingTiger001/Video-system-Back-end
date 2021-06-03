@@ -27,7 +27,9 @@ const Plans = ({ className, renderAction }) => {
   return products.length > 0 
     ? (
       <ul className={`${className} ${styles.plansList}`}>
-        { products.map((product) => (
+        { products
+        .filter(p=>p.name!=='Business') // TODO: remove this line to reactivate Business plan
+        .map((product) => (
           <li
             className={product.name === 'Business' ? styles.planBusiness : styles.planPro}
             key={product.id}

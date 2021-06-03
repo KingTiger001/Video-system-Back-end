@@ -104,10 +104,10 @@ const Contacts = ({ initialContacts, me }) => {
       />
       <p>{contact.firstName}</p>
       <p>{contact.lastName}</p>
+      <p>{contact.email}</p>
       <p>{contact.job}</p>
       <p>{contact.company}</p>
       <p>{contact.city}</p>
-      <p>{contact.email}</p>
       <p>{contact.phone}</p>
     </ListItem>
   )
@@ -327,10 +327,10 @@ const Contacts = ({ initialContacts, me }) => {
           />
           <p>First name</p>
           <p>Last name</p>
+          <p>Email</p>
           <p>Job Title</p>
           <p>Company</p>
           <p>City</p>
-          <p>Email</p>
           <p>Phone number</p>
         </ListHeader>
         <div className={styles.contacts}>

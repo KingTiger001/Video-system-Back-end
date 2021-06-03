@@ -28,6 +28,7 @@ const VideoPlayer = ({ contact, data = {}, onPause = () => {}, onPlay = () => {}
 
   const [autoPlayFlag, setAutoPlayFlag] = useState(false)
   const [replay, setReplay] = useState(false)
+  const [showPlayButton, setShowPlayButton] = useState(false)
 
   const playerRef = useRef()
   const timelineRef = useRef()
@@ -122,10 +123,8 @@ const VideoPlayer = ({ contact, data = {}, onPause = () => {}, onPlay = () => {}
 
   const restart = () => {
     setReplay(false)
-    setTimeout(() => {
-      dispatch({ type: 'videoPlayer/SET_PROGRESSION', data: 0 })
-      playOrPause()
-    }, 1200)
+    dispatch({ type: 'videoPlayer/SET_PROGRESSION', data: 0 })
+    setTimeout(playOrPause, 1200)
   }
 
   const tryToPlayVideo = () => {
@@ -146,6 +145,7 @@ const VideoPlayer = ({ contact, data = {}, onPause = () => {}, onPlay = () => {}
 
   
   useEffect(() => {
+    setShowPlayButton(true)
     return () => {
       dispatch({ type: 'videoPlayer/PAUSE' })
       dispatch({ type: 'videoPlayer/SET_PROGRESSION', data: 0 })
@@ -185,7 +185,10 @@ const VideoPlayer = ({ contact, data = {}, onPause = () => {}, onPlay = () => {}
   const seekTo = (e) => {
     const rect = timelineRef.current.getBoundingClientRect()
     const position = e.clientX - rect.left
-    const progression = (position / timelineRef.current.offsetWidth) * duration
+    const seekProgression = (position / timelineRef.current.offsetWidth) * duration
+    const progression = seekProgression > duration ? duration : seekProgression
+    setReplay(progression >= duration)
+    setShowPlayButton(false)
     dispatch({ type: 'videoPlayer/SET_PROGRESSION', data: progression })
     if (Object.keys(videoRef).length > 0) {
       const currentTime = (progression - helloScreen.duration) / 1000
@@ -194,6 +197,7 @@ const VideoPlayer = ({ contact, data = {}, onPause = () => {}, onPlay = () => {}
   }
 
   const playOrPause = () => {
+    setShowPlayButton(false)
     if (!autoPlayFlag) {
       tryToPlayVideo()
       setAutoPlayFlag(true)
@@ -228,6 +232,17 @@ const VideoPlayer = ({ contact, data = {}, onPause = () => {}, onPlay = () => {}
     }
   }
 
+  const PlayButton = () => {
+    return (
+      <div className={styles.playButton}>
+        <img
+          className={styles.playButtonImage}
+          src="/assets/video/play.png"
+        ></img>
+      </div>
+    )
+  }
+  
   return (
     <div
       className={styles.videoPlayer}
@@ -259,6 +274,7 @@ const VideoPlayer = ({ contact, data = {}, onPause = () => {}, onPlay = () => {}
         {helloScreen && Object.keys(helloScreen).length > 0 && progression < helloScreen.duration && <HelloScreen contact={contact} data={helloScreen}/>}
         {endScreen && Object.keys(endScreen).length > 0 && progression >= duration - endScreen.duration && <EndScreen contact={contact} data={endScreen}/>}
         <Logo data={logo} />
+        {showPlayButton && <PlayButton />}
       </div>
       <div
         className={styles.controls}

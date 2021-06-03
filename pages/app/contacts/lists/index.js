@@ -85,9 +85,9 @@ const ContactLists = ({ initialContactLists, me }) => {
       />
       <p><b>#{contactList.uniqueId}</b></p>
       <Link href={`/app/contacts/lists/${contactList._id}`}>
-        <a>{contactList.name}</a>
+        <a className={styles.link}>{contactList.name}</a>
       </Link>
-      { contactList.list && <span className={styles.countContacts}>{contactList.list.length}</span> }
+      { contactList.list && <p>{contactList.list.length}</p> }
     </ListItem>
   )
 
