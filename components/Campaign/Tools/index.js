@@ -33,7 +33,7 @@ const Tools = ({ me }) => {
       <ul className={styles.toolList}>
         <li
           className={`${styles.tool} ${tool === 1 ? styles.toolSelected : ''}`}
-          onClick={() => selectTool(1)}
+          onClick={() => selectTool(1,'record')}
         >
           <img src="/assets/campaign/record.svg" />
           <p>Record</p>

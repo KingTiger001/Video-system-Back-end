@@ -1,0 +1,40 @@
+@import '../../_variables.sass'
+
+.placeholder
+  display: flex
+  align-items: center
+  justify-content: center
+  flex-direction: column
+  height: 100%
+  position: relative
+  width: 100%
+  z-index: 2
+  background: #ECECEC
+
+.image
+  width: 20px
+  opacity: 0.5
+  margin: 10px
+
+.table
+  grid-template-columns: 50px 1fr
+  display: grid
+  align-items: center
+  .description
+    text-align: start
+  &:first-child
+    text-align: start
+    margin-left: 100px
+    align-self: center
+    font-weight: 600
+    font-size: 17px
+    .description
+      text-align: start
+
+.description
+  padding: 10px
+  white-space: pre-line
+  text-align: center
+  line-height: 1.4
+  opacity: 0.5
+  font-size: 15px

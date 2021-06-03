@@ -137,7 +137,7 @@ const ToolEndScreen = ({ me }) => {
             >
               &lt; Back to my library
             </p>
-            <p className={styles.toolTitle}>Edit End Screen</p>
+            <p className={styles.toolTitle}>{editMode ? 'Edit' : 'Create'} End Screen</p>
             <p className={styles.toolSubtitle}>Your End screen</p>
             <div className={styles.toolSection}>
               <label className={styles.toolLabel}>End Screen name *</label>

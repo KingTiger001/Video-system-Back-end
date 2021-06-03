@@ -69,7 +69,6 @@ const HeaderApp = () => {
         <a className={styles.needHelp} href="mailto:contact@myfomo.io">Need help ?</a>
         <Button
           onClick={() => showPopup({ display: 'CREATE_CAMPAIGN' })}
-          outline={true}
         >
           Create a video campaign
         </Button>

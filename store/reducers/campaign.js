@@ -1,4 +1,4 @@
-const defaultHelloScreen = {
+export const defaultHelloScreen = {
   background: '#000',
   duration: 200, // 0.2s
   name: 'Draft',
@@ -26,7 +26,7 @@ const defaultHelloScreen = {
   },
 }
 
-const defaultEndScreen = {
+export const defaultEndScreen = {
   background: '#000',
   duration: 200, // 0.2s
   name: 'Draft',

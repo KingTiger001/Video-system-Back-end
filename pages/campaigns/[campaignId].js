@@ -100,10 +100,10 @@ const Campaign = ({ campaign }) => {
       </div>
       <div className={styles.content}>
         <div className={styles.reply}>
-          <h1 className={styles.title}>
-            {campaign.user.firstName} from {campaign.user.company} <br />
+          <div className={styles.titleContainer}>
+            <h1 className={styles.title}>{campaign.user.firstName} from {campaign.user.company}</h1> 
             <p>sent you a video message</p>
-          </h1>
+          </div>
           <Button onClick={reply}>
             <img src="/assets/common/reply.svg" style={{ marginRight: 5 }} />
             Reply to {campaign.user.firstName}

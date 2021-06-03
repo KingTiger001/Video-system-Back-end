@@ -94,7 +94,7 @@ const ToolHelloScreen = ({ me }) => {
             >
               &lt; Back to my library
             </p>
-            <p className={styles.toolTitle}>Edit a Start Screen</p>
+            <p className={styles.toolTitle}>{editMode ? 'Edit' : 'Create'} a Start Screen</p>
             <p className={styles.toolSubtitle}>Your start screen</p>
             <div className={styles.toolSection}>
               <label className={styles.toolLabel}>Start Screen name *</label>
