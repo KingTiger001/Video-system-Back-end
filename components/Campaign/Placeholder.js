@@ -27,7 +27,7 @@ const tips = {
 
 // placeholder view in case user have no video or screens
 const Placeholder = ({ of }) => {
-  console.log(of)
+
   const data = tips[of]
 
   return data ? (

@@ -133,7 +133,7 @@ const ContactLists = ({ initialContactLists, me }) => {
             <h1 className={layoutStyles.headerTitle}>Lists <span>({ searchQuery ? contactLists.length : contactLists.totalDocs })</span></h1>
             <div className={layoutStyles.headerActions}>
               <Button
-                color="secondary"
+                color="primary"
                 onClick={() => showPopup({ display: 'CONTACT_LIST_CREATE' })}
                 size="small"
               >

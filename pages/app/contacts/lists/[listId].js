@@ -156,7 +156,7 @@ const ContactList = ({ initialContactList, me }) => {
                 Add contacts
               </Button>
               <Button
-                color="secondary"
+                color="primary"
                 onChange={extractDataFromCSV}
                 size="small"
                 type="file"

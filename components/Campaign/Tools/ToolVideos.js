@@ -75,7 +75,7 @@ const ToolVideos = () => {
                 }
               </div>
 
-              <div className={styles.toolLibraryItemEdit}>
+              <div className={styles.toolLibraryItemOption}>
                 {
                   vd._id !== video._id &&
                   <div
@@ -102,11 +102,13 @@ const ToolVideos = () => {
                 }
               </div>
               <div
-                className={styles.toolLibraryItemDelete}
+                className={styles.toolLibraryItemOption}
                 onClick={() => showPopup({ display: 'DELETE_VIDEO', data: vd })}
               >
-                <img src="/assets/campaign/libraryDelete.svg" />
-                <p>Delete</p>
+                <div>
+                  <img src="/assets/campaign/libraryDelete.svg" />
+                  <p>Delete</p>
+                </div>
               </div>
             </div>
           )

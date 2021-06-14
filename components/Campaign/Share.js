@@ -151,7 +151,9 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
               name="email"
               type="radio"
               value={providers.GOOGLE}
-              disabled={!(googleProfile && sendVia.google)}
+              disabled={
+                !(googleProfile && sendVia.google && sendVia.google.credentials)
+              }
               onClick={changeProvider}
               checked={
                 googleProfile &&
@@ -163,7 +165,11 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
               className={styles.mailLogo}
               src="/assets/socials/gmail_icon.svg"
             />
-            {!(googleProfile && sendVia.google) ? (
+            {!(
+              googleProfile &&
+              sendVia.google &&
+              sendVia.google.credentials
+            ) ? (
               <a href="#" onClick={() => handleGmailSignIn()}>
                 <b>Sign in with Gmail</b>
               </a>
@@ -176,7 +182,13 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
               name="email"
               type="radio"
               value={providers.MICROSOFT}
-              disabled={!(isOutlookAuthentified && sendVia.microsoft)}
+              disabled={
+                !(
+                  isOutlookAuthentified &&
+                  sendVia.microsoft &&
+                  sendVia.microsoft.accessToken
+                )
+              }
               onClick={changeProvider}
               checked={
                 isOutlookAuthentified &&
@@ -186,8 +198,13 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
             />
             <img
               className={styles.mailLogo}
-              src="/assets/socials/outlook_icon.svg"/>
-            {!(isOutlookAuthentified && sendVia.microsoft) ? (
+              src="/assets/socials/outlook_icon.svg"
+            />
+            {!(
+              isOutlookAuthentified &&
+              sendVia.microsoft &&
+              sendVia.microsoft.accessTokent
+            ) ? (
               <a href="#" onClick={() => handleOutlookLogin(outlookInstance)}>
                 <b>Sign in with Outlook</b>
               </a>
@@ -1027,7 +1044,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
                       <p>
                         <b>Lists: </b>
                         {campaign.share.lists.length} selected 
-                        {campaign.share.lists.length <10 && ` ( ${getListNames()} )`} 
+                        {campaign.share.lists.length && campaign.share.lists.length < 10 ? ` ( ${getListNames()} )`:``} 
                       </p>
                     </div>
                   </div>

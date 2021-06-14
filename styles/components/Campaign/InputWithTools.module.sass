@@ -1,17 +1,11 @@
+@import '../../_variables.sass'
 .input
   position: relative
   input
     padding-right: 48px
 
 .tools
-  align-items: center
-  display: grid
-  grid-auto-flow: column
-  grid-gap: 6px
-  position: absolute
-  right: 10px
-  top: 50%
-  transform: translateY(-50%)
+  display: flex
   img
     opacity: 0.3
     cursor: pointer
@@ -19,3 +13,26 @@
     width: 18px
   .styleIcon
     width: 14px
+
+.inputWithTools
+  display: grid
+  grid-template-columns: 1fr 1fr
+  .toolsArea
+    display: flex
+.dropdown
+  display: flex
+  align-items: center
+  color: #ffffff
+  width: 50%
+  position: relative
+  margin: 0 1px
+.button
+  font-size: 11px
+  width: 100%
+  border-radius: 4px
+  background: #5A7184 
+  justify-content: center
+  display: flex
+  align-items: center
+  cursor: pointer
+  padding: 5px

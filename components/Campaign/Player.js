@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useVideoResize } from '@/hooks'
@@ -30,6 +30,12 @@ const Player = () => {
   const videoSeeking = useSelector(state => state.campaign.videoSeeking)
   const videoRef = useSelector(state => state.campaign.videoRef)
   
+  const [resume, setResume] = useState(false)
+
+  useEffect(() => { 
+    setResume(preview.show || helloScreen.name || endScreen.name || video.url)
+  }, [preview.show, helloScreen, endScreen, video])
+
   const playerRef = useRef()
   const { width: playerWidth } = useVideoResize({ ref: playerRef, autoWidth: true })
 
@@ -163,9 +169,9 @@ const Player = () => {
               ))}
             {logo && <Logo data={logo}/>}
           </div>
-        ):<Placeholder of='all' />
+        ): !resume && <Placeholder of='all' />
         }
-        <div style={{ display: preview.show ? 'none' : 'block' }}> 
+        <div style={{ display:( preview.show || !resume) ? 'none' : 'block' }}> 
           <video
             ref={videoRefCb}
             key={video.url}
@@ -186,6 +192,7 @@ const Player = () => {
           onClick={async () => {
             dispatch({ type: 'HIDE_PREVIEW' }) 
             dispatch({ type: isPlaying ? 'PAUSE' : 'PLAY' })
+            setResume(true)
             if (progression > helloScreen.duration && progression < duration - endScreen.duration) {
               isPlaying ? videoRef.pause() : videoRef.play()
             }
