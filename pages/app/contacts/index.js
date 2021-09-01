@@ -25,7 +25,7 @@ import layoutStyles from "@/styles/layouts/App.module.sass";
 import styles from "@/styles/layouts/Contact.module.sass";
 import PopupContactListSelect from "@/components/Popups/PopupContactListSelect";
 
-const CONTACTS_LIMIT = 5;
+const CONTACTS_LIMIT = 10;
 
 const Contacts = ({ initialContacts, me }) => {
   const router = useRouter();
@@ -38,14 +38,12 @@ const Contacts = ({ initialContacts, me }) => {
 
   const [contacts, setContacts] = useState({});
   const [sortBy, setSortBy] = useState({ category: null, direction: -1 });
-  // const [sortBy, setSortBy] = useState({ category: null, type: "ascend" });
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedContact, setSelectedContact] = useState([]);
   const [showContactOptions, setShowContactOptions] = useState(false);
   const [showListOptions, setShowListOptions] = useState(false);
 
   useEffect(() => {
-    console.log("initialContactList", initialContacts);
     setContacts(initialContacts);
   }, [initialContacts]);
 
@@ -66,7 +64,6 @@ const Contacts = ({ initialContacts, me }) => {
   };
 
   const sortContacts = async (category) => {
-    console.log("category", category, sortBy);
     const direction = sortBy.category !== category ? 1 : -sortBy.direction;
     const { data } = await mainAPI.get(
       `/users/me/contacts?limit=${CONTACTS_LIMIT}&page=${
@@ -84,10 +81,13 @@ const Contacts = ({ initialContacts, me }) => {
     if (!query) {
       return getContacts();
     }
-    const { data } = await mainAPI.get(`/contacts/search?query=${query}`);
-    const array = Object.assign({}, contacts);
-    array.docs = data;
-    setContacts(array);
+    const { data } = await mainAPI.get(
+      `/contacts/search?query=${query}&limit=${CONTACTS_LIMIT}`
+    );
+    // const array = Object.assign({}, contacts);
+    // array.docs = data;
+    setContacts(data);
+    // setContacts(array);
   };
 
   const deleteRef = useRef(null);
@@ -528,7 +528,6 @@ const Contacts = ({ initialContacts, me }) => {
 
 export default Contacts;
 export const getServerSideProps = withAuthServerSideProps(async ({ query }) => {
-  console.log("query", query);
   const { data: initialContacts } = await mainAPI.get(
     `/users/me/contacts?limit=${CONTACTS_LIMIT}&page=${
       query.page ? query.page : 1

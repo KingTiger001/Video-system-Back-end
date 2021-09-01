@@ -35,9 +35,7 @@ const ContactList = ({ initialContactList, me }) => {
     dispatch({ type: "SHOW_POPUP", ...popupProps });
 
   const [contactList, setContactList] = useState(initialContactList);
-
   const getContactList = async () => {
-    console.log("router.query.listId", router.query.listId);
     const { data } = await mainAPI.get(`/contactLists/${router.query.listId}`);
     setContactList(data);
   };

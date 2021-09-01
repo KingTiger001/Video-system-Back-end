@@ -6,15 +6,19 @@ import styles from "@/styles/components/Pagination.module.sass";
 const Pagination = ({ initialPage, pageCount, route, sortBy, direction }) => {
   const router = useRouter();
 
-  const sortOptions = () => {
-    return `&sortBy=${sortBy || "createdAt"}&direction=${direction || -1}`;
+  const sortOptions = (page) => {
+    return sortBy && page === 0
+      ? `?sortBy=${sortBy || "createdAt"}&direction=${direction || -1}`
+      : sortBy
+      ? `&sortBy=${sortBy || "createdAt"}&direction=${direction || -1}`
+      : "";
   };
 
   const goToPage = (data) => {
     const { selected: page } = data;
-    page >= 0
-      ? router.push(`${route}?page=${page + 1}${sortOptions()}`)
-      : router.push(route);
+    page > 0
+      ? router.push(`${route}?page=${page + 1}${sortOptions(page)}`)
+      : router.push(`${route}${sortOptions(page)}`);
   };
 
   return (
