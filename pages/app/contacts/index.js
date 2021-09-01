@@ -25,7 +25,7 @@ import layoutStyles from "@/styles/layouts/App.module.sass";
 import styles from "@/styles/layouts/Contact.module.sass";
 import PopupContactListSelect from "@/components/Popups/PopupContactListSelect";
 
-const CONTACTS_LIMIT = 20;
+const CONTACTS_LIMIT = 5;
 
 const Contacts = ({ initialContacts, me }) => {
   const router = useRouter();
@@ -37,12 +37,15 @@ const Contacts = ({ initialContacts, me }) => {
     dispatch({ type: "SHOW_POPUP", ...popupProps });
 
   const [contacts, setContacts] = useState({});
+  const [sortBy, setSortBy] = useState({ category: null, direction: -1 });
+  // const [sortBy, setSortBy] = useState({ category: null, type: "ascend" });
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedContact, setSelectedContact] = useState([]);
   const [showContactOptions, setShowContactOptions] = useState(false);
   const [showListOptions, setShowListOptions] = useState(false);
 
   useEffect(() => {
+    console.log("initialContactList", initialContacts);
     setContacts(initialContacts);
   }, [initialContacts]);
 
@@ -62,15 +65,33 @@ const Contacts = ({ initialContacts, me }) => {
     setContacts(data);
   };
 
+  const sortContacts = async (category) => {
+    console.log("category", category, sortBy);
+    const direction = sortBy.category !== category ? 1 : -sortBy.direction;
+    const { data } = await mainAPI.get(
+      `/users/me/contacts?limit=${CONTACTS_LIMIT}&page=${
+        router.query.page ? router.query.page : 1
+      }&sortBy=${category}&direction=${direction}`
+    );
+    setSortBy({
+      category,
+      direction,
+    });
+    setContacts(data);
+  };
+
   const searchContacts = async (query) => {
     if (!query) {
       return getContacts();
     }
     const { data } = await mainAPI.get(`/contacts/search?query=${query}`);
-    setContacts(data);
+    const array = Object.assign({}, contacts);
+    array.docs = data;
+    setContacts(array);
   };
 
   const deleteRef = useRef(null);
+  const sortByRef = useRef({ category: null, type: "ascend" });
   const contactRef = useRef(null);
   const listRef = useRef(null);
 
@@ -131,6 +152,117 @@ const Contacts = ({ initialContacts, me }) => {
   };
   const selectAll = (e) => {
     setSelectedContact(e.target.checked ? contacts.docs.map((e) => e._id) : []);
+  };
+
+  const sortArray = (category) => {
+    let type;
+    if (sortBy.category !== category) {
+      type = "ascend";
+    } else if (sortBy.type === "ascend") {
+      type = "descend";
+    } else {
+      type = "ascend";
+    }
+    sortByRef.current = { category, type };
+
+    setSortBy({
+      category: category,
+      type,
+    });
+    switch (category) {
+      case "firstname":
+        contacts.docs.sort((a, b) =>
+          sortByRef.current.type === "ascend"
+            ? a.firstName < b.firstName
+              ? -1
+              : 1
+            : b.firstName > a.firstName
+            ? 1
+            : -1
+        );
+        setContacts(contacts);
+        break;
+      case "lastname":
+        contacts.docs.sort((a, b) =>
+          sortByRef.current.type === "ascend"
+            ? a.lastName < b.lastName
+              ? -1
+              : 1
+            : b.lastName > a.lastName
+            ? 1
+            : -1
+        );
+        setContacts(contacts);
+        break;
+      case "email":
+        contacts.docs.sort((a, b) =>
+          sortByRef.current.type === "ascend"
+            ? a.email < b.email
+              ? -1
+              : 1
+            : b.email > a.email
+            ? 1
+            : -1
+        );
+        setContacts(contacts);
+        break;
+      case "job":
+        contacts.docs.sort((a, b) => {
+          if (a.job === undefined) {
+            return 1;
+          } else if (b.job === undefined) {
+            return -1;
+          } else {
+            return sortByRef.current.type === "ascend"
+              ? a.job < b.job
+                ? -1
+                : 1
+              : b.job > a.job
+              ? 1
+              : -1;
+          }
+        });
+        setContacts(contacts);
+        break;
+      case "company":
+        contacts.docs.sort((a, b) =>
+          sortByRef.current.type === "ascend"
+            ? a.company < b.company
+              ? -1
+              : 1
+            : b.company > a.company
+            ? 1
+            : -1
+        );
+        setContacts(contacts);
+        break;
+      case "city":
+        contacts.docs.sort((a, b) => {
+          if (a.city === undefined) {
+            return 1;
+          } else if (b.city === undefined) {
+            return -1;
+          } else {
+            return sortByRef.current.type === "ascend"
+              ? a.city < b.city
+                ? -1
+                : 1
+              : b.city > a.city
+              ? 1
+              : -1;
+          }
+        });
+        setContacts(contacts);
+        break;
+    }
+  };
+
+  const arrowIcon = (category) => {
+    return sortBy.category === category && sortBy.direction === 1 ? (
+      <span>▲</span>
+    ) : sortBy.category === category && sortBy.direction === -1 ? (
+      <span>▼</span>
+    ) : null;
   };
 
   useEffect(() => {
@@ -231,7 +363,7 @@ const Contacts = ({ initialContacts, me }) => {
             <h1 className={layoutStyles.headerTitle}>
               Contacts{" "}
               <span>
-                ({searchQuery ? contacts.length : contacts.totalDocs})
+                ({searchQuery ? contacts.docs?.length : contacts.totalDocs})
               </span>
             </h1>
             <div className={layoutStyles.headerActions}>
@@ -341,22 +473,42 @@ const Contacts = ({ initialContacts, me }) => {
         </div>
         <ListHeader className={styles.contactsHeader}>
           <input type="checkbox" onChange={selectAll} />
-          <p>First name</p>
-          <p>Last name</p>
-          <p>Email</p>
-          <p>Job Title</p>
-          <p>Company</p>
-          <p>City</p>
-          <p>Phone number</p>
+          <div>
+            <p onClick={() => sortContacts("firstName", 1)}>
+              First name {arrowIcon("firstName")}
+            </p>
+          </div>
+          <div>
+            <p onClick={() => sortContacts("lastName")}>
+              Last name {arrowIcon("lastName")}
+            </p>
+          </div>
+          <div>
+            <p onClick={() => sortContacts("email")}>
+              Email {arrowIcon("email")}
+            </p>
+          </div>
+          <div>
+            <p onClick={() => sortContacts("job")}>
+              Job Title {arrowIcon("job")}
+            </p>
+          </div>
+          <div>
+            <p onClick={() => sortContacts("company")}>
+              Company {arrowIcon("company")}
+            </p>
+          </div>
+          <div>
+            <p onClick={() => sortContacts("city")}>City {arrowIcon("city")}</p>
+          </div>
+          <div>
+            <p>Phone number</p>
+          </div>
         </ListHeader>
         <div className={styles.contacts}>
-          {contacts.totalDocs > 0 &&
+          {contacts.docs?.length > 0 &&
             contacts.docs.map((contact) => renderContact(contact))}
-          {searchQuery &&
-            contacts.length > 0 &&
-            contacts.map((contact) => renderContact(contact))}
-          {(contacts.totalDocs <= 0 || (searchQuery && contacts.length <= 0)) &&
-            renderContact()}
+          {contacts.docs?.length <= 0 && renderContact()}
         </div>
         {!searchQuery && (
           <Pagination
@@ -365,6 +517,8 @@ const Contacts = ({ initialContacts, me }) => {
               router.query.page ? parseInt(router.query.page, 10) - 1 : 0
             }
             route="/app/contacts"
+            sortBy={sortBy.category}
+            direction={sortBy.direction}
           />
         )}
       </ContactLayout>
@@ -374,10 +528,11 @@ const Contacts = ({ initialContacts, me }) => {
 
 export default Contacts;
 export const getServerSideProps = withAuthServerSideProps(async ({ query }) => {
+  console.log("query", query);
   const { data: initialContacts } = await mainAPI.get(
     `/users/me/contacts?limit=${CONTACTS_LIMIT}&page=${
       query.page ? query.page : 1
-    }`
+    }&sortBy=${query.sortBy || "createdAt"}&direction=${query.direction || -1}`
   );
   return {
     initialContacts,

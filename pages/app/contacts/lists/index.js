@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
@@ -23,7 +23,7 @@ import PopupRenameContactList from "@/components/Popups/PopupRenameContactList";
 import layoutStyles from "@/styles/layouts/App.module.sass";
 import styles from "@/styles/layouts/Contact.module.sass";
 
-const CONTACT_LISTS_LIMIT = 20;
+const CONTACT_LISTS_LIMIT = 50;
 
 const ContactLists = ({ initialContactLists, me }) => {
   const router = useRouter();
@@ -35,14 +35,14 @@ const ContactLists = ({ initialContactLists, me }) => {
     dispatch({ type: "SHOW_POPUP", ...popupProps });
 
   const [contactLists, setContactLists] = useState({});
+  const [sortBy, setSortBy] = useState({ category: null, type: "ascend" });
   const [selectedContactList, setSelectedContactList] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
 
+  const sortByRef = useRef({ category: null, type: "ascend" });
+  const checkboxRef = useRef();
+
   useEffect(() => {
-    console.log(
-      "initialContactLists",
-      initialContactLists.docs.slice().sort((a, b) => b.uniqueId - a.uniqueId)
-    );
     setContactLists(initialContactLists);
   }, [initialContactLists]);
 
@@ -60,7 +60,9 @@ const ContactLists = ({ initialContactLists, me }) => {
       return getContactLists();
     }
     const { data } = await mainAPI.get(`/contactLists/search?query=${query}`);
-    setContactLists(data);
+    const array = Object.assign({}, contactLists);
+    array.docs = data;
+    setContactLists(array);
   };
 
   const selectOne = (e) => {
@@ -76,6 +78,54 @@ const ContactLists = ({ initialContactLists, me }) => {
     setSelectedContactList(
       e.target.checked ? contactLists.docs.map((e) => e._id) : []
     );
+  };
+
+  const sortArray = (category) => {
+    let type;
+    if (sortBy.category !== category) {
+      type = "ascend";
+    } else if (sortBy.type === "ascend") {
+      type = "descend";
+    } else {
+      type = "ascend";
+    }
+    sortByRef.current = { category, type };
+
+    setSortBy({
+      category: category,
+      type,
+    });
+
+    switch (category) {
+      case "name":
+        contactLists.docs.sort((a, b) =>
+          sortByRef.current.type === "ascend"
+            ? a.name < b.name
+              ? -1
+              : 1
+            : b.name > a.name
+            ? 1
+            : -1
+        );
+        setContactLists(contactLists);
+        break;
+      case "contacts":
+        contactLists.docs.sort((a, b) =>
+          sortByRef.current.type === "ascend"
+            ? b.list.length - a.list.length
+            : a.list.length - b.list.length
+        );
+        setContactLists(contactLists);
+        break;
+    }
+  };
+
+  const arrowIcon = (category) => {
+    return sortBy.category === category && sortBy.type === "ascend" ? (
+      <span>▲</span>
+    ) : sortBy.category === category && sortBy.type === "descend" ? (
+      <span>▼</span>
+    ) : null;
   };
 
   const renderContactList = (contactList = {}) => (
@@ -168,7 +218,11 @@ const ContactLists = ({ initialContactLists, me }) => {
             <h1 className={layoutStyles.headerTitle}>
               Lists{" "}
               <span>
-                ({searchQuery ? contactLists.length : contactLists.totalDocs})
+                (
+                {searchQuery
+                  ? contactLists.docs?.length
+                  : contactLists.totalDocs}
+                )
               </span>
             </h1>
             <div className={layoutStyles.headerActions}>
@@ -215,22 +269,27 @@ const ContactLists = ({ initialContactLists, me }) => {
         </div>
 
         <ListHeader className={styles.contactListsHeader}>
-          <input type="checkbox" onChange={selectAll} />
-          <p>ID</p>
-          <p>Name</p>
-          <p>Contacts</p>
+          <input type="checkbox" onChange={selectAll} ref={checkboxRef} />
+          <div>
+            <p>ID</p>
+          </div>
+          <div>
+            <p onClick={() => sortArray("name")}>
+              Name<span>{arrowIcon("name")}</span>
+            </p>
+          </div>
+          <div>
+            <p onClick={() => sortArray("contacts")}>
+              Contacts<span>{arrowIcon("contacts")}</span>
+            </p>
+          </div>
         </ListHeader>
         <div className={styles.contactLists}>
-          {contactLists.totalDocs > 0 &&
+          {contactLists.docs?.length > 0 &&
             contactLists.docs.map((contactList) =>
               renderContactList(contactList)
             )}
-          {searchQuery &&
-            contactLists.length > 0 &&
-            contactLists.map((contactList) => renderContactList(contactList))}
-          {(contactLists.totalDocs <= 0 ||
-            (searchQuery && contactLists.length <= 0)) &&
-            renderContactList()}
+          {contactLists.docs?.length <= 0 && renderContactList()}
         </div>
 
         {!searchQuery && (
