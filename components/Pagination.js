@@ -3,18 +3,38 @@ import ReactPaginate from "react-paginate";
 
 import styles from "@/styles/components/Pagination.module.sass";
 
-const Pagination = ({ initialPage, pageCount, route, sortBy, direction }) => {
+const Pagination = ({
+  initialPage,
+  pageCount,
+  route,
+  sortBy,
+  direction,
+  searchQuery,
+}) => {
   const router = useRouter();
 
   const sortOptions = (page) => {
-    return sortBy && page === 0
-      ? `?sortBy=${sortBy || "createdAt"}&direction=${direction || -1}`
-      : sortBy
-      ? `&sortBy=${sortBy || "createdAt"}&direction=${direction || -1}`
-      : "";
+    let options;
+
+    if ((sortBy || searchQuery !== "") && page === 0) {
+      options = `?sortBy=${sortBy || "createdAt"}&direction=${direction || -1}${
+        searchQuery !== "" ? `&search=${searchQuery}` : ""
+      }`;
+    } else if ((sortBy || searchQuery !== "") && page > 0) {
+      options = `?page=${page + 1}${
+        sortBy ? `&sortBy=${sortBy || "createdAt"}` : ""
+      }${direction ? `&direction=${direction || -1}` : ""}${
+        searchQuery !== "" ? `&search=${searchQuery}` : ""
+      }`;
+    } else {
+      options = "";
+    }
+
+    return options;
   };
 
   const goToPage = (data) => {
+    console.log("router", router);
     const { selected: page } = data;
     page > 0
       ? router.push(`${route}?page=${page + 1}${sortOptions(page)}`)

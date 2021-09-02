@@ -25,7 +25,7 @@ import layoutStyles from "@/styles/layouts/App.module.sass";
 import styles from "@/styles/layouts/Contact.module.sass";
 import PopupContactListSelect from "@/components/Popups/PopupContactListSelect";
 
-const CONTACTS_LIMIT = 10;
+const CONTACTS_LIMIT = 50;
 
 const Contacts = ({ initialContacts, me }) => {
   const router = useRouter();
@@ -68,7 +68,9 @@ const Contacts = ({ initialContacts, me }) => {
     const { data } = await mainAPI.get(
       `/users/me/contacts?limit=${CONTACTS_LIMIT}&page=${
         router.query.page ? router.query.page : 1
-      }&sortBy=${category}&direction=${direction}`
+      }&sortBy=${category}&direction=${direction}${
+        searchQuery !== "" ? `&search=${searchQuery}` : ""
+      }`
     );
     setSortBy({
       category,
@@ -82,16 +84,14 @@ const Contacts = ({ initialContacts, me }) => {
       return getContacts();
     }
     const { data } = await mainAPI.get(
-      `/contacts/search?query=${query}&limit=${CONTACTS_LIMIT}`
+      `/contacts/search?query=${query}&page=${
+        router.query.page ? router.query.page : 1
+      }&limit=${CONTACTS_LIMIT}`
     );
-    // const array = Object.assign({}, contacts);
-    // array.docs = data;
     setContacts(data);
-    // setContacts(array);
   };
 
   const deleteRef = useRef(null);
-  const sortByRef = useRef({ category: null, type: "ascend" });
   const contactRef = useRef(null);
   const listRef = useRef(null);
 
@@ -152,109 +152,6 @@ const Contacts = ({ initialContacts, me }) => {
   };
   const selectAll = (e) => {
     setSelectedContact(e.target.checked ? contacts.docs.map((e) => e._id) : []);
-  };
-
-  const sortArray = (category) => {
-    let type;
-    if (sortBy.category !== category) {
-      type = "ascend";
-    } else if (sortBy.type === "ascend") {
-      type = "descend";
-    } else {
-      type = "ascend";
-    }
-    sortByRef.current = { category, type };
-
-    setSortBy({
-      category: category,
-      type,
-    });
-    switch (category) {
-      case "firstname":
-        contacts.docs.sort((a, b) =>
-          sortByRef.current.type === "ascend"
-            ? a.firstName < b.firstName
-              ? -1
-              : 1
-            : b.firstName > a.firstName
-            ? 1
-            : -1
-        );
-        setContacts(contacts);
-        break;
-      case "lastname":
-        contacts.docs.sort((a, b) =>
-          sortByRef.current.type === "ascend"
-            ? a.lastName < b.lastName
-              ? -1
-              : 1
-            : b.lastName > a.lastName
-            ? 1
-            : -1
-        );
-        setContacts(contacts);
-        break;
-      case "email":
-        contacts.docs.sort((a, b) =>
-          sortByRef.current.type === "ascend"
-            ? a.email < b.email
-              ? -1
-              : 1
-            : b.email > a.email
-            ? 1
-            : -1
-        );
-        setContacts(contacts);
-        break;
-      case "job":
-        contacts.docs.sort((a, b) => {
-          if (a.job === undefined) {
-            return 1;
-          } else if (b.job === undefined) {
-            return -1;
-          } else {
-            return sortByRef.current.type === "ascend"
-              ? a.job < b.job
-                ? -1
-                : 1
-              : b.job > a.job
-              ? 1
-              : -1;
-          }
-        });
-        setContacts(contacts);
-        break;
-      case "company":
-        contacts.docs.sort((a, b) =>
-          sortByRef.current.type === "ascend"
-            ? a.company < b.company
-              ? -1
-              : 1
-            : b.company > a.company
-            ? 1
-            : -1
-        );
-        setContacts(contacts);
-        break;
-      case "city":
-        contacts.docs.sort((a, b) => {
-          if (a.city === undefined) {
-            return 1;
-          } else if (b.city === undefined) {
-            return -1;
-          } else {
-            return sortByRef.current.type === "ascend"
-              ? a.city < b.city
-                ? -1
-                : 1
-              : b.city > a.city
-              ? 1
-              : -1;
-          }
-        });
-        setContacts(contacts);
-        break;
-    }
   };
 
   const arrowIcon = (category) => {
@@ -361,10 +258,7 @@ const Contacts = ({ initialContacts, me }) => {
         <div className={layoutStyles.header}>
           <div className={layoutStyles.headerTop}>
             <h1 className={layoutStyles.headerTitle}>
-              Contacts{" "}
-              <span>
-                ({searchQuery ? contacts.docs?.length : contacts.totalDocs})
-              </span>
+              Contacts <span>({contacts.totalDocs})</span>
             </h1>
             <div className={layoutStyles.headerActions}>
               <div className={layoutStyles.buttonContainer} ref={listRef}>
@@ -510,17 +404,18 @@ const Contacts = ({ initialContacts, me }) => {
             contacts.docs.map((contact) => renderContact(contact))}
           {contacts.docs?.length <= 0 && renderContact()}
         </div>
-        {!searchQuery && (
-          <Pagination
-            pageCount={contacts.totalPages}
-            initialPage={
-              router.query.page ? parseInt(router.query.page, 10) - 1 : 0
-            }
-            route="/app/contacts"
-            sortBy={sortBy.category}
-            direction={sortBy.direction}
-          />
-        )}
+        {/* {!searchQuery && ( */}
+        <Pagination
+          pageCount={contacts.totalPages}
+          initialPage={
+            router.query.page ? parseInt(router.query.page, 10) - 1 : 0
+          }
+          route="/app/contacts"
+          searchQuery={searchQuery}
+          sortBy={sortBy.category}
+          direction={sortBy.direction}
+        />
+        {/* )} */}
       </ContactLayout>
     </AppLayout>
   );
@@ -531,7 +426,11 @@ export const getServerSideProps = withAuthServerSideProps(async ({ query }) => {
   const { data: initialContacts } = await mainAPI.get(
     `/users/me/contacts?limit=${CONTACTS_LIMIT}&page=${
       query.page ? query.page : 1
-    }&sortBy=${query.sortBy || "createdAt"}&direction=${query.direction || -1}`
+    }&sortBy=${query.sortBy || "createdAt"}&direction=${query.direction || -1}${
+      query.search !== "" && query.search !== undefined
+        ? `&search=${query.search}`
+        : ""
+    }`
   );
   return {
     initialContacts,
