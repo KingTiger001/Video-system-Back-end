@@ -49,20 +49,28 @@
 .welcomeListItem
   display: grid
   grid-template-columns: 50px 1fr
-  gap: 0 20px
   div
-    border: 3px solid #98A1AD
-    border-radius: 50%
     display: flex
-    grid-column: 1
-    grid-row-start: 1
-    grid-row-end: 3
-    height: 50px
-    width: 50px
-    img
-      margin: auto
-  p
+    flex-wrap: wrap
+    align-content: flex-end
+    justify-content: center
+    flex-direction: row
+    span
+      border: 5px solid #98A1AD
+      border-radius: 50%
+      height: 10px
+      width: 10px
+  .welcomeVerify
     color: $textColorTwo
+    font-size: 16px
+    font-weight: 500
+    line-height: 20px
+    letter-spacing: 0.1px
+    grid-column: 2
+    margin-bottom: 4px
+  .welcomeContact
+    color: $primaryColor
+    cursor: pointer
     font-size: 16px
     font-weight: 700
     line-height: 20px

@@ -20,7 +20,7 @@ const Tools = ({ me }) => {
       dispatch({ type: 'PAUSE' })
       videoRef.pause()
     }
-    tool === clickedTool ? dispatch({ type: 'HIDE_PREVIEW' }) : dispatch({ type: 'SHOW_PREVIEW', data: { element } })
+    if (clickedTool != 5) dispatch({ type: 'SHOW_PREVIEW', data: { element } })
   }
 
   const closeToolbox = () => {
@@ -33,7 +33,7 @@ const Tools = ({ me }) => {
       <ul className={styles.toolList}>
         <li
           className={`${styles.tool} ${tool === 1 ? styles.toolSelected : ''}`}
-          onClick={() => selectTool(1)}
+          onClick={() => selectTool(1,'record')}
         >
           <img src="/assets/campaign/record.svg" />
           <p>Record</p>

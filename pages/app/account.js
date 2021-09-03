@@ -70,13 +70,13 @@ const Account = ({ me }) => {
         <div className={layoutStyles.header}>
           <div className={layoutStyles.headerTop}>
             <h1 className={layoutStyles.headerTitle}>Edit your account</h1>
+            <Button loading={loading} onClick={updateAccount}>Update infos</Button>
           </div>
           <div className={layoutStyles.headerBottom} />
         </div>
 
         <form
           className={styles.form}
-          onSubmit={updateAccount}
         >
           <div className={styles.formRow}>
             <div>
@@ -171,7 +171,7 @@ const Account = ({ me }) => {
                     ...email,
                     confirm: e.target.value,
                   })}
-                  type="email"
+                  type="text"
                   value={email.confirm}
                 />
               </div>
@@ -204,7 +204,6 @@ const Account = ({ me }) => {
 
           <div>
             {error && <p className={styles.error}>{error}</p>}
-            <Button loading={loading}>Update infos</Button>
           </div>
         </form>
         

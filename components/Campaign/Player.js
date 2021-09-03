@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useVideoResize } from '@/hooks'
@@ -6,10 +6,12 @@ import { useVideoResize } from '@/hooks'
 import dayjs from '@/plugins/dayjs'
 
 import EndScreen from '@/components/Campaign/EndScreen'
+import {defaultEndScreen, defaultHelloScreen} from '../../store/reducers/campaign'
 import HelloScreen from '@/components/Campaign/HelloScreen'
 import Logo from '@/components/Campaign/Logo'
 
 import styles from '@/styles/components/Campaign/Player.module.sass'
+import Placeholder from './Placeholder'
 
 const Player = () => {
   const dispatch = useDispatch()
@@ -28,6 +30,12 @@ const Player = () => {
   const videoSeeking = useSelector(state => state.campaign.videoSeeking)
   const videoRef = useSelector(state => state.campaign.videoRef)
   
+  const [resume, setResume] = useState(false)
+
+  useEffect(() => { 
+    setResume(preview.show || helloScreen.name || endScreen.name || video.url)
+  }, [preview.show, helloScreen, endScreen, video])
+
   const playerRef = useRef()
   const { width: playerWidth } = useVideoResize({ ref: playerRef, autoWidth: true })
 
@@ -108,25 +116,62 @@ const Player = () => {
         className={styles.video}
         style={{ width: playerWidth }}
       >
-        { preview.show && 
+        {preview.show ? (
           <div>
-            { preview.element === 'video' &&
-              <video
-                key={previewVideo.url}
-                controls
-                height="100%"
-                width="100%"
-              >
-                {previewVideo.url && <source src={previewVideo.url} type="video/mp4" />}
-                Sorry, your browser doesn't support embedded videos.
-              </video>
-            }
-            { preview.element === 'helloScreen' && <HelloScreen data={Object.keys(previewHelloScreen).length > 0 ? previewHelloScreen : helloScreen} />}
-            { preview.element === 'endScreen' && <EndScreen data={Object.keys(previewEndScreen).length > 0 ? previewEndScreen : endScreen} /> }
-            { preview.element === 'logo' && <Logo data={logo} /> }
+            {preview.element === 'record' && (
+              <Placeholder  of={preview.element} />
+            )}
+            {preview.element === 'video' &&
+              (previewVideo.url || video.url ? (
+                <video
+                  key={previewVideo.url}
+                  controls
+                  height="100%"
+                  width="100%"
+                >
+                  <source
+                    src={previewVideo.url || video.url}
+                    type="video/mp4"
+                  />
+                  Sorry, your browser doesn't support embedded videos.
+                </video>
+              ) : (
+                <Placeholder of={preview.element} />
+              ))}
+            {preview.element === 'helloScreen' &&
+              (Object.keys(previewHelloScreen).length == 0 &&
+              (JSON.stringify(helloScreen) ===
+                JSON.stringify(defaultHelloScreen) ||
+                !helloScreen.name) ? (
+                  <Placeholder of={preview.element} />
+              ) : (
+                <HelloScreen
+                  data={
+                    Object.keys(previewHelloScreen).length > 0
+                      ? previewHelloScreen
+                      : helloScreen
+                  }
+                />
+              ))}
+            {preview.element === 'endScreen' &&
+              (Object.keys(previewEndScreen).length == 0 &&
+              (JSON.stringify(endScreen) === JSON.stringify(defaultEndScreen) ||
+                !endScreen.name) ? (
+                  <Placeholder of={preview.element} />
+              ) : (
+                <EndScreen
+                  data={
+                    Object.keys(previewEndScreen).length > 0
+                      ? previewEndScreen
+                      : endScreen
+                  }
+                />
+              ))}
+            {logo && <Logo data={logo}/>}
           </div>
+        ): !resume && <Placeholder of='all' />
         }
-        <div style={{ display: preview.show ? 'none' : 'block' }}> 
+        <div style={{ display:( preview.show || !resume) ? 'none' : 'block' }}> 
           <video
             ref={videoRefCb}
             key={video.url}
@@ -147,6 +192,7 @@ const Player = () => {
           onClick={async () => {
             dispatch({ type: 'HIDE_PREVIEW' }) 
             dispatch({ type: isPlaying ? 'PAUSE' : 'PLAY' })
+            setResume(true)
             if (progression > helloScreen.duration && progression < duration - endScreen.duration) {
               isPlaying ? videoRef.pause() : videoRef.play()
             }

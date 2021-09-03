@@ -78,6 +78,10 @@
     &:after
       left: 64%
       width: 201px
+  &:nth-child(3)
+    &:after
+      left: 64%
+      width: 201px
   &:last-child
     &:after
       display: none
@@ -242,8 +246,17 @@
 .stepTwo
   display: grid
   grid-gap: 45px
-  .sectionHeaderContacts
-    align-items: center
+  .sectionHeaderOption
+    padding: 10px 10px 20px 10px
+    padding-bottom: 20px
+    letter-spacing: 0.2px
+    color: #5F59F7
+    cursor: pointer
+    font-size: 16px
+    font-weight: 500
+
+  .sectionHeaderButton
+    align-items: end
     display: grid
     grid-gap: 10px
     grid-template-columns: 1fr auto auto auto
@@ -284,10 +297,32 @@
 .contactsList, .listsList
   border: 1px solid $primaryColor
   border-radius: 4px
-  height: 160px
+  height: auto
+  min-height: 200px
+  max-height: 300px
   overflow: auto
   & > div:nth-child(odd)
     background: #F9FAFC
+
+.contactCount
+  cursor: pointer
+  color: $primaryColor!important
+
+
+.listsItemSubRow
+  display: flex
+  display: flex
+  flex-direction: column
+  border-left: 1px solid #ece3e3
+  border-bottom: 1px solid #ece3e3
+  margin-left: 45px 
+  max-height: 200px
+  height: auto
+  overflow: auto
+  &>.contactsItem
+    grid-template-columns: 1fr 2fr 1fr 1fr
+
+
 
 .contactsHeader, .listsHeader
   display: grid
@@ -318,12 +353,49 @@
     cursor: pointer
 
 .contactsHeader, .contactsItem
-  grid-template-columns: 16px repeat(4, 1fr)
+  grid-template-columns: 16px 1fr 2fr 1fr 1fr
 
 .listsHeader, .listsItem
   grid-template-columns: 16px 150px 1fr 1fr
 
 .stepThree
+  display: grid
+  grid-gap: 15px
+
+.mailContainer
+  border: 1px solid $primaryColor
+  border-radius: 4px
+  overflow: auto
+  padding: 10px
+  margin: 10px
+
+.mailTitle
+  color: $textColorOne
+  font-weight: 600
+  text-align: center
+
+.mailHeader
+  color: $textColorTwo
+  font-size: 18px
+  font-weight: 600
+  letter-spacing: 0.2px
+  margin-left: 30px
+
+.mailOption
+  align-items: center 
+  display: flex
+  padding: 0 10px 
+
+.mailLogo
+  width: 30px
+  height: 30px
+  margin: 10px
+
+.mailButton 
+  height: 40px
+  margin: 10px
+
+.stepFour
   display: grid
   grid-gap: 15px
 
@@ -352,6 +424,7 @@
     cursor: pointer
     font-size: 12px
     letter-spacing: 0.2px
+    font-weight: 700
 
 .summaryChecked
   background: $secondaryColor
