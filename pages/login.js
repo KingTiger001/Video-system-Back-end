@@ -57,6 +57,7 @@ const Login = () => {
       }
     }
   };
+  console.log("SO?");
 
   return (
     <AuthLayout>

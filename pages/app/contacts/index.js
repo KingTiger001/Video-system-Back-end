@@ -97,7 +97,7 @@ const Contacts = ({ initialContacts, me }) => {
 
   const renderContact = (contact = {}) => (
     <ListItem
-      className={styles.contactsItem}
+      className={styles.contactsItem + " " + styles.textAlignCenter}
       empty={Object.keys(contact).length > 0 ? false : true}
       key={contact._id}
       renderDropdownActions={() => (
