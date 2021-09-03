@@ -107,7 +107,6 @@ const PopupImportContacts = ({ listId, me, onDone }) => {
     );
     await Promise.all(promises);
   };
-  console.log("POPUPIMPORT CONTACT");
   return (
     <Popup title="Import contacts">
       {contacts.length > 0 ? (

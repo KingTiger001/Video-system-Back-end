@@ -34,7 +34,6 @@ const Pagination = ({
   };
 
   const goToPage = (data) => {
-    console.log("router", router);
     const { selected: page } = data;
     page > 0
       ? router.push(`${route}?page=${page + 1}${sortOptions(page)}`)

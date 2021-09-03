@@ -26,7 +26,6 @@ const PopupEditContact = ({ me, onDone }) => {
     const { contact, lists } = form;
     if (!loading) {
       try {
-        console.log("edit contact");
         setLoading(true);
         await mainAPI.patch(`/contacts/${contact._id}`, {
           ...contact,
