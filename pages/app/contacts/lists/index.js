@@ -35,11 +35,10 @@ const ContactLists = ({ initialContactLists, me }) => {
     dispatch({ type: "SHOW_POPUP", ...popupProps });
 
   const [contactLists, setContactLists] = useState({});
-  const [sortBy, setSortBy] = useState({ category: null, type: "ascend" });
+  const [sortBy, setSortBy] = useState({ category: null, direction: -1 });
   const [selectedContactList, setSelectedContactList] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const sortByRef = useRef({ category: null, type: "ascend" });
   const checkboxRef = useRef();
 
   useEffect(() => {
@@ -50,6 +49,8 @@ const ContactLists = ({ initialContactLists, me }) => {
     const { data } = await mainAPI.get(
       `/users/me/contactLists?limit=${CONTACT_LISTS_LIMIT}&page=${
         router.query.page ? router.query.page : 1
+      }&sortBy=${router.query.sortBy || "updatedAt"}&direction=${
+        router.query.direction || -1
       }`
     );
     setContactLists(data);
@@ -59,10 +60,14 @@ const ContactLists = ({ initialContactLists, me }) => {
     if (!query) {
       return getContactLists();
     }
-    const { data } = await mainAPI.get(`/contactLists/search?query=${query}`);
-    const array = Object.assign({}, contactLists);
-    array.docs = data;
-    setContactLists(array);
+    const { data } = await mainAPI.get(
+      `/users/me/contactLists?limit=${CONTACT_LISTS_LIMIT}&page=${
+        router.query.page ? router.query.page : 1
+      }&sortBy=${
+        router.query.sortBy || "updatedAt"
+      }&search=${query}&direction=${router.query.direction || -1}`
+    );
+    setContactLists(data);
   };
 
   const selectOne = (e) => {
@@ -80,50 +85,26 @@ const ContactLists = ({ initialContactLists, me }) => {
     );
   };
 
-  const sortArray = (category) => {
-    let type;
-    if (sortBy.category !== category) {
-      type = "ascend";
-    } else if (sortBy.type === "ascend") {
-      type = "descend";
-    } else {
-      type = "ascend";
-    }
-    sortByRef.current = { category, type };
-
+  const sortContactLists = async (category) => {
+    const direction = sortBy.category !== category ? 1 : -sortBy.direction;
+    const { data } = await mainAPI.get(
+      `/users/me/contactLists?limit=${CONTACT_LISTS_LIMIT}&page=${
+        router.query.page ? router.query.page : 1
+      }&sortBy=${category}&direction=${direction}${
+        searchQuery !== "" ? `&search=${searchQuery}` : ""
+      }`
+    );
     setSortBy({
-      category: category,
-      type,
+      category,
+      direction,
     });
-
-    switch (category) {
-      case "name":
-        contactLists.docs.sort((a, b) =>
-          sortByRef.current.type === "ascend"
-            ? a.name < b.name
-              ? -1
-              : 1
-            : b.name > a.name
-            ? 1
-            : -1
-        );
-        setContactLists(contactLists);
-        break;
-      case "contacts":
-        contactLists.docs.sort((a, b) =>
-          sortByRef.current.type === "ascend"
-            ? b.list.length - a.list.length
-            : a.list.length - b.list.length
-        );
-        setContactLists(contactLists);
-        break;
-    }
+    setContactLists(data);
   };
 
   const arrowIcon = (category) => {
-    return sortBy.category === category && sortBy.type === "ascend" ? (
+    return sortBy.category === category && sortBy.direction === 1 ? (
       <span>▲</span>
-    ) : sortBy.category === category && sortBy.type === "descend" ? (
+    ) : sortBy.category === category && sortBy.direction === -1 ? (
       <span>▼</span>
     ) : null;
   };
@@ -216,14 +197,7 @@ const ContactLists = ({ initialContactLists, me }) => {
         <div className={layoutStyles.header}>
           <div className={layoutStyles.headerTop}>
             <h1 className={layoutStyles.headerTitle}>
-              Lists{" "}
-              <span>
-                (
-                {searchQuery
-                  ? contactLists.docs?.length
-                  : contactLists.totalDocs}
-                )
-              </span>
+              Lists <span>({contactLists.totalDocs})</span>
             </h1>
             <div className={layoutStyles.headerActions}>
               <div className={layoutStyles.buttonContainer}>
@@ -274,12 +248,12 @@ const ContactLists = ({ initialContactLists, me }) => {
             <p>ID</p>
           </div>
           <div>
-            <p onClick={() => sortArray("name")}>
+            <p onClick={() => sortContactLists("name")}>
               Name<span>{arrowIcon("name")}</span>
             </p>
           </div>
           <div>
-            <p onClick={() => sortArray("contacts")}>
+            <p onClick={() => sortContactLists("contacts")}>
               Contacts<span>{arrowIcon("contacts")}</span>
             </p>
           </div>
@@ -292,15 +266,18 @@ const ContactLists = ({ initialContactLists, me }) => {
           {contactLists.docs?.length <= 0 && renderContactList()}
         </div>
 
-        {!searchQuery && (
-          <Pagination
-            pageCount={contactLists.totalPages}
-            initialPage={
-              router.query.page ? parseInt(router.query.page, 10) - 1 : 0
-            }
-            route="/app/contacts/lists"
-          />
-        )}
+        {/* {!searchQuery && ( */}
+        <Pagination
+          pageCount={contactLists.totalPages}
+          initialPage={
+            router.query.page ? parseInt(router.query.page, 10) - 1 : 0
+          }
+          route="/app/contacts/lists"
+          searchQuery={searchQuery}
+          sortBy={sortBy.category}
+          direction={sortBy.direction}
+        />
+        {/* )} */}
       </ContactLayout>
     </AppLayout>
   );
@@ -311,6 +288,10 @@ export const getServerSideProps = withAuthServerSideProps(async ({ query }) => {
   const { data: initialContactLists } = await mainAPI.get(
     `/users/me/contactLists?limit=${CONTACT_LISTS_LIMIT}&page=${
       query.page ? query.page : 1
+    }&sortBy=${query.sortBy || "updatedAt"}&direction=${query.direction || -1}${
+      query.search !== "" && query.search !== undefined
+        ? `&search=${query.search}`
+        : ""
     }`
   );
   return {

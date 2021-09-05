@@ -33,16 +33,27 @@
 
 .contacts
   display: grid
-  grid-gap: 20px
+  grid-gap: 12px
+  >div
+    height: 30px
 
 .contactsHeader, .contactsItem
-  grid-template-columns: 44px repeat(7, 1fr) 24px
+  // grid-template-columns: 44px repeat(7, 1fr) 24px
+  grid-template-columns: 44px 1fr 1fr 2fr 1fr 1fr 1fr 1fr 24px
   
 .contactLists
   display: grid
-  grid-gap: 20px
+  grid-gap: 12px
+  >div
+    height: 30px
+
 
 .contactListsHeader, .contactListsItem
   grid-template-columns: 44px 100px 1fr 3fr 24px
   &>a
     color: $primaryColor !important
+
+.contactListsHeader, .contactsHeader
+  &>div p
+    color: $primaryColor !important
+  

@@ -9,7 +9,7 @@ const Pagination = ({
   route,
   sortBy,
   direction,
-  searchQuery,
+  searchQuery = "",
 }) => {
   const router = useRouter();
 

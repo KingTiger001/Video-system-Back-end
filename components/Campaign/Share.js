@@ -1,44 +1,44 @@
-import { useEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { toast } from 'react-toastify'
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 
-import { mainAPI, mediaAPI } from '@/plugins/axios'
+import { mainAPI, mediaAPI } from "@/plugins/axios";
 
-import Button from '@/components/Button'
-import PopupAddContact from '@/components/Popups/PopupAddContact'
-import PopupImportContacts from '@/components/Popups/PopupImportContacts'
-import PopupQuitShare from '@/components/Popups/PopupQuitShare'
+import Button from "@/components/Button";
+import PopupAddContact from "@/components/Popups/PopupAddContact";
+import PopupImportContacts from "@/components/Popups/PopupImportContacts";
+import PopupQuitShare from "@/components/Popups/PopupQuitShare";
 
-import { MsalProvider, useIsAuthenticated, useMsal } from '@azure/msal-react'
-import { PublicClientApplication } from '@azure/msal-browser'
-import { requestScopes, msalConfig } from 'config/MsConfig'
+import { MsalProvider, useIsAuthenticated, useMsal } from "@azure/msal-react";
+import { PublicClientApplication } from "@azure/msal-browser";
+import { requestScopes, msalConfig } from "config/MsConfig";
 
-import styles from '@/styles/components/Campaign/Share.module.sass'
-import { useGoogleLogin } from 'react-google-login'
-import { googleConfig } from 'config/GoogleConfig'
-import { Collapse } from 'react-collapse'
-import 'react-tabs/style/react-tabs.css'
+import styles from "@/styles/components/Campaign/Share.module.sass";
+import { useGoogleLogin } from "react-google-login";
+import { googleConfig } from "config/GoogleConfig";
+import { Collapse } from "react-collapse";
+import "react-tabs/style/react-tabs.css";
 
 const providers = {
-  GOOGLE: 'GOOGLE',
-  MICROSOFT: 'MICROSOFT',
-  FOMO: 'FOMO',
-}
+  GOOGLE: "GOOGLE",
+  MICROSOFT: "MICROSOFT",
+  FOMO: "FOMO",
+};
 
 const RenderStepTree = ({ setSendVia, sendVia }) => {
-  const { instance: outlookInstance } = useMsal()
-  const [msAccesToken, setMsAccessToken] = useState(undefined)
-  const isOutlookAuthentified = useIsAuthenticated()
+  const { instance: outlookInstance } = useMsal();
+  const [msAccesToken, setMsAccessToken] = useState(undefined);
+  const isOutlookAuthentified = useIsAuthenticated();
 
-  const [googleCredentials, setGoogleCredentials] = useState(undefined)
-  const [googleProfile, setGoogleProfile] = useState(undefined)
+  const [googleCredentials, setGoogleCredentials] = useState(undefined);
+  const [googleProfile, setGoogleProfile] = useState(undefined);
   const { signIn: handleGmailSignIn } = useGoogleLogin({
     onSuccess: (session) => refreshGmailToken(session),
     ...googleConfig,
-  })
+  });
 
-  const [stepThreeError, setStepThreeError] = useState('')
+  const [stepThreeError, setStepThreeError] = useState("");
 
   const handleOutlookLogin = (outlookInstance) => {
     outlookInstance
@@ -49,50 +49,50 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
           provider: providers.MICROSOFT,
           // email: outlookInstance.getAllAccounts()[0].username,
           // maybe delete it all
-        })
+        });
       })
       .catch((e) => {
-        setStepThreeError('Error occurred')
-        console.error(e)
-      })
-  }
+        setStepThreeError("Error occurred");
+        console.error(e);
+      });
+  };
 
   //request accesstokens
   useEffect(() => {
-    if (isOutlookAuthentified) refreshOutlookToken()
-  }, [isOutlookAuthentified])
+    if (isOutlookAuthentified) refreshOutlookToken();
+  }, [isOutlookAuthentified]);
 
   // OnTokensChange
-  useEffect(() => { 
+  useEffect(() => {
     if (msAccesToken)
       setSendVia({
         ...sendVia,
-        microsoft: { 
+        microsoft: {
           accessToken: msAccesToken,
           email: outlookInstance.getAllAccounts()[0].username,
         },
-      })
+      });
     if (googleCredentials)
       setSendVia({
         ...sendVia,
         google: { credentials: googleCredentials, email: googleProfile.email },
-      })
-  }, [msAccesToken, googleCredentials])
+      });
+  }, [msAccesToken, googleCredentials]);
 
   const refreshGmailToken = async (session) => {
     if (session.code) {
       const { data } = await mainAPI.post(`/campaigns/googleToken`, {
         code: session.code,
-      })
+      });
 
-      const { profile, credentials } = data
+      const { profile, credentials } = data;
 
-      setGoogleProfile(profile)
-      setGoogleCredentials(credentials)
+      setGoogleProfile(profile);
+      setGoogleCredentials(credentials);
     } else {
-      setGoogleProfile(session.profileObj)
+      setGoogleProfile(session.profileObj);
     }
-  }
+  };
 
   const refreshOutlookToken = () => {
     outlookInstance
@@ -106,19 +106,19 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
           .acquireTokenPopup(requestScopes)
           .then((response) => setMsAccessToken(response.accessToken))
           .catch((e) => {
-            setStepThreeError(e)
-            console.error(e)
-          })
-      })
-  }
+            setStepThreeError(e);
+            console.error(e);
+          });
+      });
+  };
 
   const changeProvider = (event) => {
     event.target.value === providers.GOOGLE &&
       setSendVia({
         ...sendVia,
         provider: providers.GOOGLE,
-        google: { credentials: googleCredentials , email: googleProfile.email },
-      })
+        google: { credentials: googleCredentials, email: googleProfile.email },
+      });
     event.target.value === providers.MICROSOFT &&
       setSendVia({
         ...sendVia,
@@ -127,14 +127,14 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
           accessToken: msAccesToken,
           email: outlookInstance.getAllAccounts()[0].username,
         },
-      })
+      });
     event.target.value === providers.FOMO &&
       setSendVia({
         ...sendVia,
         provider: providers.FOMO,
-        fomo: { email: 'noreply@myfomo.io' },
-      })
-  }
+        fomo: { email: "noreply@myfomo.io" },
+      });
+  };
 
   return (
     <div className={styles.stepThree}>
@@ -232,50 +232,50 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
       </div>
       {stepThreeError && <p className={styles.error}>{stepThreeError}</p>}
     </div>
-  )
-}
+  );
+};
 
 const Share = ({ campaignId, onClose, onDone, me }) => {
-  const _FROM = `${me.firstName} ${me.lastName} `
-  const SUBJECT = `${me.firstName} from ${me.company} sent you a video message`
+  const _FROM = `${me.firstName} ${me.lastName} `;
+  const SUBJECT = `${me.firstName} from ${me.company} sent you a video message`;
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const popup = useSelector((state) => state.popup)
-  const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
+  const popup = useSelector((state) => state.popup);
+  const hidePopup = () => dispatch({ type: "HIDE_POPUP" });
   const showPopup = (popupProps) =>
-    dispatch({ type: 'SHOW_POPUP', ...popupProps })
+    dispatch({ type: "SHOW_POPUP", ...popupProps });
 
-  const [campaign, setCampaign] = useState({})
-  const [contacts, setContacts] = useState({})
-  const [contactsSelected, setContactsSelected] = useState([])
+  const [campaign, setCampaign] = useState({});
+  const [contacts, setContacts] = useState({});
+  const [contactsSelected, setContactsSelected] = useState([]);
   const [formDetails, setFormDetails] = useState({
     from: `${_FROM} via FOMO`,
-    message: '',
+    message: "",
     subject: SUBJECT,
-  })
-  const [lists, setLists] = useState({})
-  const [listsSelected, setListsSelected] = useState([])
-  const [mounted, setMounted] = useState(false)
-  const [shareLoading, setShareLoading] = useState(false)
-  const [step, setStep] = useState(1)
-  const [stepOneError, setStepOneError] = useState('')
-  const [stepTwoError, setStepTwoError] = useState('')
-  const [stepFourError, setStepFourError] = useState('')
-  const [thumbnailLoading, setThumbnailLoading] = useState(false)
+  });
+  const [lists, setLists] = useState({});
+  const [listsSelected, setListsSelected] = useState([]);
+  const [mounted, setMounted] = useState(false);
+  const [shareLoading, setShareLoading] = useState(false);
+  const [step, setStep] = useState(1);
+  const [stepOneError, setStepOneError] = useState("");
+  const [stepTwoError, setStepTwoError] = useState("");
+  const [stepFourError, setStepFourError] = useState("");
+  const [thumbnailLoading, setThumbnailLoading] = useState(false);
 
-  const [displayPopupVariable, showPopupVariables] = useState(false)
-  const [variable, setVariable] = useState('firstName')
+  const [displayPopupVariable, showPopupVariables] = useState(false);
+  const [variable, setVariable] = useState("firstName");
 
-  const formDetailsRef = useRef(null)
-  const textareaMessageRef = useRef(null)
-  const variablesPopupRef = useRef(null)
+  const formDetailsRef = useRef(null);
+  const textareaMessageRef = useRef(null);
+  const variablesPopupRef = useRef(null);
 
-  const msalInstance = new PublicClientApplication(msalConfig)
+  const msalInstance = new PublicClientApplication(msalConfig);
   const [sendVia, setSendVia] = useState({
     provider: providers.FOMO,
-    fomo: { email: 'noreply@myfomo.io' },
-  })
+    fomo: { email: "noreply@myfomo.io" },
+  });
 
   // Close click outside text style
   useEffect(() => {
@@ -284,23 +284,23 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
         variablesPopupRef.current &&
         !variablesPopupRef.current.contains(event.target)
       ) {
-        setVariable(false)
-        showPopupVariables(false)
+        setVariable(false);
+        showPopupVariables(false);
       }
     }
-    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [variablesPopupRef])
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [variablesPopupRef]);
 
   // mounted
   useEffect(() => {
-    getCampaign()
-    getContacts()
-    getLists()
-    getLastUsedProvider()
-  }, [])
+    getCampaign();
+    getContacts();
+    getLists();
+    getLastUsedProvider();
+  }, []);
 
   useEffect(() => {
     const via =
@@ -308,12 +308,12 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
         ? sendVia.google.email
         : sendVia.provider === providers.MICROSOFT && sendVia.microsoft
         ? sendVia.microsoft.email
-        : providers.FOMO
+        : providers.FOMO;
     setFormDetails({
       ...formDetails,
       from: `${_FROM} via ${via}`,
-    })
-  }, [sendVia])
+    });
+  }, [sendVia]);
 
   useEffect(() => {
     if (
@@ -322,145 +322,147 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
       campaign.share.lists &&
       (campaign.share.contacts.length > 0 || campaign.share.lists.length > 0)
     ) {
-      setStep(3)
+      setStep(3);
     } else if (
       campaign.share &&
       campaign.share.from &&
       campaign.share.message &&
       campaign.share.subject
     ) {
-      setStep(2)
+      setStep(2);
     }
-  }, [mounted])
+  }, [mounted]);
 
   const getCampaign = async () => {
-    const { data: campaign } = await mainAPI.get(`/campaigns/${campaignId}`)
+    const { data: campaign } = await mainAPI.get(`/campaigns/${campaignId}`);
     if (campaign.share && campaign.share.contacts) {
-      campaign.share.contacts = campaign.share.contacts.map((c) => c._id)
+      campaign.share.contacts = campaign.share.contacts.map((c) => c._id);
     }
-    setCampaign(campaign)
+    setCampaign(campaign);
     setFormDetails({
       from: `${_FROM} via FOMO`,
-      message: campaign.share ? campaign.share.message : '',
+      message: campaign.share ? campaign.share.message : "",
       subject: SUBJECT,
-    })
-    if (campaign.share.sendVia) setSendVia(campaign.share.sendVia)
+    });
+    if (campaign.share.sendVia) setSendVia(campaign.share.sendVia);
 
     setContactsSelected(
       campaign.share && campaign.share.contacts ? campaign.share.contacts : []
-    )
+    );
     setListsSelected(
-      campaign.share && campaign.share.lists ? campaign.share.lists.map(l=> l._id) : []
-    )
-    setMounted(true)
-  }
+      campaign.share && campaign.share.lists
+        ? campaign.share.lists.map((l) => l._id)
+        : []
+    );
+    setMounted(true);
+  };
   const getContacts = async () => {
     const { data: contacts } = await mainAPI.get(
       `/users/me/contacts?pagination=false`
-    )
-    setContacts(contacts)
-  }
+    );
+    setContacts(contacts);
+  };
   const searchContacts = async (query) => {
     if (!query) {
-      return getContacts()
+      return getContacts();
     }
-    const { data } = await mainAPI.get(`/contacts/search?query=${query}`)
-    setContacts(data)
-  }
+    const { data } = await mainAPI.get(`/contacts/search?query=${query}`);
+    setContacts(data);
+  };
 
   const getLists = async () => {
     const { data: lists } = await mainAPI.get(
       `/users/me/contactLists?pagination=false`
-    )
-    setLists(lists)
-  }
+    );
+    setLists(lists);
+  };
 
   const getLastUsedProvider = async () => {
-    const lastSendVia = localStorage.getItem('sendVia')
-    if (lastSendVia) setSendVia(JSON.parse(lastSendVia))
-  }
+    const lastSendVia = localStorage.getItem("sendVia");
+    if (lastSendVia) setSendVia(JSON.parse(lastSendVia));
+  };
 
   const searchLists = async (query) => {
     if (!query) {
-      return getLists()
+      return getLists();
     }
-    const { data } = await mainAPI.get(`/contactLists/search?query=${query}`)
-    setLists(data)
-  }
+    const { data } = await mainAPI.get(`/contactLists/search?query=${query}`);
+    setLists(data);
+  };
 
   const extractDataFromCSV = async (e) => {
-    const formData = new FormData()
-    formData.append('file', e.target.files[0])
-    const { data } = await mainAPI.post('/contacts/csv', formData)
-    showPopup({ display: 'IMPORT_CONTACTS', data })
-  }
+    const formData = new FormData();
+    formData.append("file", e.target.files[0]);
+    const { data } = await mainAPI.post("/contacts/csv", formData);
+    showPopup({ display: "IMPORT_CONTACTS", data });
+  };
 
   const handleSelectedContact = (e) => {
-    const contactId = e.target.value
+    const contactId = e.target.value;
     if (contactsSelected.includes(contactId)) {
       return setContactsSelected(
         contactsSelected.filter((c) => c !== contactId)
-      )
+      );
     }
-    setContactsSelected([...contactsSelected, e.target.value])
-  }
+    setContactsSelected([...contactsSelected, e.target.value]);
+  };
 
   const handleSelectedList = (e) => {
-    const listId = e.target.value
+    const listId = e.target.value;
     if (listsSelected.includes(listId)) {
-      return setListsSelected(listsSelected.filter((l) => l !== listId))
+      return setListsSelected(listsSelected.filter((l) => l !== listId));
     }
-    setListsSelected([...listsSelected, e.target.value])
-  }
+    setListsSelected([...listsSelected, e.target.value]);
+  };
 
   const insertVariableInMessage = () => {
-    const cursorPosition = textareaMessageRef.current.selectionStart
-    const value = textareaMessageRef.current.value
+    const cursorPosition = textareaMessageRef.current.selectionStart;
+    const value = textareaMessageRef.current.value;
     setFormDetails({
       ...formDetails,
       message: `${value.substring(
         0,
         cursorPosition
       )}{{${variable}}}${value.substring(cursorPosition, value.length)}`,
-    })
-    showPopupVariables(false)
-    setVariable('firstName')
-  }
+    });
+    showPopupVariables(false);
+    setVariable("firstName");
+  };
 
   const next = async () => {
     try {
       switch (step) {
         case 1:
-          await stepOne()
-          break
+          await stepOne();
+          break;
         case 2:
-          await stepTwo()
-          break
+          await stepTwo();
+          break;
         case 3:
-          await stepThree()
-          break
+          await stepThree();
+          break;
       }
-      setStep(step + 1)
+      setStep(step + 1);
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
-  }
+  };
 
   const share = async () => {
     try {
-      setShareLoading(true)
-      await mainAPI.post('/campaigns/share', { campaign, sendVia })
-      onDone()
+      setShareLoading(true);
+      await mainAPI.post("/campaigns/share", { campaign, sendVia });
+      onDone();
     } catch (err) {
-      setStepFourError('An error has occured.')
+      setStepFourError("An error has occured.");
     } finally {
-      setShareLoading(false)
+      setShareLoading(false);
     }
-  }
+  };
 
   const stepOne = async () => {
     if (!formDetailsRef.current.checkValidity()) {
-      throw formDetailsRef.current.reportValidity()
+      throw formDetailsRef.current.reportValidity();
     }
     try {
       const { data: campaignUpdated } = await mainAPI.patch(
@@ -471,23 +473,23 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
             ...formDetails,
           },
         }
-      )
+      );
       setCampaign({
         ...campaign,
         share: {
           ...campaignUpdated.share,
         },
-      })
+      });
     } catch (err) {
-      throw setStepOneError('An error has occured.')
+      throw setStepOneError("An error has occured.");
     }
-  }
+  };
 
   const stepTwo = async () => {
     try {
-      setStepTwoError('')
+      setStepTwoError("");
       if (contactsSelected.length <= 0 && listsSelected.length <= 0) {
-        throw new Error('You need at least one contact or one list selected.')
+        throw new Error("You need at least one contact or one list selected.");
       }
       const { data: campaignUpdated } = await mainAPI.patch(
         `/campaigns/${campaignId}`,
@@ -498,33 +500,33 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
             lists: listsSelected,
           },
         }
-      )
+      );
       setCampaign({
         ...campaign,
         share: {
           ...campaignUpdated.share,
         },
-      })
+      });
     } catch (err) {
-      console.log(err)
-      throw setStepTwoError(err.message || 'An error has occured.')
+      console.log(err);
+      throw setStepTwoError(err.message || "An error has occured.");
     }
-  }
+  };
 
   const stepThree = async () => {
     try {
-      localStorage.setItem('sendVia', JSON.stringify(sendVia))
+      localStorage.setItem("sendVia", JSON.stringify(sendVia));
     } catch (err) {
-      throw setStepOneError('An error has occured.')
+      throw setStepOneError("An error has occured.");
     }
-    getCampaign()
-  }
+    getCampaign();
+  };
   const removeThumbnail = async () => {
-    await mediaAPI.delete('/', {
+    await mediaAPI.delete("/", {
       data: {
         url: campaign.share.thumbnail,
       },
-    })
+    });
     const { data: campaignUpdated } = await mainAPI.patch(
       `/campaigns/${campaignId}`,
       {
@@ -533,29 +535,29 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
           thumbnail: null,
         },
       }
-    )
+    );
     setCampaign({
       ...campaign,
       share: {
         ...campaignUpdated.share,
       },
-    })
-  }
+    });
+  };
 
   const uploadThumbnail = async (file) => {
-    const formData = new FormData()
-    formData.append('file', file)
-    formData.append('folder', 'thumbnails')
-    formData.append('width', 800)
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("folder", "thumbnails");
+    formData.append("width", 800);
     try {
-      setThumbnailLoading(true)
-      const { data: url } = await mediaAPI.post('/images', formData)
+      setThumbnailLoading(true);
+      const { data: url } = await mediaAPI.post("/images", formData);
       if (campaign.share && campaign.share.thumbnail) {
-        await mediaAPI.delete('/', {
+        await mediaAPI.delete("/", {
           data: {
             url: campaign.share.thumbnail,
           },
-        })
+        });
       }
       const { data: campaignUpdated } = await mainAPI.patch(
         `/campaigns/${campaignId}`,
@@ -565,35 +567,36 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
             thumbnail: url,
           },
         }
-      )
+      );
       setCampaign({
         ...campaign,
         share: {
           ...campaignUpdated.share,
         },
-      })
+      });
     } catch (err) {
-      console.log(err)
-      const code = err.response && err.response.data
-      if (code === 'Upload.incorrectFiletype') {
-        setStepOneError('Only .jpg and .png images are accepted.')
+      console.log(err);
+      const code = err.response && err.response.data;
+      if (code === "Upload.incorrectFiletype") {
+        setStepOneError("Only .jpg and .png images are accepted.");
       } else {
-        setStepOneError('Thumbnail upload failed.')
+        setStepOneError("Thumbnail upload failed.");
       }
     } finally {
-      setThumbnailLoading(false)
-      setTimeout(() => setStepOneError(''), 5000)
+      setThumbnailLoading(false);
+      setTimeout(() => setStepOneError(""), 5000);
     }
-  }
+  };
 
   const renderContact = (contact, checked = true) =>
     contact ? (
       <div className={styles.contactsItem} key={contact._id}>
         {(me.freeTrial ||
-          me.subscription.level !== 'business' ||
-          (me.subscription.level === 'business' &&
+          me.subscription.level !== "business" ||
+          (me.subscription.level === "business" &&
             (contactsSelected.length < 1 ||
-              contactsSelected.includes(contact._id)))) && checked && (
+              contactsSelected.includes(contact._id)))) &&
+          checked && (
             <input
               checked={contactsSelected.includes(contact._id)}
               onChange={handleSelectedContact}
@@ -601,7 +604,9 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
               value={contact._id}
             />
           )}
-        <p>{contact.firstName} {contact.lastName}</p>
+        <p>
+          {contact.firstName} {contact.lastName}
+        </p>
         <p>{contact.email}</p>
         <p>{contact.company}</p>
         <p>{contact.job}</p>
@@ -610,24 +615,24 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
       <div className={`${styles.contactsItem} ${styles.empty}`}>
         <p>No contacts found</p>
       </div>
-    )
+    );
 
-  const [show, setShow] = useState(undefined)
-  const [listContent, setListContent] = useState({})
+  const [show, setShow] = useState(undefined);
+  const [listContent, setListContent] = useState({});
 
   const getContactList = async (id) => {
-    const { data } = await mainAPI.get(`/contactLists/${id}`)
-    setListContent(data)
-  }
+    const { data } = await mainAPI.get(`/contactLists/${id}`);
+    setListContent(data);
+  };
 
   const showList = (id) => {
-    if (id === show) setShow(null)
+    if (id === show) setShow(null);
     else {
-      setShow(id)
-      setListContent(null)
-      getContactList(id)
+      setShow(id);
+      setListContent(null);
+      getContactList(id);
     }
-  }
+  };
 
   const renderList = (list) => {
     return list ? (
@@ -641,7 +646,11 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
           />
           <p>#{list.uniqueId}</p>
           <p>{list.name}</p>
-          <p className={styles.contactCount} href="#" onClick={() => showList(list._id)}>
+          <p
+            className={styles.contactCount}
+            href="#"
+            onClick={() => showList(list._id)}
+          >
             {list.list.length} contacts
           </p>
         </div>
@@ -650,7 +659,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
           <div className={styles.listsItemSubRow}>
             {listContent &&
               listContent.list &&
-              listContent.list.map((contact) => renderContact(contact,false))}
+              listContent.list.map((contact) => renderContact(contact, false))}
           </div>
         </Collapse>
       </div>
@@ -658,8 +667,8 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
       <div className={`${styles.listsItem} ${styles.empty}`}>
         <p>No lists found</p>
       </div>
-    )
-  }
+    );
+  };
 
   const RenderStepTwo = () => {
     // TODO: reduce this if possible
@@ -667,12 +676,12 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
       const selected = contacts.filter(
         (contact) =>
           contactsSelected.length && contactsSelected.includes(contact._id)
-      )
+      );
       const inselected = contacts.filter(
         (contact) => !selected.includes(contact)
-      )
-      return [...selected, ...inselected]
-    }
+      );
+      return [...selected, ...inselected];
+    };
 
     return (
       <div className={styles.stepTwo}>
@@ -697,7 +706,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
                   />
                 </div>
                 <Button
-                  onClick={() => showPopup({ display: 'ADD_CONTACT' })}
+                  onClick={() => showPopup({ display: "ADD_CONTACT" })}
                   outline={true}
                   size="small"
                 >
@@ -723,7 +732,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
                       e.target.checked
                         ? (contacts.docs ?? contacts).map((c) => c._id)
                         : []
-                    )
+                    );
                   }}
                   type="checkbox"
                 />
@@ -779,60 +788,61 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
 
         {stepTwoError && <p className={styles.error}>{stepTwoError}</p>}
       </div>
-    )
-  }
+    );
+  };
 
   const countContact = () => {
-    let listsIds = []
+    let listsIds = [];
     campaign.share.lists.forEach((l) => {
       if (l.list)
-        listsIds = [...listsIds, ...l.list.map((contact) => contact._id)]
-    })
+        listsIds = [...listsIds, ...l.list.map((contact) => contact._id)];
+    });
     const contacts = [...campaign.share.contacts, ...listsIds].filter(
       (value, index, self) => self.indexOf(value) === index
-    )
-    return contacts.length
-  }
+    );
+    return contacts.length;
+  };
   const getListNames = () => {
     const limits = 10;
-    let listName = []
+    let listName = [];
     campaign.share.lists.forEach((l) => {
-      if (l.name) listName = [...listName, l.name]
-    })
+      if (l.name) listName = [...listName, l.name];
+    });
     return (
-      listName.slice(0, limits).join(', ') + (listName.length > limits ? ', ...' : '')
-    )
-  }
+      listName.slice(0, limits).join(", ") +
+      (listName.length > limits ? ", ..." : "")
+    );
+  };
 
   return (
     <MsalProvider instance={msalInstance}>
       <div className={styles.shareCampaign}>
-        {popup.display === 'ADD_CONTACT' && (
+        {popup.display === "ADD_CONTACT" && (
           <PopupAddContact
             onDone={() => {
-              getContacts()
-              getLists()
-              hidePopup()
-              toast.success('Contact added.')
+              getContacts();
+              getLists();
+              hidePopup();
+              toast.success("Contact added.");
             }}
           />
         )}
-        {popup.display === 'IMPORT_CONTACTS' && (
+        {popup.display === "IMPORT_CONTACTS" && (
           <PopupImportContacts
             me={me}
             onDone={() => {
-              getContacts()
-              getLists()
-              hidePopup()
-              toast.success('Contacts imported.')
+              getContacts();
+              getLists();
+              hidePopup();
+              toast.success("Contacts imported.");
             }}
           />
         )}
-        {popup.display === 'QUIT_SHARE' && (
+        {popup.display === "QUIT_SHARE" && (
           <PopupQuitShare
             onDone={() => {
-              onClose()
-              hidePopup()
+              onClose();
+              hidePopup();
             }}
           />
         )}
@@ -842,40 +852,44 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
           <div className={styles.header}>
             <p className={styles.headerTitle}>Your video campaign</p>
             <img
-              onClick={() => showPopup({ display: 'QUIT_SHARE' })}
+              onClick={() => showPopup({ display: "QUIT_SHARE" })}
               src="/assets/common/close.svg"
             />
           </div>
           <div className={styles.steps}>
             <div
-              className={`${styles.step} ${step === 1 ? styles.current : ''} ${
-                step > 1 ? styles.valid : ''
-              }`}>
+              className={`${styles.step} ${step === 1 ? styles.current : ""} ${
+                step > 1 ? styles.valid : ""
+              }`}
+            >
               <p>Message</p>
               <div className={styles.stepStatus}>
                 <img src="/assets/common/doneWhite.svg" />
               </div>
             </div>
             <div
-              className={`${styles.step} ${step === 2 ? styles.current : ''} ${
-                step > 2 ? styles.valid : ''
-              }`}>
+              className={`${styles.step} ${step === 2 ? styles.current : ""} ${
+                step > 2 ? styles.valid : ""
+              }`}
+            >
               <p>Contacts</p>
               <div className={styles.stepStatus}>
                 <img src="/assets/common/doneWhite.svg" />
               </div>
             </div>
             <div
-              className={`${styles.step} ${step === 3 ? styles.current : ''} ${
-                step > 3 ? styles.valid : ''
-              }`}>
+              className={`${styles.step} ${step === 3 ? styles.current : ""} ${
+                step > 3 ? styles.valid : ""
+              }`}
+            >
               <p>Send via</p>
               <div className={styles.stepStatus}>
                 <img src="/assets/common/doneWhite.svg" />
               </div>
             </div>
             <div
-              className={`${styles.step} ${step === 4 ? styles.current : ''}`}>
+              className={`${styles.step} ${step === 4 ? styles.current : ""}`}
+            >
               <p>Confirmation</p>
               <div className={styles.stepStatus}>
                 <img src="/assets/common/doneWhite.svg" />
@@ -889,21 +903,24 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
                 <div>
                   <div className={styles.detailsMessageHeader}>
                     <label>Your message</label>
-                    {(me.freeTrial || me.subscription.level === 'pro') && (
+                    {(me.freeTrial || me.subscription.level === "pro") && (
                       <span
                         className={styles.addVariable}
-                        onClick={() => showPopupVariables(true)}>
+                        onClick={() => showPopupVariables(true)}
+                      >
                         Add variable
                       </span>
                     )}
                     {displayPopupVariable && (
                       <div
                         className={styles.popupVariables}
-                        ref={variablesPopupRef}>
+                        ref={variablesPopupRef}
+                      >
                         <label>Variables</label>
                         <select
                           onChange={(e) => setVariable(e.target.value)}
-                          defaultValue={variable}>
+                          defaultValue={variable}
+                        >
                           <option value="firstName">First name</option>
                           <option value="lastName">Last name</option>
                           <option value="job">Job title</option>
@@ -915,7 +932,8 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
                         <Button
                           onClick={() => insertVariableInMessage(variable)}
                           size="small"
-                          type="div">
+                          type="div"
+                        >
                           Add
                         </Button>
                       </div>
@@ -942,7 +960,8 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
                   </p>
                   <label
                     className={styles.uploadThumbnailArea}
-                    htmlFor="thumbnail">
+                    htmlFor="thumbnail"
+                  >
                     <img src="/assets/common/thumbnail.svg" />
                     {!thumbnailLoading && <p>Download image</p>}
                     {thumbnailLoading && <p>Downloading...</p>}
@@ -962,7 +981,8 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
                       />
                       <p
                         className={styles.removeThumbnail}
-                        onClick={removeThumbnail}>
+                        onClick={removeThumbnail}
+                      >
                         Remove thumbnail
                       </p>
                     </div>
@@ -1008,7 +1028,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
                         <b>Message: </b>
                         {(campaign.share.message &&
                           campaign.share.message.trim()) ||
-                          'none'}
+                          "none"}
                       </p>
                       <div>
                         <b>Thumbnail: </b>
@@ -1021,7 +1041,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
                             />
                           </div>
                         ) : (
-                          'none'
+                          "none"
                         )}
                       </div>
                     </div>
@@ -1043,8 +1063,11 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
                       </p>
                       <p>
                         <b>Lists: </b>
-                        {campaign.share.lists.length} selected 
-                        {campaign.share.lists.length && campaign.share.lists.length < 10 ? ` ( ${getListNames()} )`:``} 
+                        {campaign.share.lists.length} selected
+                        {campaign.share.lists.length &&
+                        campaign.share.lists.length < 10
+                          ? ` ( ${getListNames()} )`
+                          : ``}
                       </p>
                     </div>
                   </div>
@@ -1067,7 +1090,8 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
               {step < 4 && (
                 <Button
                   disabled={step == 3 && !sendVia.provider}
-                  onClick={next}>
+                  onClick={next}
+                >
                   Next
                 </Button>
               )}
@@ -1081,7 +1105,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
         </div>
       </div>
     </MsalProvider>
-  )
-}
+  );
+};
 
-export default Share
+export default Share;

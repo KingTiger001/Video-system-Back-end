@@ -58,6 +58,8 @@ const Contacts = ({ initialContacts, me }) => {
     const { data } = await mainAPI.get(
       `/users/me/contacts?limit=${CONTACTS_LIMIT}&page=${
         router.query.page ? router.query.page : 1
+      }&sortBy=${router.query.sortBy || "updatedAt"}&direction=${
+        router.query.direction || -1
       }`
     );
     setContacts(data);
@@ -84,9 +86,11 @@ const Contacts = ({ initialContacts, me }) => {
       return getContacts();
     }
     const { data } = await mainAPI.get(
-      `/contacts/search?query=${query}&page=${
+      `/users/me/contacts?limit=${CONTACTS_LIMIT}&page=${
         router.query.page ? router.query.page : 1
-      }&limit=${CONTACTS_LIMIT}`
+      }&sortBy=${
+        router.query.sortBy || "updatedAt"
+      }&search=${query}&direction=${router.query.direction || -1}`
     );
     setContacts(data);
   };
@@ -426,7 +430,7 @@ export const getServerSideProps = withAuthServerSideProps(async ({ query }) => {
   const { data: initialContacts } = await mainAPI.get(
     `/users/me/contacts?limit=${CONTACTS_LIMIT}&page=${
       query.page ? query.page : 1
-    }&sortBy=${query.sortBy || "createdAt"}&direction=${query.direction || -1}${
+    }&sortBy=${query.sortBy || "updatedAt"}&direction=${query.direction || -1}${
       query.search !== "" && query.search !== undefined
         ? `&search=${query.search}`
         : ""
