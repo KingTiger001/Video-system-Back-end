@@ -35,11 +35,9 @@ const Login = () => {
           email,
           password,
         });
-        console.log("login !-!", mainAPI.c);
         await mainAPI
           .get("/auth/test")
-          .catch((err) => console.log("test api err", err))
-          .then((res) => console.log("res test api", res));
+          .catch((err) => console.log("test api err", err));
         jscookie.set("fo_sas_tk", jwt, { expires: 30 });
         mainAPI.defaults.headers.common.Authorization = `Bearer ${jwt}`;
         router.push(
@@ -57,7 +55,6 @@ const Login = () => {
       }
     }
   };
-  console.log("SO?");
 
   return (
     <AuthLayout>
