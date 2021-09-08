@@ -1,113 +1,159 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import { useVideoResize } from '@/hooks'
+import { useVideoResize } from "@/hooks";
 
-import dayjs from '@/plugins/dayjs'
+import dayjs from "@/plugins/dayjs";
 
-import EndScreen from '@/components/Campaign/EndScreen'
-import {defaultEndScreen, defaultHelloScreen} from '../../store/reducers/campaign'
-import HelloScreen from '@/components/Campaign/HelloScreen'
-import Logo from '@/components/Campaign/Logo'
+import EndScreen from "@/components/Campaign/EndScreen";
+import {
+  defaultEndScreen,
+  defaultHelloScreen,
+} from "../../store/reducers/campaign";
+import HelloScreen from "@/components/Campaign/HelloScreen";
+import Logo from "@/components/Campaign/Logo";
 
-import styles from '@/styles/components/Campaign/Player.module.sass'
-import Placeholder from './Placeholder'
+import styles from "@/styles/components/Campaign/Player.module.sass";
+import Placeholder from "./Placeholder";
 
 const Player = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const endScreen = useSelector(state => state.campaign.endScreen)
-  const duration = useSelector(state => state.campaign.duration)
-  const helloScreen = useSelector(state => state.campaign.helloScreen)
-  const isPlaying = useSelector(state => state.campaign.isPlaying)
-  const logo = useSelector(state => state.campaign.logo)
-  const preview = useSelector(state => state.campaign.preview)
-  const previewEndScreen = useSelector(state => state.campaign.previewEndScreen)
-  const previewHelloScreen = useSelector(state => state.campaign.previewHelloScreen)
-  const previewVideo = useSelector(state => state.campaign.previewVideo)
-  const progression = useSelector(state => state.campaign.progression)
-  const video = useSelector(state => state.campaign.video)
-  const videoSeeking = useSelector(state => state.campaign.videoSeeking)
-  const videoRef = useSelector(state => state.campaign.videoRef)
-  
-  const [resume, setResume] = useState(false)
+  const endScreen = useSelector((state) => state.campaign.endScreen);
+  const duration = useSelector((state) => state.campaign.duration);
+  const helloScreen = useSelector((state) => state.campaign.helloScreen);
+  const isPlaying = useSelector((state) => state.campaign.isPlaying);
+  const logo = useSelector((state) => state.campaign.logo);
+  const preview = useSelector((state) => state.campaign.preview);
+  const previewEndScreen = useSelector(
+    (state) => state.campaign.previewEndScreen
+  );
+  const previewHelloScreen = useSelector(
+    (state) => state.campaign.previewHelloScreen
+  );
+  const previewVideo = useSelector((state) => state.campaign.previewVideo);
+  const progression = useSelector((state) => state.campaign.progression);
+  const video = useSelector((state) => state.campaign.video);
+  const videoSeeking = useSelector((state) => state.campaign.videoSeeking);
+  const videoRef = useSelector((state) => state.campaign.videoRef);
 
-  useEffect(() => { 
-    setResume(preview.show || helloScreen.name || endScreen.name || video.url)
-  }, [preview.show, helloScreen, endScreen, video])
+  const [resume, setResume] = useState(false);
 
-  const playerRef = useRef()
-  const { width: playerWidth } = useVideoResize({ ref: playerRef, autoWidth: true })
+  useEffect(() => {
+    setResume(preview.show || helloScreen.name || endScreen.name || video.url);
+  }, [preview.show, helloScreen, endScreen, video]);
 
-  const videoRefCb = useCallback(node => {
-    const handleSeeking = () => dispatch({ type: 'SET_VIDEO_SEEKING', data: true })
-    const handlePlaying = () => dispatch({ type: 'SET_VIDEO_SEEKING', data: false })
-    
-    if (node !== null) {
-      dispatch({ type: 'SET_VIDEO_REF', data: node })
+  const playerRef = useRef();
+  const { width: playerWidth } = useVideoResize({
+    ref: playerRef,
+    autoWidth: true,
+  });
 
-      if (Object.keys(videoRef).length > 0) {
-        videoRef.addEventListener('playing', handlePlaying)
-        videoRef.addEventListener('seeking', handleSeeking)
-        const currentTime = (progression - helloScreen.duration) / 1000
-        videoRef.currentTime = currentTime > 0 ? currentTime : 0 
+  const videoRefCb = useCallback(
+    (node) => {
+      const handleSeeking = () =>
+        dispatch({ type: "SET_VIDEO_SEEKING", data: true });
+      const handlePlaying = () =>
+        dispatch({ type: "SET_VIDEO_SEEKING", data: false });
+
+      if (node !== null) {
+        dispatch({ type: "SET_VIDEO_REF", data: node });
+
+        if (Object.keys(videoRef).length > 0) {
+          videoRef.addEventListener("playing", handlePlaying);
+          videoRef.addEventListener("seeking", handleSeeking);
+          const currentTime = (progression - helloScreen.duration) / 1000;
+          videoRef.currentTime = currentTime > 0 ? currentTime : 0;
+        }
+      } else {
+        if (Object.keys(videoRef).length > 0) {
+          videoRef.removeEventListener("seeking", handleSeeking);
+          videoRef.removeEventListener("playing", handlePlaying);
+        }
       }
-    } else {
-      if (Object.keys(videoRef).length > 0) {
-        videoRef.removeEventListener('seeking', handleSeeking)
-        videoRef.removeEventListener('playing', handlePlaying)
-      }
-    }
-  }, [video, videoRef]);
+    },
+    [video, videoRef]
+  );
 
   useEffect(() => {
     let interval = null;
     if (
-      ((progression > helloScreen.duration) && (progression < (duration - endScreen.duration)) && videoSeeking && videoRef.currentTime !== 0)
-      || (!isPlaying && progression !== 0)
+      (progression > helloScreen.duration &&
+        progression < duration - endScreen.duration &&
+        videoSeeking &&
+        videoRef.currentTime !== 0) ||
+      (!isPlaying && progression !== 0)
     ) {
-      clearInterval(interval)
+      clearInterval(interval);
     } else if (isPlaying) {
-      interval = setInterval(() => {
-        dispatch({
-          type: 'SET_PROGRESSION',
-          data: progression + 50,
-        });
-      }, 50);
+      // interval = setInterval(() => {
+      //   dispatch({
+      //     type: "SET_PROGRESSION",
+      //     data: progression + 1000,
+      //   });
+      // }, 1000);
     }
     if (progression >= duration) {
-      dispatch({ type: 'PAUSE' })
+      dispatch({ type: "PAUSE" });
       dispatch({
-        type: 'SET_PROGRESSION',
+        type: "SET_PROGRESSION",
         data: 0,
       });
     }
     if (progression < 0) {
       dispatch({
-        type: 'SET_PROGRESSION',
+        type: "SET_PROGRESSION",
         data: 0,
       });
     }
 
     if (videoRef.ended && !videoRef.paused) {
-      videoRef.currenTime = 0
-      videoRef.pause()
-    } else if (Object.keys(videoRef).length > 0 && !videoRef.paused && (progression < helloScreen.duration || progression > duration - endScreen.duration)) {
-      videoRef.currenTime = 0
-      videoRef.pause()
-    } else if (Object.keys(videoRef).length > 0 && videoRef.paused && progression > helloScreen.duration && progression < duration - endScreen.duration && isPlaying) {
-      videoRef.play()
+      videoRef.currenTime = 0;
+      videoRef.pause();
+    }
+    //
+    else if (!videoRef.paused && isPlaying) {
+      videoRef.play();
+    }
+    //
+    else if (
+      Object.keys(videoRef).length > 0 &&
+      !videoRef.paused &&
+      (progression < helloScreen.duration ||
+        progression > duration - endScreen.duration)
+    ) {
+      videoRef.currenTime = 0;
+      videoRef.pause();
+    } else if (
+      Object.keys(videoRef).length > 0 &&
+      videoRef.paused &&
+      // progression > helloScreen.duration &&
+      // progression < duration - endScreen.duration &&
+      isPlaying
+    ) {
+      videoRef.play();
     }
     return () => clearInterval(interval);
-  }, [isPlaying, progression, videoSeeking])
+  }, [isPlaying, progression, videoSeeking]);
 
   const displayProgression = () => {
-    const t = dayjs.duration(progression)
-    const m = t.minutes()
-    const s = t.seconds()
-    const ms = t.milliseconds()
-    return `${m < 10 ? `0${m}` : m}:${s < 10 ? `0${s}` : s}:${ms < 100 ? '0' : ms.toString().substring(0, 1)}`
-  }
+    const t = dayjs.duration(progression);
+    const m = t.minutes();
+    const s = t.seconds();
+    const ms = t.milliseconds();
+    return `${m < 10 ? `0${m}` : m}:${s < 10 ? `0${s}` : s}:${
+      ms < 100 ? "0" : ms.toString().substring(0, 1)
+    }`;
+  };
+
+  const handleOnTimeUpdate = () => {
+    // const progress = (videoRef.currentTime / videoRef.duration) * 100;
+    const progress = videoRef.currentTime * 1000;
+    dispatch({
+      type: "SET_PROGRESSION",
+      data: progress,
+    });
+  };
 
   return (
     <div className={styles.player}>
@@ -118,10 +164,10 @@ const Player = () => {
       >
         {preview.show ? (
           <div>
-            {preview.element === 'record' && (
-              <Placeholder  of={preview.element} />
+            {preview.element === "record" && (
+              <Placeholder of={preview.element} />
             )}
-            {preview.element === 'video' &&
+            {preview.element === "video" &&
               (previewVideo.url || video.url ? (
                 <video
                   key={previewVideo.url}
@@ -138,12 +184,12 @@ const Player = () => {
               ) : (
                 <Placeholder of={preview.element} />
               ))}
-            {preview.element === 'helloScreen' &&
+            {preview.element === "helloScreen" &&
               (Object.keys(previewHelloScreen).length == 0 &&
               (JSON.stringify(helloScreen) ===
                 JSON.stringify(defaultHelloScreen) ||
                 !helloScreen.name) ? (
-                  <Placeholder of={preview.element} />
+                <Placeholder of={preview.element} />
               ) : (
                 <HelloScreen
                   data={
@@ -153,11 +199,11 @@ const Player = () => {
                   }
                 />
               ))}
-            {preview.element === 'endScreen' &&
+            {preview.element === "endScreen" &&
               (Object.keys(previewEndScreen).length == 0 &&
               (JSON.stringify(endScreen) === JSON.stringify(defaultEndScreen) ||
                 !endScreen.name) ? (
-                  <Placeholder of={preview.element} />
+                <Placeholder of={preview.element} />
               ) : (
                 <EndScreen
                   data={
@@ -167,42 +213,55 @@ const Player = () => {
                   }
                 />
               ))}
-            {logo && <Logo data={logo}/>}
+            {logo && <Logo data={logo} />}
           </div>
-        ): !resume && <Placeholder of='all' />
-        }
-        <div style={{ display:( preview.show || !resume) ? 'none' : 'block' }}> 
+        ) : (
+          !resume && <Placeholder of="all" />
+        )}
+        <div style={{ display: preview.show || !resume ? "none" : "block" }}>
           <video
             ref={videoRefCb}
             key={video.url}
             src={video.url}
             height="100%"
             width="100%"
+            onTimeUpdate={handleOnTimeUpdate}
             style={{
-              display: progression > helloScreen.duration && progression < duration - endScreen.duration ? 'block' : 'none'
+              display:
+                progression > helloScreen.duration &&
+                progression < duration - endScreen.duration
+                  ? "block"
+                  : "none",
             }}
           />
-          {progression < helloScreen.duration && <HelloScreen data={helloScreen} />}
-          {progression >= duration - endScreen.duration && <EndScreen data={endScreen} />}
+          {progression < helloScreen.duration && (
+            <HelloScreen data={helloScreen} />
+          )}
+          {progression >= duration - endScreen.duration && (
+            <EndScreen data={endScreen} />
+          )}
           <Logo data={logo} />
         </div>
       </div>
       <div className={styles.controls}>
         <img
           onClick={async () => {
-            dispatch({ type: 'HIDE_PREVIEW' }) 
-            dispatch({ type: isPlaying ? 'PAUSE' : 'PLAY' })
-            setResume(true)
-            if (progression > helloScreen.duration && progression < duration - endScreen.duration) {
-              isPlaying ? videoRef.pause() : videoRef.play()
+            dispatch({ type: "HIDE_PREVIEW" });
+            dispatch({ type: isPlaying ? "PAUSE" : "PLAY" });
+            setResume(true);
+            if (
+              progression > helloScreen.duration &&
+              progression < duration - endScreen.duration
+            ) {
+              isPlaying ? videoRef.pause() : videoRef.play();
             }
           }}
-          src={isPlaying ? '/assets/video/pause.svg' : '/assets/video/play.svg'}
+          src={isPlaying ? "/assets/video/pause.svg" : "/assets/video/play.svg"}
         />
         <p className={styles.progression}>{displayProgression()}</p>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Player
+export default Player;

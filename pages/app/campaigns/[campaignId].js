@@ -112,6 +112,7 @@ const Campaign = ({ me }) => {
   };
 
   const seekTo = (e) => {
+    console.log("ahaha seekto");
     const rect = e.currentTarget.getBoundingClientRect();
     const position = e.clientX - rect.left;
     const progression = (position / ref.current.offsetWidth) * duration;
@@ -128,8 +129,8 @@ const Campaign = ({ me }) => {
   return (
     <div
       className={styles.dashboardCampaign}
-      onMouseUp={() => dispatch({ type: "TIMELINE_DRAGGABLE", data: false })}
-      onMouseMove={(e) => timelineDraggable && seekTo(e)}
+      // onMouseUp={() => dispatch({ type: "TIMELINE_DRAGGABLE", data: false })}
+      // onMouseMove={(e) => timelineDraggable && seekTo(e)}
       ref={ref}
     >
       <Head>
