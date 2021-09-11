@@ -6,7 +6,9 @@
     "dev": "env-cmd -f config/env/.env.development next dev -p 7031",
     "build:production": "env-cmd -f config/env/.env.production next build",
     "build:staging": "env-cmd -f config/env/.env.staging next build",
-    "start": "NODE_ENV=production next start -p 7031"
+    "build:dev": "env-cmd -f config/env/.env.development next build",
+    "start": "NODE_ENV=production next start -p 7031",
+    "start:dev": "NODE_ENV=development next start -p 7031"
   },
   "dependencies": {
     "@azure/msal-browser": "^2.14.2",

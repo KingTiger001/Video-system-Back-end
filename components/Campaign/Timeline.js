@@ -16,6 +16,9 @@ const Timeline = () => {
   );
   const video = useSelector((state) => state.campaign.video);
   const videoRef = useSelector((state) => state.campaign.videoRef);
+  const videosRef = useSelector((state) => state.campaign.videosRef);
+  const currentVideo = useSelector((state) => state.campaign.currentVideo);
+  const videosOffset = useSelector((state) => state.campaign.videosOffset);
 
   const ref = useRef();
   useEffect(() => {
@@ -38,9 +41,21 @@ const Timeline = () => {
     );
     const progression = (position / ref.current.offsetWidth) * duration;
     dispatch({ type: "SET_PROGRESSION", data: progression });
-    if (Object.keys(videoRef).length > 0) {
-      const currentTime = (progression - helloScreen.duration) / 1000;
-      videoRef.currentTime = currentTime > 0 ? currentTime : 0;
+    if (videosRef.length > 0) {
+      for (let i = 0; i < video.length; i++) {
+        if (
+          progression > videosOffset[i] * 1000 &&
+          progression < (videosOffset[i + 1] * 1000 || duration)
+        ) {
+          const currentTime =
+            (progression - helloScreen.duration) / 1000 - videosOffset[i];
+          videosRef[i].currentTime = currentTime > 0 ? currentTime : 0;
+          dispatch({
+            type: "SET_CURRENT_VIDEO",
+            data: i,
+          });
+        }
+      }
     }
     if (preview.show) {
       dispatch({ type: "HIDE_PREVIEW" });
@@ -77,10 +92,16 @@ const Timeline = () => {
       )}
       {Object.keys(video).length > 0 && (
         <div className={styles.videoRecorded}>
-          <div>
-            <img src="/assets/campaign/toolVideos.svg" />
-            <p>{video.name}</p>
-          </div>
+          {video.map((elem) => (
+            <div
+              style={{
+                width: `${((elem.metadata.duration * 1000) / duration) * 100}%`,
+              }}
+            >
+              <img src="/assets/campaign/toolVideos.svg" />
+              <p>{elem.name}</p>
+            </div>
+          ))}
         </div>
       )}
       {endScreen.duration > 0 && (

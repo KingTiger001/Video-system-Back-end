@@ -1,74 +1,74 @@
 export const defaultHelloScreen = {
-  background: '#000',
+  background: "#000",
   duration: 200, // 0.2s
-  name: 'Draft',
+  name: "Draft",
   title: {
-    color: '#fff',
+    color: "#fff",
     displayStyle: false,
     displayVariables: false,
     fontSize: 50,
     fontWeight: 700,
     letterSpacing: 0,
     lineHeight: 1,
-    textAlign: 'center',
-    value: '',
+    textAlign: "center",
+    value: "",
   },
   subtitle: {
-    color: '#fff',
+    color: "#fff",
     displayStyle: false,
     displayVariables: false,
     fontSize: 35,
     fontWeight: 400,
     letterSpacing: 0,
     lineHeight: 1,
-    textAlign: 'center',
-    value: '',
+    textAlign: "center",
+    value: "",
   },
-}
+};
 
 export const defaultEndScreen = {
-  background: '#000',
+  background: "#000",
   duration: 200, // 0.2s
-  name: 'Draft',
+  name: "Draft",
   title: {
-    color: '#fff',
+    color: "#fff",
     displayStyle: false,
     fontSize: 50,
     fontWeight: 700,
     letterSpacing: 0,
     lineHeight: 1,
-    textAlign: 'center',
-    value: '',
+    textAlign: "center",
+    value: "",
   },
   subtitle: {
-    color: '#fff',
+    color: "#fff",
     displayStyle: false,
     fontSize: 35,
     fontWeight: 400,
     letterSpacing: 0,
     lineHeight: 1,
-    textAlign: 'center',
-    value: '',
+    textAlign: "center",
+    value: "",
   },
   button: {
-    value: '',
-    href: '',
+    value: "",
+    href: "",
   },
   email: {
-    color: '#fff',
+    color: "#fff",
     displayStyle: false,
     fontSize: 16,
     fontWeight: 400,
-    value: '',
+    value: "",
   },
   phone: {
-    color: '#fff',
+    color: "#fff",
     displayStyle: false,
     fontSize: 16,
     fontWeight: 400,
-    value: '',
+    value: "",
   },
-}
+};
 
 const initialState = {
   duration: 0,
@@ -83,14 +83,14 @@ const initialState = {
   helloScreenList: [],
   isPlaying: false,
   logo: {
-    placement: 'top-left',
-    value: '',
+    placement: "top-left",
+    value: "",
     size: 60,
   },
-  name: '',
+  name: "",
   preview: {
     show: false,
-    element: 'video',
+    element: "video",
   },
   previewEndScreen: {},
   previewHelloScreen: {},
@@ -101,53 +101,56 @@ const initialState = {
   video: {},
   videoList: [],
   videoRef: {},
+  videosRef: [],
+  currentVideo: 0,
+  videosOffset: [],
   videoSeeking: false,
-}
+};
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'ADD_END_SCREEN':
+    case "ADD_END_SCREEN":
       return {
         ...state,
         endScreen: defaultEndScreen,
-      }
-    case 'ADD_HELLO_SCREEN':
+      };
+    case "ADD_HELLO_SCREEN":
       return {
         ...state,
         helloScreen: defaultHelloScreen,
-      }
-    case 'CHANGE_END_SCREEN':
+      };
+    case "CHANGE_END_SCREEN":
       return {
         ...state,
         endScreen: {
           duration: 10000,
           ...state.endScreen,
-          ...action.data
+          ...action.data,
         },
-      }
-    case 'CHANGE_HELLO_SCREEN':
+      };
+    case "CHANGE_HELLO_SCREEN":
       return {
         ...state,
         helloScreen: {
           duration: 10000,
           ...state.helloScreen,
-          ...action.data
+          ...action.data,
         },
-      }
-    case 'CHANGE_LOGO':
+      };
+    case "CHANGE_LOGO":
       return {
         ...state,
         logo: {
           ...state.logo,
-          ...action.data
+          ...action.data,
         },
-      }
-    case 'HAS_CHANGES':
+      };
+    case "HAS_CHANGES":
       return {
         ...state,
         hasChanges: action.data,
-      }
-    case 'SHOW_PREVIEW':
+      };
+    case "SHOW_PREVIEW":
       return {
         ...state,
         preview: {
@@ -155,40 +158,40 @@ const reducer = (state = initialState, action) => {
           show: true,
           ...action.data,
         },
-      }
-    case 'HIDE_PREVIEW':
+      };
+    case "HIDE_PREVIEW":
       return {
         ...state,
         preview: {
           ...state.preview,
           show: false,
         },
-      }
-    case 'PLAY':
+      };
+    case "PLAY":
       return {
         ...state,
         isPlaying: true,
-      }
-    case 'PAUSE':
+      };
+    case "PAUSE":
       return {
         ...state,
         isPlaying: false,
-      }
-    case 'RESET_END_SCREEN':
+      };
+    case "RESET_END_SCREEN":
       return {
         ...state,
         endScreen: {
           duration: 0,
         },
-      }
-    case 'RESET_HELLO_SCREEN':
+      };
+    case "RESET_HELLO_SCREEN":
       return {
         ...state,
         helloScreen: {
           duration: 0,
         },
-      }
-    case 'SET_CAMPAIGN':
+      };
+    case "SET_CAMPAIGN":
       return {
         ...state,
         endScreen: action.data.endScreen || { duration: 0 },
@@ -196,82 +199,117 @@ const reducer = (state = initialState, action) => {
         logo: action.data.logo || initialState.logo,
         name: action.data.name,
         video: action.data.video || {},
-      }
-    case 'CALC_DURATION':
-      const { endScreen, helloScreen, video } = state
+      };
+    case "CALC_DURATION":
+      const { endScreen, helloScreen, video } = state;
+      const totalDuration = video.reduce(
+        (prev, cur) => prev + cur.metadata.duration,
+        0
+      );
       return {
         ...state,
-        duration: (helloScreen && Object.keys(helloScreen).length > 1 ? helloScreen.duration : 0) + (Object.keys(video).length > 0 ? video.metadata.duration * 1000 : 0) + (endScreen && Object.keys(endScreen).length > 1 ? endScreen.duration : 0),
-      }
-    case 'SET_END_SCREEN_LIST':
+        duration:
+          (helloScreen && Object.keys(helloScreen).length > 1
+            ? helloScreen.duration
+            : 0) +
+          (Object.keys(video).length > 0 ? totalDuration * 1000 : 0) +
+          (endScreen && Object.keys(endScreen).length > 1
+            ? endScreen.duration
+            : 0),
+      };
+    case "SET_END_SCREEN_LIST":
       return {
         ...state,
         endScreenList: action.data,
-      }
-    case 'SET_HELLO_SCREEN_LIST':
+      };
+    case "SET_HELLO_SCREEN_LIST":
       return {
         ...state,
         helloScreenList: action.data,
-      }
-    case 'SET_NAME':
+      };
+    case "SET_NAME":
       return {
         ...state,
         name: action.data,
-      }
-    case 'SET_PREVIEW_END_SCREEN':
+      };
+    case "SET_PREVIEW_END_SCREEN":
       return {
         ...state,
         previewEndScreen: action.data,
-      }
-    case 'SET_PREVIEW_HELLO_SCREEN':
+      };
+    case "SET_PREVIEW_HELLO_SCREEN":
       return {
         ...state,
         previewHelloScreen: action.data,
-      }
-    case 'SET_PREVIEW_VIDEO':
+      };
+    case "SET_PREVIEW_VIDEO":
       return {
         ...state,
         previewVideo: action.data,
-      }
-    case 'SET_PROGRESSION':
+      };
+    case "SET_PROGRESSION":
       return {
         ...state,
         progression: action.data,
-      }
-    case 'SELECT_TOOL':
+      };
+    case "SELECT_TOOL":
       return {
         ...state,
         tool: action.data,
-      }
-    case 'SET_VIDEO':
+      };
+    case "SET_VIDEO":
       return {
         ...state,
-        duration: state.helloScreen.duration + (Object.keys(action.data).length > 0 ? action.data.metadata.duration * 1000 : 0) + state.endScreen.duration,
+        duration:
+          state.helloScreen.duration +
+          (Object.keys(action.data).length > 0
+            ? action.data.metadata.duration * 1000
+            : 0) +
+          state.endScreen.duration,
         video: action.data,
-      }
-    case 'SET_VIDEO_LIST':
+      };
+    case "SET_VIDEO_LIST":
       return {
         ...state,
         videoList: action.data,
-      }
-    case 'SET_VIDEO_REF':
+      };
+    case "SET_VIDEO_REF":
       return {
         ...state,
         videoRef: action.data,
+      };
+    case "SET_VIDEOS_REF":
+      return { ...state, videosRef: [...state.videosRef, action.data] };
+    case "SET_CURRENT_VIDEO":
+      return {
+        ...state,
+        currentVideo: action.data,
+      };
+    case "CALC_VIDEOS_OFFSET":
+      const videosOffset = [];
+      for (let i = 0; i < action.data.video.length; i++) {
+        videosOffset[i] =
+          (videosOffset[i - 1] || 0) +
+          (action.data.video[i - 1]?.metadata?.duration || 0);
       }
-    case 'SET_VIDEO_SEEKING':
+
+      return {
+        ...state,
+        videosOffset: videosOffset,
+      };
+    case "SET_VIDEO_SEEKING":
       return {
         ...state,
         videoSeeking: action.data,
-      }
-    case 'TIMELINE_DRAGGABLE':
+      };
+    case "TIMELINE_DRAGGABLE":
       return {
         ...state,
         timelineDraggable: action.data,
-      }
+      };
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default reducer
+export default reducer;

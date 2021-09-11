@@ -301,6 +301,7 @@ export const getServerSideProps = withAuthServerSideProps(
         data: campaign,
       });
       dispatch({ type: "CALC_DURATION" });
+      dispatch({ type: "CALC_VIDEOS_OFFSET", data: campaign });
     } catch (err) {
       console.log(err);
     }
