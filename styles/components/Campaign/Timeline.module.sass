@@ -62,9 +62,14 @@
   div
     transition: background .2s ease
     background: rgba(#5F59F7, 0.6)
-    // border: 1px solid #000
-    &:hover
-      background: rgba(#5F59F7, 0.4)
+    &.template
+      background: rgba(#00d5ff,.6)
+      &:hover
+        background: rgba(#00d5ff, .4)
+    &.video
+      background: rgba(#5F59F7, 0.6)
+      &:hover
+        background: rgba(#5F59F7, 0.4)
 .endScreen
   align-items: flex-end
   grid-column-end: -1

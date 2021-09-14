@@ -21,8 +21,6 @@ const Timeline = () => {
   const currentVideo = useSelector((state) => state.campaign.currentVideo);
   const videosOffset = useSelector((state) => state.campaign.videosOffset);
 
-  //
-
   const ref = useRef();
   useEffect(() => {
     const handleMouseUp = (e) => {
@@ -35,6 +33,18 @@ const Timeline = () => {
       document.removeEventListener("mouseup", handleMouseUp);
     };
   }, [ref]);
+
+  const getDataByType = (elem) => {
+    switch (elem.type) {
+      case "video":
+        return {
+          name: elem.video.name,
+          duration: elem.video.metadata.duration,
+        };
+      case "template":
+        return { name: elem.template.name, duration: elem.template.duration };
+    }
+  };
 
   const seekTo = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -124,27 +134,31 @@ const Timeline = () => {
                 {...provided.droppableProps}
                 ref={provided.innerRef}
               >
-                {contents.map((elem, i) => (
-                  <Draggable key={i} draggableId={`draggable-${i}`} index={i}>
-                    {(provided, snapshot) => (
-                      <div
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        ref={provided.innerRef}
-                        style={{
-                          width: `${
-                            ((elem.video.metadata.duration * 1000) / duration) *
-                            100
-                          }%`,
-                          ...provided.draggableProps.style,
-                        }}
-                      >
-                        <img src="/assets/campaign/toolVideos.svg" />
-                        <p>{elem.video.name}</p>
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
+                {contents.map((elem, i) => {
+                  const infos = getDataByType(elem);
+
+                  return (
+                    <Draggable key={i} draggableId={`draggable-${i}`} index={i}>
+                      {(provided, snapshot) => (
+                        <div
+                          className={styles[elem.type]}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          ref={provided.innerRef}
+                          style={{
+                            width: `${
+                              ((infos.duration * 1000) / duration) * 100
+                            }%`,
+                            ...provided.draggableProps.style,
+                          }}
+                        >
+                          <img src="/assets/campaign/toolVideos.svg" />
+                          <p>{infos.name}</p>
+                        </div>
+                      )}
+                    </Draggable>
+                  );
+                })}
                 {provided.placeholder}
               </div>
             )}

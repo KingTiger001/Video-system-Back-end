@@ -1,91 +1,93 @@
-import { useEffect, useRef, useState } from 'react'
-import { ChromePicker } from 'react-color'
-import { useDispatch, useSelector } from 'react-redux'
-import { toast } from 'react-toastify'
+import { useEffect, useRef, useState } from "react";
+import { ChromePicker } from "react-color";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
-import { mainAPI } from '@/plugins/axios'
+import { mainAPI } from "@/plugins/axios";
 
-import Button from '@/components/Button'
-import InputWithTools from '@/components/Campaign/InputWithTools'
-import PopupDeleteHelloScreen from '@/components/Popups/PopupDeleteHelloScreen'
-import PopupDeleteDraftHelloScreen from '@/components/Popups/PopupDeleteDraftHelloScreen'
+import Button from "@/components/Button";
+import InputWithTools from "@/components/Campaign/InputWithTools";
+import PopupDeleteHelloScreen from "@/components/Popups/PopupDeleteHelloScreen";
+import PopupDeleteDraftHelloScreen from "@/components/Popups/PopupDeleteDraftHelloScreen";
 
-import styles from '@/styles/components/Campaign/Tools.module.sass'
+import styles from "@/styles/components/Campaign/Tools.module.sass";
 
 const ToolHelloScreen = ({ me }) => {
-  const dispatch = useDispatch()
-  const popup = useSelector((state) => state.popup)
-  const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
+  const dispatch = useDispatch();
+  const popup = useSelector((state) => state.popup);
+  const hidePopup = () => dispatch({ type: "HIDE_POPUP" });
   const showPopup = (popupProps) =>
-    dispatch({ type: 'SHOW_POPUP', ...popupProps })
+    dispatch({ type: "SHOW_POPUP", ...popupProps });
 
-  const tool = useSelector((state) => state.campaign.tool)
+  const tool = useSelector((state) => state.campaign.tool);
 
-  const helloScreen = useSelector((state) => state.campaign.helloScreen)
-  const helloScreenList = useSelector((state) => state.campaign.helloScreenList)
-  const preview = useSelector((state) => state.campaign.preview)
+  const helloScreen = useSelector((state) => state.campaign.helloScreen);
+  const helloScreenList = useSelector(
+    (state) => state.campaign.helloScreenList
+  );
+  const preview = useSelector((state) => state.campaign.preview);
   const previewHelloScreen = useSelector(
     (state) => state.campaign.previewHelloScreen
-  )
+  );
 
-  const [displayFormHelloScreen, showFormHelloScreen] = useState(false)
-  const [editMode, setEditMode] = useState(false)
-  const [showColor, setShowColor] = useState(false)
+  const [displayFormHelloScreen, showFormHelloScreen] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [showColor, setShowColor] = useState(false);
   const [showOptions, setShowOptions] = useState({
     display: false,
     data: null,
-  })
+  });
   const addHelloScreenToLibrary = async () => {
     try {
       if (!editMode) {
-        const { data } = await mainAPI.post(`/helloScreens`, helloScreen)
+        const { data } = await mainAPI.post(`/helloScreens`, helloScreen);
         dispatch({
-          type: 'CHANGE_HELLO_SCREEN',
+          type: "CHANGE_HELLO_SCREEN",
           data,
-        })
-        toast.success(`Start screen added to the library.`)
+        });
+        toast.success(`Start screen added to the library.`);
       } else {
-        await mainAPI.patch(`/helloScreens/${helloScreen._id}`, helloScreen)
-        toast.success(`Start screen ${helloScreen.name} updated.`)
+        await mainAPI.patch(`/helloScreens/${helloScreen._id}`, helloScreen);
+        toast.success(`Start screen ${helloScreen.name} updated.`);
       }
-      getHelloScreenList()
-      showFormHelloScreen(false)
+      getHelloScreenList();
+      showFormHelloScreen(false);
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
-  }
+  };
 
   const getHelloScreenList = async () => {
-    const { data } = await mainAPI.get('/users/me/helloScreens')
+    const { data } = await mainAPI.get("/users/me/helloScreens");
     dispatch({
-      type: 'SET_HELLO_SCREEN_LIST',
+      type: "SET_HELLO_SCREEN_LIST",
       data,
-    })
-  }
+    });
+  };
   return (
     tool === 3 && (
       <div
         className={styles.toolHelloScreen}
         onClick={() => {
           if (!preview.show) {
-            dispatch({ type: 'SHOW_PREVIEW' })
+            dispatch({ type: "SHOW_PREVIEW" });
           }
         }}
       >
-        {popup.display === 'DELETE_DRAFT_HELLO_SCREEN' && (
+        {popup.display === "DELETE_DRAFT_HELLO_SCREEN" && (
           <PopupDeleteDraftHelloScreen
             onConfirm={() => {
-              dispatch({ type: 'RESET_HELLO_SCREEN' })
-              hidePopup()
+              dispatch({ type: "RESET_HELLO_SCREEN" });
+              hidePopup();
             }}
           />
         )}
-        {popup.display === 'DELETE_HELLO_SCREEN' && (
+        {popup.display === "DELETE_HELLO_SCREEN" && (
           <PopupDeleteHelloScreen
             onDone={() => {
-              getHelloScreenList()
-              toast.success('Start screen deleted.')
-              hidePopup()
+              getHelloScreenList();
+              toast.success("Start screen deleted.");
+              hidePopup();
             }}
           />
         )}
@@ -93,7 +95,7 @@ const ToolHelloScreen = ({ me }) => {
         {displayFormHelloScreen ? (
           <div>
             <p className={styles.toolTitle}>
-              {editMode ? 'Edit' : 'Create'} a Start Screen
+              {editMode ? "Edit" : "Create"} a Start Screen
             </p>
             <p
               onClick={() => showFormHelloScreen(false)}
@@ -108,11 +110,11 @@ const ToolHelloScreen = ({ me }) => {
                 </label>
                 <input
                   className={styles.toolInput}
-                  placeholder={'Start Screen name'}
-                  style={{ width: '50%' }}
+                  placeholder={"Start Screen name"}
+                  style={{ width: "50%" }}
                   onChange={(e) =>
                     dispatch({
-                      type: 'CHANGE_HELLO_SCREEN',
+                      type: "CHANGE_HELLO_SCREEN",
                       data: {
                         name: e.target.value,
                       },
@@ -134,8 +136,8 @@ const ToolHelloScreen = ({ me }) => {
                     <img
                       src={
                         showColor
-                          ? '/assets/common/expandLessPrimary.svg'
-                          : '/assets/common/expandMorePrimary.svg'
+                          ? "/assets/common/expandLessPrimary.svg"
+                          : "/assets/common/expandMorePrimary.svg"
                       }
                     />
                   </div>
@@ -147,7 +149,7 @@ const ToolHelloScreen = ({ me }) => {
                     color={helloScreen.background}
                     onChange={(color) =>
                       dispatch({
-                        type: 'CHANGE_HELLO_SCREEN',
+                        type: "CHANGE_HELLO_SCREEN",
                         data: {
                           background: color.hex,
                         },
@@ -161,7 +163,7 @@ const ToolHelloScreen = ({ me }) => {
                 <label className={styles.toolSubtitle}>Content</label>
                 <label className={styles.toolLabel}>Text line 1</label>
                 <InputWithTools
-                  placeholder={'Text line 1'}
+                  placeholder={"Text line 1"}
                   dispatchType="CHANGE_HELLO_SCREEN"
                   me={me}
                   object={helloScreen}
@@ -174,7 +176,7 @@ const ToolHelloScreen = ({ me }) => {
               <div className={styles.toolSection}>
                 <label className={styles.toolLabel}>Text line 2</label>
                 <InputWithTools
-                  placeholder={'Text line 2'}
+                  placeholder={"Text line 2"}
                   dispatchType="CHANGE_HELLO_SCREEN"
                   me={me}
                   object={helloScreen}
@@ -193,16 +195,16 @@ const ToolHelloScreen = ({ me }) => {
           <div className={styles.toolSection}>
             <p className={styles.toolTitle}>Start Screen</p>
             <Button
-              width={'auto'}
+              width={"auto"}
               onClick={() => {
-                dispatch({ type: 'ADD_HELLO_SCREEN' })
+                dispatch({ type: "ADD_HELLO_SCREEN" });
                 dispatch({
-                  type: 'SET_PREVIEW_HELLO_SCREEN',
+                  type: "SET_PREVIEW_HELLO_SCREEN",
                   data: {},
-                })
-                dispatch({ type: 'CALC_DURATION' })
-                showFormHelloScreen(true)
-                setEditMode(false)
+                });
+                dispatch({ type: "CALC_DURATION" });
+                showFormHelloScreen(true);
+                setEditMode(false);
               }}
             >
               <div className={styles.toolAdd}>
@@ -226,13 +228,13 @@ const ToolHelloScreen = ({ me }) => {
                       }`}
                       onClick={() => {
                         dispatch({
-                          type: 'DISPLAY_ELEMENT',
-                          data: 'helloScreen',
-                        })
+                          type: "DISPLAY_ELEMENT",
+                          data: "helloScreen",
+                        });
                         dispatch({
-                          type: 'SET_PREVIEW_HELLO_SCREEN',
+                          type: "SET_PREVIEW_HELLO_SCREEN",
                           data: hs,
-                        })
+                        });
                       }}
                     >
                       {hs.name}
@@ -241,19 +243,19 @@ const ToolHelloScreen = ({ me }) => {
                       className={styles.toolLibraryItemEdit}
                       onClick={() => {
                         dispatch({
-                          type: 'DISPLAY_ELEMENT',
-                          data: 'helloScreen',
-                        })
+                          type: "DISPLAY_ELEMENT",
+                          data: "helloScreen",
+                        });
                         dispatch({
-                          type: 'SET_PREVIEW_HELLO_SCREEN',
+                          type: "SET_PREVIEW_HELLO_SCREEN",
                           data: {},
-                        })
+                        });
                         dispatch({
-                          type: 'CHANGE_HELLO_SCREEN',
+                          type: "CHANGE_HELLO_SCREEN",
                           data: hs,
-                        })
+                        });
 
-                        dispatch({ type: 'CALC_DURATION' })
+                        dispatch({ type: "CALC_DURATION" });
                       }}
                     >
                       <p>Select</p>
@@ -264,7 +266,7 @@ const ToolHelloScreen = ({ me }) => {
                         setShowOptions({
                           data: hs,
                           display: true,
-                        })
+                        });
                       }}
                     >
                       <img src="/assets/common/more.svg" />
@@ -275,17 +277,17 @@ const ToolHelloScreen = ({ me }) => {
                             onClick={() => {
                               setShowOptions({
                                 display: false,
-                              })
+                              });
                               dispatch({
-                                type: 'SET_PREVIEW_HELLO_SCREEN',
+                                type: "SET_PREVIEW_HELLO_SCREEN",
                                 data: {},
-                              })
+                              });
                               dispatch({
-                                type: 'CHANGE_HELLO_SCREEN',
+                                type: "CHANGE_HELLO_SCREEN",
                                 data: hs,
-                              })
-                              showFormHelloScreen(true)
-                              setEditMode(true)
+                              });
+                              showFormHelloScreen(true);
+                              setEditMode(true);
                             }}
                           >
                             Edit
@@ -295,11 +297,11 @@ const ToolHelloScreen = ({ me }) => {
                             onClick={() => {
                               setShowOptions({
                                 display: false,
-                              })
+                              });
                               showPopup({
-                                display: 'DELETE_HELLO_SCREEN',
+                                display: "DELETE_HELLO_SCREEN",
                                 data: hs,
-                              })
+                              });
                             }}
                           >
                             Delete
@@ -320,27 +322,27 @@ const ToolHelloScreen = ({ me }) => {
         )}
       </div>
     )
-  )
-}
+  );
+};
 const PopupOptions = ({ setAction, children }) => {
-  const wrapperRef = useRef(null)
+  const wrapperRef = useRef(null);
   useEffect(() => {
     function handleClickOutside(event) {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-        setAction({ display: false })
+        setAction({ display: false });
       }
     }
-    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [wrapperRef])
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [wrapperRef]);
 
   return (
     <div ref={wrapperRef} className={styles.popupOptions}>
       {children}
     </div>
-  )
-}
+  );
+};
 
-export default ToolHelloScreen
+export default ToolHelloScreen;

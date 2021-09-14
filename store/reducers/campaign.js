@@ -98,6 +98,7 @@ const initialState = {
   progression: 0,
   timelineDraggable: false,
   tool: 0,
+  toolItem: 0,
   contents: [],
   videoList: [],
   videoRef: {},
@@ -105,6 +106,16 @@ const initialState = {
   currentVideo: 0,
   videosOffset: [],
   videoSeeking: false,
+};
+
+const durationByType = (elem) => {
+  switch (elem.type) {
+    case "video":
+      return elem.video.metadata.duration;
+
+    case "template":
+      return elem.template.duration;
+  }
 };
 
 const reducer = (state = initialState, action) => {
@@ -206,7 +217,7 @@ const reducer = (state = initialState, action) => {
     case "CALC_DURATION":
       const { endScreen, helloScreen, contents } = state;
       const totalDuration = contents.reduce(
-        (prev, cur) => prev + cur.video.metadata.duration,
+        (prev, cur) => prev + durationByType(cur),
         0
       );
       return {
@@ -260,9 +271,14 @@ const reducer = (state = initialState, action) => {
         ...state,
         tool: action.data,
       };
+    case "SELECT_TOOL_ITEM":
+      return {
+        ...state,
+        toolItem: action.data,
+      };
     case "SET_VIDEO":
       const setVideoDuration = action.data.reduce(
-        (prev, cur) => prev + cur.video.metadata.duration,
+        (prev, cur) => prev + durationByType(cur),
         0
       );
       return {

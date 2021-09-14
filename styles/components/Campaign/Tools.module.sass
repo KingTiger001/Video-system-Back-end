@@ -396,7 +396,7 @@
   width: 20px
 
 // Tool "Start Screen" & "End Screen"
-.toolHelloScreen, .toolEndScreen
+.toolHelloScreen, .toolEndScreen,.toolItems
   padding: 20px
   button
     margin-bottom: 10px
@@ -517,3 +517,49 @@
   border-radius: 8px !important
   box-shadow: none !important
   width: 100% !important
+
+
+// Tool Templates
+
+.toolItems
+  .toolItem
+    padding: 0 1rem
+    display: flex
+    flex-direction: row
+    align-items: center
+    justify-content: space-between
+    background: rgba($primaryColor ,.6 )
+    background: $blueGradient
+    border-radius: .6rem
+    width: 100%
+    height: 4rem
+    transition: transform .4s cubic-bezier(.2,.81,.22,.83)
+    &:hover
+      cursor: pointer
+      transform: scale(.9)
+    p
+      color: $white
+    img
+      height: 3rem
+      width:3rem
+  // .toolItem
+  //   padding: 0 1rem
+  //   display: flex
+  //   flex-direction: column
+  //   align-items: center
+  //   justify-content: center
+  //   background: rgba($primaryColor ,.6 )
+  //   background: $blueGradient
+  //   border-radius: .6rem
+  //   width: 6rem
+  //   height: 6rem
+  //   transition: transform .4s cubic-bezier(.2,.81,.22,.83)
+  //   &:hover
+  //     cursor: pointer
+  //     transform: scale(.9)
+  //   p
+  //     color: $white
+  //     margin-bottom: .5rem
+  //   img
+  //     height: 3rem
+  //     width:3rem

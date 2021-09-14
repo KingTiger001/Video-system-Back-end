@@ -125,7 +125,13 @@ const ToolVideos = () => {
                     onClick={() => {
                       const data = addToTimeline(vd);
                       dispatch({ type: "SET_VIDEO", data });
+                      dispatch({ type: "CALC_VIDEOS_OFFSET", data });
+                      dispatch({ type: "SET_VIDEOS_REF" });
                       dispatch({ type: "SET_PROGRESSION", data: 0 });
+                      dispatch({
+                        type: "SET_CURRENT_VIDEO",
+                        data: 0,
+                      });
                     }}
                   >
                     <img src="/assets/campaign/librarySelect.svg" />
@@ -137,6 +143,7 @@ const ToolVideos = () => {
                     onClick={() => {
                       const data = removeFromTimeline(vd._id);
                       dispatch({ type: "SET_VIDEO", data });
+                      dispatch({ type: "CALC_VIDEOS_OFFSET", data });
                       dispatch({ type: "SET_VIDEOS_REF" });
                       dispatch({ type: "SET_PROGRESSION", data: 0 });
                       dispatch({

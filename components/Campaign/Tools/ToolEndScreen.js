@@ -1,112 +1,112 @@
-import { useEffect, useRef, useState } from 'react'
-import { ChromePicker } from 'react-color'
-import { useDispatch, useSelector } from 'react-redux'
-import { toast } from 'react-toastify'
+import { useEffect, useRef, useState } from "react";
+import { ChromePicker } from "react-color";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
-import { mainAPI } from '@/plugins/axios'
+import { mainAPI } from "@/plugins/axios";
 
-import Button from '@/components/Button'
-import InputWithTools from '@/components/Campaign/InputWithTools'
-import PopupDeleteEndScreen from '@/components/Popups/PopupDeleteEndScreen'
-import PopupDeleteDraftEndScreen from '@/components/Popups/PopupDeleteDraftEndScreen'
+import Button from "@/components/Button";
+import InputWithTools from "@/components/Campaign/InputWithTools";
+import PopupDeleteEndScreen from "@/components/Popups/PopupDeleteEndScreen";
+import PopupDeleteDraftEndScreen from "@/components/Popups/PopupDeleteDraftEndScreen";
 
-import styles from '@/styles/components/Campaign/Tools.module.sass'
+import styles from "@/styles/components/Campaign/Tools.module.sass";
 
 const ToolEndScreen = ({ me }) => {
-  const dispatch = useDispatch()
-  const popup = useSelector((state) => state.popup)
-  const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
+  const dispatch = useDispatch();
+  const popup = useSelector((state) => state.popup);
+  const hidePopup = () => dispatch({ type: "HIDE_POPUP" });
   const showPopup = (popupProps) =>
-    dispatch({ type: 'SHOW_POPUP', ...popupProps })
+    dispatch({ type: "SHOW_POPUP", ...popupProps });
 
-  const tool = useSelector((state) => state.campaign.tool)
+  const tool = useSelector((state) => state.campaign.tool);
 
-  const endScreen = useSelector((state) => state.campaign.endScreen)
-  const endScreenList = useSelector((state) => state.campaign.endScreenList)
-  const preview = useSelector((state) => state.campaign.preview)
+  const endScreen = useSelector((state) => state.campaign.endScreen);
+  const endScreenList = useSelector((state) => state.campaign.endScreenList);
+  const preview = useSelector((state) => state.campaign.preview);
   const previewEndScreen = useSelector(
     (state) => state.campaign.previewEndScreen
-  )
+  );
 
-  const [displayFormEndScreen, showFormEndScreen] = useState(false)
-  const [editMode, setEditMode] = useState(false)
-  const [showColor, setShowColor] = useState(false)
+  const [displayFormEndScreen, showFormEndScreen] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [showColor, setShowColor] = useState(false);
   const [showOptions, setShowOptions] = useState({
     display: false,
     data: null,
-  })
+  });
 
   const addEndScreenToLibrary = async () => {
     try {
       if (!editMode) {
-        const { data } = await mainAPI.post(`/endScreens`, endScreen)
+        const { data } = await mainAPI.post(`/endScreens`, endScreen);
         dispatch({
-          type: 'CHANGE_END_SCREEN',
+          type: "CHANGE_END_SCREEN",
           data,
-        })
-        toast.success(`End screen added to the library.`)
+        });
+        toast.success(`End screen added to the library.`);
       } else {
-        await mainAPI.patch(`/endScreens/${endScreen._id}`, endScreen)
-        toast.success(`End screen ${endScreen.name} updated.`)
+        await mainAPI.patch(`/endScreens/${endScreen._id}`, endScreen);
+        toast.success(`End screen ${endScreen.name} updated.`);
       }
-      getEndScreenList()
-      showFormEndScreen(false)
+      getEndScreenList();
+      showFormEndScreen(false);
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
-  }
+  };
 
   const getEndScreenList = async () => {
-    const { data } = await mainAPI.get('/users/me/endScreens')
+    const { data } = await mainAPI.get("/users/me/endScreens");
     dispatch({
-      type: 'SET_END_SCREEN_LIST',
+      type: "SET_END_SCREEN_LIST",
       data,
-    })
-  }
+    });
+  };
 
   const addNetwork = () => {
     dispatch({
-      type: 'CHANGE_END_SCREEN',
+      type: "CHANGE_END_SCREEN",
       data: {
         networks: endScreen.networks
           ? [
               ...endScreen.networks,
               {
                 id: endScreen.networks.length + 1,
-                link: '',
+                link: "",
               },
             ]
           : [
               {
                 id: 1,
-                link: '',
-                site: '',
+                link: "",
+                site: "",
               },
             ],
       },
-    })
-  }
+    });
+  };
 
   const deleteNetwork = (id) => {
-    const newArray = endScreen.networks.filter((network) => network.id !== id)
+    const newArray = endScreen.networks.filter((network) => network.id !== id);
     dispatch({
-      type: 'CHANGE_END_SCREEN',
+      type: "CHANGE_END_SCREEN",
       data: {
         networks: newArray,
       },
-    })
-  }
+    });
+  };
 
   const updateNetwork = ({ index, property, value }) => {
-    const newArray = [...endScreen.networks]
-    newArray[index][property] = value
+    const newArray = [...endScreen.networks];
+    newArray[index][property] = value;
     dispatch({
-      type: 'CHANGE_END_SCREEN',
+      type: "CHANGE_END_SCREEN",
       data: {
         networks: newArray,
       },
-    })
-  }
+    });
+  };
 
   return (
     tool === 4 && (
@@ -114,33 +114,33 @@ const ToolEndScreen = ({ me }) => {
         className={styles.toolEndScreen}
         onClick={() => {
           if (!preview.show) {
-            dispatch({ type: 'SHOW_PREVIEW' })
+            dispatch({ type: "SHOW_PREVIEW" });
           }
         }}
       >
-        {popup.display === 'DELETE_DRAFT_END_SCREEN' && (
+        {popup.display === "DELETE_DRAFT_END_SCREEN" && (
           <PopupDeleteDraftEndScreen
             onConfirm={() => {
-              dispatch({ type: 'RESET_END_SCREEN' })
-              dispatch({ type: 'SET_PROGRESSION', data: 0 })
-              dispatch({ type: 'CALC_DURATION' })
-              hidePopup()
+              dispatch({ type: "RESET_END_SCREEN" });
+              dispatch({ type: "SET_PROGRESSION", data: 0 });
+              dispatch({ type: "CALC_DURATION" });
+              hidePopup();
             }}
           />
         )}
-        {popup.display === 'DELETE_END_SCREEN' && (
+        {popup.display === "DELETE_END_SCREEN" && (
           <PopupDeleteEndScreen
             onDone={() => {
-              getEndScreenList()
-              toast.success('End screen deleted.')
-              hidePopup()
+              getEndScreenList();
+              toast.success("End screen deleted.");
+              hidePopup();
             }}
           />
         )}
         {displayFormEndScreen ? (
           <div>
             <p className={styles.toolTitle}>
-              {editMode ? 'Edit' : 'Create'} End Screen
+              {editMode ? "Edit" : "Create"} End Screen
             </p>
             <p
               onClick={() => showFormEndScreen(false)}
@@ -154,12 +154,12 @@ const ToolEndScreen = ({ me }) => {
                   Name your End Screen*
                 </label>
                 <input
-                  style={{ width: '50%' }}
+                  style={{ width: "50%" }}
                   className={styles.toolInput}
-                  placeholder={'End Screen name'}
+                  placeholder={"End Screen name"}
                   onChange={(e) =>
                     dispatch({
-                      type: 'CHANGE_END_SCREEN',
+                      type: "CHANGE_END_SCREEN",
                       data: {
                         name: e.target.value,
                       },
@@ -181,8 +181,8 @@ const ToolEndScreen = ({ me }) => {
                     <img
                       src={
                         showColor
-                          ? '/assets/common/expandLessPrimary.svg'
-                          : '/assets/common/expandMorePrimary.svg'
+                          ? "/assets/common/expandLessPrimary.svg"
+                          : "/assets/common/expandMorePrimary.svg"
                       }
                     />
                   </div>
@@ -194,7 +194,7 @@ const ToolEndScreen = ({ me }) => {
                     color={endScreen.background}
                     onChange={(color) =>
                       dispatch({
-                        type: 'CHANGE_END_SCREEN',
+                        type: "CHANGE_END_SCREEN",
                         data: {
                           background: color.hex,
                         },
@@ -209,7 +209,7 @@ const ToolEndScreen = ({ me }) => {
                 <label className={styles.toolSubtitle}>Content</label>
                 <label className={styles.toolLabel}>Text line 1</label>
                 <InputWithTools
-                  placeholder={'Text line 1'}
+                  placeholder={"Text line 1"}
                   dispatchType="CHANGE_END_SCREEN"
                   me={me}
                   object={endScreen}
@@ -222,7 +222,7 @@ const ToolEndScreen = ({ me }) => {
               <div className={styles.toolSection}>
                 <label className={styles.toolLabel}>Text line 2</label>
                 <InputWithTools
-                  placeholder={'Text line 2'}
+                  placeholder={"Text line 2"}
                   dispatchType="CHANGE_END_SCREEN"
                   me={me}
                   object={endScreen}
@@ -234,7 +234,7 @@ const ToolEndScreen = ({ me }) => {
               </div>
 
               <p className={styles.toolSubtitle}>Add links</p>
-              {(me.freeTrial || me.subscription.status === 'active') && (
+              {(me.freeTrial || me.subscription.status === "active") && (
                 <div className={styles.toolSection}>
                   <label className={styles.toolLabel}>CTA</label>
                   <div className={styles.toolInputGrid}>
@@ -242,7 +242,7 @@ const ToolEndScreen = ({ me }) => {
                       className={styles.toolInput}
                       onChange={(e) =>
                         dispatch({
-                          type: 'CHANGE_END_SCREEN',
+                          type: "CHANGE_END_SCREEN",
                           data: {
                             button: {
                               ...endScreen.button,
@@ -252,13 +252,13 @@ const ToolEndScreen = ({ me }) => {
                         })
                       }
                       placeholder="Text button"
-                      value={endScreen.button ? endScreen.button.value : ''}
+                      value={endScreen.button ? endScreen.button.value : ""}
                     />
                     <input
                       className={styles.toolInput}
                       onChange={(e) =>
                         dispatch({
-                          type: 'CHANGE_END_SCREEN',
+                          type: "CHANGE_END_SCREEN",
                           data: {
                             button: {
                               ...endScreen.button,
@@ -268,7 +268,7 @@ const ToolEndScreen = ({ me }) => {
                         })
                       }
                       placeholder="Copy link"
-                      value={endScreen.button ? endScreen.button.href : ''}
+                      value={endScreen.button ? endScreen.button.href : ""}
                     />
                   </div>
                 </div>
@@ -277,7 +277,7 @@ const ToolEndScreen = ({ me }) => {
                 <label className={styles.toolLabel}>Email</label>
                 <InputWithTools
                   me={me}
-                  placeholder={'Example@domain.com'}
+                  placeholder={"Example@domain.com"}
                   dispatchType="CHANGE_END_SCREEN"
                   object={endScreen}
                   objectName="endScreen"
@@ -349,16 +349,16 @@ const ToolEndScreen = ({ me }) => {
           <div className={styles.toolSection}>
             <p className={styles.toolTitle}>End Screen</p>
             <Button
-              width={'auto'}
+              width={"auto"}
               onClick={() => {
-                dispatch({ type: 'ADD_END_SCREEN' })
+                dispatch({ type: "ADD_END_SCREEN" });
                 dispatch({
-                  type: 'SET_PREVIEW_END_SCREEN',
+                  type: "SET_PREVIEW_END_SCREEN",
                   data: {},
-                })
-                dispatch({ type: 'CALC_DURATION' })
-                showFormEndScreen(true)
-                setEditMode(false)
+                });
+                dispatch({ type: "CALC_DURATION" });
+                showFormEndScreen(true);
+                setEditMode(false);
               }}
             >
               <div className={styles.toolAdd}>
@@ -380,11 +380,14 @@ const ToolEndScreen = ({ me }) => {
                           : styles.toolLibraryItemNotSelected
                       }`}
                       onClick={() => {
-                        dispatch({ type: 'DISPLAY_ELEMENT', data: 'endScreen' })
                         dispatch({
-                          type: 'SET_PREVIEW_END_SCREEN',
+                          type: "DISPLAY_ELEMENT",
+                          data: "endScreen",
+                        });
+                        dispatch({
+                          type: "SET_PREVIEW_END_SCREEN",
                           data: es,
-                        })
+                        });
                       }}
                     >
                       {es.name}
@@ -393,18 +396,18 @@ const ToolEndScreen = ({ me }) => {
                       className={styles.toolLibraryItemEdit}
                       onClick={() => {
                         dispatch({
-                          type: 'DISPLAY_ELEMENT',
-                          data: 'endScreen',
-                        })
+                          type: "DISPLAY_ELEMENT",
+                          data: "endScreen",
+                        });
                         dispatch({
-                          type: 'CHANGE_END_SCREEN',
+                          type: "CHANGE_END_SCREEN",
                           data: es,
-                        })
+                        });
                         dispatch({
-                          type: 'SET_PREVIEW_END_SCREEN',
+                          type: "SET_PREVIEW_END_SCREEN",
                           data: {},
-                        })
-                        dispatch({ type: 'CALC_DURATION' })
+                        });
+                        dispatch({ type: "CALC_DURATION" });
                       }}
                     >
                       <p>Select</p>
@@ -426,18 +429,18 @@ const ToolEndScreen = ({ me }) => {
                             onClick={() => {
                               setShowOptions({
                                 display: false,
-                              })
+                              });
                               dispatch({
-                                type: 'SET_PREVIEW_HELLO_SCREEN',
+                                type: "SET_PREVIEW_HELLO_SCREEN",
                                 data: {},
-                              })
+                              });
                               dispatch({
-                                type: 'CHANGE_END_SCREEN',
+                                type: "CHANGE_END_SCREEN",
                                 data: es,
-                              })
+                              });
 
-                              showFormEndScreen(true)
-                              setEditMode(true)
+                              showFormEndScreen(true);
+                              setEditMode(true);
                             }}
                           >
                             Edit
@@ -447,11 +450,11 @@ const ToolEndScreen = ({ me }) => {
                             onClick={() => {
                               setShowOptions({
                                 display: false,
-                              })
+                              });
                               showPopup({
-                                display: 'DELETE_END_SCREEN',
+                                display: "DELETE_END_SCREEN",
                                 data: es,
-                              })
+                              });
                             }}
                           >
                             Delete
@@ -472,27 +475,27 @@ const ToolEndScreen = ({ me }) => {
         )}
       </div>
     )
-  )
-}
+  );
+};
 
 const PopupOptions = ({ setAction, children }) => {
-  const wrapperRef = useRef(null)
+  const wrapperRef = useRef(null);
   useEffect(() => {
     function handleClickOutside(event) {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-        setAction({ display: false })
+        setAction({ display: false });
       }
     }
-    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [wrapperRef])
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [wrapperRef]);
 
   return (
     <div ref={wrapperRef} className={styles.popupOptions}>
       {children}
     </div>
-  )
-}
-export default ToolEndScreen
+  );
+};
+export default ToolEndScreen;

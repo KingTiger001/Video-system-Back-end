@@ -42,6 +42,7 @@ const Player = () => {
   //
 
   const [resume, setResume] = useState(false);
+  const [videos, setVideos] = useState([]);
 
   useEffect(() => {
     setResume(
@@ -84,6 +85,13 @@ const Player = () => {
         }
     };
   }, [videosRef]);
+
+  useEffect(() => {
+    if (contents.length > 0) {
+      const arr = contents.filter((content) => content.type === "video");
+      setVideos(arr);
+    }
+  }, [contents]);
 
   useEffect(() => {
     let interval = null;
@@ -177,8 +185,8 @@ const Player = () => {
   };
 
   const renderVideos = () => {
-    if (contents.length > 0)
-      return contents.map((elem, i) => (
+    if (videos.length > 0)
+      return videos.map((elem, i) => (
         <video
           ref={videoRefCb}
           key={elem.video.url}

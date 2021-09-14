@@ -80,14 +80,16 @@ const Campaign = ({ me }) => {
   // Save campaign
   useEffect(() => {
     const saveCampaign = async () => {
-      await mainAPI.patch(`/campaigns/${router.query.campaignId}`, {
-        duration,
-        endScreen,
-        helloScreen,
-        logo,
-        name,
-        contents: video.length > 0 ? video : null,
-      });
+      await mainAPI
+        .patch(`/campaigns/${router.query.campaignId}`, {
+          duration,
+          endScreen,
+          helloScreen,
+          logo,
+          name,
+          contents: video.length > 0 ? video : [],
+        })
+        .catch((err) => console.log("err", err));
     };
     saveCampaign();
     dispatch({

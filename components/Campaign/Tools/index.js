@@ -7,6 +7,7 @@ import ToolHelloScreen from "./ToolHelloScreen";
 import ToolLogo from "./ToolLogo";
 import ToolRecord from "./ToolRecord";
 import ToolVideos from "./ToolVideos";
+import ToolItems from "./ToolItems";
 
 const Tools = ({ me }) => {
   const dispatch = useDispatch();
@@ -24,7 +25,11 @@ const Tools = ({ me }) => {
       dispatch({ type: "PAUSE" });
       videosRef[currentVideo]?.pause();
     }
-    if (clickedTool != 5) dispatch({ type: "SHOW_PREVIEW", data: { element } });
+    if (!element) {
+      dispatch({ type: "HIDE_PREVIEW" });
+    } else if (clickedTool != 5) {
+      dispatch({ type: "SHOW_PREVIEW", data: { element } });
+    }
   };
 
   const closeToolbox = () => {
@@ -58,16 +63,16 @@ const Tools = ({ me }) => {
         </li>
         <li
           className={`${styles.tool} ${tool === 3 ? styles.toolSelected : ""}`}
-          onClick={() => selectTool(3, "helloScreen")}
+          onClick={() => selectTool(3)}
         >
           <img
             src={`/assets/campaign/${
-              tool === 3 ? "toolHelloScreenSelected" : "toolHelloScreen"
+              tool === 3 ? "toolWandSelected" : "toolWand"
             }.svg`}
           />
-          <p>Start Screen</p>
+          <p>Items</p>
         </li>
-        <li
+        {/* <li
           className={`${styles.tool} ${tool === 4 ? styles.toolSelected : ""}`}
           onClick={() => selectTool(4, "endScreen")}
         >
@@ -77,7 +82,7 @@ const Tools = ({ me }) => {
             }.svg`}
           />
           <p>End Screen</p>
-        </li>
+        </li> */}
         <li
           className={`${styles.tool} ${tool === 5 ? styles.toolSelected : ""}`}
           onClick={() => selectTool(5, "logo")}
@@ -99,8 +104,8 @@ const Tools = ({ me }) => {
           />
           <ToolRecord />
           <ToolVideos />
-          <ToolHelloScreen me={me} />
-          <ToolEndScreen me={me} />
+          <ToolItems me={me} />
+          {/* <ToolEndScreen me={me} /> */}
           <ToolLogo />
         </div>
       )}
