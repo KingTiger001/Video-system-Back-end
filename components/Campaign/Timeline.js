@@ -1,6 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+
 import styles from "@/styles/components/Campaign/Timeline.module.sass";
 
 const Timeline = () => {
@@ -14,11 +16,12 @@ const Timeline = () => {
   const timelineDraggable = useSelector(
     (state) => state.campaign.timelineDraggable
   );
-  const video = useSelector((state) => state.campaign.video);
-  const videoRef = useSelector((state) => state.campaign.videoRef);
+  const contents = useSelector((state) => state.campaign.contents);
   const videosRef = useSelector((state) => state.campaign.videosRef);
   const currentVideo = useSelector((state) => state.campaign.currentVideo);
   const videosOffset = useSelector((state) => state.campaign.videosOffset);
+
+  //
 
   const ref = useRef();
   useEffect(() => {
@@ -42,7 +45,7 @@ const Timeline = () => {
     const progression = (position / ref.current.offsetWidth) * duration;
     dispatch({ type: "SET_PROGRESSION", data: progression });
     if (videosRef.length > 0) {
-      for (let i = 0; i < video.length; i++) {
+      for (let i = 0; i < contents.length; i++) {
         if (
           progression > videosOffset[i] * 1000 &&
           progression < (videosOffset[i + 1] * 1000 || duration)
@@ -50,16 +53,37 @@ const Timeline = () => {
           const currentTime =
             (progression - helloScreen.duration) / 1000 - videosOffset[i];
           videosRef[i].currentTime = currentTime > 0 ? currentTime : 0;
-          dispatch({
-            type: "SET_CURRENT_VIDEO",
-            data: i,
-          });
+
+          if (i !== currentVideo) {
+            videosRef[currentVideo].currentTime = 0;
+            videosRef[currentVideo].pause();
+            dispatch({
+              type: "SET_CURRENT_VIDEO",
+              data: i,
+            });
+          }
         }
       }
     }
     if (preview.show) {
       dispatch({ type: "HIDE_PREVIEW" });
     }
+  };
+
+  const handleOnDragEnd = (result) => {
+    const data = Array.from(contents);
+
+    if (result.destination) {
+      const [reorderedItem] = data.splice(result.source.index, 1);
+      data.splice(result.destination.index, 0, reorderedItem);
+    }
+
+    data.map((elem, i) => {
+      elem.position = i;
+    });
+    dispatch({ type: "SET_VIDEO", data });
+    dispatch({ type: "CALC_VIDEOS_OFFSET", data });
+    dispatch({ type: "SET_VIDEOS_REF" });
   };
 
   return (
@@ -72,7 +96,7 @@ const Timeline = () => {
       ref={ref}
       style={{
         gridTemplateColumns: `${helloScreen.duration ? `auto` : ""} ${
-          Object.keys(video).length > 0 ? "1fr" : ""
+          contents.length > 0 ? "1fr" : ""
         } ${endScreen.duration ? `auto` : ""}`,
       }}
     >
@@ -90,20 +114,61 @@ const Timeline = () => {
           </div>
         </div>
       )}
-      {Object.keys(video).length > 0 && (
+
+      {contents.length > 0 && (
+        <DragDropContext onDragEnd={handleOnDragEnd}>
+          <Droppable direction="horizontal" droppableId="videoRecorded">
+            {(provided) => (
+              <div
+                className={styles.videoRecorded}
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+              >
+                {contents.map((elem, i) => (
+                  <Draggable key={i} draggableId={`draggable-${i}`} index={i}>
+                    {(provided, snapshot) => (
+                      <div
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        ref={provided.innerRef}
+                        style={{
+                          width: `${
+                            ((elem.video.metadata.duration * 1000) / duration) *
+                            100
+                          }%`,
+                          ...provided.draggableProps.style,
+                        }}
+                      >
+                        <img src="/assets/campaign/toolVideos.svg" />
+                        <p>{elem.video.name}</p>
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+      )}
+
+      {/* {Object.keys(video).length > 0 && (
         <div className={styles.videoRecorded}>
-          {video.map((elem) => (
+          {video.map((elem, i) => (
             <div
+              key={i}
               style={{
-                width: `${((elem.metadata.duration * 1000) / duration) * 100}%`,
+                width: `${
+                  ((elem.video.metadata.duration * 1000) / duration) * 100
+                }%`,
               }}
             >
               <img src="/assets/campaign/toolVideos.svg" />
-              <p>{elem.name}</p>
+              <p>{elem.video.name}</p>
             </div>
           ))}
         </div>
-      )}
+      )} */}
       {endScreen.duration > 0 && (
         <div className={styles.endScreen}>
           <div>

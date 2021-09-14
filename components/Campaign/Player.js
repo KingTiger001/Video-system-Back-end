@@ -33,7 +33,7 @@ const Player = () => {
   );
   const previewVideo = useSelector((state) => state.campaign.previewVideo);
   const progression = useSelector((state) => state.campaign.progression);
-  const video = useSelector((state) => state.campaign.video);
+  const contents = useSelector((state) => state.campaign.contents);
   const videoSeeking = useSelector((state) => state.campaign.videoSeeking);
   //
   const videosRef = useSelector((state) => state.campaign.videosRef);
@@ -44,8 +44,10 @@ const Player = () => {
   const [resume, setResume] = useState(false);
 
   useEffect(() => {
-    setResume(preview.show || helloScreen.name || endScreen.name || video.url);
-  }, [preview.show, helloScreen, endScreen, video]);
+    setResume(
+      preview.show || helloScreen.name || endScreen.name || contents.url
+    );
+  }, [preview.show, helloScreen, endScreen, contents]);
 
   const playerRef = useRef();
   const { width: playerWidth } = useVideoResize({
@@ -55,22 +57,11 @@ const Player = () => {
   const videoRefCb = useCallback(
     (node) => {
       if (node !== null) {
-        // dispatch({ type: "SET_VIDEO_REF", data: node });
         dispatch({ type: "SET_VIDEOS_REF", data: node });
-        // if (Object.keys(videoRef).length > 0) {
-        //   videoRef.addEventListener("playing", handlePlaying);
-        //   videoRef.addEventListener("seeking", handleSeeking);
-        //   const currentTime = (progression - helloScreen.duration) / 1000;
-        //   videoRef.currentTime = currentTime > 0 ? currentTime : 0;
-        // }
       } else {
-        // if (Object.keys(videoRef).length > 0) {
-        //   videoRef.removeEventListener("seeking", handleSeeking);
-        //   videoRef.removeEventListener("playing", handlePlaying);
-        // }
       }
     },
-    [video]
+    [contents]
   );
 
   useEffect(() => {
@@ -79,7 +70,7 @@ const Player = () => {
     const handlePlaying = () =>
       dispatch({ type: "SET_VIDEO_SEEKING", data: false });
 
-    if (videosRef.length === video.length) {
+    if (videosRef.length === contents.length) {
       for (let i = 0; i < videosRef; i++) {
         videosRef[i].addEventListener("playing", handlePlaying);
         videosRef[i].addEventListener("seeking", handleSeeking);
@@ -106,13 +97,13 @@ const Player = () => {
       clearInterval(interval);
     } else if (isPlaying) {
       interval = setInterval(() => {
-        dispatch({
-          type: "SET_PROGRESSION",
-          data: progression + 100,
-        });
+        if (videosRef[currentVideo]?.readyState === 4)
+          dispatch({
+            type: "SET_PROGRESSION",
+            data: progression + 100,
+          });
       }, 100);
     }
-
     if (progression >= duration) {
       dispatch({ type: "PAUSE" });
       dispatch({
@@ -123,8 +114,10 @@ const Player = () => {
         type: "SET_CURRENT_VIDEO",
         data: 0,
       });
-      videosRef[video.length - 1].currentTime = 0;
-      videosRef[video.length - 1].pause();
+      if (videosRef.length > 0) {
+        videosRef[contents.length - 1].currentTime = 0;
+        videosRef[contents.length - 1].pause();
+      }
     }
     if (progression < 0) {
       dispatch({
@@ -134,10 +127,13 @@ const Player = () => {
     }
 
     // if is timeline ended
-    if (videosRef[video.length - 1]?.ended) {
+    if (videosRef[contents.length - 1]?.ended) {
       videosRef[0].pause();
       videosRef[0].currentTime = 0;
-    } else if (videosRef[currentVideo]?.ended && currentVideo < video.length) {
+    } else if (
+      videosRef[currentVideo]?.ended &&
+      currentVideo < contents.length
+    ) {
       videosRef[currentVideo].currentTime = 0;
       videosRef[currentVideo].pause();
       videosRef[currentVideo + 1].currentTime = 0;
@@ -181,24 +177,25 @@ const Player = () => {
   };
 
   const renderVideos = () => {
-    return video.map((elem, i) => (
-      <video
-        ref={videoRefCb}
-        key={elem.url}
-        src={elem.url}
-        height="100%"
-        width="100%"
-        // onTimeUpdate={handleOnTimeUpdate}
-        style={{
-          display:
-            progression > helloScreen.duration &&
-            progression < duration - endScreen.duration &&
-            currentVideo === i
-              ? "block"
-              : "none",
-        }}
-      />
-    ));
+    if (contents.length > 0)
+      return contents.map((elem, i) => (
+        <video
+          ref={videoRefCb}
+          key={elem.video.url}
+          src={elem.video.url}
+          height="100%"
+          width="100%"
+          // onTimeUpdate={handleOnTimeUpdate}
+          style={{
+            display:
+              progression > helloScreen.duration &&
+              progression < duration - endScreen.duration &&
+              currentVideo === i
+                ? "block"
+                : "none",
+          }}
+        />
+      ));
   };
 
   return (
@@ -214,7 +211,7 @@ const Player = () => {
               <Placeholder of={preview.element} />
             )}
             {preview.element === "video" &&
-              (previewVideo.url || video.url ? (
+              (previewVideo.url || contents.url ? (
                 <video
                   key={previewVideo.url}
                   controls
@@ -222,7 +219,7 @@ const Player = () => {
                   width="100%"
                 >
                   <source
-                    src={previewVideo.url || video.url}
+                    src={previewVideo.url || contents.url}
                     type="video/mp4"
                   />
                   Sorry, your browser doesn't support embedded videos.

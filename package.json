@@ -26,6 +26,7 @@
     "nprogress": "^0.2.0",
     "prop-types": "^15.7.2",
     "react": "^16.14.0",
+    "react-beautiful-dnd": "^13.1.0",
     "react-beforeunload": "^2.4.0",
     "react-collapse": "^5.1.0",
     "react-color": "^2.18.1",

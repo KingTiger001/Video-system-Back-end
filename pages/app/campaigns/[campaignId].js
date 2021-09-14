@@ -23,6 +23,9 @@ import Share from "@/components/Campaign/Share";
 
 import styles from "@/styles/pages/app/[campaignId].module.sass";
 
+// test
+import { resetServerContext } from "react-beautiful-dnd";
+
 const Campaign = ({ me }) => {
   const router = useRouter();
 
@@ -40,9 +43,8 @@ const Campaign = ({ me }) => {
   const timelineDraggable = useSelector(
     (state) => state.campaign.timelineDraggable
   );
-  const video = useSelector((state) => state.campaign.video);
+  const video = useSelector((state) => state.campaign.contents);
   const videoRef = useSelector((state) => state.campaign.videoRef);
-
   const [inputNameWidth, setInputNameWidth] = useState(0);
   const [displayMenu, showMenu] = useState(false);
   const [displayPreview, showPreview] = useState(false);
@@ -84,7 +86,7 @@ const Campaign = ({ me }) => {
         helloScreen,
         logo,
         name,
-        video: Object.keys(video).length > 0 ? video._id : null,
+        contents: video.length > 0 ? video : null,
       });
     };
     saveCampaign();
@@ -112,7 +114,6 @@ const Campaign = ({ me }) => {
   };
 
   const seekTo = (e) => {
-    console.log("ahaha seekto");
     const rect = e.currentTarget.getBoundingClientRect();
     const position = e.clientX - rect.left;
     const progression = (position / ref.current.offsetWidth) * duration;
@@ -282,7 +283,6 @@ export const getServerSideProps = withAuthServerSideProps(
     const { data: helloScreenList } = await mainAPI.get(
       "/users/me/helloScreens"
     );
-
     try {
       dispatch({
         type: "SET_VIDEO_LIST",
@@ -301,10 +301,11 @@ export const getServerSideProps = withAuthServerSideProps(
         data: campaign,
       });
       dispatch({ type: "CALC_DURATION" });
-      dispatch({ type: "CALC_VIDEOS_OFFSET", data: campaign });
+      dispatch({ type: "CALC_VIDEOS_OFFSET", data: campaign.contents });
     } catch (err) {
       console.log(err);
     }
+    resetServerContext();
 
     return {
       initialReduxState: reduxStore.getState(),

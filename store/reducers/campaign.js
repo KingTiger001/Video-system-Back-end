@@ -98,7 +98,7 @@ const initialState = {
   progression: 0,
   timelineDraggable: false,
   tool: 0,
-  video: {},
+  contents: [],
   videoList: [],
   videoRef: {},
   videosRef: [],
@@ -192,18 +192,21 @@ const reducer = (state = initialState, action) => {
         },
       };
     case "SET_CAMPAIGN":
+      const contentsArr = action.data.contents
+        ? action.data.contents.sort((a, b) => a.position - b.position)
+        : [];
       return {
         ...state,
         endScreen: action.data.endScreen || { duration: 0 },
         helloScreen: action.data.helloScreen || { duration: 0 },
         logo: action.data.logo || initialState.logo,
         name: action.data.name,
-        video: action.data.video || {},
+        contents: contentsArr || [],
       };
     case "CALC_DURATION":
-      const { endScreen, helloScreen, video } = state;
-      const totalDuration = video.reduce(
-        (prev, cur) => prev + cur.metadata.duration,
+      const { endScreen, helloScreen, contents } = state;
+      const totalDuration = contents.reduce(
+        (prev, cur) => prev + cur.video.metadata.duration,
         0
       );
       return {
@@ -212,7 +215,7 @@ const reducer = (state = initialState, action) => {
           (helloScreen && Object.keys(helloScreen).length > 1
             ? helloScreen.duration
             : 0) +
-          (Object.keys(video).length > 0 ? totalDuration * 1000 : 0) +
+          (Object.keys(contents).length > 0 ? totalDuration * 1000 : 0) +
           (endScreen && Object.keys(endScreen).length > 1
             ? endScreen.duration
             : 0),
@@ -258,15 +261,17 @@ const reducer = (state = initialState, action) => {
         tool: action.data,
       };
     case "SET_VIDEO":
+      const setVideoDuration = action.data.reduce(
+        (prev, cur) => prev + cur.video.metadata.duration,
+        0
+      );
       return {
         ...state,
         duration:
           state.helloScreen.duration +
-          (Object.keys(action.data).length > 0
-            ? action.data.metadata.duration * 1000
-            : 0) +
+          (Object.keys(action.data).length > 0 ? setVideoDuration * 1000 : 0) +
           state.endScreen.duration,
-        video: action.data,
+        contents: action.data,
       };
     case "SET_VIDEO_LIST":
       return {
@@ -279,7 +284,8 @@ const reducer = (state = initialState, action) => {
         videoRef: action.data,
       };
     case "SET_VIDEOS_REF":
-      return { ...state, videosRef: [...state.videosRef, action.data] };
+      const refs = action.data ? [...state.videosRef, action.data] : [];
+      return { ...state, videosRef: refs };
     case "SET_CURRENT_VIDEO":
       return {
         ...state,
@@ -287,10 +293,10 @@ const reducer = (state = initialState, action) => {
       };
     case "CALC_VIDEOS_OFFSET":
       const videosOffset = [];
-      for (let i = 0; i < action.data.video.length; i++) {
+      for (let i = 0; i < action.data.length; i++) {
         videosOffset[i] =
           (videosOffset[i - 1] || 0) +
-          (action.data.video[i - 1]?.metadata?.duration || 0);
+          (action.data[i - 1]?.video?.metadata?.duration || 0);
       }
 
       return {
