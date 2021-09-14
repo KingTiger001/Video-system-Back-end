@@ -244,7 +244,7 @@ const Campaign = ({ me }) => {
       <div className={styles.main}>
         <Tools me={me} />
 
-        <Player />
+        {/* <Player /> */}
       </div>
 
       <div className={styles.footer}>
