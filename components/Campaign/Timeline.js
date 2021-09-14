@@ -152,23 +152,6 @@ const Timeline = () => {
         </DragDropContext>
       )}
 
-      {/* {Object.keys(video).length > 0 && (
-        <div className={styles.videoRecorded}>
-          {video.map((elem, i) => (
-            <div
-              key={i}
-              style={{
-                width: `${
-                  ((elem.video.metadata.duration * 1000) / duration) * 100
-                }%`,
-              }}
-            >
-              <img src="/assets/campaign/toolVideos.svg" />
-              <p>{elem.video.name}</p>
-            </div>
-          ))}
-        </div>
-      )} */}
       {endScreen.duration > 0 && (
         <div className={styles.endScreen}>
           <div>
