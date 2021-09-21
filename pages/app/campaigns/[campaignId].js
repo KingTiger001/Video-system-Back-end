@@ -39,13 +39,8 @@ const Campaign = ({ me }) => {
   const helloScreen = useSelector((state) => state.campaign.helloScreen);
   const logo = useSelector((state) => state.campaign.logo);
   const name = useSelector((state) => state.campaign.name);
-  const preview = useSelector((state) => state.campaign.preview);
-  const timelineDraggable = useSelector(
-    (state) => state.campaign.timelineDraggable
-  );
-  const video = useSelector((state) => state.campaign.contents);
-  const videoRef = useSelector((state) => state.campaign.videoRef);
-  const [inputNameWidth, setInputNameWidth] = useState(0);
+
+  const contents = useSelector((state) => state.campaign.contents);
   const [displayMenu, showMenu] = useState(false);
   const [displayPreview, showPreview] = useState(false);
   const [displayShare, showShare] = useState(false);
@@ -74,32 +69,32 @@ const Campaign = ({ me }) => {
         },
       });
     }
-    setInputNameWidth((name.length + 1) * 16);
   }, []);
 
   // Save campaign
   useEffect(() => {
     const saveCampaign = async () => {
-      await mainAPI
+      const res = await mainAPI
         .patch(`/campaigns/${router.query.campaignId}`, {
           duration,
           endScreen,
           helloScreen,
           logo,
           name,
-          contents: video.length > 0 ? video : [],
+          contents: contents.length > 0 ? contents : [],
         })
         .catch((err) => console.log("err", err));
     };
     saveCampaign();
+
     dispatch({
       type: "HAS_CHANGES",
       data: false,
     });
-  }, [duration, endScreen, helloScreen, logo, name, video]);
+  }, [duration, endScreen, helloScreen, logo, name, contents]);
 
   const checkBeforeStartShare = () => {
-    if (Object.keys(video).length <= 0) {
+    if (Object.keys(contents).length <= 0) {
       return toast.error(
         "You need to add a video before sharing your campaign."
       );
@@ -115,27 +110,8 @@ const Campaign = ({ me }) => {
     });
   };
 
-  const seekTo = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const position = e.clientX - rect.left;
-    const progression = (position / ref.current.offsetWidth) * duration;
-    dispatch({ type: "SET_PROGRESSION", data: progression });
-    if (Object.keys(videoRef).length > 0) {
-      const currentTime = (progression - helloScreen.duration) / 1000;
-      videoRef.currentTime = currentTime > 0 ? currentTime : 0;
-    }
-    if (preview.show) {
-      dispatch({ type: "HIDE_PREVIEW" });
-    }
-  };
-
   return (
-    <div
-      className={styles.dashboardCampaign}
-      // onMouseUp={() => dispatch({ type: "TIMELINE_DRAGGABLE", data: false })}
-      // onMouseMove={(e) => timelineDraggable && seekTo(e)}
-      ref={ref}
-    >
+    <div className={styles.dashboardCampaign} ref={ref}>
       <Head>
         <title>Edit my video campaign | FOMO</title>
       </Head>
@@ -246,7 +222,7 @@ const Campaign = ({ me }) => {
       <div className={styles.main}>
         <Tools me={me} />
 
-        {/* <Player /> */}
+        <Player />
       </div>
 
       <div className={styles.footer}>

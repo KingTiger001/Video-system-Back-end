@@ -14,6 +14,7 @@ const Tools = ({ me }) => {
   const isPlaying = useSelector((state) => state.campaign.isPlaying);
   const tool = useSelector((state) => state.campaign.tool);
   const videosRef = useSelector((state) => state.campaign.videosRef);
+  const contents = useSelector((state) => state.campaign.contents);
   const currentVideo = useSelector((state) => state.campaign.currentVideo);
 
   const selectTool = (clickedTool, element) => {
@@ -23,7 +24,7 @@ const Tools = ({ me }) => {
     });
     if (isPlaying) {
       dispatch({ type: "PAUSE" });
-      videosRef[currentVideo]?.pause();
+      videosRef[getVideoIndex(currentVideo)]?.pause();
     }
     if (!element) {
       dispatch({ type: "HIDE_PREVIEW" });
@@ -35,6 +36,14 @@ const Tools = ({ me }) => {
   const closeToolbox = () => {
     dispatch({ type: "SELECT_TOOL", data: 0 });
     setTimeout(() => dispatch({ type: "HIDE_PREVIEW" }), 0);
+  };
+
+  const getVideoIndex = (max) => {
+    let count = -1;
+    for (let i = 0; i <= max; i++) {
+      if (contents[i].type === "video") count++;
+    }
+    return count;
   };
 
   return (

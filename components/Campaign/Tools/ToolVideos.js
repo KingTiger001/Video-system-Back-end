@@ -6,6 +6,7 @@ import { mainAPI } from "@/plugins/axios";
 import dayjs from "@/plugins/dayjs";
 
 import styles from "@/styles/components/Campaign/Tools.module.sass";
+import { useState, useEffect } from "react";
 
 const ToolVideos = () => {
   const dispatch = useDispatch();
@@ -52,23 +53,25 @@ const ToolVideos = () => {
 
   useDebounce(updateProcessingVideos, 3000, [videoList]);
 
-  const removeFromTimeline = (id) => {
+  const removeFromContents = (id) => {
     const array = contents.filter((obj) => {
-      return obj.video._id !== id;
+      if (obj.type === "video") {
+        return obj.video._id !== id;
+      } else {
+        return obj;
+      }
     });
     array.map((elem, i) => {
       elem.position = i;
     });
-
     return array;
   };
 
-  const addToTimeline = (data) => {
+  const addToContents = (data) => {
     const array = contents.slice();
-    array.push({ position: array.length, video: data });
+    array.push({ position: array.length, type: "video", video: data });
     return array;
   };
-
   return (
     tool === 2 && (
       <div
@@ -85,7 +88,9 @@ const ToolVideos = () => {
             <div
               key={vd._id}
               className={`${styles.toolLibraryItem} ${styles.videosItem} ${
-                contents.some((elem) => elem.video._id === vd._id)
+                contents.some(
+                  (elem) => elem.type === "video" && elem.video._id === vd._id
+                )
                   ? styles.selected
                   : ""
               }`}
@@ -120,10 +125,12 @@ const ToolVideos = () => {
               </div>
 
               <div className={styles.toolLibraryItemOption}>
-                {!contents.some((elem) => elem.video._id === vd._id) && (
+                {!contents.some(
+                  (elem) => elem.type === "video" && elem.video._id === vd._id
+                ) && (
                   <div
                     onClick={() => {
-                      const data = addToTimeline(vd);
+                      const data = addToContents(vd);
                       dispatch({ type: "SET_VIDEO", data });
                       dispatch({ type: "CALC_VIDEOS_OFFSET", data });
                       dispatch({ type: "SET_VIDEOS_REF" });
@@ -138,11 +145,14 @@ const ToolVideos = () => {
                     <p>Select</p>
                   </div>
                 )}
-                {contents.some((elem) => elem.video._id === vd._id) && (
+                {contents.some(
+                  (elem) => elem.type === "video" && elem.video._id === vd._id
+                ) && (
                   <div
                     onClick={() => {
-                      const data = removeFromTimeline(vd._id);
+                      const data = removeFromContents(vd._id);
                       dispatch({ type: "SET_VIDEO", data });
+
                       dispatch({ type: "CALC_VIDEOS_OFFSET", data });
                       dispatch({ type: "SET_VIDEOS_REF" });
                       dispatch({ type: "SET_PROGRESSION", data: 0 });

@@ -5,12 +5,28 @@ import { toast } from "react-toastify";
 
 import { mainAPI } from "@/plugins/axios";
 
+import { ObjectID } from "bson";
+
 import Button from "@/components/Button";
 import InputWithTools from "@/components/Campaign/InputWithTools";
 import PopupDeleteEndScreen from "@/components/Popups/PopupDeleteEndScreen";
 import PopupDeleteDraftEndScreen from "@/components/Popups/PopupDeleteDraftEndScreen";
 
 import styles from "@/styles/components/Campaign/Tools.module.sass";
+import InputRange from "react-input-range";
+import "react-input-range/lib/css/index.css";
+import styled from "styled-components";
+
+const RangeSliderContainer = styled.div`
+  .input-range__track--active,
+  .input-range__slider {
+    background: ${(props) => props.color};
+    border-color: ${(props) => props.color};
+  }
+  .input-range {
+    border: 50px;
+  }
+`;
 
 const ToolTemplate = ({ me }) => {
   const dispatch = useDispatch();
@@ -24,6 +40,7 @@ const ToolTemplate = ({ me }) => {
   const endScreen = useSelector((state) => state.campaign.endScreen);
   const endScreenList = useSelector((state) => state.campaign.endScreenList);
   const preview = useSelector((state) => state.campaign.preview);
+  const contents = useSelector((state) => state.campaign.contents);
   const previewEndScreen = useSelector(
     (state) => state.campaign.previewEndScreen
   );
@@ -120,6 +137,18 @@ const ToolTemplate = ({ me }) => {
     // if (clickedTool != 5) dispatch({ type: "SHOW_PREVIEW", data: { element } });
   };
 
+  const addToContents = (data) => {
+    const array = contents.slice();
+    const id = new ObjectID();
+    array.push({
+      _id: id.toString(),
+      position: array.length,
+      type: "template",
+      template: data,
+    });
+    return array;
+  };
+
   return (
     toolItem === 1 && (
       <div
@@ -181,6 +210,40 @@ const ToolTemplate = ({ me }) => {
                   required
                 />
               </div>
+
+              {/*  */}
+              {console.log("endscreen.duration", endScreen.duration)}
+              <div className={styles.toolSection}>
+                <label className={styles.toolLabel}>Duration</label>
+                <div className={styles.toolSlider}>
+                  <RangeSliderContainer color={"#5F59F7"}>
+                    <InputRange
+                      maxValue={20}
+                      minValue={1}
+                      value={endScreen.duration}
+                      onChange={(value) => {
+                        dispatch({
+                          type: "CHANGE_END_SCREEN",
+                          data: {
+                            duration: parseInt(value, 10),
+                          },
+                        });
+                      }}
+                    />
+                  </RangeSliderContainer>
+                </div>
+              </div>
+
+              {/* <div className={styles.spliter} />
+              <div className={styles.toolSection}>
+                <label className={styles.toolSubtitle}>Duration</label>
+                <label className={styles.toolLabel}>Text line 1</label>
+                <div className={styles.toolRange}>
+                  <input type="range" />
+                </div>
+              </div> */}
+
+              {/*  */}
               <div className={styles.spliter} />
               <div className={styles.toolSection}>
                 <label className={styles.toolSubtitle}>
@@ -410,6 +473,10 @@ const ToolTemplate = ({ me }) => {
                     <div
                       className={styles.toolLibraryItemEdit}
                       onClick={() => {
+                        const data = addToContents(es);
+                        console.log("data", data);
+                        dispatch({ type: "SET_VIDEO", data });
+                        dispatch({ type: "CALC_VIDEOS_OFFSET", data });
                         dispatch({
                           type: "DISPLAY_ELEMENT",
                           data: "endScreen",
@@ -422,6 +489,7 @@ const ToolTemplate = ({ me }) => {
                           type: "SET_PREVIEW_END_SCREEN",
                           data: {},
                         });
+
                         dispatch({ type: "CALC_DURATION" });
                       }}
                     >

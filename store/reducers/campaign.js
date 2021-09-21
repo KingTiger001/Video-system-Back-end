@@ -28,7 +28,7 @@ export const defaultHelloScreen = {
 
 export const defaultEndScreen = {
   background: "#000",
-  duration: 200, // 0.2s
+  duration: 1, // 0.2s
   name: "Draft",
   title: {
     color: "#fff",
@@ -108,7 +108,8 @@ const initialState = {
   videoSeeking: false,
 };
 
-const durationByType = (elem) => {
+const getDurationByType = (elem) => {
+  if (!elem) return;
   switch (elem.type) {
     case "video":
       return elem.video.metadata.duration;
@@ -134,7 +135,6 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         endScreen: {
-          duration: 10000,
           ...state.endScreen,
           ...action.data,
         },
@@ -217,19 +217,12 @@ const reducer = (state = initialState, action) => {
     case "CALC_DURATION":
       const { endScreen, helloScreen, contents } = state;
       const totalDuration = contents.reduce(
-        (prev, cur) => prev + durationByType(cur),
+        (prev, cur) => prev + getDurationByType(cur),
         0
       );
       return {
         ...state,
-        duration:
-          (helloScreen && Object.keys(helloScreen).length > 1
-            ? helloScreen.duration
-            : 0) +
-          (Object.keys(contents).length > 0 ? totalDuration * 1000 : 0) +
-          (endScreen && Object.keys(endScreen).length > 1
-            ? endScreen.duration
-            : 0),
+        duration: contents.length > 0 ? totalDuration * 1000 : 0,
       };
     case "SET_END_SCREEN_LIST":
       return {
@@ -278,7 +271,7 @@ const reducer = (state = initialState, action) => {
       };
     case "SET_VIDEO":
       const setVideoDuration = action.data.reduce(
-        (prev, cur) => prev + durationByType(cur),
+        (prev, cur) => prev + getDurationByType(cur),
         0
       );
       return {
@@ -312,9 +305,8 @@ const reducer = (state = initialState, action) => {
       for (let i = 0; i < action.data.length; i++) {
         videosOffset[i] =
           (videosOffset[i - 1] || 0) +
-          (action.data[i - 1]?.video?.metadata?.duration || 0);
+          (getDurationByType(action.data[i - 1]) || 0);
       }
-
       return {
         ...state,
         videosOffset: videosOffset,
