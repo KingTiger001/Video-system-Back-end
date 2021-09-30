@@ -50,7 +50,7 @@ export const getDataByType = (elem) => {
         name: elem.video.name,
         duration: elem.video.metadata.duration,
       };
-    case "template":
-      return { name: elem.template.name, duration: elem.template.duration };
+    case "screen":
+      return { name: elem.screen.name, duration: elem.screen.duration };
   }
 };

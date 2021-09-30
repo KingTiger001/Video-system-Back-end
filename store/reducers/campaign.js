@@ -106,6 +106,7 @@ const initialState = {
   currentVideo: 0,
   videosOffset: [],
   videoSeeking: false,
+  selectedContent: {},
 };
 
 const getDurationByType = (elem) => {
@@ -114,8 +115,8 @@ const getDurationByType = (elem) => {
     case "video":
       return elem.video.metadata.duration;
 
-    case "template":
-      return elem.template.duration;
+    case "screen":
+      return elem.screen.duration;
   }
 };
 
@@ -215,7 +216,7 @@ const reducer = (state = initialState, action) => {
         contents: contentsArr || [],
       };
     case "CALC_DURATION":
-      const { endScreen, helloScreen, contents } = state;
+      const { contents } = state;
       const totalDuration = contents.reduce(
         (prev, cur) => prev + getDurationByType(cur),
         0
@@ -277,9 +278,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         duration:
-          state.helloScreen.duration +
-          (Object.keys(action.data).length > 0 ? setVideoDuration * 1000 : 0) +
-          state.endScreen.duration,
+          Object.keys(action.data).length > 0 ? setVideoDuration * 1000 : 0,
         contents: action.data,
       };
     case "SET_VIDEO_LIST":
@@ -320,6 +319,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         timelineDraggable: action.data,
+      };
+    case "SET_SELECTED_CONTENT":
+      return {
+        ...state,
+        selectedContent: action.data,
       };
     default:
       return state;

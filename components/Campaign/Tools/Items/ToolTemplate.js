@@ -143,8 +143,8 @@ const ToolTemplate = ({ me }) => {
     array.push({
       _id: id.toString(),
       position: array.length,
-      type: "template",
-      template: data,
+      type: "screen",
+      screen: data,
     });
     return array;
   };
@@ -422,7 +422,7 @@ const ToolTemplate = ({ me }) => {
           </div>
         ) : (
           <div className={styles.toolSection}>
-            <p className={styles.toolTitle}>Template</p>
+            <p className={styles.toolTitle}>Screen</p>
             <p onClick={() => selectToolItem(0)} className={styles.toolBack}>
               &#8592; Back to items
             </p>
@@ -441,7 +441,7 @@ const ToolTemplate = ({ me }) => {
             >
               <div className={styles.toolAdd}>
                 <img src="/assets/common/addW.svg" />
-                <p>Create Template</p>
+                <p>Create Screen</p>
               </div>
             </Button>
             <p className={styles.toolSubtitle}>Your Library</p>
@@ -458,6 +458,7 @@ const ToolTemplate = ({ me }) => {
                           : styles.toolLibraryItemNotSelected
                       }`}
                       onClick={() => {
+                        console.log("select template", es);
                         dispatch({
                           type: "DISPLAY_ELEMENT",
                           data: "endScreen",

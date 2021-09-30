@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { getDataByType, useVideoResize } from "@/hooks";
@@ -6,11 +6,13 @@ import { getDataByType, useVideoResize } from "@/hooks";
 import dayjs from "@/plugins/dayjs";
 
 import EndScreen from "@/components/Campaign/EndScreen";
+import { defaultEndScreen } from "../../store/reducers/campaign";
 
 import Logo from "@/components/Campaign/Logo";
 
 import styles from "@/styles/components/Campaign/Player.module.sass";
 import Placeholder from "./Placeholder";
+import Draggable from "react-draggable";
 
 const Player = () => {
   const dispatch = useDispatch();
@@ -26,6 +28,10 @@ const Player = () => {
   const progression = useSelector((state) => state.campaign.progression);
   const contents = useSelector((state) => state.campaign.contents);
   const videoSeeking = useSelector((state) => state.campaign.videoSeeking);
+  const previewEndScreen = useSelector(
+    (state) => state.campaign.previewEndScreen
+  );
+
   //
   const videosRef = useSelector((state) => state.campaign.videosRef);
   const currentVideo = useSelector((state) => state.campaign.currentVideo);
@@ -33,6 +39,7 @@ const Player = () => {
   //
 
   const [resume, setResume] = useState(false);
+  const [ref, setRef] = useState();
 
   useEffect(() => {
     setResume(
@@ -172,32 +179,122 @@ const Player = () => {
     }`;
   };
 
+  const getPositionPercent = (x, y) => {
+    return {
+      x: (x / ref.offsetWidth) * 100,
+      y: (y / ref.offsetHeight) * 100,
+    };
+  };
+
+  const convertPercentToPx = ({ x, y }) => {
+    if (!playerRef) {
+      return;
+    } else {
+      return {
+        x: (x * playerRef.current?.offsetWidth) / 100,
+        y: (y * playerRef.current?.offsetHeight) / 100,
+      };
+    }
+  };
+
+  const handleStop = (_, info, id, data, type) => {
+    const obj = { ...data };
+
+    const index =
+      type === "text"
+        ? obj.texts.findIndex((text) => text._id === id)
+        : obj.links.findIndex((link) => link._id === id);
+    if (index < 0) return;
+    const { x, y } = getPositionPercent(info.x, info.y);
+    // const { x, y } = { x: info.x, y: info.y };
+    if (type === "text") {
+      obj.texts[index].position = { x, y };
+    } else {
+      obj.links[index].position = { x, y };
+    }
+
+    const indexArr = contents.findIndex((content) => content._id === data._id);
+    let array = contents.slice();
+    array[indexArr] = obj;
+    dispatch({
+      type: "SET_VIDEO",
+      data: array,
+    });
+  };
+
+  const renderText = (text, data) => {
+    if (ref !== undefined)
+      return (
+        <Draggable
+          key={text._id}
+          bounds={"parent"}
+          defaultPosition={convertPercentToPx(text.position)}
+          position={null}
+          grid={[25, 25]}
+          scale={1}
+          onStop={(event, info) =>
+            handleStop(event, info, text._id, data, "text")
+          }
+        >
+          <p className={styles.textDraggable}>{text.value}</p>
+        </Draggable>
+      );
+  };
+
+  const renderLink = (link, data) => {
+    if (ref !== undefined)
+      return (
+        <Draggable
+          key={link._id}
+          bounds={"parent"}
+          defaultPosition={convertPercentToPx(link.position)}
+          // position={link.position}
+          position={null}
+          grid={[25, 25]}
+          scale={1}
+          onStop={(event, info) =>
+            handleStop(event, info, link._id, data, "link")
+          }
+        >
+          <p className={styles.linkDraggable}>{link.value}</p>
+        </Draggable>
+      );
+  };
+
   const renderVideos = () => {
     if (contents.length > 0)
       return contents.map(
         (elem, i) =>
           elem.type === "video" && (
-            <video
-              ref={videoRefCb}
-              key={elem.video.url}
-              src={elem.video.url}
-              height="100%"
-              width="100%"
-              // onTimeUpdate={handleOnTimeUpdate}
-              style={{
-                display: currentVideo === i ? "block" : "none",
-              }}
-            />
+            <React.Fragment key={elem._id}>
+              {currentVideo === i && (
+                <div className={styles.textSection}>
+                  {elem.texts.map((text) => renderText(text, elem))}
+                  {elem.links.map((link) => renderLink(link, elem))}
+                </div>
+              )}
+              <video
+                ref={videoRefCb}
+                key={elem.video.url}
+                src={elem.video.url}
+                height="100%"
+                width="100%"
+                // onTimeUpdate={handleOnTimeUpdate}
+                style={{
+                  display: currentVideo === i ? "block" : "none",
+                }}
+              />
+            </React.Fragment>
           )
       );
   };
 
-  const renderTemplates = () => {
+  const renderScreens = () => {
     if (contents.length > 0) {
       return contents.map(
         (elem, i) =>
-          elem.type === "template" &&
-          currentVideo === i && <EndScreen key={i} data={elem.template} />
+          elem.type === "screen" &&
+          currentVideo === i && <EndScreen key={i} data={elem} />
       );
     }
   };
@@ -209,37 +306,59 @@ const Player = () => {
         className={styles.video}
         style={{ width: playerWidth }}
       >
-        {preview.show ? (
-          <div>
-            {preview.element === "record" && (
-              <Placeholder of={preview.element} />
-            )}
-            {preview.element === "video" &&
-              (previewVideo.url || contents.url ? (
-                <video
-                  key={previewVideo.url}
-                  controls
-                  height="100%"
-                  width="100%"
-                >
-                  <source
-                    src={previewVideo.url || contents.url}
-                    type="video/mp4"
-                  />
-                  Sorry, your browser doesn't support embedded videos.
-                </video>
-              ) : (
+        {
+          preview.show ? (
+            <div>
+              {preview.element === "record" && (
                 <Placeholder of={preview.element} />
-              ))}
-            {logo && <Logo data={logo} />}
-          </div>
-        ) : (
-          !resume && <Placeholder of="all" />
-        )}
-        <div style={{ display: preview.show || !resume ? "none" : "block" }}>
-          {renderVideos()}
-          {renderTemplates()}
+              )}
+              {preview.element === "video" &&
+                (previewVideo.url || contents.url ? (
+                  <video
+                    key={previewVideo.url}
+                    controls
+                    height="100%"
+                    width="100%"
+                  >
+                    <source
+                      src={previewVideo.url || contents.url}
+                      type="video/mp4"
+                    />
+                    Sorry, your browser doesn't support embedded videos.
+                  </video>
+                ) : (
+                  <Placeholder of={preview.element} />
+                ))}
 
+              {preview.element === "endScreen" &&
+                (Object.keys(previewEndScreen).length == 0 &&
+                (JSON.stringify(endScreen) ===
+                  JSON.stringify(defaultEndScreen) ||
+                  !endScreen.name) ? (
+                  <Placeholder of={preview.element} />
+                ) : (
+                  <EndScreen
+                    data={
+                      Object.keys(previewEndScreen).length > 0
+                        ? previewEndScreen
+                        : endScreen
+                    }
+                  />
+                ))}
+
+              {logo && <Logo data={logo} />}
+            </div>
+          ) : null
+          // !resume && <Placeholder of="all" />
+        }
+        <div
+          ref={(newRef) => setRef(newRef)}
+          style={{ display: preview.show ? "none" : "block" }}
+        >
+          {" "}
+          {/* || !resume */}
+          {renderVideos()}
+          {renderScreens()}
           <Logo data={logo} />
         </div>
       </div>

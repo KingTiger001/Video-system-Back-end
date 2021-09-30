@@ -8,6 +8,7 @@ import ToolLogo from "./ToolLogo";
 import ToolRecord from "./ToolRecord";
 import ToolVideos from "./ToolVideos";
 import ToolItems from "./ToolItems";
+import ToolScreens from "./ToolScreens";
 
 const Tools = ({ me }) => {
   const dispatch = useDispatch();
@@ -18,6 +19,10 @@ const Tools = ({ me }) => {
   const currentVideo = useSelector((state) => state.campaign.currentVideo);
 
   const selectTool = (clickedTool, element) => {
+    dispatch({
+      type: "SET_SELECTED_CONTENT",
+      data: {},
+    });
     dispatch({
       type: "SELECT_TOOL",
       data: tool === clickedTool ? 0 : clickedTool,
@@ -53,7 +58,7 @@ const Tools = ({ me }) => {
           className={`${styles.tool} ${tool === 1 ? styles.toolSelected : ""}`}
           onClick={() => selectTool(1, "record")}
         >
-          <img src="/assets/campaign/record.svg" />
+          <img src="/assets/campaign/record2.png" />
           <p>Record</p>
         </li>
         <li
@@ -63,24 +68,21 @@ const Tools = ({ me }) => {
             selectTool(2, "video");
           }}
         >
-          <img
-            src={`/assets/campaign/${
-              tool === 2 ? "toolVideosSelected" : "toolVideos"
-            }.svg`}
-          />
+          <img src={`/assets/campaign/toolVideosWhite.svg`} />
           <p>Video</p>
         </li>
+
+        {/* need to enable */}
         <li
           className={`${styles.tool} ${tool === 3 ? styles.toolSelected : ""}`}
-          onClick={() => selectTool(3)}
+          onClick={() => selectTool(3, "endScreen")}
         >
-          <img
-            src={`/assets/campaign/${
-              tool === 3 ? "toolWandSelected" : "toolWand"
-            }.svg`}
-          />
-          <p>Items</p>
+          <img src={`/assets/campaign/toolScreenWhite.svg`} />
+          <p>Screen</p>
         </li>
+
+        {/*  */}
+
         {/* <li
           className={`${styles.tool} ${tool === 4 ? styles.toolSelected : ""}`}
           onClick={() => selectTool(4, "endScreen")}
@@ -96,24 +98,23 @@ const Tools = ({ me }) => {
           className={`${styles.tool} ${tool === 5 ? styles.toolSelected : ""}`}
           onClick={() => selectTool(5, "logo")}
         >
-          <img
-            src={`/assets/campaign/${
-              tool === 5 ? "toolLogoSelected" : "toolLogo"
-            }.svg`}
-          />
-          <p>Add logo</p>
+          <img src={`/assets/campaign/toolLogoWhite.svg`} />
+          <p>Logo</p>
         </li>
       </ul>
       {tool !== 0 && (
         <div className={styles.toolBox}>
-          <img
-            className={styles.close}
-            onClick={closeToolbox}
-            src="/assets/common/close.svg"
-          />
+          {tool === 1 && (
+            <img
+              className={styles.close}
+              onClick={closeToolbox}
+              src="/assets/common/close.svg"
+            />
+          )}
           <ToolRecord />
           <ToolVideos />
-          <ToolItems me={me} />
+          {/* <ToolItems me={me} /> */}
+          <ToolScreens me={me} />
           {/* <ToolEndScreen me={me} /> */}
           <ToolLogo />
         </div>

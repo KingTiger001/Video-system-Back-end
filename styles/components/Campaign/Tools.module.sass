@@ -20,7 +20,7 @@
   *
   */
 .toolList
-  background: #fff
+  background: $primaryColor
   border-radius: 8px
   display: grid
   grid-auto-rows: max-content
@@ -33,7 +33,9 @@
   cursor: pointer
   display: grid
   grid-gap: 4px
-  height: 60px
+  width: 70%
+  justify-self: center
+  height: 80px
   justify-items: center
   position: relative
   user-select: none
@@ -41,20 +43,15 @@
     align-self: flex-end
   p
     align-self: flex-start
-    color: $textColorOne
+    color: $white
     font-size: 12px
     font-weight: 500
 
 .toolSelected
-  background: rgba(232, 231, 254, 0.3)
-  &:before
-    background: $primaryColor
-    content: ''
-    height: 100%
-    left: 0
-    position: absolute
-    top: 0
-    width: 2px
+  // background: rgba(232, 231, 254, 0.3)
+  -webkit-box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.6)
+  box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.6)
+  border-radius: .6rem
 
 
 /**
@@ -94,11 +91,26 @@
 .toolSlider
   margin: 30px 5px
 
+.toolTitleSection
+  display: flex
+  flex-direction: row
+  align-items: center
+  margin-bottom: 1.5rem
+  .backArrow
+    cursor: pointer
+    transition: transform .4s cubic-bezier(.2,.81,.22,.83)
+    margin-right: .4rem
+    &:hover
+      transform: scale(1.2)
+    img
+      height: 1rem
+
+
 .toolTitle
   color: $textColorOne
-  font-size: 18px
+  font-size: 16px
   font-weight: 900
-  margin-bottom: 24px
+  // margin-bottom: 24px
   position: relative
   align-content: center
   &:after
@@ -109,6 +121,23 @@
     top: calc(100% + 5px)
     position: absolute
     width: 55px
+
+.createScreenBtn
+  border-radius: .6rem
+  padding: 0 1rem
+  background: $purpleGradient
+  display: flex
+  height: 3rem
+  align-items: center
+  justify-content: space-between
+  transition: transform .4s cubic-bezier(.2,.81,.22,.83)
+  cursor: pointer
+  img
+    filter: invert(1)
+  span
+    color: $white
+  &:hover
+    transform: scale(.92)
 
 .toolAdd
   align-items: center
@@ -218,15 +247,18 @@
 .toolLibraryItem
   align-items: center
   border-radius: 4px
-  display: grid
+  // display: grid
+  display: flex
+  justify-content: space-between
   gap: 2px 8px
-  grid-template-columns: 1fr repeat(2, 38px)
+  // grid-template-columns: 1fr repeat(2, 38px)
   img
     cursor: pointer
     width: 20px
 
 .toolLibraryItemName
   align-items: center
+  flex-grow: 1
   background: #F7F8FB
   border: 1px dashed transparent
   border-radius: 8px
@@ -265,9 +297,13 @@
   background: #e5e6da
   position: relative
 
+.toolLibraryItemOptions
+  display: flex
+
 .toolLibraryItemOption
   cursor: pointer
-  display: grid
+  display: flex
+  margin: 0 .5rem
   border-radius: 10%
   justify-items: center
   align-items: center
@@ -353,7 +389,8 @@
     border : 1px solid $textColorThree
   button, label
     margin-top: 10px
-    width: 150px
+    // width: 150px
+    width: 100%
 
 // Tool "Add video"
 .toolVideos
@@ -523,43 +560,161 @@
 
 .toolItems
   .toolItem
-    padding: 0 1rem
-    display: flex
-    flex-direction: row
-    align-items: center
-    justify-content: space-between
-    background: rgba($primaryColor ,.6 )
-    background: $blueGradient
-    border-radius: .6rem
-    width: 100%
-    height: 4rem
-    transition: transform .4s cubic-bezier(.2,.81,.22,.83)
-    &:hover
-      cursor: pointer
-      transform: scale(.9)
-    p
-      color: $white
-    img
-      height: 3rem
-      width:3rem
-  // .toolItem
-  //   padding: 0 1rem
-  //   display: flex
-  //   flex-direction: column
-  //   align-items: center
-  //   justify-content: center
-  //   background: rgba($primaryColor ,.6 )
-  //   background: $blueGradient
-  //   border-radius: .6rem
-  //   width: 6rem
-  //   height: 6rem
-  //   transition: transform .4s cubic-bezier(.2,.81,.22,.83)
-  //   &:hover
-  //     cursor: pointer
-  //     transform: scale(.9)
-  //   p
-  //     color: $white
-  //     margin-bottom: .5rem
-  //   img
-  //     height: 3rem
-  //     width:3rem
+    .toolItemName
+      padding: 0 1rem
+      flex-grow: 1
+      display: flex
+      flex-direction: row
+      align-items: center
+      justify-content: space-between
+      background: rgba($primaryColor ,.6 )  
+      border-radius: .6rem
+      width: 100%
+      height: 3.7rem
+      margin: 1rem 0
+      transition: transform .4s cubic-bezier(.2,.81,.22,.83)
+      &:hover
+        cursor: pointer
+        transform: scale(.92)
+      p
+        color: $white
+      img
+        height: 2.5rem
+        width:2.5rem
+    .toolItemContent
+      display: flex
+      padding: 1rem 
+      flex-grow: 1
+      flex-direction: column
+      justify-content: center
+      // align-items: center
+      background: $white
+      border-radius: .6rem
+      -webkit-box-shadow: 0px 7px 14px -8px rgba(0,0,0,0.6)
+      box-shadow: 0px 7px 14px -8px rgba(0,0,0,0.6)
+    &.background
+      .toolItemContent
+        padding: 0
+      .toolItemName
+        background: $darkBlueGradient
+    &.duration
+      .toolItemName
+        background: $mauveGradient
+    &.texts,&.links,&.save
+      .toolItemContent
+        .addTextBtn,.addLinkBtn
+          width: 100%
+          padding: 0 1rem
+          border: 2px solid $blueText
+          border-radius: .6rem
+          margin: 1rem 0
+          height: 3rem
+          cursor: pointer
+          display: flex
+          align-items: center
+          justify-content: space-between
+          transition: transform .4s cubic-bezier(.2,.81,.22,.83)
+          img
+            opacity: 0.6
+          span
+            color: $grey
+          &:hover
+            transform: scale(.92)
+        .subtitle
+          color: $grey
+          margin-top: 1.5rem
+          margin-bottom: 1rem
+          position: relative
+          display: flex
+          align-items: center
+          &:before
+            background: $blueText
+            border-radius: 50%
+            content: ''
+            display: inline-block
+            margin-right: .5rem
+            height: 4px
+            width: 4px
+        .listItems
+          display: flex
+          flex-direction: column
+          width: 100%
+          > span
+            font-size: .8rem
+            text-align: center
+            color: $grey
+          .listItem
+            margin-bottom: 2rem
+            display: flex
+            border-bottom: 1px solid rgba($grey,.5)
+            justify-content: space-between
+            &:focus-within
+              border-bottom: solid 1px rgba($blueText,.5)
+            &:last-child
+              margin-bottom: 1rem
+            input
+              border: none
+              flex-grow: 1
+            .toolItemOptions
+              display: flex
+              .toolItemOption
+                cursor: pointer
+                margin: 0 .2rem
+
+  
+    &.links
+      .toolItemName
+        background: $pinkGradient
+      .toolItemContent
+        .addLinkBtn
+          border: 2px solid $pinkLink
+        .subtitle
+          &::before
+            background: $pinkLink
+        .listItems
+          .listItem
+            &:focus-within
+              border-bottom: solid 1px rgba($pinkLink,.5)
+
+    &.texts
+      .toolItemName
+        background: $blueGradient
+    &.save
+      .toolItemName
+        background: $purpleGradient
+      .toolItemContent
+        .subtitle
+          &::before
+            background: $primaryColor
+        .nameInput
+          margin-bottom: 2rem
+          display: flex
+          border-bottom: 1px solid rgba($grey,.5)
+          &:focus-within
+            border-bottom: solid 1px rgba($primaryColor,.5)
+          input
+            border: none
+            flex-grow: 1
+        .saveTemplate
+          .saveBtn
+            width: 100%
+            padding: 0 1rem
+            border: 2px solid $primaryColor
+            border-radius: .6rem
+            margin: 1rem 0
+            height: 3rem
+            cursor: pointer
+            display: flex
+            align-items: center
+            justify-content: space-between
+            transition: transform .4s cubic-bezier(.2,.81,.22,.83)
+            img
+              opacity: 0.6
+            span
+              color: $grey
+            &:hover
+              transform: scale(.92)
+    
+    
+
+      

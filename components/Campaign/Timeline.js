@@ -94,6 +94,7 @@ const Timeline = () => {
     }
     if (preview.show) {
       dispatch({ type: "HIDE_PREVIEW" });
+    } else {
     }
   };
 
@@ -116,7 +117,6 @@ const Timeline = () => {
   };
 
   const handleContextMenu = (event, id) => {
-    console.log("id", id, event.pageX, event.pageY);
     event.preventDefault();
     const rect = ref.current.getBoundingClientRect();
     const x = event.clientX - rect.left;
@@ -134,7 +134,6 @@ const Timeline = () => {
     data.map((elem, i) => {
       elem.position = i;
     });
-    console.log("array", data);
     dispatch({ type: "SET_VIDEO", data });
     dispatch({ type: "CALC_VIDEOS_OFFSET", data });
 
