@@ -1,13 +1,33 @@
 .endScreen
-  align-content: center
-  display: grid
-  grid-gap: 10px
-  grid-auto-rows: max-content
+  display: block
   height: 100%
   position: relative
   width: 100%
   & > a
     margin: auto
+  .textSection
+    padding: 2rem
+    position: absolute
+    width: 100%
+    height: 100%
+    top: 0
+    left: 0
+    .textDraggable
+      cursor: grab
+      color:#fff
+      display: inline-block
+      position: absolute
+      font-size: 1.5rem
+    .linkDraggable
+      cursor: grab
+      color: #000000
+      background: #fff
+      box-shadow: 0px 1px 10px 0px #ffffff99
+      padding: .5rem 1rem
+      border-radius: .4rem
+      display: inline-block
+      position: absolute
+      font-size: 1.5rem
   .endScreenFooter
     display: grid
     grid-gap: 20px

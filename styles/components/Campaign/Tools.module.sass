@@ -20,20 +20,24 @@
   *
   */
 .toolList
-  background: #fff
+  background: $primaryColor
   border-radius: 8px
   display: grid
   grid-auto-rows: max-content
   grid-gap: 10px
   padding: 10px 0
-  width: 90px
+  width: 80px
+  box-shadow: 0px 5px 8px 0px rgba(0,0,0,0.3)
+
 
 .tool
   align-items: center
   cursor: pointer
   display: grid
   grid-gap: 4px
-  height: 60px
+  width: 70%
+  justify-self: center
+  height: 80px
   justify-items: center
   position: relative
   user-select: none
@@ -41,20 +45,15 @@
     align-self: flex-end
   p
     align-self: flex-start
-    color: $textColorOne
+    color: $white
     font-size: 12px
     font-weight: 500
 
 .toolSelected
-  background: rgba(232, 231, 254, 0.3)
-  &:before
-    background: $primaryColor
-    content: ''
-    height: 100%
-    left: 0
-    position: absolute
-    top: 0
-    width: 2px
+  // background: rgba(232, 231, 254, 0.3)
+  -webkit-box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.6)
+  box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.6)
+  border-radius: .6rem
 
 
 /**
@@ -68,7 +67,7 @@
 .toolBox
   background: #fff
   border-radius: 8px
-  width: 370px
+  width: 470px
   margin-left: 4px
   overflow: auto
   position: relative
@@ -94,11 +93,26 @@
 .toolSlider
   margin: 30px 5px
 
+.toolTitleSection
+  display: flex
+  flex-direction: row
+  align-items: center
+  margin-bottom: 1.5rem
+  .backArrow
+    cursor: pointer
+    transition: transform .4s cubic-bezier(.2,.81,.22,.83)
+    margin-right: .4rem
+    &:hover
+      transform: scale(1.2)
+    img
+      height: 1rem
+
+
 .toolTitle
   color: $textColorOne
-  font-size: 18px
+  font-size: 16px
   font-weight: 900
-  margin-bottom: 24px
+  // margin-bottom: 24px
   position: relative
   align-content: center
   &:after
@@ -109,6 +123,23 @@
     top: calc(100% + 5px)
     position: absolute
     width: 55px
+
+.createScreenBtn
+  border-radius: .6rem
+  padding: 0 1rem
+  background: $purpleGradient
+  display: flex
+  height: 3rem
+  align-items: center
+  justify-content: space-between
+  transition: transform .4s cubic-bezier(.2,.81,.22,.83)
+  cursor: pointer
+  img
+    filter: invert(1)
+  span
+    color: $white
+  &:hover
+    transform: scale(.92)
 
 .toolAdd
   align-items: center
@@ -218,15 +249,18 @@
 .toolLibraryItem
   align-items: center
   border-radius: 4px
-  display: grid
+  // display: grid
+  display: flex
+  justify-content: space-between
   gap: 2px 8px
-  grid-template-columns: 1fr repeat(2, 38px)
+  // grid-template-columns: 1fr repeat(2, 38px)
   img
     cursor: pointer
     width: 20px
 
 .toolLibraryItemName
   align-items: center
+  flex-grow: 1
   background: #F7F8FB
   border: 1px dashed transparent
   border-radius: 8px
@@ -265,9 +299,13 @@
   background: #e5e6da
   position: relative
 
+.toolLibraryItemOptions
+  display: flex
+
 .toolLibraryItemOption
   cursor: pointer
-  display: grid
+  display: flex
+  margin: 0 .5rem
   border-radius: 10%
   justify-items: center
   align-items: center
@@ -326,7 +364,7 @@
   align-content: center
   display: grid
   justify-items: center
-  padding: 0 20px
+  padding: 0 66px
   .toolRecordImage
     height: 36px
     margin-bottom: 5px
@@ -351,9 +389,27 @@
     border-radius: 5px
     padding: 5px
     border : 1px solid $textColorThree
+  .recordBtn
+    color: $white 
+    padding: 0 1rem
+    flex-grow: 1
+    display: flex
+    flex-direction: row
+    align-items: center
+    justify-content: center
+    background: $purpleGradient 
+    border-radius: .6rem
+    width: 100%
+    height: 3.1rem
+    margin: 1rem 0
+    transition: transform .4s cubic-bezier(.2,.81,.22,.83)
+    &:hover
+      cursor: pointer
+      transform: scale(.92)
   button, label
     margin-top: 10px
-    width: 150px
+    // width: 150px
+    width: 100%
 
 // Tool "Add video"
 .toolVideos
@@ -396,7 +452,7 @@
   width: 20px
 
 // Tool "Start Screen" & "End Screen"
-.toolHelloScreen, .toolEndScreen
+.toolHelloScreen, .toolEndScreen,.toolItems
   padding: 20px
   button
     margin-bottom: 10px
@@ -433,6 +489,22 @@
     margin-bottom: 0
   button
     width: 100%
+  .toolSection
+    display: flex
+    margin-top: 3rem
+    flex-direction: row
+    .toolLabel
+      margin-right: 1rem
+    .content
+      display: flex
+      flex-direction: column
+      align-items: center
+    .toolSlider
+      width: 70%
+    .placement
+      width: calc(70% - 1rem)
+
+
 
 .logo
   align-items: center
@@ -517,3 +589,256 @@
   border-radius: 8px !important
   box-shadow: none !important
   width: 100% !important
+
+
+// Tool Templates
+
+.toolItems
+  .toolItem
+    .toolItemName
+      padding: 0 1rem
+      flex-grow: 1
+      display: flex
+      flex-direction: row
+      align-items: center
+      justify-content: space-between
+      background: rgba($primaryColor ,.6 )  
+      border-radius: .6rem
+      width: 100%
+      height: 3.7rem
+      margin: 1rem 0
+      transition: transform .4s cubic-bezier(.2,.81,.22,.83)
+      &:hover
+        cursor: pointer
+        transform: scale(.92)
+      p
+        color: $white
+      img
+        height: 2.5rem
+        width:2.5rem
+    .toolItemContent
+      display: flex
+      padding: 1rem 
+      flex-grow: 1
+      flex-direction: column
+      justify-content: center
+      // align-items: center
+      background: $white
+      border-radius: .6rem
+      -webkit-box-shadow: 0px 7px 14px -8px rgba(0,0,0,0.6)
+      box-shadow: 0px 7px 14px -8px rgba(0,0,0,0.6)
+    &.background
+      .toolItemContent
+        padding: 0
+      .toolItemName
+        background: $darkBlueGradient
+    &.duration
+      .toolItemName
+        background: $mauveGradient
+    &.texts,&.links,&.save
+      .toolItemContent
+        .addTextBtn
+          background: $blueText
+        .addLinkBtn
+          background: $pinkLink
+        .addTextBtn,.addLinkBtn
+          width: 100%
+          height: 2.5rem
+          padding : 0.8rem 1rem
+          border-radius: .4rem
+          align-self: end
+          cursor: pointer
+          position: relative
+          display: flex
+          transition: transform .4s cubic-bezier(.2,.81,.22,.83)
+          img
+            position: absolute
+            left: 50%
+            top: 50%
+            transform: translate(-50%,-50%)
+          &:hover
+            transform: scale(.92)
+        .listItems
+          display: flex
+          flex-direction: column
+          width: 100%
+          > span
+            font-size: .8rem
+            text-align: center
+            color: $grey
+          .listItem
+            margin-bottom: 2rem
+            display: flex
+            flex-direction: column
+            .subtitle
+              font-size: .8rem
+              color: $textColorOne
+              &:nth-child(3)
+                margin-top: 1rem
+            >input
+              background: #F5F5F5
+              padding: .8rem 1rem
+              box-shadow: 0px 4px 6px 0px rgba(0,0,0,0.25)
+              border-radius: .4rem
+              text-align: center
+              background: transparent
+              border: none
+              flex-grow: 1
+              &:nth-child(4)
+                font-size: .8rem
+                padding: .4rem 1rem
+
+            .toolItemOptions
+              margin-top: .4rem
+              display: flex
+              .toolItemOption
+                -ms-user-select: none // edge | intermet explorer
+                -webkit-user-select: none // safari
+                user-select: none
+                color: $white
+                font-weight: 700
+                padding: .2rem 0
+                justify-content: center
+                display: flex
+                width:33%
+                border-radius: 1rem
+                cursor: pointer
+                margin: .3rem .2rem
+                transition: background .2s ease
+                img
+                  display: none
+                &:last-child
+                  background: #b3b3b3
+                  &:hover
+                    background: #c5c5c5
+            .toolItemOptionContent
+              .styleOption
+                >div
+                  display: flex
+                  flex-direction: row
+                  margin-top: 3rem
+                .subtitle
+                  margin-right: 1rem
+                .content
+                  flex-grow: 1
+                .styles
+                  .content
+                    display: flex
+                    flex-wrap: wrap
+                  .presetBtn
+                    cursor: pointer
+                    border-radius: .4rem
+                    padding: .2rem .4rem
+                    box-shadow: 0px 3px 8px 0px rgba(0,0,0,0.4)
+                    margin: 0 .4rem
+                    margin-bottom: 1rem
+                    display: flex
+                    &.selected
+                      color: $white
+                      background: $blueText
+                .variables
+                  margin-top: 1rem
+                  >div
+                    width: 100%
+                    border: initial
+                    background: initial
+                  ul
+                    width: 100%
+                    border: initial
+                    background: initial
+                    li
+                      box-shadow: 0px 2px 6px 0px rgba(0,0,0,0.2)
+                      margin: .4rem 0
+                      border-radius: .4rem
+                      transition: transform .4s cubic-bezier(.2,.81,.22,.83)
+                      &:hover
+                        border: inherit
+                        transform: scale(.94)
+                      
+
+                .url
+                  margin-top: 1rem
+                  width: 100%
+                  >input
+                    text-align: center
+                    width: 100%
+                    border-radius: 1rem
+                    border: 1px solid $pinkLink
+                    padding: .2rem 1rem
+                    color: $textColorOne
+                
+  
+    &.links
+      .toolItemName
+        background: $pinkGradient
+      .toolItemContent
+        border:1px solid $pinkLink
+        .presetBtn
+          &.selected
+            background: $pinkLink!important
+      .toolItemOption
+        background: $pinkLink
+        &:hover
+          background: rgba($pinkLink, 0.7)
+    &.texts
+      .toolItemName
+        background: $blueGradient
+      .toolItemOption
+        background: $blueText
+        &:hover
+          background: rgba($blueText, 0.7)
+      .toolItemContent
+        border:1px solid $blueText
+      .presetBtn
+        border: 1px solid $blueText
+    &.save
+      .toolItemName
+        background: $purpleGradient
+      .toolItemContent
+        .subtitle
+          color: $grey
+          margin-top: 1.5rem
+          margin-bottom: 1rem
+          position: relative
+          display: flex
+          align-items: center
+          &::before
+            background: $primaryColor
+            border-radius: 50%
+            content: ''
+            display: inline-block
+            margin-right: .5rem
+            height: 4px
+            width: 4px
+        .nameInput
+          margin-bottom: 2rem
+          display: flex
+          border-bottom: 1px solid rgba($grey,.5)
+          &:focus-within
+            border-bottom: solid 1px rgba($primaryColor,.5)
+          input
+            border: none
+            flex-grow: 1
+        .saveTemplate
+          .saveBtn
+            width: 100%
+            padding: 0 1rem
+            border: 2px solid $primaryColor
+            border-radius: .6rem
+            margin: 1rem 0
+            height: 3rem
+            cursor: pointer
+            display: flex
+            align-items: center
+            justify-content: space-between
+            transition: transform .4s cubic-bezier(.2,.81,.22,.83)
+            img
+              opacity: 0.6
+            span
+              color: $grey
+            &:hover
+              transform: scale(.92)
+    
+    
+
+      

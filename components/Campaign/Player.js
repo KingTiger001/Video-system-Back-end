@@ -1,208 +1,353 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import { useVideoResize } from '@/hooks'
+import { getDataByType, useVideoResize } from "@/hooks";
 
-import dayjs from '@/plugins/dayjs'
+import dayjs from "@/plugins/dayjs";
 
-import EndScreen from '@/components/Campaign/EndScreen'
-import {defaultEndScreen, defaultHelloScreen} from '../../store/reducers/campaign'
-import HelloScreen from '@/components/Campaign/HelloScreen'
-import Logo from '@/components/Campaign/Logo'
+import EndScreen from "@/components/Campaign/EndScreen";
+import { defaultEndScreen } from "../../store/reducers/campaign";
 
-import styles from '@/styles/components/Campaign/Player.module.sass'
-import Placeholder from './Placeholder'
+import Logo from "@/components/Campaign/Logo";
+
+import styles from "@/styles/components/Campaign/Player.module.sass";
+import Placeholder from "./Placeholder";
+import Draggable from "react-draggable";
+import Overlays from "./Overlays";
 
 const Player = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const endScreen = useSelector(state => state.campaign.endScreen)
-  const duration = useSelector(state => state.campaign.duration)
-  const helloScreen = useSelector(state => state.campaign.helloScreen)
-  const isPlaying = useSelector(state => state.campaign.isPlaying)
-  const logo = useSelector(state => state.campaign.logo)
-  const preview = useSelector(state => state.campaign.preview)
-  const previewEndScreen = useSelector(state => state.campaign.previewEndScreen)
-  const previewHelloScreen = useSelector(state => state.campaign.previewHelloScreen)
-  const previewVideo = useSelector(state => state.campaign.previewVideo)
-  const progression = useSelector(state => state.campaign.progression)
-  const video = useSelector(state => state.campaign.video)
-  const videoSeeking = useSelector(state => state.campaign.videoSeeking)
-  const videoRef = useSelector(state => state.campaign.videoRef)
-  
-  const [resume, setResume] = useState(false)
+  const endScreen = useSelector((state) => state.campaign.endScreen);
+  const duration = useSelector((state) => state.campaign.duration);
+  const helloScreen = useSelector((state) => state.campaign.helloScreen);
+  const isPlaying = useSelector((state) => state.campaign.isPlaying);
+  const logo = useSelector((state) => state.campaign.logo);
+  const preview = useSelector((state) => state.campaign.preview);
 
-  useEffect(() => { 
-    setResume(preview.show || helloScreen.name || endScreen.name || video.url)
-  }, [preview.show, helloScreen, endScreen, video])
+  const previewVideo = useSelector((state) => state.campaign.previewVideo);
+  const progression = useSelector((state) => state.campaign.progression);
+  const contents = useSelector((state) => state.campaign.contents);
+  const videoSeeking = useSelector((state) => state.campaign.videoSeeking);
+  const previewEndScreen = useSelector(
+    (state) => state.campaign.previewEndScreen
+  );
 
-  const playerRef = useRef()
-  const { width: playerWidth } = useVideoResize({ ref: playerRef, autoWidth: true })
+  //
+  const videosRef = useSelector((state) => state.campaign.videosRef);
+  const currentVideo = useSelector((state) => state.campaign.currentVideo);
+  const videosOffset = useSelector((state) => state.campaign.videosOffset);
+  //
 
-  const videoRefCb = useCallback(node => {
-    const handleSeeking = () => dispatch({ type: 'SET_VIDEO_SEEKING', data: true })
-    const handlePlaying = () => dispatch({ type: 'SET_VIDEO_SEEKING', data: false })
-    
-    if (node !== null) {
-      dispatch({ type: 'SET_VIDEO_REF', data: node })
+  const [resume, setResume] = useState(false);
+  const [ref, setRef] = useState();
 
-      if (Object.keys(videoRef).length > 0) {
-        videoRef.addEventListener('playing', handlePlaying)
-        videoRef.addEventListener('seeking', handleSeeking)
-        const currentTime = (progression - helloScreen.duration) / 1000
-        videoRef.currentTime = currentTime > 0 ? currentTime : 0 
+  useEffect(() => {
+    setResume(
+      preview.show || helloScreen.name || endScreen.name || contents.url
+    );
+  }, [preview.show, helloScreen, endScreen, contents]);
+
+  const playerRef = useRef();
+  const { width: playerWidth } = useVideoResize({
+    ref: playerRef,
+    autoWidth: true,
+  });
+  const videoRefCb = useCallback(
+    (node) => {
+      if (node !== null) {
+        dispatch({ type: "SET_VIDEOS_REF", data: node });
+      } else {
       }
-    } else {
-      if (Object.keys(videoRef).length > 0) {
-        videoRef.removeEventListener('seeking', handleSeeking)
-        videoRef.removeEventListener('playing', handlePlaying)
+    },
+    [contents]
+  );
+
+  const getVideoIndex = (max) => {
+    let count = -1;
+    for (let i = 0; i <= max; i++) {
+      if (contents[i].type === "video") count++;
+    }
+    if (count < 0) count = 0;
+    return count;
+  };
+
+  useEffect(() => {
+    const handleSeeking = () =>
+      dispatch({ type: "SET_VIDEO_SEEKING", data: true });
+    const handlePlaying = () =>
+      dispatch({ type: "SET_VIDEO_SEEKING", data: false });
+
+    if (videosRef.length === contents.length) {
+      for (let i = 0; i < videosRef; i++) {
+        videosRef[i].addEventListener("playing", handlePlaying);
+        videosRef[i].addEventListener("seeking", handleSeeking);
       }
     }
-  }, [video, videoRef]);
+    return () => {
+      if (videosRef.length > 0)
+        for (let i = 0; i < videosRef; i++) {
+          videosRef[i].removeEventListener("seeking", handleSeeking);
+          videosRef[i].removeEventListener("playing", handlePlaying);
+        }
+    };
+  }, [videosRef]);
 
   useEffect(() => {
     let interval = null;
     if (
-      ((progression > helloScreen.duration) && (progression < (duration - endScreen.duration)) && videoSeeking && videoRef.currentTime !== 0)
-      || (!isPlaying && progression !== 0)
+      (videoSeeking &&
+        videosRef[getVideoIndex(currentVideo)].currentTime !== 0) ||
+      (!isPlaying && progression !== 0)
     ) {
-      clearInterval(interval)
+      clearInterval(interval);
     } else if (isPlaying) {
       interval = setInterval(() => {
-        dispatch({
-          type: 'SET_PROGRESSION',
-          data: progression + 50,
-        });
-      }, 50);
+        if (
+          videosRef[getVideoIndex(currentVideo)]?.readyState === 4 ||
+          contents[currentVideo].type !== "video"
+        ) {
+          dispatch({
+            type: "SET_PROGRESSION",
+            data: progression + 100,
+          });
+        }
+      }, 100);
     }
     if (progression >= duration) {
-      dispatch({ type: 'PAUSE' })
+      dispatch({ type: "PAUSE" });
       dispatch({
-        type: 'SET_PROGRESSION',
+        type: "SET_PROGRESSION",
+        data: 0,
+      });
+      dispatch({
+        type: "SET_CURRENT_VIDEO",
+        data: 0,
+      });
+      dispatch({
+        type: "SET_CURRENT_OVERLAY",
         data: 0,
       });
     }
     if (progression < 0) {
       dispatch({
-        type: 'SET_PROGRESSION',
+        type: "SET_PROGRESSION",
         data: 0,
       });
     }
 
-    if (videoRef.ended && !videoRef.paused) {
-      videoRef.currenTime = 0
-      videoRef.pause()
-    } else if (Object.keys(videoRef).length > 0 && !videoRef.paused && (progression < helloScreen.duration || progression > duration - endScreen.duration)) {
-      videoRef.currenTime = 0
-      videoRef.pause()
-    } else if (Object.keys(videoRef).length > 0 && videoRef.paused && progression > helloScreen.duration && progression < duration - endScreen.duration && isPlaying) {
-      videoRef.play()
+    for (let i = 0; i < contents.length; i++) {
+      if (
+        progression > videosOffset[i] * 1000 &&
+        progression <
+          (videosOffset[i] + getDataByType(contents[i]).duration) * 1000 &&
+        currentVideo !== i
+      ) {
+        if (contents[currentVideo].type === "video") {
+          videosRef[getVideoIndex(currentVideo)].pause();
+        }
+        dispatch({
+          type: "SET_CURRENT_VIDEO",
+          data: i,
+        });
+        dispatch({
+          type: "SET_CURRENT_OVERLAY",
+          data: i,
+        });
+      }
+    }
+    if (progression >= duration) {
+    } else if (!videosRef[getVideoIndex(currentVideo)]?.paused && !isPlaying) {
+      videosRef[getVideoIndex(currentVideo)]?.pause();
+    } else if (
+      contents[currentVideo].type === "video" &&
+      !videosRef[getVideoIndex(currentVideo)]?.paused &&
+      isPlaying &&
+      !videosRef[getVideoIndex(currentVideo)]?.ended
+    ) {
+      videosRef[getVideoIndex(currentVideo)]?.play();
+    } else if (
+      contents[currentVideo].type === "video" &&
+      videosRef.length > 0 &&
+      videosRef[getVideoIndex(currentVideo)]?.paused &&
+      isPlaying &&
+      !videosRef[getVideoIndex(currentVideo)]?.ended
+    ) {
+      videosRef[getVideoIndex(currentVideo)]?.play();
     }
     return () => clearInterval(interval);
-  }, [isPlaying, progression, videoSeeking])
+  }, [isPlaying, progression, videoSeeking]);
 
   const displayProgression = () => {
-    const t = dayjs.duration(progression)
-    const m = t.minutes()
-    const s = t.seconds()
-    const ms = t.milliseconds()
-    return `${m < 10 ? `0${m}` : m}:${s < 10 ? `0${s}` : s}:${ms < 100 ? '0' : ms.toString().substring(0, 1)}`
-  }
+    const t = dayjs.duration(progression);
+    const m = t.minutes();
+    const s = t.seconds();
+    const ms = t.milliseconds();
+    return `${m < 10 ? `0${m}` : m}:${s < 10 ? `0${s}` : s}:${
+      ms < 100 ? "0" : ms.toString().substring(0, 1)
+    }`;
+  };
+
+  const getPositionPercent = (x, y) => {
+    return {
+      x: (x / ref.offsetWidth) * 100,
+      y: (y / ref.offsetHeight) * 100,
+    };
+  };
+
+  const convertPercentToPx = ({ x, y }) => {
+    if (!playerRef) {
+      return;
+    } else {
+      return {
+        x: (x * playerRef.current?.offsetWidth) / 100,
+        y: (y * playerRef.current?.offsetHeight) / 100,
+      };
+    }
+  };
+
+  const handleStop = (_, info, id, data, type) => {
+    const obj = { ...data };
+
+    const index =
+      type === "text"
+        ? obj.texts.findIndex((text) => text._id === id)
+        : obj.links.findIndex((link) => link._id === id);
+    if (index < 0) return;
+    const { x, y } = getPositionPercent(info.x, info.y);
+    // const { x, y } = { x: info.x, y: info.y };
+    if (type === "text") {
+      obj.texts[index].position = { x, y };
+    } else {
+      obj.links[index].position = { x, y };
+    }
+
+    const indexArr = contents.findIndex((content) => content._id === data._id);
+    let array = contents.slice();
+    array[indexArr] = obj;
+    dispatch({
+      type: "SET_VIDEO",
+      data: array,
+    });
+  };
+
+  const renderVideos = () => {
+    if (contents.length > 0)
+      return contents.map(
+        (elem, i) =>
+          elem.type === "video" && (
+            <video
+              ref={videoRefCb}
+              key={elem.video.url}
+              src={elem.video.url}
+              height="100%"
+              width="100%"
+              style={{
+                display: currentVideo === i ? "block" : "none",
+              }}
+            />
+          )
+      );
+  };
+
+  const renderScreens = () => {
+    if (contents.length > 0) {
+      return contents.map(
+        (elem, i) =>
+          elem.type === "screen" &&
+          currentVideo === i && <EndScreen key={i} data={elem} />
+      );
+    }
+  };
 
   return (
     <div className={styles.player}>
-      <div
-        ref={playerRef}
-        className={styles.video}
-        style={{ width: playerWidth }}
-      >
-        {preview.show ? (
-          <div>
-            {preview.element === 'record' && (
-              <Placeholder  of={preview.element} />
-            )}
-            {preview.element === 'video' &&
-              (previewVideo.url || video.url ? (
-                <video
-                  key={previewVideo.url}
-                  controls
-                  height="100%"
-                  width="100%"
+      <div className={styles.playerWrap} style={{ width: playerWidth }}>
+        <div ref={playerRef} className={styles.video}>
+          {
+            preview.show ? (
+              <div>
+                {preview.element === "record" && (
+                  <Placeholder of={preview.element} />
+                )}
+                {preview.element === "video" &&
+                  (previewVideo.url || contents.url ? (
+                    <video
+                      key={previewVideo.url}
+                      controls
+                      height="100%"
+                      width="100%"
+                    >
+                      <source
+                        src={previewVideo.url || contents.url}
+                        type="video/mp4"
+                      />
+                      Sorry, your browser doesn't support embedded videos.
+                    </video>
+                  ) : (
+                    <Placeholder of={preview.element} />
+                  ))}
+
+                {preview.element === "endScreen" &&
+                  (Object.keys(previewEndScreen).length == 0 &&
+                  (JSON.stringify(endScreen) ===
+                    JSON.stringify(defaultEndScreen) ||
+                    !endScreen.name) ? (
+                    <Placeholder of={preview.element} />
+                  ) : (
+                    <EndScreen
+                      data={
+                        Object.keys(previewEndScreen).length > 0
+                          ? previewEndScreen
+                          : endScreen
+                      }
+                    />
+                  ))}
+
+                {logo && <Logo data={logo} />}
+                <div
+                  className={styles.overlaySection}
+                  style={{ pointerEvents: "none" }}
                 >
-                  <source
-                    src={previewVideo.url || video.url}
-                    type="video/mp4"
-                  />
-                  Sorry, your browser doesn't support embedded videos.
-                </video>
-              ) : (
-                <Placeholder of={preview.element} />
-              ))}
-            {preview.element === 'helloScreen' &&
-              (Object.keys(previewHelloScreen).length == 0 &&
-              (JSON.stringify(helloScreen) ===
-                JSON.stringify(defaultHelloScreen) ||
-                !helloScreen.name) ? (
-                  <Placeholder of={preview.element} />
-              ) : (
-                <HelloScreen
-                  data={
-                    Object.keys(previewHelloScreen).length > 0
-                      ? previewHelloScreen
-                      : helloScreen
-                  }
-                />
-              ))}
-            {preview.element === 'endScreen' &&
-              (Object.keys(previewEndScreen).length == 0 &&
-              (JSON.stringify(endScreen) === JSON.stringify(defaultEndScreen) ||
-                !endScreen.name) ? (
-                  <Placeholder of={preview.element} />
-              ) : (
-                <EndScreen
-                  data={
-                    Object.keys(previewEndScreen).length > 0
-                      ? previewEndScreen
-                      : endScreen
-                  }
-                />
-              ))}
-            {logo && <Logo data={logo}/>}
+                  <Overlays playerRef={playerRef.current} />
+                </div>
+              </div>
+            ) : null
+            // !resume && <Placeholder of="all" />
+          }
+          <div
+            ref={(newRef) => setRef(newRef)}
+            style={{ display: preview.show ? "none" : "block" }}
+          >
+            {/* || !resume */}
+            {renderVideos()}
+            {renderScreens()}
+            {!preview.show && (
+              <>
+                <Logo data={logo} />
+                <div className={styles.overlaySection}>
+                  <Overlays playerRef={playerRef.current} />
+                </div>
+              </>
+            )}
           </div>
-        ): !resume && <Placeholder of='all' />
-        }
-        <div style={{ display:( preview.show || !resume) ? 'none' : 'block' }}> 
-          <video
-            ref={videoRefCb}
-            key={video.url}
-            src={video.url}
-            height="100%"
-            width="100%"
-            style={{
-              display: progression > helloScreen.duration && progression < duration - endScreen.duration ? 'block' : 'none'
+        </div>
+        <div className={styles.controls}>
+          <p className={styles.progression}>{displayProgression()}</p>
+          <img
+            onClick={async () => {
+              dispatch({ type: "HIDE_PREVIEW" });
+              dispatch({ type: isPlaying ? "PAUSE" : "PLAY" });
+              setResume(true);
             }}
+            src={
+              isPlaying ? "/assets/video/pause.svg" : "/assets/video/play.svg"
+            }
           />
-          {progression < helloScreen.duration && <HelloScreen data={helloScreen} />}
-          {progression >= duration - endScreen.duration && <EndScreen data={endScreen} />}
-          <Logo data={logo} />
         </div>
       </div>
-      <div className={styles.controls}>
-        <img
-          onClick={async () => {
-            dispatch({ type: 'HIDE_PREVIEW' }) 
-            dispatch({ type: isPlaying ? 'PAUSE' : 'PLAY' })
-            setResume(true)
-            if (progression > helloScreen.duration && progression < duration - endScreen.duration) {
-              isPlaying ? videoRef.pause() : videoRef.play()
-            }
-          }}
-          src={isPlaying ? '/assets/video/pause.svg' : '/assets/video/play.svg'}
-        />
-        <p className={styles.progression}>{displayProgression()}</p>
-      </div>
     </div>
-  )
-}
+  );
+};
 
-export default Player
+export default Player;

@@ -1,92 +1,115 @@
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from "react-redux";
 
-import styles from '@/styles/components/Campaign/Tools.module.sass'
+import styles from "@/styles/components/Campaign/Tools.module.sass";
 
-import ToolEndScreen from './ToolEndScreen'
-import ToolHelloScreen from './ToolHelloScreen'
-import ToolLogo from './ToolLogo'
-import ToolRecord from './ToolRecord'
-import ToolVideos from './ToolVideos'
+import ToolEndScreen from "./ToolEndScreen";
+import ToolHelloScreen from "./ToolHelloScreen";
+import ToolLogo from "./ToolLogo";
+import ToolRecord from "./ToolRecord";
+import ToolVideos from "./ToolVideos";
+import ToolItems from "./ToolItems";
+import ToolScreens from "./ToolScreens";
 
 const Tools = ({ me }) => {
-  const dispatch = useDispatch()
-  const isPlaying = useSelector(state => state.campaign.isPlaying)
-  const tool = useSelector(state => state.campaign.tool)
-  const videoRef = useSelector(state => state.campaign.videoRef)
-  
+  const dispatch = useDispatch();
+  const isPlaying = useSelector((state) => state.campaign.isPlaying);
+  const tool = useSelector((state) => state.campaign.tool);
+  const videosRef = useSelector((state) => state.campaign.videosRef);
+  const contents = useSelector((state) => state.campaign.contents);
+  const currentVideo = useSelector((state) => state.campaign.currentVideo);
+
   const selectTool = (clickedTool, element) => {
-    dispatch({ type: 'SELECT_TOOL', data: tool === clickedTool ? 0 : clickedTool })
+    dispatch({
+      type: "SET_SELECTED_CONTENT",
+      data: {},
+    });
+    dispatch({
+      type: "SET_CURRENT_OVERLAY",
+      data: -1,
+    });
+    dispatch({
+      type: "SELECT_TOOL",
+      data: tool === clickedTool ? 0 : clickedTool,
+    });
     if (isPlaying) {
-      dispatch({ type: 'PAUSE' })
-      videoRef.pause()
+      dispatch({ type: "PAUSE" });
+      videosRef[getVideoIndex(currentVideo)]?.pause();
     }
-    if (clickedTool != 5) dispatch({ type: 'SHOW_PREVIEW', data: { element } })
-  }
+    if (!element) {
+      dispatch({ type: "HIDE_PREVIEW" });
+    } else if (clickedTool != 5) {
+      dispatch({ type: "SHOW_PREVIEW", data: { element } });
+    }
+  };
 
   const closeToolbox = () => {
-    dispatch({ type: 'SELECT_TOOL', data: 0 })
-    setTimeout(() => dispatch({ type: 'HIDE_PREVIEW' }), 0)
-  }
+    dispatch({ type: "SELECT_TOOL", data: 0 });
+    setTimeout(() => dispatch({ type: "HIDE_PREVIEW" }), 0);
+  };
+
+  const getVideoIndex = (max) => {
+    let count = -1;
+    for (let i = 0; i <= max; i++) {
+      if (contents[i].type === "video") count++;
+    }
+    return count;
+  };
 
   return (
     <div className={styles.tools}>
       <ul className={styles.toolList}>
         <li
-          className={`${styles.tool} ${tool === 1 ? styles.toolSelected : ''}`}
-          onClick={() => selectTool(1,'record')}
+          className={`${styles.tool} ${tool === 1 ? styles.toolSelected : ""}`}
+          onClick={() => selectTool(1, "record")}
         >
-          <img src="/assets/campaign/record.svg" />
+          <img src="/assets/campaign/record2.png" />
           <p>Record</p>
         </li>
         <li
-          className={`${styles.tool} ${tool === 2 ? styles.toolSelected : ''}`}
+          className={`${styles.tool} ${tool === 2 ? styles.toolSelected : ""}`}
           onClick={() => {
-            dispatch({ type: 'SET_PREVIEW_VIDEO', data: {} })
-            selectTool(2, 'video')
+            dispatch({ type: "SET_PREVIEW_VIDEO", data: {} });
+            selectTool(2, "video");
           }}
         >
-          <img src={`/assets/campaign/${tool === 2 ? 'toolVideosSelected' : 'toolVideos'}.svg`} />
+          <img src={`/assets/campaign/toolVideosWhite.svg`} />
           <p>Video</p>
         </li>
+
         <li
-          className={`${styles.tool} ${tool === 3 ? styles.toolSelected : ''}`}
-          onClick={() => selectTool(3, 'helloScreen')}
+          className={`${styles.tool} ${tool === 3 ? styles.toolSelected : ""}`}
+          onClick={() => selectTool(3, "endScreen")}
         >
-          <img src={`/assets/campaign/${tool === 3 ? 'toolHelloScreenSelected' : 'toolHelloScreen'}.svg`} />
-          <p>Start Screen</p>
+          <img src={`/assets/campaign/toolScreenWhite.svg`} />
+          <p>Screen</p>
         </li>
+
         <li
-          className={`${styles.tool} ${tool === 4 ? styles.toolSelected : ''}`}
-          onClick={() => selectTool(4, 'endScreen')}
+          className={`${styles.tool} ${tool === 5 ? styles.toolSelected : ""}`}
+          onClick={() => selectTool(5, "logo")}
         >
-          <img src={`/assets/campaign/${tool === 4 ? 'toolEndScreenSelected' : 'toolEndScreen'}.svg`} />
-          <p>End Screen</p>
-        </li>
-        <li
-          className={`${styles.tool} ${tool === 5 ? styles.toolSelected : ''}`}
-          onClick={() => selectTool(5, 'logo')}
-        >
-          <img src={`/assets/campaign/${tool === 5 ? 'toolLogoSelected' : 'toolLogo'}.svg`} />
-          <p>Add logo</p>
+          <img src={`/assets/campaign/toolLogoWhite.svg`} />
+          <p>Logo</p>
         </li>
       </ul>
-      {
-        tool !== 0 &&
+      {tool !== 0 && (
         <div className={styles.toolBox}>
-          <img
-            className={styles.close}
-            onClick={closeToolbox}
-            src="/assets/common/close.svg"
-          />
+          {tool === 1 && (
+            <img
+              className={styles.close}
+              onClick={closeToolbox}
+              src="/assets/common/close.svg"
+            />
+          )}
           <ToolRecord />
           <ToolVideos />
-          <ToolHelloScreen me={me} />
-          <ToolEndScreen me={me} />
+          {/* <ToolItems me={me} /> */}
+          <ToolScreens me={me} />
           <ToolLogo />
         </div>
-      }
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default Tools
+export default Tools;

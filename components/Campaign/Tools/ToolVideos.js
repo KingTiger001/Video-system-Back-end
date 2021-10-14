@@ -1,121 +1,315 @@
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from "react-redux";
 
-import { useDebounce } from '@/hooks'
+import { useDebounce } from "@/hooks";
 
-import { mainAPI } from '@/plugins/axios'
-import dayjs from '@/plugins/dayjs'
+import { mainAPI } from "@/plugins/axios";
+import dayjs from "@/plugins/dayjs";
 
-import styles from '@/styles/components/Campaign/Tools.module.sass'
+import styles from "@/styles/components/Campaign/Tools.module.sass";
+import { useState, useEffect } from "react";
+import ToolItemText from "./Items/toolItemText";
+import ToolItemLink from "./Items/toolItemLink";
 
 const ToolVideos = () => {
-  const dispatch = useDispatch()
-  const showPopup = (popupProps) => dispatch({ type: 'SHOW_POPUP', ...popupProps })
+  const dispatch = useDispatch();
 
-  const tool = useSelector(state => state.campaign.tool)
-  
-  const preview = useSelector(state => state.campaign.preview)
-  const previewVideo = useSelector(state => state.campaign.previewVideo)
-  const video = useSelector(state => state.campaign.video)
-  const videoList = useSelector(state => state.campaign.videoList)
+  const showPopup = (popupProps) =>
+    dispatch({ type: "SHOW_POPUP", ...popupProps });
+
+  const closeToolbox = () => {
+    dispatch({ type: "SELECT_TOOL", data: 0 });
+    setTimeout(() => {
+      dispatch({ type: "HIDE_PREVIEW" });
+      dispatch({
+        type: "SET_CURRENT_OVERLAY",
+        data: currentVideo,
+      });
+    }, 0);
+  };
+
+  const tool = useSelector((state) => state.campaign.tool);
+
+  const currentVideo = useSelector((state) => state.campaign.currentVideo);
+  const preview = useSelector((state) => state.campaign.preview);
+  const previewVideo = useSelector((state) => state.campaign.previewVideo);
+  const contents = useSelector((state) => state.campaign.contents);
+  const videoList = useSelector((state) => state.campaign.videoList);
+  const selectedContent = useSelector(
+    (state) => state.campaign.selectedContent
+  );
+
+  const [selectedVideos, setSelectedVideos] = useState([]);
+  const [unselectedVideos, setUnselectedVideos] = useState([]);
+  const [showEdit, setShowEdit] = useState(false);
+
+  useEffect(() => {
+    const selected = contents.filter((obj) => obj.type === "video");
+
+    const unSelected = videoList.filter(
+      (obj) =>
+        !contents.some(
+          (elem) => elem.type === "video" && elem.video._id === obj._id
+        )
+    );
+
+    setSelectedVideos(selected);
+    setUnselectedVideos(unSelected);
+  }, [contents, videoList]);
+
+  useEffect(() => {
+    if (Object.keys(selectedContent).length === 0) {
+      setShowEdit(false);
+    }
+  }, [selectedContent]);
+
+  const selectVideo = (elem) => {
+    dispatch({
+      type: "SET_SELECTED_CONTENT",
+      data: elem,
+    });
+    // dispatch({
+    //   type: "DISPLAY_ELEMENT",
+    //   data: "endScreen",
+    // });
+    // dispatch({
+    //   type: "SET_PREVIEW_END_SCREEN",
+    //   data: elem,
+    // });
+  };
 
   const displayDuration = (value) => {
     if (!value) {
-      return '00:00'
+      return "00:00";
     }
-    const t = dayjs.duration(parseInt(value, 10))
-    const m = t.minutes()
-    const s = t.seconds()
-    return `${m < 10 ? `0${m}` : m}:${s < 10 ? `0${s}` : s}`
-  }
+    const t = dayjs.duration(parseInt(value, 10));
+    const m = t.minutes();
+    const s = t.seconds();
+    return `${m < 10 ? `0${m}` : m}:${s < 10 ? `0${s}` : s}`;
+  };
 
   const updateProcessingVideos = async () => {
-    const processingVideos = videoList.filter(video => video.status === 'processing' || video.status === 'waiting')
+    const processingVideos = videoList.filter(
+      (video) => video.status === "processing" || video.status === "waiting"
+    );
     if (processingVideos.length > 0) {
-      const newVideosPromise = await Promise.all(processingVideos.map(video => mainAPI(`/videos/${video._id}`)))
-      const newVideos = newVideosPromise.flat().map(video => video.data)
+      const newVideosPromise = await Promise.all(
+        processingVideos.map((video) => mainAPI(`/videos/${video._id}`))
+      );
+      const newVideos = newVideosPromise.flat().map((video) => video.data);
       dispatch({
-        type: 'SET_VIDEO_LIST',
-        data: videoList.map(video => {
-          const videoProcessingFound = newVideos.find(newVideo => newVideo._id === video._id)
-          return videoProcessingFound || video
+        type: "SET_VIDEO_LIST",
+        data: videoList.map((video) => {
+          const videoProcessingFound = newVideos.find(
+            (newVideo) => newVideo._id === video._id
+          );
+          return videoProcessingFound || video;
         }),
-      })
+      });
     }
-  }
+  };
 
-  useDebounce(updateProcessingVideos, 3000, [videoList])
+  useDebounce(updateProcessingVideos, 3000, [videoList]);
 
-  return tool === 2 && (
+  const removeFromContents = (id) => {
+    const array = contents.filter((obj) => {
+      if (obj.type === "video") {
+        return obj.video._id !== id;
+      } else {
+        return obj;
+      }
+    });
+    array.map((elem, i) => {
+      elem.position = i;
+    });
+    return array;
+  };
+
+  const addToContents = (data) => {
+    const array = contents.slice();
+    array.push({
+      position: array.length,
+      type: "video",
+      video: data,
+      texts: [],
+      links: [],
+    });
+    return array;
+  };
+
+  const renderVideoItem = (vd) => (
     <div
-      className={styles.toolVideos}
-      onClick={() => {
-        if (!preview.show) {
-          dispatch({ type: 'SHOW_PREVIEW' })
-        }
-      }}
+      key={vd.video._id}
+      className={`${styles.toolLibraryItem} ${styles.videosItem} ${
+        contents.some(
+          (elem) => elem.type === "video" && elem.video._id === vd.video._id
+        )
+          ? styles.selected
+          : ""
+      }`}
     >
-      <p className={styles.toolTitle}>Videos</p>
-      <div className={styles.videosList}>
-        {
-          videoList.map(vd => 
+      <div
+        className={`${styles.toolLibraryItemName} ${
+          previewVideo.name === vd.video.name
+            ? styles.toolLibraryItemPreview
+            : ""
+        }`}
+        onClick={() => {
+          const index = contents.findIndex((content) => content._id === vd._id);
+          if (index !== -1)
+            dispatch({
+              type: "SET_CURRENT_OVERLAY",
+              data: index,
+            });
+          dispatch({ type: "SET_PREVIEW_VIDEO", data: vd.video });
+        }}
+      >
+        <p>{vd.video.name}</p>
+        {vd.video.status === "done" ? (
+          <p className={`${styles.videosItemStatus}`}>
+            {displayDuration(vd.video.metadata.duration * 1000)}
+          </p>
+        ) : (
+          <p
+            className={`${styles.videosItemStatus} ${styles[vd.video.status]}`}
+          >
+            {vd.video.status}...{" "}
+            {vd.video.status === "processing" && vd.video.statusProgress > 0
+              ? `${vd.video.statusProgress || 0}%`
+              : ""}
+          </p>
+        )}
+      </div>
+      <div className={styles.toolLibraryItemOptions}>
+        {contents.some(
+          (elem) => elem.type === "video" && elem.video._id === vd.video._id
+        ) && (
+          <div className={styles.toolLibraryItemOption}>
             <div
-              key={vd._id}
-              className={`${styles.toolLibraryItem} ${styles.videosItem} ${vd._id === video._id ? styles.selected : ''}`}
+              onClick={() => {
+                setShowEdit(true);
+                selectVideo(vd);
+              }}
             >
-              <div
-                className={`${styles.toolLibraryItemName} ${previewVideo.name === vd.name ? styles.toolLibraryItemPreview : ''}`}
-                onClick={() => dispatch({ type: 'SET_PREVIEW_VIDEO', data: vd })}
-              >
-                <p>{vd.name}</p>
-                { vd.status === 'done'
-                  ?
-                  <p className={`${styles.videosItemStatus}`}>{displayDuration(vd.metadata.duration * 1000)}</p>
-                  :
-                  <p className={`${styles.videosItemStatus} ${styles[vd.status]}`}>{vd.status}... {vd.status === 'processing' && vd.statusProgress > 0 ? `${vd.statusProgress || 0}%` : ''}</p>
-                }
-              </div>
-
-              <div className={styles.toolLibraryItemOption}>
-                {
-                  vd._id !== video._id &&
-                  <div
-                    onClick={() => {
-                      dispatch({ type: 'SET_VIDEO', data: vd })
-                      dispatch({ type: 'SET_PROGRESSION', data: 0 })
-                    }}
-                  >
-                    <img src="/assets/campaign/librarySelect.svg"/>
-                    <p>Select</p>
-                  </div>
-                }
-                {
-                  vd._id === video._id &&
-                  <div
-                    onClick={() => {
-                      dispatch({ type: 'SET_VIDEO', data: {} })
-                      dispatch({ type: 'SET_PROGRESSION', data: 0 })
-                    }}
-                  >
-                    <img src="/assets/campaign/libraryUnselect.svg"/>
-                    <p>Remove</p>
-                  </div>
-                }
-              </div>
-              <div
-                className={styles.toolLibraryItemOption}
-                onClick={() => showPopup({ display: 'DELETE_VIDEO', data: vd })}
-              >
-                <div>
-                  <img src="/assets/campaign/libraryDelete.svg" />
-                  <p>Delete</p>
-                </div>
-              </div>
+              <img src="/assets/campaign/libraryEdit.svg" />
+              <p>Edit</p>
             </div>
-          )
-        }
+          </div>
+        )}
+
+        <div className={styles.toolLibraryItemOption}>
+          {!contents.some(
+            (elem) => elem.type === "video" && elem.video._id === vd.video._id
+          ) && (
+            <div
+              onClick={() => {
+                const data = addToContents(vd.video);
+                dispatch({ type: "SET_VIDEO", data });
+
+                dispatch({ type: "CALC_VIDEOS_OFFSET", data });
+                dispatch({ type: "SET_VIDEOS_REF" });
+                dispatch({ type: "SET_PROGRESSION", data: 0 });
+                dispatch({
+                  type: "SET_CURRENT_VIDEO",
+                  data: 0,
+                });
+              }}
+            >
+              <img src="/assets/campaign/librarySelect.svg" />
+              <p>Select</p>
+            </div>
+          )}
+          {contents.some(
+            (elem) => elem.type === "video" && elem.video._id === vd.video._id
+          ) && (
+            <div
+              onClick={() => {
+                const data = removeFromContents(vd.video._id);
+                dispatch({ type: "SET_VIDEO", data });
+
+                dispatch({ type: "CALC_VIDEOS_OFFSET", data });
+                dispatch({ type: "SET_VIDEOS_REF" });
+                dispatch({ type: "SET_PROGRESSION", data: 0 });
+                dispatch({
+                  type: "SET_CURRENT_VIDEO",
+                  data: 0,
+                });
+              }}
+            >
+              <img src="/assets/campaign/libraryUnselect.svg" />
+              <p>Remove</p>
+            </div>
+          )}
+        </div>
+        {!contents.some(
+          (elem) => elem.type === "video" && elem.video._id === vd.video._id
+        ) && (
+          <div
+            className={styles.toolLibraryItemOption}
+            onClick={() =>
+              showPopup({ display: "DELETE_VIDEO", data: vd.video })
+            }
+          >
+            <div>
+              <img src="/assets/campaign/libraryDelete.svg" />
+              <p>Delete</p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
-  )
-}
+  );
 
-export default ToolVideos
+  return (
+    tool === 2 && (
+      <div
+        className={styles.toolVideos}
+        onClick={() => {
+          if (!preview.show) {
+            dispatch({ type: "SHOW_PREVIEW" });
+          }
+        }}
+      >
+        {!showEdit ? (
+          <>
+            <span className={styles.toolTitleSection}>
+              <div onClick={closeToolbox} className={styles.backArrow}>
+                <img src="/assets/campaign/backArrow.svg" />{" "}
+              </div>
+              <p className={styles.toolTitle}>Videos</p>
+            </span>
+
+            <p style={{ marginTop: "14px" }} className={styles.toolSubtitle}>
+              Timeline
+            </p>
+            <div className={styles.videosList}>
+              {selectedVideos.map((vd) => renderVideoItem(vd))}
+            </div>
+            <p className={styles.toolSubtitle}>Library</p>
+            <div className={styles.videosList}>
+              {unselectedVideos.map((vd) => renderVideoItem({ video: vd }))}
+            </div>
+          </>
+        ) : (
+          <div className={styles.toolSection}>
+            <span className={styles.toolTitleSection}>
+              <div
+                onClick={() => setShowEdit(false)}
+                className={styles.backArrow}
+              >
+                <img src="/assets/campaign/backArrow.svg" />{" "}
+              </div>
+              <p className={styles.toolTitle}>Edit</p>
+            </span>
+
+            <div className={styles.toolItems}>
+              <ToolItemText />
+              <ToolItemLink />
+            </div>
+          </div>
+        )}
+      </div>
+    )
+  );
+};
+
+export default ToolVideos;

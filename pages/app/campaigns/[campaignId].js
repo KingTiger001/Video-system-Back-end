@@ -10,7 +10,7 @@ import withAuthServerSideProps from "@/hocs/withAuthServerSideProps";
 
 import { initializeStore } from "@/store";
 
-import { mainAPI } from "@/plugins/axios";
+import { mainAPI, mediaAPI } from "@/plugins/axios";
 
 import Button from "@/components/Button";
 import PopupDeleteVideo from "@/components/Popups/PopupDeleteVideo";
@@ -22,6 +22,9 @@ import Preview from "@/components/Campaign/Preview";
 import Share from "@/components/Campaign/Share";
 
 import styles from "@/styles/pages/app/[campaignId].module.sass";
+
+// test
+import { resetServerContext } from "react-beautiful-dnd";
 
 const Campaign = ({ me }) => {
   const router = useRouter();
@@ -36,14 +39,8 @@ const Campaign = ({ me }) => {
   const helloScreen = useSelector((state) => state.campaign.helloScreen);
   const logo = useSelector((state) => state.campaign.logo);
   const name = useSelector((state) => state.campaign.name);
-  const preview = useSelector((state) => state.campaign.preview);
-  const timelineDraggable = useSelector(
-    (state) => state.campaign.timelineDraggable
-  );
-  const video = useSelector((state) => state.campaign.video);
-  const videoRef = useSelector((state) => state.campaign.videoRef);
 
-  const [inputNameWidth, setInputNameWidth] = useState(0);
+  const contents = useSelector((state) => state.campaign.contents);
   const [displayMenu, showMenu] = useState(false);
   const [displayPreview, showPreview] = useState(false);
   const [displayShare, showShare] = useState(false);
@@ -72,30 +69,32 @@ const Campaign = ({ me }) => {
         },
       });
     }
-    setInputNameWidth((name.length + 1) * 16);
   }, []);
 
   // Save campaign
   useEffect(() => {
     const saveCampaign = async () => {
-      await mainAPI.patch(`/campaigns/${router.query.campaignId}`, {
-        duration,
-        endScreen,
-        helloScreen,
-        logo,
-        name,
-        video: Object.keys(video).length > 0 ? video._id : null,
-      });
+      const res = await mainAPI
+        .patch(`/campaigns/${router.query.campaignId}`, {
+          duration,
+          endScreen,
+          helloScreen,
+          logo,
+          name,
+          contents: contents.length > 0 ? contents : [],
+        })
+        .catch((err) => console.log("err", err));
     };
     saveCampaign();
+
     dispatch({
       type: "HAS_CHANGES",
       data: false,
     });
-  }, [duration, endScreen, helloScreen, logo, name, video]);
+  }, [duration, endScreen, helloScreen, logo, name, contents]);
 
   const checkBeforeStartShare = () => {
-    if (Object.keys(video).length <= 0) {
+    if (Object.keys(contents).length <= 0) {
       return toast.error(
         "You need to add a video before sharing your campaign."
       );
@@ -111,27 +110,25 @@ const Campaign = ({ me }) => {
     });
   };
 
-  const seekTo = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const position = e.clientX - rect.left;
-    const progression = (position / ref.current.offsetWidth) * duration;
-    dispatch({ type: "SET_PROGRESSION", data: progression });
-    if (Object.keys(videoRef).length > 0) {
-      const currentTime = (progression - helloScreen.duration) / 1000;
-      videoRef.currentTime = currentTime > 0 ? currentTime : 0;
-    }
-    if (preview.show) {
-      dispatch({ type: "HIDE_PREVIEW" });
+  const onMerge = async () => {
+    try {
+      await mediaAPI.post("/mergeVideo", { contents: contents });
+    } catch (err) {
+      console.log("err", err);
+      // const code = err.response && err.response.data;
+      // if (code === "Upload.incorrectFiletype") {
+      //   setError(
+      //     "Incorrect file type, Please use an accepted format (webm, mp4, avi, mov)"
+      //   );
+      // }
+    } finally {
+      // setIsUploading(false);
+      // setUploadProgress(0);
     }
   };
 
   return (
-    <div
-      className={styles.dashboardCampaign}
-      onMouseUp={() => dispatch({ type: "TIMELINE_DRAGGABLE", data: false })}
-      onMouseMove={(e) => timelineDraggable && seekTo(e)}
-      ref={ref}
-    >
+    <div className={styles.dashboardCampaign} ref={ref}>
       <Head>
         <title>Edit my video campaign | FOMO</title>
       </Head>
@@ -230,12 +227,23 @@ const Campaign = ({ me }) => {
         <div className={styles.headerActions}>
           <Button
             color="white"
-            onClick={() => showPreview(true)}
+            // onClick={() => showPreview(true)}
+            // onClick={onMerge}
             textColor="dark"
+            style={{
+              boxShadow: "0px 7px 14px -8px rgba(0,0,0,0.5)",
+            }}
           >
             Preview mode
           </Button>
-          <Button onClick={checkBeforeStartShare}>Share</Button>
+          <Button
+            style={{
+              boxShadow: "0px 7px 14px -8px rgba(0,0,0,0.5)",
+            }}
+            onClick={checkBeforeStartShare}
+          >
+            Share
+          </Button>
         </div>
       </div>
 
@@ -281,7 +289,6 @@ export const getServerSideProps = withAuthServerSideProps(
     const { data: helloScreenList } = await mainAPI.get(
       "/users/me/helloScreens"
     );
-
     try {
       dispatch({
         type: "SET_VIDEO_LIST",
@@ -300,9 +307,11 @@ export const getServerSideProps = withAuthServerSideProps(
         data: campaign,
       });
       dispatch({ type: "CALC_DURATION" });
+      dispatch({ type: "CALC_VIDEOS_OFFSET", data: campaign.contents });
     } catch (err) {
       console.log(err);
     }
+    resetServerContext();
 
     return {
       initialReduxState: reduxStore.getState(),
