@@ -12,16 +12,24 @@ import ToolItemLink from "./Items/toolItemLink";
 
 const ToolVideos = () => {
   const dispatch = useDispatch();
+
   const showPopup = (popupProps) =>
     dispatch({ type: "SHOW_POPUP", ...popupProps });
 
   const closeToolbox = () => {
     dispatch({ type: "SELECT_TOOL", data: 0 });
-    setTimeout(() => dispatch({ type: "HIDE_PREVIEW" }), 0);
+    setTimeout(() => {
+      dispatch({ type: "HIDE_PREVIEW" });
+      dispatch({
+        type: "SET_CURRENT_OVERLAY",
+        data: currentVideo,
+      });
+    }, 0);
   };
 
   const tool = useSelector((state) => state.campaign.tool);
 
+  const currentVideo = useSelector((state) => state.campaign.currentVideo);
   const preview = useSelector((state) => state.campaign.preview);
   const previewVideo = useSelector((state) => state.campaign.previewVideo);
   const contents = useSelector((state) => state.campaign.contents);
@@ -55,11 +63,18 @@ const ToolVideos = () => {
   }, [selectedContent]);
 
   const selectVideo = (elem) => {
-    console.log("elem", elem);
     dispatch({
       type: "SET_SELECTED_CONTENT",
       data: elem,
     });
+    // dispatch({
+    //   type: "DISPLAY_ELEMENT",
+    //   data: "endScreen",
+    // });
+    // dispatch({
+    //   type: "SET_PREVIEW_END_SCREEN",
+    //   data: elem,
+    // });
   };
 
   const displayDuration = (value) => {
@@ -138,7 +153,15 @@ const ToolVideos = () => {
             ? styles.toolLibraryItemPreview
             : ""
         }`}
-        onClick={() => dispatch({ type: "SET_PREVIEW_VIDEO", data: vd.video })}
+        onClick={() => {
+          const index = contents.findIndex((content) => content._id === vd._id);
+          if (index !== -1)
+            dispatch({
+              type: "SET_CURRENT_OVERLAY",
+              data: index,
+            });
+          dispatch({ type: "SET_PREVIEW_VIDEO", data: vd.video });
+        }}
       >
         <p>{vd.video.name}</p>
         {vd.video.status === "done" ? (
@@ -181,6 +204,7 @@ const ToolVideos = () => {
               onClick={() => {
                 const data = addToContents(vd.video);
                 dispatch({ type: "SET_VIDEO", data });
+
                 dispatch({ type: "CALC_VIDEOS_OFFSET", data });
                 dispatch({ type: "SET_VIDEOS_REF" });
                 dispatch({ type: "SET_PROGRESSION", data: 0 });

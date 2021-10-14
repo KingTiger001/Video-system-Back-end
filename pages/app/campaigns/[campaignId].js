@@ -10,7 +10,7 @@ import withAuthServerSideProps from "@/hocs/withAuthServerSideProps";
 
 import { initializeStore } from "@/store";
 
-import { mainAPI } from "@/plugins/axios";
+import { mainAPI, mediaAPI } from "@/plugins/axios";
 
 import Button from "@/components/Button";
 import PopupDeleteVideo from "@/components/Popups/PopupDeleteVideo";
@@ -108,6 +108,23 @@ const Campaign = ({ me }) => {
       type: "SET_VIDEO_LIST",
       data,
     });
+  };
+
+  const onMerge = async () => {
+    try {
+      await mediaAPI.post("/mergeVideo", { contents: contents });
+    } catch (err) {
+      console.log("err", err);
+      // const code = err.response && err.response.data;
+      // if (code === "Upload.incorrectFiletype") {
+      //   setError(
+      //     "Incorrect file type, Please use an accepted format (webm, mp4, avi, mov)"
+      //   );
+      // }
+    } finally {
+      // setIsUploading(false);
+      // setUploadProgress(0);
+    }
   };
 
   return (
@@ -210,12 +227,23 @@ const Campaign = ({ me }) => {
         <div className={styles.headerActions}>
           <Button
             color="white"
-            onClick={() => showPreview(true)}
+            // onClick={() => showPreview(true)}
+            // onClick={onMerge}
             textColor="dark"
+            style={{
+              boxShadow: "0px 7px 14px -8px rgba(0,0,0,0.5)",
+            }}
           >
             Preview mode
           </Button>
-          <Button onClick={checkBeforeStartShare}>Share</Button>
+          <Button
+            style={{
+              boxShadow: "0px 7px 14px -8px rgba(0,0,0,0.5)",
+            }}
+            onClick={checkBeforeStartShare}
+          >
+            Share
+          </Button>
         </div>
       </div>
 

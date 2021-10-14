@@ -26,6 +26,7 @@
     "next": "^10.0.1",
     "nprogress": "^0.2.0",
     "prop-types": "^15.7.2",
+    "rc-ruler": "^0.1.1",
     "react": "^16.14.0",
     "react-beautiful-dnd": "^13.1.0",
     "react-beforeunload": "^2.4.0",

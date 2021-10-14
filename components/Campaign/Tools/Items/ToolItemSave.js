@@ -52,7 +52,6 @@ const ToolItemSave = () => {
   };
 
   const updateScreenInLibrary = async () => {
-    console.log("selectedContent", selectedContent);
     try {
       await mainAPI.patch(
         `/endScreens/${selectedContent._id}`,

@@ -104,6 +104,7 @@ const initialState = {
   videoRef: {},
   videosRef: [],
   currentVideo: 0,
+  currentOverlay: 0,
   videosOffset: [],
   videoSeeking: false,
   selectedContent: {},
@@ -298,6 +299,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         currentVideo: action.data,
+      };
+    case "SET_CURRENT_OVERLAY":
+      return {
+        ...state,
+        currentOverlay: action.data,
       };
     case "CALC_VIDEOS_OFFSET":
       const videosOffset = [];

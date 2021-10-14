@@ -24,6 +24,10 @@ const Tools = ({ me }) => {
       data: {},
     });
     dispatch({
+      type: "SET_CURRENT_OVERLAY",
+      data: -1,
+    });
+    dispatch({
       type: "SELECT_TOOL",
       data: tool === clickedTool ? 0 : clickedTool,
     });
@@ -72,7 +76,6 @@ const Tools = ({ me }) => {
           <p>Video</p>
         </li>
 
-        {/* need to enable */}
         <li
           className={`${styles.tool} ${tool === 3 ? styles.toolSelected : ""}`}
           onClick={() => selectTool(3, "endScreen")}
@@ -81,19 +84,6 @@ const Tools = ({ me }) => {
           <p>Screen</p>
         </li>
 
-        {/*  */}
-
-        {/* <li
-          className={`${styles.tool} ${tool === 4 ? styles.toolSelected : ""}`}
-          onClick={() => selectTool(4, "endScreen")}
-        >
-          <img
-            src={`/assets/campaign/${
-              tool === 4 ? "toolEndScreenSelected" : "toolEndScreen"
-            }.svg`}
-          />
-          <p>End Screen</p>
-        </li> */}
         <li
           className={`${styles.tool} ${tool === 5 ? styles.toolSelected : ""}`}
           onClick={() => selectTool(5, "logo")}
@@ -115,7 +105,6 @@ const Tools = ({ me }) => {
           <ToolVideos />
           {/* <ToolItems me={me} /> */}
           <ToolScreens me={me} />
-          {/* <ToolEndScreen me={me} /> */}
           <ToolLogo />
         </div>
       )}

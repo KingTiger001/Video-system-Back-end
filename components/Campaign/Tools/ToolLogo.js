@@ -108,31 +108,33 @@ const ToolLogo = () => {
         </span>
         <div className={styles.toolSection}>
           <label className={styles.toolLabel}>Add Logo</label>
-          <label className={styles.logo} htmlFor="logo">
-            {!uploadloading && !logo.value && (
-              <img className={styles.add} src="/assets/common/add.svg" />
+          <div className={styles.content}>
+            <label className={styles.logo} htmlFor="logo">
+              {!uploadloading && !logo.value && (
+                <img className={styles.add} src="/assets/common/add.svg" />
+              )}
+              {uploadloading && (
+                <div className={styles.loading}>
+                  <img src="/assets/common/loader.svg" />
+                </div>
+              )}
+              {logo.value && <img className={styles.image} src={logo.value} />}
+            </label>
+            <input
+              accept="image/*"
+              id="logo"
+              type="file"
+              onChange={(e) => uploadLogo(e.target.files[0])}
+              className={styles.logoInput}
+            />
+            {logo.value && (
+              <p className={styles.logoRemove} onClick={removeLogo}>
+                Remove
+              </p>
             )}
-            {uploadloading && (
-              <div className={styles.loading}>
-                <img src="/assets/common/loader.svg" />
-              </div>
-            )}
-            {logo.value && <img className={styles.image} src={logo.value} />}
-          </label>
-          <input
-            accept="image/*"
-            id="logo"
-            type="file"
-            onChange={(e) => uploadLogo(e.target.files[0])}
-            className={styles.logoInput}
-          />
-          {logo.value && (
-            <p className={styles.logoRemove} onClick={removeLogo}>
-              Remove
-            </p>
-          )}
-          {/* <p className={styles.logoRecoSize}>(Recommended size: 300x300)</p> */}
-          {error && <p className={styles.error}>{error}</p>}
+            {/* <p className={styles.logoRecoSize}>(Recommended size: 300x300)</p> */}
+            {error && <p className={styles.error}>{error}</p>}
+          </div>
         </div>
         <div className={styles.toolSection}>
           <label className={styles.toolLabel}>Size</label>
@@ -141,6 +143,8 @@ const ToolLogo = () => {
               <InputRange
                 maxValue={100}
                 minValue={0}
+                step={10}
+                formatLabel={(value) => value / 10}
                 value={logo.size}
                 onChange={(value) => {
                   dispatch({
@@ -155,7 +159,7 @@ const ToolLogo = () => {
           </div>
         </div>
         <div className={styles.toolSection}>
-          <label className={styles.toolLabel}>Logo Placement</label>
+          <label className={styles.toolLabel}>Position</label>
           <div className={styles.placement}>
             <div
               className={`${

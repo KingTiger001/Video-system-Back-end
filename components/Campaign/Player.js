@@ -13,6 +13,7 @@ import Logo from "@/components/Campaign/Logo";
 import styles from "@/styles/components/Campaign/Player.module.sass";
 import Placeholder from "./Placeholder";
 import Draggable from "react-draggable";
+import Overlays from "./Overlays";
 
 const Player = () => {
   const dispatch = useDispatch();
@@ -123,6 +124,10 @@ const Player = () => {
         type: "SET_CURRENT_VIDEO",
         data: 0,
       });
+      dispatch({
+        type: "SET_CURRENT_OVERLAY",
+        data: 0,
+      });
     }
     if (progression < 0) {
       dispatch({
@@ -143,6 +148,10 @@ const Player = () => {
         }
         dispatch({
           type: "SET_CURRENT_VIDEO",
+          data: i,
+        });
+        dispatch({
+          type: "SET_CURRENT_OVERLAY",
           data: i,
         });
       }
@@ -222,69 +231,21 @@ const Player = () => {
     });
   };
 
-  const renderText = (text, data) => {
-    if (ref !== undefined)
-      return (
-        <Draggable
-          key={text._id}
-          bounds={"parent"}
-          defaultPosition={convertPercentToPx(text.position)}
-          position={null}
-          grid={[25, 25]}
-          scale={1}
-          onStop={(event, info) =>
-            handleStop(event, info, text._id, data, "text")
-          }
-        >
-          <p className={styles.textDraggable}>{text.value}</p>
-        </Draggable>
-      );
-  };
-
-  const renderLink = (link, data) => {
-    if (ref !== undefined)
-      return (
-        <Draggable
-          key={link._id}
-          bounds={"parent"}
-          defaultPosition={convertPercentToPx(link.position)}
-          // position={link.position}
-          position={null}
-          grid={[25, 25]}
-          scale={1}
-          onStop={(event, info) =>
-            handleStop(event, info, link._id, data, "link")
-          }
-        >
-          <p className={styles.linkDraggable}>{link.value}</p>
-        </Draggable>
-      );
-  };
-
   const renderVideos = () => {
     if (contents.length > 0)
       return contents.map(
         (elem, i) =>
           elem.type === "video" && (
-            <React.Fragment key={elem._id}>
-              {currentVideo === i && (
-                <div className={styles.textSection}>
-                  {elem.texts.map((text) => renderText(text, elem))}
-                  {elem.links.map((link) => renderLink(link, elem))}
-                </div>
-              )}
-              <video
-                ref={videoRefCb}
-                key={elem.video.url}
-                src={elem.video.url}
-                height="100%"
-                width="100%"
-                // onTimeUpdate={handleOnTimeUpdate}
-                style={{
-                  display: currentVideo === i ? "block" : "none",
-                }}
-              />
-            </React.Fragment>
+            <video
+              ref={videoRefCb}
+              key={elem.video.url}
+              src={elem.video.url}
+              height="100%"
+              width="100%"
+              style={{
+                display: currentVideo === i ? "block" : "none",
+              }}
+            />
           )
       );
   };
@@ -301,77 +262,89 @@ const Player = () => {
 
   return (
     <div className={styles.player}>
-      <div
-        ref={playerRef}
-        className={styles.video}
-        style={{ width: playerWidth }}
-      >
-        {
-          preview.show ? (
-            <div>
-              {preview.element === "record" && (
-                <Placeholder of={preview.element} />
-              )}
-              {preview.element === "video" &&
-                (previewVideo.url || contents.url ? (
-                  <video
-                    key={previewVideo.url}
-                    controls
-                    height="100%"
-                    width="100%"
-                  >
-                    <source
-                      src={previewVideo.url || contents.url}
-                      type="video/mp4"
+      <div className={styles.playerWrap} style={{ width: playerWidth }}>
+        <div ref={playerRef} className={styles.video}>
+          {
+            preview.show ? (
+              <div>
+                {preview.element === "record" && (
+                  <Placeholder of={preview.element} />
+                )}
+                {preview.element === "video" &&
+                  (previewVideo.url || contents.url ? (
+                    <video
+                      key={previewVideo.url}
+                      controls
+                      height="100%"
+                      width="100%"
+                    >
+                      <source
+                        src={previewVideo.url || contents.url}
+                        type="video/mp4"
+                      />
+                      Sorry, your browser doesn't support embedded videos.
+                    </video>
+                  ) : (
+                    <Placeholder of={preview.element} />
+                  ))}
+
+                {preview.element === "endScreen" &&
+                  (Object.keys(previewEndScreen).length == 0 &&
+                  (JSON.stringify(endScreen) ===
+                    JSON.stringify(defaultEndScreen) ||
+                    !endScreen.name) ? (
+                    <Placeholder of={preview.element} />
+                  ) : (
+                    <EndScreen
+                      data={
+                        Object.keys(previewEndScreen).length > 0
+                          ? previewEndScreen
+                          : endScreen
+                      }
                     />
-                    Sorry, your browser doesn't support embedded videos.
-                  </video>
-                ) : (
-                  <Placeholder of={preview.element} />
-                ))}
+                  ))}
 
-              {preview.element === "endScreen" &&
-                (Object.keys(previewEndScreen).length == 0 &&
-                (JSON.stringify(endScreen) ===
-                  JSON.stringify(defaultEndScreen) ||
-                  !endScreen.name) ? (
-                  <Placeholder of={preview.element} />
-                ) : (
-                  <EndScreen
-                    data={
-                      Object.keys(previewEndScreen).length > 0
-                        ? previewEndScreen
-                        : endScreen
-                    }
-                  />
-                ))}
-
-              {logo && <Logo data={logo} />}
-            </div>
-          ) : null
-          // !resume && <Placeholder of="all" />
-        }
-        <div
-          ref={(newRef) => setRef(newRef)}
-          style={{ display: preview.show ? "none" : "block" }}
-        >
-          {" "}
-          {/* || !resume */}
-          {renderVideos()}
-          {renderScreens()}
-          <Logo data={logo} />
+                {logo && <Logo data={logo} />}
+                <div
+                  className={styles.overlaySection}
+                  style={{ pointerEvents: "none" }}
+                >
+                  <Overlays playerRef={playerRef.current} />
+                </div>
+              </div>
+            ) : null
+            // !resume && <Placeholder of="all" />
+          }
+          <div
+            ref={(newRef) => setRef(newRef)}
+            style={{ display: preview.show ? "none" : "block" }}
+          >
+            {/* || !resume */}
+            {renderVideos()}
+            {renderScreens()}
+            {!preview.show && (
+              <>
+                <Logo data={logo} />
+                <div className={styles.overlaySection}>
+                  <Overlays playerRef={playerRef.current} />
+                </div>
+              </>
+            )}
+          </div>
         </div>
-      </div>
-      <div className={styles.controls}>
-        <img
-          onClick={async () => {
-            dispatch({ type: "HIDE_PREVIEW" });
-            dispatch({ type: isPlaying ? "PAUSE" : "PLAY" });
-            setResume(true);
-          }}
-          src={isPlaying ? "/assets/video/pause.svg" : "/assets/video/play.svg"}
-        />
-        <p className={styles.progression}>{displayProgression()}</p>
+        <div className={styles.controls}>
+          <p className={styles.progression}>{displayProgression()}</p>
+          <img
+            onClick={async () => {
+              dispatch({ type: "HIDE_PREVIEW" });
+              dispatch({ type: isPlaying ? "PAUSE" : "PLAY" });
+              setResume(true);
+            }}
+            src={
+              isPlaying ? "/assets/video/pause.svg" : "/assets/video/play.svg"
+            }
+          />
+        </div>
       </div>
     </div>
   );

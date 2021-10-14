@@ -212,7 +212,6 @@ const ToolTemplate = ({ me }) => {
               </div>
 
               {/*  */}
-              {console.log("endscreen.duration", endScreen.duration)}
               <div className={styles.toolSection}>
                 <label className={styles.toolLabel}>Duration</label>
                 <div className={styles.toolSlider}>
@@ -458,7 +457,6 @@ const ToolTemplate = ({ me }) => {
                           : styles.toolLibraryItemNotSelected
                       }`}
                       onClick={() => {
-                        console.log("select template", es);
                         dispatch({
                           type: "DISPLAY_ELEMENT",
                           data: "endScreen",
@@ -475,7 +473,6 @@ const ToolTemplate = ({ me }) => {
                       className={styles.toolLibraryItemEdit}
                       onClick={() => {
                         const data = addToContents(es);
-                        console.log("data", data);
                         dispatch({ type: "SET_VIDEO", data });
                         dispatch({ type: "CALC_VIDEOS_OFFSET", data });
                         dispatch({

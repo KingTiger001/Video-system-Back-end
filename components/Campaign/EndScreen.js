@@ -125,7 +125,15 @@ const EndScreen = ({ contact, data = {} }) => {
           scale={1}
           onStop={(event, info) => handleStop(event, info, text._id, "text")}
         >
-          <p className={styles.textDraggable}>{text.value}</p>
+          <p
+            style={{
+              fontSize: `${text.fontSize ? text.fontSize : 1}rem`,
+              color: `${text.color ? text.color : "#fff"}`,
+            }}
+            className={styles.textDraggable}
+          >
+            {text.value}
+          </p>
         </Draggable>
       );
   };
@@ -157,8 +165,8 @@ const EndScreen = ({ contact, data = {} }) => {
         style={{ background: data.screen.background.color }}
       >
         <div className={styles.textSection}>
-          {data.texts.map(renderText)}
-          {data.links.map(renderLink)}
+          {/* {data.texts.map(renderText)}
+          {data.links.map(renderLink)} */}
         </div>
 
         {/* { data.title.value &&

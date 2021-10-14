@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useCallback, useEffect, useRef, useState } from "react";
-
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 import styles from "@/styles/components/Campaign/Timeline.module.sass";
@@ -88,6 +87,10 @@ const Timeline = () => {
               type: "SET_CURRENT_VIDEO",
               data: i,
             });
+            dispatch({
+              type: "SET_CURRENT_OVERLAY",
+              data: i,
+            });
           }
         }
       }
@@ -141,6 +144,10 @@ const Timeline = () => {
     dispatch({ type: "SET_PROGRESSION", data: 0 });
     dispatch({
       type: "SET_CURRENT_VIDEO",
+      data: 0,
+    });
+    dispatch({
+      type: "SET_CURRENT_OVERLAY",
       data: 0,
     });
   };

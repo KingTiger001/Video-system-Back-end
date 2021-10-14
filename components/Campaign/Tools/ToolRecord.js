@@ -72,9 +72,15 @@ const ToolRecord = () => {
             </p>
           </div>
         ) : (
-          <Button onClick={() => showVideoRecorder(true)}>
+          <div
+            className={styles.recordBtn}
+            onClick={() => showVideoRecorder(true)}
+          >
             Start recording
-          </Button>
+          </div>
+          // <Button onClick={() => showVideoRecorder(true)}>
+          //   Start recording
+          // </Button>
         )}
 
         <ImportButton

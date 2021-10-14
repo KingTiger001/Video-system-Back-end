@@ -47,12 +47,10 @@ const ToolScreens = () => {
 
   useEffect(() => {
     const selected = contents.filter((obj) => obj.type === "screen");
-    console.log("endscreenList", endScreenList);
     const unSelected = endScreenList.filter(
       (obj) =>
         !contents.some((elem) => elem.type === "screen" && elem._id === obj._id)
     );
-    console.log("unselected", unSelected, selected);
     setSelectedScreens(selected);
     setUnselectedScreens(unSelected);
   }, [contents, endScreenList]);
@@ -174,6 +172,18 @@ const ToolScreens = () => {
           }`}
           onClick={() => {
             // dispatch({ type: "SET_PREVIEW_VIDEO", data: obj });
+
+            const index = contents.findIndex(
+              (content) => content._id === obj._id
+            );
+            dispatch({
+              type: "SET_CURRENT_VIDEO",
+              data: index,
+            });
+            dispatch({
+              type: "SET_CURRENT_OVERLAY",
+              data: index,
+            });
             dispatch({
               type: "DISPLAY_ELEMENT",
               data: "endScreen",
