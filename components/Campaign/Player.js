@@ -143,7 +143,7 @@ const Player = () => {
           (videosOffset[i] + getDataByType(contents[i]).duration) * 1000 &&
         currentVideo !== i
       ) {
-        if (contents[currentVideo].type === "video") {
+        if (contents[currentVideo]?.type === "video") {
           videosRef[getVideoIndex(currentVideo)].pause();
         }
         dispatch({
@@ -160,14 +160,14 @@ const Player = () => {
     } else if (!videosRef[getVideoIndex(currentVideo)]?.paused && !isPlaying) {
       videosRef[getVideoIndex(currentVideo)]?.pause();
     } else if (
-      contents[currentVideo].type === "video" &&
+      contents[currentVideo]?.type === "video" &&
       !videosRef[getVideoIndex(currentVideo)]?.paused &&
       isPlaying &&
       !videosRef[getVideoIndex(currentVideo)]?.ended
     ) {
       videosRef[getVideoIndex(currentVideo)]?.play();
     } else if (
-      contents[currentVideo].type === "video" &&
+      contents[currentVideo]?.type === "video" &&
       videosRef.length > 0 &&
       videosRef[getVideoIndex(currentVideo)]?.paused &&
       isPlaying &&
@@ -264,57 +264,58 @@ const Player = () => {
     <div className={styles.player}>
       <div className={styles.playerWrap} style={{ width: playerWidth }}>
         <div ref={playerRef} className={styles.video}>
-          {
-            preview.show ? (
-              <div>
-                {preview.element === "record" && (
-                  <Placeholder of={preview.element} />
-                )}
-                {preview.element === "video" &&
-                  (previewVideo.url || contents.url ? (
-                    <video
-                      key={previewVideo.url}
-                      controls
-                      height="100%"
-                      width="100%"
-                    >
-                      <source
-                        src={previewVideo.url || contents.url}
-                        type="video/mp4"
-                      />
-                      Sorry, your browser doesn't support embedded videos.
-                    </video>
-                  ) : (
-                    <Placeholder of={preview.element} />
-                  ))}
-
-                {preview.element === "endScreen" &&
-                  (Object.keys(previewEndScreen).length == 0 &&
-                  (JSON.stringify(endScreen) ===
-                    JSON.stringify(defaultEndScreen) ||
-                    !endScreen.name) ? (
-                    <Placeholder of={preview.element} />
-                  ) : (
-                    <EndScreen
-                      data={
-                        Object.keys(previewEndScreen).length > 0
-                          ? previewEndScreen
-                          : endScreen
-                      }
+          {preview.show ? (
+            <div>
+              {preview.element === "record" && (
+                <Placeholder of={preview.element} />
+              )}
+              {preview.element === "video" &&
+                (previewVideo.url || contents.url ? (
+                  <video
+                    key={previewVideo.url}
+                    controls
+                    height="100%"
+                    width="100%"
+                  >
+                    <source
+                      src={previewVideo.url || contents.url}
+                      type="video/mp4"
                     />
-                  ))}
+                    Sorry, your browser doesn't support embedded videos.
+                  </video>
+                ) : (
+                  <Placeholder of={preview.element} />
+                ))}
 
-                {logo && <Logo data={logo} />}
-                <div
-                  className={styles.overlaySection}
-                  style={{ pointerEvents: "none" }}
-                >
-                  <Overlays playerRef={playerRef.current} />
-                </div>
+              {preview.element === "endScreen" &&
+                (Object.keys(previewEndScreen).length == 0 &&
+                (JSON.stringify(endScreen) ===
+                  JSON.stringify(defaultEndScreen) ||
+                  !endScreen.name) ? (
+                  <Placeholder of={preview.element} />
+                ) : (
+                  <EndScreen
+                    data={
+                      Object.keys(previewEndScreen).length > 0
+                        ? previewEndScreen
+                        : endScreen
+                    }
+                  />
+                ))}
+              {preview.element === "logo" && (
+                <Placeholder of={preview.element} />
+              )}
+              {logo && <Logo data={logo} />}
+              <div
+                className={styles.overlaySection}
+                style={{ pointerEvents: "none" }}
+              >
+                <Overlays playerRef={playerRef.current} />
               </div>
-            ) : null
-            // !resume && <Placeholder of="all" />
-          }
+            </div>
+          ) : null}
+          {!resume && contents.length === 0 && <Placeholder of="all" />}
+
           <div
             ref={(newRef) => setRef(newRef)}
             style={{ display: preview.show ? "none" : "block" }}

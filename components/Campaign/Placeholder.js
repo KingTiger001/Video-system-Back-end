@@ -17,7 +17,7 @@ const tips = {
   endScreen: {
     image: "/assets/campaign/toolEndScreen.svg",
     description:
-      "Add an End Screen with your contacts  and a Call \n to Action button (website, calendar, ...)",
+      "Add a Screen with your contacts  and a Call \n to Action button (website, calendar, ...)",
   },
   logo: {
     image: "/assets/campaign/toolLogo.svg",

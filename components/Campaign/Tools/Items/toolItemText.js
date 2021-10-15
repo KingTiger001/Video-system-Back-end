@@ -136,7 +136,7 @@ const ToolItemText = () => {
       _id,
       value: "",
       fontSize: 1,
-      color: "#fff",
+      color: "#898989",
       preset: 0,
       position: { x: 50, y: 50 },
     });

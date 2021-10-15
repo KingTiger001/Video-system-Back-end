@@ -67,14 +67,13 @@ const ToolVideos = () => {
       type: "SET_SELECTED_CONTENT",
       data: elem,
     });
-    // dispatch({
-    //   type: "DISPLAY_ELEMENT",
-    //   data: "endScreen",
-    // });
-    // dispatch({
-    //   type: "SET_PREVIEW_END_SCREEN",
-    //   data: elem,
-    // });
+    const index = contents.findIndex((content) => content._id === elem._id);
+    if (index !== -1)
+      dispatch({
+        type: "SET_CURRENT_OVERLAY",
+        data: index,
+      });
+    dispatch({ type: "SET_PREVIEW_VIDEO", data: elem.video });
   };
 
   const displayDuration = (value) => {
