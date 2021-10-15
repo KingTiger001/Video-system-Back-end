@@ -82,7 +82,7 @@ const ToolItemText = () => {
       value: "",
       url: "",
       fontSize: 1,
-      color: "#fff",
+      color: "#898989",
       preset: 0,
       position: { x: 50, y: 50 },
     });
@@ -208,20 +208,19 @@ const ToolItemText = () => {
         </div>
       </div>
 
-      {link.preset === 0 ||
-        (link.preset === 4 && (
-          <div className={styles.color}>
-            <div className={styles.subtitle}>Color</div>
-            <div className={styles.content}>
-              <ChromePicker
-                className={styles.colorPicker}
-                disableAlpha={true}
-                color={link.color}
-                onChange={(color) => handleChangeColor(color.hex, link._id)}
-              />
-            </div>
+      {(link.preset === 0 || link.preset === 4) && (
+        <div className={styles.color}>
+          <div className={styles.subtitle}>Color</div>
+          <div className={styles.content}>
+            <ChromePicker
+              className={styles.colorPicker}
+              disableAlpha={true}
+              color={link.color}
+              onChange={(color) => handleChangeColor(color.hex, link._id)}
+            />
           </div>
-        ))}
+        </div>
+      )}
     </div>
   );
 

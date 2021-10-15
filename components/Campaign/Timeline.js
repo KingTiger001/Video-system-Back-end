@@ -79,7 +79,7 @@ const Timeline = () => {
           }
 
           if (i !== currentVideo) {
-            if (contents[currentVideo].type === "video") {
+            if (contents[currentVideo]?.type === "video") {
               videosRef[getVideoIndex(currentVideo)].currentTime = 0;
               videosRef[getVideoIndex(currentVideo)].pause();
             }
@@ -176,56 +176,48 @@ const Timeline = () => {
         }}
       />
 
-      {contents.length > 0 && (
-        <>
-          <DragDropContext onDragEnd={handleOnDragEnd}>
-            <Droppable direction="horizontal" droppableId="videoRecorded">
-              {(provided) => (
-                <div
-                  className={styles.videoRecorded}
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                >
-                  {contents.map((elem, i) => {
-                    const infos = getDataByType(elem);
+      <>
+        <DragDropContext onDragEnd={handleOnDragEnd}>
+          <Droppable direction="horizontal" droppableId="videoRecorded">
+            {(provided) => (
+              <div
+                className={styles.videoRecorded}
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+              >
+                {contents.map((elem, i) => {
+                  const infos = getDataByType(elem);
 
-                    return (
-                      <Draggable
-                        key={i}
-                        draggableId={`draggable-${i}`}
-                        index={i}
-                      >
-                        {(provided, snapshot) => (
-                          <div
-                            onContextMenu={(e) => handleContextMenu(e, elem)}
-                            className={styles[elem.type]}
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            style={{
-                              width: `${
-                                ((infos.duration * 1000) / duration) * 100
-                              }%`,
-                              ...provided.draggableProps.style,
-                            }}
-                          >
-                            <img src="/assets/campaign/toolVideos.svg" />
-                            <p>{infos.name}</p>
-                          </div>
-                        )}
-                      </Draggable>
-                    );
-                  })}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
-          </DragDropContext>
-          {show && (
-            <ContextMenu onDelete={onDelete} anchorPoint={anchorPoint} />
-          )}
-        </>
-      )}
+                  return (
+                    <Draggable key={i} draggableId={`draggable-${i}`} index={i}>
+                      {(provided, snapshot) => (
+                        <div
+                          onContextMenu={(e) => handleContextMenu(e, elem)}
+                          className={styles[elem.type]}
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          style={{
+                            width: `${
+                              ((infos.duration * 1000) / duration) * 100
+                            }%`,
+                            ...provided.draggableProps.style,
+                          }}
+                        >
+                          <img src="/assets/campaign/toolVideos.svg" />
+                          <p>{infos.name}</p>
+                        </div>
+                      )}
+                    </Draggable>
+                  );
+                })}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+        {show && <ContextMenu onDelete={onDelete} anchorPoint={anchorPoint} />}
+      </>
 
       {/* <TestDragnDrop /> */}
     </div>

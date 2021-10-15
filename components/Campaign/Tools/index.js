@@ -37,7 +37,7 @@ const Tools = ({ me }) => {
     }
     if (!element) {
       dispatch({ type: "HIDE_PREVIEW" });
-    } else if (clickedTool != 5) {
+    } else {
       dispatch({ type: "SHOW_PREVIEW", data: { element } });
     }
   };
