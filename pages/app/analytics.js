@@ -7,29 +7,32 @@ import withAuthServerSideProps from '@/hocs/withAuthServerSideProps'
 import { mainAPI } from '@/plugins/axios'
 
 import AppLayout from '@/layouts/AppLayout'
-import dayjs from '@/plugins/dayjs'
 
 import ListHeader from '@/components/ListHeader'
 import ListItem from '@/components/ListItem'
 import Stat from '@/components/Stat'
 
+
 import layoutStyles from '@/styles/layouts/App.module.sass'
 import styles from '@/styles/pages/app/analytics.module.sass'
+import Button from '@/components/Button';
 
-const Analytics = ({ initialAnalytics }) => {
+
+
+
+const Analytics = ({ initialAnalytics,
+  campaignsShared,
+  contactsCount= 0,
+  stats = {} }) => {
   const router = useRouter()
 
+  const [selectedCampaign, setSelectedCampaign] = useState(null);
+  const [campaignPreviewed, setCampaignPreviewed] = useState(null)
   const [analytics, setAnalytics] = useState(initialAnalytics)
-
-  useEffect(() => {
-    const campaignId = router.query.c
-    if (campaignId) {
-      const el = document.getElementById(campaignId)
-      if (el) {
-        el.scrollIntoView()
-      }
-    }
-  }, [])
+  const [selectedContacts, setSelectedContacts] = useState([])
+  const [detailedContacts, setDetailedContacts] = useState([])
+  const [selectAllChecked, setSelectAllChecked] = useState(false)
+  const [showByContact, setShowByContact] = useState(false)
 
   const displayDuration = (value) => {
     if (!value) {
@@ -41,71 +44,126 @@ const Analytics = ({ initialAnalytics }) => {
     return `${m}:${s < 10 ? `0${s}` : s}`
   }
 
-  const renderAnalytic = (analytic = {}) => (
-    <div
-      className={styles.analyticItem}
-      id={analytic.campaign ? analytic.campaign._id : ''}
-      key={analytic._id}
-    >
-      <ListItem
-        className={styles.analyticItemDetails}
-        empty={Object.keys(analytic).length > 0 ? false : true}
-        renderActions={() => (
-          <div>
-            <button
-              onClick={() => setAnalytics({
-                ...analytics,
-                [analytic._id]: {
-                  ...analytics[analytic._id],
-                  displayReport: !analytics[analytic._id].displayReport,
-                },
-              })}
-            >
-              {analytics[analytic._id].displayReport ? 'Close Analytics' : 'Analytics'}
-            </button>
-          </div>
+  
+  useEffect(() => {
+    const campaignId = router.query.c
+    if (campaignId) {
+      setSelectedCampaign(campaignsShared.find((c) => c._id === campaignId))
+      setAnalytics(Object.values(initialAnalytics)
+      .filter((a) => a.campaign._id === campaignId))
+    }
+  }, [])
+
+  const refreshSelectedCampaign = (campaign) => {
+    setSelectAllChecked(false)
+    setDetailedContacts([])
+    setSelectedContacts([])
+    if (campaign !== selectedCampaign) {
+      setAnalytics(Object.values(initialAnalytics)
+      .filter((a) => a.campaign._id === campaign._id))
+      setSelectedCampaign(campaign)
+    } else {
+      setAnalytics([])
+      setSelectedCampaign(null)
+    }
+  }
+
+  const selectOne = (e) => {
+    const contactId = e.target.value;
+    setSelectedContacts(
+    e.target.checked
+      ? [...selectedContacts, contactId]
+      : selectedContacts.filter((c) => c !== contactId)
+    );
+  };
+
+  const selectAll = (e) => {
+    selectAllChecked ? setSelectAllChecked(false) : setSelectAllChecked(true)
+    setSelectedContacts(
+      e.target.checked ? analytics.map((a) => a.sentTo._id) : []
+    );
+  };
+
+  const renderCampaigns = (campaign = {}) => {
+      
+    const empty= Object.keys(campaign).length > 0 ? false : true
+
+    return empty ? 
+      <Button
+        color={'white'}
+        type={'div'}
+        className={styles.unactiveCampaignItem}>
+          <p>no campaigns yet.</p>
+      </Button> :
+      <div>
+        <Button
+          color={'white'}
+          type={'div'}
+          className={`${campaign != selectedCampaign ? styles.unactiveCampaignItem : styles.activeCampaignItem}`}
+          onClick={() => refreshSelectedCampaign(campaign)}>
+            <p>{campaign && campaign.name}</p>
+        </Button>
+        
+        {campaignPreviewed && (
+          <Preview 
+            campaign={campaignPreviewed}
+            onClose={() => setCampaignPreviewed(null)} />
         )}
-        renderEmpty={() => (
-          <p>No analytics yet.</p>
-        )}
-      >
-        <p><b>#{analytic.campaign && analytic.campaign.uniqueId}</b></p>
-        <p>{analytic.campaign && analytic.campaign.name}</p>
-        <p>{analytic.campaign && dayjs(analytic.campaign.sentAt).format('MM/DD/YYYY')}</p>
-        <span>{analytic.sentTo && analytic.sentTo.length}</span>
-        <p>{analytic.campaign && displayDuration(analytic.campaign.duration)}</p>
+      </div>        
+    }
+        
+  const displayCampaignInformations = (campaign) => {
+      
+    return (
+      <ListItem 
+      className={styles.campaignInformations}
+      renderActions={() => (
+        <div>
+      <button
+      onClick={() => setShowByContact(false)}>General</button>
+      <button
+      onClick={() => setShowByContact(true)}>Contacts</button>
+      </div>)}>
+        <p className={styles.campaignName}>{campaign && campaign.name}</p>
       </ListItem>
-      { analytic.displayReport && 
-        <div className={styles.analyticItemStats}>
-          <div className={styles.analyticItemStatsText}>
+    )
+  }
+
+  const displayAnalyticsByContacts = (analytic) => {
+
+    const displayReport = detailedContacts.includes(analytic.sentTo._id);
+      
+    return (
+      <div className={styles.analyticItem}>
+        <ListItem
+        className={styles.analyticItemDetails}
+        renderActions={() => 
+        <button onClick={() => setDetailedContacts( displayReport ? 
+          detailedContacts.filter((c) => c !== analytic.sentTo._id)
+          : [...detailedContacts, analytic.sentTo._id])}>
+          {displayReport ? 'Close Details' : 'Details'}</button>}>
+          <input
+            type="checkbox"
+            value={analytic.sentTo._id}
+            onChange={selectOne}
+            checked={selectedContacts.includes(analytic.sentTo._id)}
+          />
+          <p>{analytic.sentTo && analytic.sentTo.email}</p>
+          <p>OPEN</p>
+          <p>100%</p>
+          <p>2/2</p>
+        </ListItem>
+        {displayReport && 
+          <ListItem 
+            className={styles.test}>
             <div>
-              <p>From</p>
-              <p>{analytic.campaign.share.from}</p>
+              <p>{analytic.sentTo && analytic.sentTo.firstName + ' ' + analytic.sentTo.lastName}</p>
+              <p>{analytic.sentTo && analytic.sentTo.company}</p>
             </div>
-            <div>
-              <p>Message</p>
-              <p>{analytic.campaign.share.message}</p>
-            </div>
-          </div>
-          <Stat
-            text="Video opening rate"
-            unit="%"
-            value={analytic.openingRate}
-          />
-          <Stat
-            text="Average view duration"
-            unit="s"
-            value={displayDuration(analytic.averageViewDuration * 1000)}
-          />
-          <Stat
-            text="Reply button click through rate"
-            unit="%"
-            value={analytic.replyRate}
-          />
-        </div>
-      }
-    </div>
-  )
+          </ListItem>}
+      </div>
+      )
+    }
 
   return (
     <AppLayout>
@@ -113,46 +171,76 @@ const Analytics = ({ initialAnalytics }) => {
         <title>Analytics | FOMO</title>
       </Head>
 
-      <div className={layoutStyles.container}>
-        <div className={layoutStyles.header}>
-          <div className={layoutStyles.headerTop}>
-            <h1 className={layoutStyles.headerTitle}>Analytics</h1>
+        <div className={styles.campaignsListContainer}>
+          <div className={layoutStyles.container}>
+            <div>
+              <div className={layoutStyles.header}>
+                  <div className={layoutStyles.headerTop}>
+                      <h1 className={layoutStyles.headerTitle}>Analytics</h1>
+                  </div>
+              </div>
+              <div className={styles.campaignsList}>
+              { Object.values(campaignsShared).length > 0 && Object.values(campaignsShared).map((campaign) => renderCampaigns(campaign)) }
+              { Object.values(campaignsShared).length <= 0 && renderCampaigns() }
+              </div>
+            </div>
           </div>
         </div>
-
-        <ListHeader className={styles.analyticsHeader}>
-          <p>ID</p>
-          <p>Video name</p>
-          <p>Sent date</p>
-          <p>Recipients</p>
-          <p>Duration</p>
-          <p>Actions</p>
-        </ListHeader>
-
-        <div className={styles.analyticsList}>
-          { Object.values(analytics).length > 0 && Object.values(analytics).map((analytic) => renderAnalytic(analytic)) }
-          { Object.values(analytics).length <= 0 && renderAnalytic() }
-        </div>
+        <div>
+        { !selectedCampaign && 
+        <div className={styles.stats}>
+        <p className={styles.statsTitle}>General analytics</p>
+        <Stat
+          text="Contacts"
+          value="0"
+          value={contactsCount}
+        />
+        <Stat
+          text="Video opening rate"
+          unit="%"
+          value={stats.openingRate}
+        />
+        <Stat
+          text="Average view duration"
+          unit="s"
+          value={displayDuration(stats.averageViewDuration * 1000)}
+        />
+        <Stat
+          text="Reply button click through rate"
+          unit="%"
+          value={stats.replyRate}
+        />
+      </div>}
       </div>
+      <div>
+        { selectedCampaign && 
+        displayCampaignInformations(selectedCampaign)}
+      </div>
+        
+        <div className={styles.analyticsByContact}>
+          {selectedCampaign && showByContact && 
+          <ListHeader className={styles.analyticsByContactHeader}>
+            <input type="checkbox" onChange={selectAll} checked={selectAllChecked}/>
+            <div><p>Email</p></div>
+            <div><p>State</p></div>
+            <div><p>Watch Time</p></div>
+            <div><p>CTA</p></div>
+          </ListHeader>}
+          {selectedCampaign && showByContact && analytics.map((a) => displayAnalyticsByContacts(a))}
+        </div>
+
+  
     </AppLayout>
   )
 }
 
 export default Analytics
 export const getServerSideProps = withAuthServerSideProps(async ({ query }) => {
+  const { data: campaignsShared } = await mainAPI.get(`/users/me/campaigns?status=shared`)
+  const { data: contactsCount } = await mainAPI.get('/users/me/contacts/count')
   let { data: initialAnalytics } = await mainAPI.get('/users/me/analytics')
-  const campaignId = query.c
-  initialAnalytics = initialAnalytics
-    .map(analytic => ({
-      [analytic._id]: {
-        ...analytic,
-        displayReport: campaignId && analytic.campaign && campaignId === analytic.campaign._id ? true : false,
-      }
-    }))
-    .reduce(function(result, current) {
-      return Object.assign(result, current);
-    }, {});
   return {
+    campaignsShared,
     initialAnalytics,
   }
 })
