@@ -1,28 +1,91 @@
-@import '../../_variables'
+@import '../../_variables.sass'
 
-.analyticsHeader, .analyticItemDetails
-  grid-template-columns: 100px repeat(5, 1fr)
+%campaignItem
+  border-radius: 4px
+  box-shadow: 0 5px 16px 0 rgba(24,59,86,0.03)
+  height: 40px
+  padding: 0 5px
+  p
+    color: $textColorOne
+    font-size: 14px
+    letter-spacing: 0.2px
+    text-align: left
+    overflow: auto
+  
+.campaignsListContainer
+  float: left
+  width: 25%
+  height: 100%
+  background-color: rgba($primaryColor, 0.1)
+  .campaignsList
+    display: grid
+    grid-gap: 15px
+    .unactiveCampaignItem
+      @extend %campaignItem
+      &:hover
+        outline: groove rgba($primaryColor, 0.5)
+    .activeCampaignItem
+      @extend %campaignItem
+      outline: solid $primaryColor
 
-.analyticsList
+.campaignInformations
   display: grid
-  grid-gap: 20px
+  grid-template-columns: 6fr 1fr 1fr
+  padding: 0 30px
+  width: 70%
+  margin: 30px
+  height: 50px
+  background-color: #fff
+  border-radius: 8px
+  box-shadow: 0 5px 16px 0 rgba(24,59,86,0.03)
+  align-items: center
+  .campaignName
+    color: $primaryColor
+    font-size: 24px
+    font-weight: 600
 
-.analyticItemStats
+.analyticsByContact
+  display: grid
+  grid-gap: 12px
+  padding: 0 30px
+  .analyticsByContactHeader
+    grid-template-columns: 1fr 2fr 1fr 1fr 1fr 1fr
+    p
+      color: $primaryColor
+  .analyticItemDetails
+    grid-template-columns: 1fr 2fr 1fr 1fr 1fr 1fr
+    box-shadow: 0 5px 16px 0 rgba(24,59,86,0.03)
+
+.test
+  background-color: #fff
+  box-shadow: 0 5px 16px 0 rgba(24,59,86,0.03)
+  width: 60%
+  color: $textColorOne
+    font-size: 14px
+
+.stats
   display: grid
   grid-gap: 10px
-  grid-template-columns: 30% repeat(3, 1fr)
-  padding: 10px 30px
+  grid-template-columns: repeat(4, 1fr)
+  grid-column-start: 1
+  grid-column-end: 13
+  margin: 20px
+  
+.statsTitle
+  color: $primaryColor
+  font-size: 24px
+  font-weight: 600
+  grid-row: 1
+  grid-column-start: 1
+  grid-column-end: 5
 
-.analyticItemStatsText
-  align-content: center
-  display: grid
-  grid-auto-rows: max-content
-  grid-gap: 20px
-  div
-    p
-      color: $textColorTwo
-      font-size: 12px
-      letter-spacing: 0.2px
-      &:first-child
-        font-weight: 600
-        margin-bottom: 5px
+.stat
+  grid-row: 2
+
+
+    
+
+
+    
+    
+

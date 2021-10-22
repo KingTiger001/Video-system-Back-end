@@ -210,12 +210,12 @@ export const getServerSideProps = withAuthServerSideProps(async () => {
   const { data: campaignsDraft } = await mainAPI.get(`/users/me/campaigns?status=draft&limit=${CAMPAIGNS_LIMIT}`)
   const { data: campaignsShared } = await mainAPI.get(`/users/me/campaigns?status=shared&limit=${CAMPAIGNS_LIMIT}`)
   const { data: contactsCount } = await mainAPI.get('/users/me/contacts/count')
-  const { data: stats } = await mainAPI.get('/users/me/analytics/stats')
-
+/*   const { data: stats } = await mainAPI.get('/users/me/analytics/stats')
+ */
   return {
     campaignsDraft,
     campaignsShared,
     contactsCount,
-    stats
+    /* stats */
   }
 })
