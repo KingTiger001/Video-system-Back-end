@@ -11,8 +11,7 @@ const Timeline = () => {
   const dispatch = useDispatch();
 
   const duration = useSelector((state) => state.campaign.duration);
-  const endScreen = useSelector((state) => state.campaign.endScreen);
-  const helloScreen = useSelector((state) => state.campaign.helloScreen);
+
   const preview = useSelector((state) => state.campaign.preview);
   const progression = useSelector((state) => state.campaign.progression);
   const timelineDraggable = useSelector(
@@ -72,8 +71,7 @@ const Timeline = () => {
             (videosOffset[i] + getDataByType(contents[i]).duration) * 1000
         ) {
           if (contents[i].type === "video") {
-            const currentTime =
-              (progression - helloScreen.duration) / 1000 - videosOffset[i];
+            const currentTime = progression / 1000 - videosOffset[i];
             videosRef[getVideoIndex(i)].currentTime =
               currentTime > 0 ? currentTime : 0;
           }

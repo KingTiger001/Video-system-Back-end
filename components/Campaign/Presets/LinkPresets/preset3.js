@@ -132,11 +132,11 @@ const LinkPreset3 = ({ value, color, fontSize }) => {
   return (
     <Preset>
       <a style={{ fontSize: `${fontSize}rem` }}>
-        <span class="text">{value}</span>
-        <span class="line -right"></span>
-        <span class="line -top"></span>
-        <span class="line -left"></span>
-        <span class="line -bottom"></span>
+        <span className="text">{value}</span>
+        <span className="line -right"></span>
+        <span className="line -top"></span>
+        <span className="line -left"></span>
+        <span className="line -bottom"></span>
       </a>
     </Preset>
   );

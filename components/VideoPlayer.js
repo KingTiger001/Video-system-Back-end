@@ -1,15 +1,17 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { useVideoResize } from "@/hooks";
+import { getDataByType, useVideoResize } from "@/hooks";
 
 import dayjs from "@/plugins/dayjs";
 
-import EndScreen from "@/components/Campaign/EndScreen";
-import HelloScreen from "@/components/Campaign/HelloScreen";
+import Overlays from "./Campaign/OverlaysVideoPlayer";
 import Logo from "@/components/Campaign/Logo";
 
 import styles from "@/styles/components/VideoPlayer.module.sass";
+
+const helloScreen = { duration: 0 }; // need to remove, only here temporary to fix bug
+const endScreen = { duration: 0 }; // need to remove, only here temporary to fix bug
 
 const VideoPlayer = ({
   contact,
@@ -18,12 +20,13 @@ const VideoPlayer = ({
   onPlay = () => {},
 }) => {
   const dispatch = useDispatch();
+  const { logo, finalVideo, contents } = data;
 
-  const { endScreen, helloScreen, logo, video } = data;
-
+  const videosOffset = useSelector((state) => state.campaign.videosOffset);
   const duration = useSelector((state) => state.videoPlayer.duration);
   const isPlaying = useSelector((state) => state.videoPlayer.isPlaying);
   const progression = useSelector((state) => state.videoPlayer.progression);
+  const activeContent = useSelector((state) => state.videoPlayer.activeContent);
   const timelineDraggable = useSelector(
     (state) => state.videoPlayer.timelineDraggable
   );
@@ -43,6 +46,11 @@ const VideoPlayer = ({
   const timelineRef = useRef();
   const volumeRef = useRef();
   const { height } = useVideoResize({ ref: playerRef, autoHeight: true });
+
+  useEffect(() => {
+    const data = Array.from(contents);
+    dispatch({ type: "CALC_VIDEOS_OFFSET", data });
+  }, []);
 
   useEffect(() => {
     const handleMouseUp = (e) => {
@@ -72,7 +80,7 @@ const VideoPlayer = ({
     let interval = null;
     if (
       (progression > helloScreen.duration &&
-        progression < duration - endScreen.duration &&
+        progression < duration &&
         videoSeeking &&
         videoRef.currentTime !== 0) ||
       (!isPlaying && progression !== 0)
@@ -84,7 +92,7 @@ const VideoPlayer = ({
       isPlaying
     ) {
       interval = setInterval(() => {
-        const videoProg = helloScreen.duration + videoRef.currentTime * 1000;
+        const videoProg = videoRef.currentTime * 1000;
         if (videoProg > progression) {
           dispatch({
             type: "videoPlayer/SET_PROGRESSION",
@@ -108,6 +116,20 @@ const VideoPlayer = ({
         type: "videoPlayer/SET_PROGRESSION",
         data: 0,
       });
+    }
+
+    for (let i = 0; i < contents.length; i++) {
+      if (
+        progression > videosOffset[i] * 1000 &&
+        progression <
+          (videosOffset[i] + getDataByType(contents[i]).duration) * 1000 &&
+        activeContent !== i
+      ) {
+        dispatch({
+          type: "videoPlayer/SET_ACTIVE_CONTENT",
+          data: i,
+        });
+      }
     }
 
     if (videoRef.ended && !videoRef.paused) {
@@ -164,8 +186,7 @@ const VideoPlayer = ({
           videoRef.muted = false;
         })
         .catch((err) => {
-          console.log("can't play video ");
-          console.log(err);
+          console.log("can't play video ", err);
         });
     }
   };
@@ -193,8 +214,7 @@ const VideoPlayer = ({
         if (Object.keys(videoRef).length > 0) {
           videoRef.addEventListener("playing", handlePlaying);
           videoRef.addEventListener("seeking", handleSeeking);
-          const currentTime =
-            Math.round(progression - helloScreen.duration) / 1000;
+          const currentTime = Math.round(progression) / 1000;
           videoRef.currentTime = currentTime > 0 ? currentTime : 0;
         }
       } else {
@@ -204,7 +224,7 @@ const VideoPlayer = ({
         }
       }
     },
-    [video, videoRef]
+    [finalVideo, videoRef]
   );
 
   const displayProgression = (value) => {
@@ -279,6 +299,26 @@ const VideoPlayer = ({
     );
   };
 
+  const renderScreens = () => {
+    if (contents.length > 0) {
+      return contents.map(
+        (elem, i) =>
+          elem.type === "screen" &&
+          activeContent === i && (
+            <div
+              key={i}
+              style={{
+                width: "100%",
+                height: "100%",
+                position: "relative",
+                background: elem.screen.background.color,
+              }}
+            />
+          )
+      );
+    }
+  };
+
   return (
     <div
       className={styles.videoPlayer}
@@ -301,22 +341,15 @@ const VideoPlayer = ({
           className={styles.videoElement}
           height="100%"
           width="100%"
-          key={video.url}
+          key={finalVideo.url}
           playsInline={true}
           ref={videoRefCb}
           preload="auto"
-          src={video.url}
+          src={finalVideo.url}
         />
-        {helloScreen &&
-          Object.keys(helloScreen).length > 0 &&
-          progression < helloScreen.duration && (
-            <HelloScreen contact={contact} data={helloScreen} />
-          )}
-        {endScreen &&
-          Object.keys(endScreen).length > 0 &&
-          progression >= duration - endScreen.duration && (
-            <EndScreen contact={contact} data={endScreen} />
-          )}
+        {renderScreens()}
+        <Overlays contents={contents} activeContent={activeContent} />
+
         <Logo data={logo} />
         {showPlayButton && <PlayButton />}
       </div>
