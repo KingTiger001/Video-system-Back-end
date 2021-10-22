@@ -107,6 +107,7 @@ const Campaign = ({ me }) => {
       })
       .catch((err) => {
         console.log("error", err);
+        toast.error("Can't process to the compression");
         setShareLoading(false);
       });
   };
@@ -126,8 +127,7 @@ const Campaign = ({ me }) => {
         contents: contents,
       });
     } catch (err) {
-      console.log("error", err);
-      // toast.error("Failed to create the preview");
+      throw createError(500, err);
     }
   };
 
@@ -140,6 +140,7 @@ const Campaign = ({ me }) => {
       })
       .catch((err) => {
         console.log("error", err);
+        toast.error("Can't process to the compression");
         setPreviewLoading(false);
       });
   };
