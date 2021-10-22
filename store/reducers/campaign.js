@@ -108,6 +108,7 @@ const initialState = {
   videosOffset: [],
   videoSeeking: false,
   selectedContent: {},
+  finalVideo: { url: null },
 };
 
 const getDurationByType = (elem) => {
@@ -212,8 +213,10 @@ const reducer = (state = initialState, action) => {
         ...state,
         endScreen: action.data.endScreen || { duration: 0 },
         helloScreen: action.data.helloScreen || { duration: 0 },
+        _id: action.data._id,
         logo: action.data.logo || initialState.logo,
         name: action.data.name,
+        finalVideo: action.data.finalVideo || initialState.finalVideo,
         contents: contentsArr || [],
       };
     case "CALC_DURATION":

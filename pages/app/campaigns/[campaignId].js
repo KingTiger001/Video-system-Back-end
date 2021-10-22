@@ -28,7 +28,6 @@ import { resetServerContext } from "react-beautiful-dnd";
 
 const Campaign = ({ me }) => {
   const router = useRouter();
-
   const dispatch = useDispatch();
   const popup = useSelector((state) => state.popup);
   const hidePopup = () => dispatch({ type: "HIDE_POPUP" });
@@ -44,7 +43,8 @@ const Campaign = ({ me }) => {
   const [displayMenu, showMenu] = useState(false);
   const [displayPreview, showPreview] = useState(false);
   const [displayShare, showShare] = useState(false);
-
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [shareLoading, setShareLoading] = useState(false);
   const ref = useRef();
   const headerMenuRef = useRef(null);
   useEffect(() => {
@@ -99,7 +99,16 @@ const Campaign = ({ me }) => {
         "You need to add a video before sharing your campaign."
       );
     }
-    showShare(true);
+    setShareLoading(true);
+    onMerge()
+      .then(() => {
+        showShare(true);
+        setShareLoading(false);
+      })
+      .catch((err) => {
+        console.log("error", err);
+        setShareLoading(false);
+      });
   };
 
   const getVideos = async () => {
@@ -112,19 +121,27 @@ const Campaign = ({ me }) => {
 
   const onMerge = async () => {
     try {
-      await mediaAPI.post("/mergeVideo", { contents: contents });
+      await mediaAPI.post("/renderVideo", {
+        campaignId: campaign._id,
+        contents: contents,
+      });
     } catch (err) {
-      console.log("err", err);
-      // const code = err.response && err.response.data;
-      // if (code === "Upload.incorrectFiletype") {
-      //   setError(
-      //     "Incorrect file type, Please use an accepted format (webm, mp4, avi, mov)"
-      //   );
-      // }
-    } finally {
-      // setIsUploading(false);
-      // setUploadProgress(0);
+      console.log("error", err);
+      // toast.error("Failed to create the preview");
     }
+  };
+
+  const handlePreviewMode = () => {
+    setPreviewLoading(true);
+    onMerge()
+      .then(() => {
+        showPreview(true);
+        setPreviewLoading(false);
+      })
+      .catch((err) => {
+        console.log("error", err);
+        setPreviewLoading(false);
+      });
   };
 
   return (
@@ -228,13 +245,13 @@ const Campaign = ({ me }) => {
           <Button
             color="white"
             // onClick={() => showPreview(true)}
-            // onClick={onMerge}
+            onClick={handlePreviewMode}
             textColor="dark"
             style={{
               boxShadow: "0px 7px 14px -8px rgba(0,0,0,0.5)",
             }}
           >
-            Preview mode
+            {previewLoading ? "Processing..." : "Preview mode"}
           </Button>
           <Button
             style={{
@@ -242,7 +259,7 @@ const Campaign = ({ me }) => {
             }}
             onClick={checkBeforeStartShare}
           >
-            Share
+            {shareLoading ? "Processing..." : "Share"}
           </Button>
         </div>
       </div>

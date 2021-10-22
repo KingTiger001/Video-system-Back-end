@@ -8,63 +8,69 @@ const initialState = {
   volume: 1,
   volumeDraggable: false,
   volumeMuted: false,
-}
+  activeContent: -1,
+};
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'videoPlayer/PLAY':
+    case "videoPlayer/PLAY":
       return {
         ...state,
         isPlaying: true,
-      }
-    case 'videoPlayer/PAUSE':
+      };
+    case "videoPlayer/PAUSE":
       return {
         ...state,
         isPlaying: false,
-      }
-    case 'videoPlayer/SET_DURATION':
+      };
+    case "videoPlayer/SET_DURATION":
       return {
         ...state,
         duration: action.data,
-      }
-    case 'videoPlayer/SET_PROGRESSION':
+      };
+    case "videoPlayer/SET_PROGRESSION":
       return {
         ...state,
         progression: action.data,
-      }
-    case 'videoPlayer/SET_VIDEO_REF':
+      };
+    case "videoPlayer/SET_ACTIVE_CONTENT":
+      return {
+        ...state,
+        activeContent: action.data,
+      };
+    case "videoPlayer/SET_VIDEO_REF":
       return {
         ...state,
         videoRef: action.data,
-      }
-    case 'videoPlayer/SET_VOLUME':
+      };
+    case "videoPlayer/SET_VOLUME":
       return {
         ...state,
         volume: action.data,
-      }
-    case 'videoPlayer/SET_VOLUME_MUTED':
+      };
+    case "videoPlayer/SET_VOLUME_MUTED":
       return {
         ...state,
         volumeMuted: action.data,
-      }
-    case 'videoPlayer/SET_VIDEO_SEEKING':
+      };
+    case "videoPlayer/SET_VIDEO_SEEKING":
       return {
         ...state,
         videoSeeking: action.data,
-      }
-    case 'videoPlayer/TIMELINE_DRAGGABLE':
+      };
+    case "videoPlayer/TIMELINE_DRAGGABLE":
       return {
         ...state,
         timelineDraggable: action.data,
-      }
-    case 'videoPlayer/VOLUME_DRAGGABLE':
+      };
+    case "videoPlayer/VOLUME_DRAGGABLE":
       return {
         ...state,
         volumeDraggable: action.data,
-      }
+      };
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default reducer
+export default reducer;

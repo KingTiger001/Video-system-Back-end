@@ -105,7 +105,7 @@ const Player = () => {
       interval = setInterval(() => {
         if (
           videosRef[getVideoIndex(currentVideo)]?.readyState === 4 ||
-          contents[currentVideo].type !== "video"
+          contents[currentVideo]?.type !== "video"
         ) {
           dispatch({
             type: "SET_PROGRESSION",
