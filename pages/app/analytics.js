@@ -22,6 +22,7 @@ const Analytics = ({ initialAnalytics,
   campaignsShared,
   contactsCount= 0,
   stats = {} }) => {
+
   const router = useRouter()
 
   const [selectedCampaign, setSelectedCampaign] = useState(null);
@@ -31,6 +32,9 @@ const Analytics = ({ initialAnalytics,
   const [detailedContacts, setDetailedContacts] = useState([])
   const [selectAllChecked, setSelectAllChecked] = useState(false)
   const [showByContact, setShowByContact] = useState(false)
+
+  const totalCTA = campaignsShared.map(campaign => campaign.contents.reduce((acc, data) => 
+  (data.links.length > 0 ? acc + data.links.length : acc), 0)).reduce((a, b) => a + b, 0) * initialAnalytics.length
 
   const displayDuration = (value) => {
     if (!value) {
@@ -97,7 +101,8 @@ const Analytics = ({ initialAnalytics,
         <Button
           color={'white'}
           type={'div'}
-          className={`${campaign != selectedCampaign ? styles.unactiveCampaignItem : styles.activeCampaignItem}`}
+          className={`${campaign != selectedCampaign ? 
+            styles.unactiveCampaignItem : styles.activeCampaignItem}`}
           onClick={() => refreshSelectedCampaign(campaign)}>
             <p>{campaign && campaign.name}</p>
         </Button>
@@ -113,51 +118,78 @@ const Analytics = ({ initialAnalytics,
   const displayCampaignInformations = (campaign) => {
       
     return (
-      <div>
+      <div className={styles.campaignGlobalAnalytic}>
       <ListItem 
-      className={styles.campaignInformations}
+      className={styles.campaignHeader}
       renderActions={() => (
       <div className={styles.displayIcon}>
         <button
           src="/assets/analytics/DashBoard.svg"
-          onClick={() => setShowByContact(false)}>Genral</button>
+          onClick={() => setShowByContact(false)}>Global</button>
         <button
           src="/assets/analytics/byContacts.svg"
           onClick={() => setShowByContact(true)}>Contact</button>
       </div>
       )}>
-        <p className={styles.campaignName}>{campaign && campaign.name}</p>
+        <p className={styles.title}>{campaign && campaign.name}</p>
       </ListItem>
-      { !showByContact && 
+      </div>
+      )}
+
+  const displayCampaignAnalytics = (campaign) => {
+
+    const totalOpened = analytics.filter(analytic => analytic.openedCount?.length > 0).length
+    const totalCTA = analytics.length * campaign.contents.reduce((acc, data) => 
+    (data.links.length > 0 ? acc + data.links.length : acc), 0);
+    const arrayClickedCTA = analytics.filter(analytic => analytic.clickedLinks?.length > 0)
+    .map(a => [...new Set(a.clickedLinks)].length)
+    const totalClickedCTA = arrayClickedCTA.reduce((a, b) => a + b, 0)
+
+    return (
         <div className={styles.stats}>
         <Stat
-          text="Contacts"
+          text="Recipients"
           value="0"
-          value={contactsCount}
+          value={campaign.sentCount}
         />
         <Stat
           text="Video opening rate"
           unit="%"
-          value={stats.openingRate}
+          value={Math.round(totalOpened / analytics.length * 100)}
         />
         <Stat
           text="Average view duration"
-          unit="s"
-          value={displayDuration(stats.averageViewDuration * 1000)}
+          unit="%"
+          value={stats.averageViewDuration ? stats.averageViewDuration * 1000 : 0}
         />
         <Stat
-          text="Reply button click through rate"
+          text="Links click through rate"
           unit="%"
-          value={stats.replyRate}
+          value={totalCTA > 0 ? 
+            totalClickedCTA ? Math.round((totalClickedCTA / totalCTA) * 100) : 0
+          : ' - '}
         />
-      </div>}
       </div>
-      )}
+    )
+  }
+
+  const displayLinkDetails = (analytic, link) => {
+    const clicks = analytic.clickedLinks ? analytic.clickedLinks.filter((l) => l === link._id).length : '-';
+    return (
+      <div className={styles.CTADetail}>
+        <p>Clicks <b>{clicks}</b></p>
+        <p>{link.url}</p>
+      </div>
+    )
+  }
 
   const displayAnalyticsByContacts = (analytic) => {
 
     const displayReport = detailedContacts.includes(analytic.sentTo._id);
-      
+    const totalCTA = analytic.campaign.contents.reduce((acc, data) => 
+    (data.links.length > 0 ? acc + data.links.length : acc), 0);
+    const totalClickedCTA = [...new Set(analytic.clickedLinks)]
+
     return (
       <div className={styles.analyticItem}>
         <ListItem
@@ -174,22 +206,35 @@ const Analytics = ({ initialAnalytics,
             checked={selectedContacts.includes(analytic.sentTo._id)}
           />
           <p>{analytic.sentTo && analytic.sentTo.email}</p>
-          <p>OPEN</p>
-          <p>100%</p>
-          <p>2/2</p>
+          {analytic.openedCount.length === 0 ? 
+          <p className={styles.badAnalytic}><b>USEEN</b></p> :
+          <p className={styles.goodAnalytic}><b>OPEN</b></p>}
+          <p>{ analytic.openedCount.length === 0 ? '-' : analytic.viewDuration ? 
+           analytic.viewDuration + '%' : '0%'}</p>
+          <p>{ totalCTA > 0 ? 
+          analytic.openedCount.length !== 0 ? (analytic.clickedLinks?.length > 0 ? totalClickedCTA.length+'/'+totalCTA : '0/'+totalCTA) : '-'
+        : 'No Links'}</p>
         </ListItem>
         {displayReport && 
           <ListItem 
             className={styles.analyticDetails}>
+            <div></div>
             <div>
               <p>{analytic.sentTo && analytic.sentTo.firstName + ' ' + analytic.sentTo.lastName}</p>
               <p>{analytic.sentTo && analytic.sentTo.company}</p>
+            </div>
+            <p>Views : <b>{analytic.openedCount.length === 0 ? '-' : analytic.openedCount.length}</b></p>
+            <p><b>{analytics.viewDurations ? displayDuration(analytic.viewDurations) : '-'}</b></p>
+            <div>
+              {totalCTA > 0 ? analytic.campaign.contents.map((content) => 
+                content.links.map(link => displayLinkDetails(analytic, link))) : '-'}
             </div>
           </ListItem>}
       </div>
       )
     }
 
+    console.log(stats, totalCTA)
   return (
     <AppLayout>
       <Head>
@@ -223,17 +268,17 @@ const Analytics = ({ initialAnalytics,
         <Stat
           text="Video opening rate"
           unit="%"
-          value={stats.openingRate}
+          value={stats.videoOpeningRate}
         />
         <Stat
           text="Average view duration"
-          unit="s"
-          value={displayDuration(stats.averageViewDuration * 1000)}
+          unit="%"
+          value={stats.averageViewDuration ? stats.averageViewDuration * 1000 : 0}
         />
         <Stat
-          text="Reply button click through rate"
+          text="Links click through rate"
           unit="%"
-          value={stats.replyRate}
+          value={Math.round((stats.totalLinksClicked / totalCTA) * 100)}
         />
       </div>}
       </div>
@@ -241,6 +286,10 @@ const Analytics = ({ initialAnalytics,
         <div>
           { selectedCampaign && 
           displayCampaignInformations(selectedCampaign)}
+        </div>
+        <div>
+          { selectedCampaign && !showByContact &&
+          displayCampaignAnalytics(selectedCampaign)}
         </div>
         
         <div className={styles.analyticsByContact}>
@@ -255,19 +304,20 @@ const Analytics = ({ initialAnalytics,
           {selectedCampaign && showByContact && analytics.map((a) => displayAnalyticsByContacts(a))}
         </div>
       </div>
-
-  
     </AppLayout>
   )
 }
 
 export default Analytics
-export const getServerSideProps = withAuthServerSideProps(async ({ query }) => {
+export const getServerSideProps = withAuthServerSideProps(async () => {
   const { data: campaignsShared } = await mainAPI.get(`/users/me/campaigns?status=shared`)
   const { data: contactsCount } = await mainAPI.get('/users/me/contacts/count')
-  let { data: initialAnalytics } = await mainAPI.get('/users/me/analytics')
+  const { data: initialAnalytics } = await mainAPI.get('/users/me/analytics')
+  const { data: stats } = await mainAPI.get('/users/me/analytics/stats')
   return {
     campaignsShared,
     initialAnalytics,
+    contactsCount,
+    stats,
   }
 })

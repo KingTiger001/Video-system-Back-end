@@ -1,15 +1,25 @@
-import { useSelector } from "react-redux";
+import { useRouter } from 'next/router'
 
 import styles from "@/styles/components/Campaign/Player.module.sass";
 import { useState } from "react";
 import { renderPresetElement } from "./Presets";
 
+import { mainAPI } from '@/plugins/axios'
+
+
 const Overlays = ({ contents, activeContent }) => {
+  const router = useRouter()
+
+  const createLinkAnalytic = (linkId) => {
+    const campaignId = router.query.campaignId;
+    const contactId = router.query.c
+    mainAPI.post(`/analytics/${campaignId}/clickedLink?c=${contactId}&l=${linkId}`)
+  }
   const renderElement = (elem, type) => {
     return (
       <div
         onClick={() =>
-          type === "link" ? window.open("https://youtube.com", "_blank") : null
+          type === "link" ? (window.open(elem.url, "_blank") && createLinkAnalytic(elem._id)): null
         }
         key={elem._id}
         style={{

@@ -128,19 +128,19 @@ const Dashboard = ({
         <div className={styles.stats}>
           <p className={styles.statsTitle}>Your analytics</p>
           <Stat
-            text="Contacts"
-            value="0"
-            value={contactsCount}
+          text="Contacts"
+          value="0"
+          value={contactsCount}
           />
           <Stat
             text="Video opening rate"
             unit="%"
-            value={stats.openingRate}
+            value={stats.videoOpeningRate}
           />
           <Stat
             text="Average view duration"
-            unit="s"
-            value={displayDuration(stats.averageViewDuration * 1000)}
+            unit="%"
+            value={stats.averageViewDuration ? stats.averageViewDuration * 1000 : 0}
           />
           <Stat
             text="Reply button click through rate"
@@ -210,12 +210,12 @@ export const getServerSideProps = withAuthServerSideProps(async () => {
   const { data: campaignsDraft } = await mainAPI.get(`/users/me/campaigns?status=draft&limit=${CAMPAIGNS_LIMIT}`)
   const { data: campaignsShared } = await mainAPI.get(`/users/me/campaigns?status=shared&limit=${CAMPAIGNS_LIMIT}`)
   const { data: contactsCount } = await mainAPI.get('/users/me/contacts/count')
-/*   const { data: stats } = await mainAPI.get('/users/me/analytics/stats')
- */
+  const { data: stats } = await mainAPI.get('/users/me/analytics/stats')
+ 
   return {
     campaignsDraft,
     campaignsShared,
     contactsCount,
-    /* stats */
+    stats
   }
 })

@@ -30,21 +30,32 @@
       outline: solid $primaryColor
 
 
+
 .campaignAnalytics
   padding: 30px
-  .campaignInformations
+  .title
+    color: $primaryColor
+    font-size: 24px
+    font-weight: 600
+  .campaignHeader
     display: grid
     margin-bottom: 20px
-    grid-template-columns: 7fr 1fr 1fr
+    grid-template-columns: 8.3fr 1fr 1fr
     height: 50px
     background-color: #fff
     border-radius: 8px
     box-shadow: 0 5px 16px 0 rgba(24,59,86,0.03)
     align-items: center
-    .campaignName
-      color: $primaryColor
-      font-size: 24px
-      font-weight: 600
+    .campaignHeader
+      margin-bottom: 20px
+      height: fit-content
+      width: 100%
+      background-color: #fff
+      border-radius: 8px
+      box-shadow: 0 5px 16px 0 rgba(24,59,86,0.03)
+      .informations
+        display: grid
+        padding: 10px
     .displayIcon
       display: grid
 
@@ -55,14 +66,26 @@
       grid-template-columns: 0.3fr 2fr 1fr 1fr 1fr 1fr
       p
         color: $primaryColor
+    .goodAnalytic
+      color: #12AA22
+    .badAnalytic
+      color: #D42216
   .analyticItemDetails
     grid-template-columns: 0.3fr 2fr 1fr 1fr 1fr 1fr
     box-shadow: 0 5px 16px 0 rgba(24,59,86,0.03)
   .analyticDetails
+    height: fit-content
+    padding-top: 5px
+    padding-bottom: 5px
+    grid-template-columns: 0.3fr 2fr 1fr 1fr 2fr
     background-color: #fff
     box-shadow: 0 5px 16px 0 rgba(24,59,86,0.03)
     color: $textColorOne
     font-size: 14px
+  .CTADetail
+    display: grid 
+    grid-template-columns: 1fr 2fr
+   
   
 .stats
   display: grid
