@@ -18,8 +18,6 @@ import styles from '@/styles/pages/app/analytics.module.sass'
 import Button from '@/components/Button';
 
 
-
-
 const Analytics = ({ initialAnalytics,
   campaignsShared,
   contactsCount= 0,
@@ -115,19 +113,46 @@ const Analytics = ({ initialAnalytics,
   const displayCampaignInformations = (campaign) => {
       
     return (
+      <div>
       <ListItem 
       className={styles.campaignInformations}
       renderActions={() => (
-        <div>
-      <button
-      onClick={() => setShowByContact(false)}>General</button>
-      <button
-      onClick={() => setShowByContact(true)}>Contacts</button>
-      </div>)}>
+      <div className={styles.displayIcon}>
+        <button
+          src="/assets/analytics/DashBoard.svg"
+          onClick={() => setShowByContact(false)}>Genral</button>
+        <button
+          src="/assets/analytics/byContacts.svg"
+          onClick={() => setShowByContact(true)}>Contact</button>
+      </div>
+      )}>
         <p className={styles.campaignName}>{campaign && campaign.name}</p>
       </ListItem>
-    )
-  }
+      { !showByContact && 
+        <div className={styles.stats}>
+        <Stat
+          text="Contacts"
+          value="0"
+          value={contactsCount}
+        />
+        <Stat
+          text="Video opening rate"
+          unit="%"
+          value={stats.openingRate}
+        />
+        <Stat
+          text="Average view duration"
+          unit="s"
+          value={displayDuration(stats.averageViewDuration * 1000)}
+        />
+        <Stat
+          text="Reply button click through rate"
+          unit="%"
+          value={stats.replyRate}
+        />
+      </div>}
+      </div>
+      )}
 
   const displayAnalyticsByContacts = (analytic) => {
 
@@ -155,7 +180,7 @@ const Analytics = ({ initialAnalytics,
         </ListItem>
         {displayReport && 
           <ListItem 
-            className={styles.test}>
+            className={styles.analyticDetails}>
             <div>
               <p>{analytic.sentTo && analytic.sentTo.firstName + ' ' + analytic.sentTo.lastName}</p>
               <p>{analytic.sentTo && analytic.sentTo.company}</p>
@@ -186,7 +211,7 @@ const Analytics = ({ initialAnalytics,
             </div>
           </div>
         </div>
-        <div>
+        <div className={styles.generalDashboard}>
         { !selectedCampaign && 
         <div className={styles.stats}>
         <p className={styles.statsTitle}>General analytics</p>
@@ -212,10 +237,11 @@ const Analytics = ({ initialAnalytics,
         />
       </div>}
       </div>
-      <div>
-        { selectedCampaign && 
-        displayCampaignInformations(selectedCampaign)}
-      </div>
+      <div className={styles.campaignAnalytics}>
+        <div>
+          { selectedCampaign && 
+          displayCampaignInformations(selectedCampaign)}
+        </div>
         
         <div className={styles.analyticsByContact}>
           {selectedCampaign && showByContact && 
@@ -228,6 +254,7 @@ const Analytics = ({ initialAnalytics,
           </ListHeader>}
           {selectedCampaign && showByContact && analytics.map((a) => displayAnalyticsByContacts(a))}
         </div>
+      </div>
 
   
     </AppLayout>

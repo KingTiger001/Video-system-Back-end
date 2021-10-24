@@ -14,6 +14,7 @@
   
 .campaignsListContainer
   float: left
+  margin-right: 30px
   width: 25%
   height: 100%
   background-color: rgba($primaryColor, 0.1)
@@ -28,41 +29,41 @@
       @extend %campaignItem
       outline: solid $primaryColor
 
-.campaignInformations
-  display: grid
-  grid-template-columns: 6fr 1fr 1fr
-  padding: 0 30px
-  width: 70%
-  margin: 30px
-  height: 50px
-  background-color: #fff
-  border-radius: 8px
-  box-shadow: 0 5px 16px 0 rgba(24,59,86,0.03)
-  align-items: center
-  .campaignName
-    color: $primaryColor
-    font-size: 24px
-    font-weight: 600
 
-.analyticsByContact
-  display: grid
-  grid-gap: 12px
-  padding: 0 30px
-  .analyticsByContactHeader
-    grid-template-columns: 1fr 2fr 1fr 1fr 1fr 1fr
-    p
-      color: $primaryColor
-  .analyticItemDetails
-    grid-template-columns: 1fr 2fr 1fr 1fr 1fr 1fr
+.campaignAnalytics
+  padding: 30px
+  .campaignInformations
+    display: grid
+    margin-bottom: 20px
+    grid-template-columns: 7fr 1fr 1fr
+    height: 50px
+    background-color: #fff
+    border-radius: 8px
     box-shadow: 0 5px 16px 0 rgba(24,59,86,0.03)
+    align-items: center
+    .campaignName
+      color: $primaryColor
+      font-size: 24px
+      font-weight: 600
+    .displayIcon
+      display: grid
 
-.test
-  background-color: #fff
-  box-shadow: 0 5px 16px 0 rgba(24,59,86,0.03)
-  width: 60%
-  color: $textColorOne
+  .analyticsByContact
+    display: grid
+    grid-gap: 12px
+    .analyticsByContactHeader
+      grid-template-columns: 0.3fr 2fr 1fr 1fr 1fr 1fr
+      p
+        color: $primaryColor
+  .analyticItemDetails
+    grid-template-columns: 0.3fr 2fr 1fr 1fr 1fr 1fr
+    box-shadow: 0 5px 16px 0 rgba(24,59,86,0.03)
+  .analyticDetails
+    background-color: #fff
+    box-shadow: 0 5px 16px 0 rgba(24,59,86,0.03)
+    color: $textColorOne
     font-size: 14px
-
+  
 .stats
   display: grid
   grid-gap: 10px
