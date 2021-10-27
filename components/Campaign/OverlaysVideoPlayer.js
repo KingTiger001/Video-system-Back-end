@@ -4,12 +4,27 @@ import styles from "@/styles/components/Campaign/Player.module.sass";
 import { useState } from "react";
 import { renderPresetElement } from "./Presets";
 
-const Overlays = ({ contents, activeContent }) => {
+const Overlays = ({ contact, contents, activeContent }) => {
+  const replaceVariables = (text) => {
+    if (!contact) {
+      return text;
+    }
+    const matches = text.match(/(?:\{\{)(.*?)(?:\}\})/gi);
+    if (!matches || matches.length <= 0) {
+      return text;
+    }
+    matches.map((match) => {
+      text = text.replace(match, contact[match.replace(/{|}/g, "")] || "");
+    });
+    return text;
+  };
+
   const renderElement = (elem, type) => {
+    elem.value = replaceVariables(elem.value);
     return (
       <div
         onClick={() =>
-          type === "link" ? window.open("https://youtube.com", "_blank") : null
+          type === "link" ? window.open(elem.url, "_blank") : null
         }
         key={elem._id}
         style={{

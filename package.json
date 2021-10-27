@@ -8,6 +8,7 @@
     "build:staging": "env-cmd -f config/env/.env.staging next build",
     "build:dev": "env-cmd -f config/env/.env.development next build",
     "start": "NODE_ENV=production next start -p 7031",
+    "start:staging": "NODE_ENV=staging next start -p 7031",
     "start:dev": "NODE_ENV=development next start -p 7031"
   },
   "dependencies": {
