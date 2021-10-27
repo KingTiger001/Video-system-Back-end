@@ -1,6 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
 
-import { useDebounce } from "@/hooks";
+import { handleProgression, useDebounce } from "@/hooks";
+
+import { ObjectID } from "bson";
 
 import { mainAPI } from "@/plugins/axios";
 import dayjs from "@/plugins/dayjs";
@@ -37,6 +39,9 @@ const ToolVideos = () => {
   const selectedContent = useSelector(
     (state) => state.campaign.selectedContent
   );
+  const videosRef = useSelector((state) => state.campaign.videosRef);
+
+  const videosOffset = useSelector((state) => state.campaign.videosOffset);
 
   const [selectedVideos, setSelectedVideos] = useState([]);
   const [unselectedVideos, setUnselectedVideos] = useState([]);
@@ -68,11 +73,36 @@ const ToolVideos = () => {
       data: elem,
     });
     const index = contents.findIndex((content) => content._id === elem._id);
-    if (index !== -1)
+
+    if (index !== -1) {
+      const position = contents[index].position;
+      const timePosition = videosOffset[position];
+      dispatch({
+        type: "SET_PROGRESSION",
+        data: timePosition * 1000 + 10,
+      });
+      handleProgression(
+        contents,
+        videosOffset,
+        timePosition * 1000 + 10,
+        dispatch,
+        videosRef,
+        currentVideo,
+        preview
+      );
+      dispatch({ type: "HIDE_PREVIEW" });
       dispatch({
         type: "SET_CURRENT_OVERLAY",
         data: index,
       });
+    } else {
+      dispatch({
+        type: "SET_CURRENT_OVERLAY",
+        data: -1,
+      });
+      dispatch({ type: "SHOW_PREVIEW" });
+      // dispatch({ type: "SET_PREVIEW_VIDEO", data: elem.video });
+    }
     dispatch({ type: "SET_PREVIEW_VIDEO", data: elem.video });
   };
 
@@ -125,7 +155,9 @@ const ToolVideos = () => {
 
   const addToContents = (data) => {
     const array = contents.slice();
+    const _id = new ObjectID().toString();
     array.push({
+      _id,
       position: array.length,
       type: "video",
       video: data,
@@ -154,11 +186,36 @@ const ToolVideos = () => {
         }`}
         onClick={() => {
           const index = contents.findIndex((content) => content._id === vd._id);
-          if (index !== -1)
+          if (index !== -1) {
+            const position = contents[index].position;
+            const timePosition = videosOffset[position];
+
+            dispatch({
+              type: "SET_PROGRESSION",
+              data: timePosition * 1000 + 10,
+            });
+            handleProgression(
+              contents,
+              videosOffset,
+              timePosition * 1000 + 10,
+              dispatch,
+              videosRef,
+              currentVideo,
+              preview
+            );
+            dispatch({ type: "HIDE_PREVIEW" });
             dispatch({
               type: "SET_CURRENT_OVERLAY",
               data: index,
             });
+          } else {
+            dispatch({
+              type: "SET_CURRENT_OVERLAY",
+              data: -1,
+            });
+            dispatch({ type: "SHOW_PREVIEW" });
+            // dispatch({ type: "SET_PREVIEW_VIDEO", data: vd.video });
+          }
           dispatch({ type: "SET_PREVIEW_VIDEO", data: vd.video });
         }}
       >
@@ -264,7 +321,7 @@ const ToolVideos = () => {
         className={styles.toolVideos}
         onClick={() => {
           if (!preview.show) {
-            dispatch({ type: "SHOW_PREVIEW" });
+            // dispatch({ type: "SHOW_PREVIEW" });
           }
         }}
       >

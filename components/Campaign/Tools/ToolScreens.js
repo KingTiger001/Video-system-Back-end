@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 
-import { useDebounce } from "@/hooks";
+import { handleProgression, useDebounce } from "@/hooks";
 
 import { mainAPI } from "@/plugins/axios";
 
@@ -41,6 +41,11 @@ const ToolScreens = () => {
     (state) => state.campaign.selectedContent
   );
 
+  const currentVideo = useSelector((state) => state.campaign.currentVideo);
+  const videosRef = useSelector((state) => state.campaign.videosRef);
+
+  const videosOffset = useSelector((state) => state.campaign.videosOffset);
+
   const [selectedScreens, setSelectedScreens] = useState([]);
   const [unselectedScreens, setUnselectedScreens] = useState([]);
   const [showEdit, setShowEdit] = useState(false);
@@ -62,6 +67,31 @@ const ToolScreens = () => {
   }, [selectedContent]);
 
   const selectScreen = (elem) => {
+    const index = contents.findIndex((content) => content._id === elem._id);
+    console.log("index", index, elem, contents);
+    if (index !== -1) {
+      const position = contents[index].position;
+      const timePosition = videosOffset[position];
+
+      dispatch({
+        type: "SET_PROGRESSION",
+        data: timePosition * 1000 + 10,
+      });
+      handleProgression(
+        contents,
+        videosOffset,
+        timePosition * 1000 + 10,
+        dispatch,
+        videosRef,
+        currentVideo,
+        preview
+      );
+      dispatch({ type: "HIDE_PREVIEW" });
+    } else {
+      dispatch({ type: "SHOW_PREVIEW" });
+      dispatch({ type: "SET_PREVIEW_VIDEO", data: elem });
+    }
+
     dispatch({
       type: "SET_SELECTED_CONTENT",
       data: elem,
@@ -171,19 +201,32 @@ const ToolScreens = () => {
               : ""
           }`}
           onClick={() => {
-            // dispatch({ type: "SET_PREVIEW_VIDEO", data: obj });
-
             const index = contents.findIndex(
               (content) => content._id === obj._id
             );
-            dispatch({
-              type: "SET_CURRENT_VIDEO",
-              data: index,
-            });
-            dispatch({
-              type: "SET_CURRENT_OVERLAY",
-              data: index,
-            });
+            if (index !== -1) {
+              const position = contents[index].position;
+              const timePosition = videosOffset[position];
+
+              dispatch({
+                type: "SET_PROGRESSION",
+                data: timePosition * 1000 + 10,
+              });
+              handleProgression(
+                contents,
+                videosOffset,
+                timePosition * 1000 + 10,
+                dispatch,
+                videosRef,
+                currentVideo,
+                preview
+              );
+              dispatch({ type: "HIDE_PREVIEW" });
+            } else {
+              dispatch({ type: "SHOW_PREVIEW" });
+              dispatch({ type: "SET_PREVIEW_VIDEO", data: obj });
+            }
+
             dispatch({
               type: "DISPLAY_ELEMENT",
               data: "endScreen",
@@ -288,7 +331,7 @@ const ToolScreens = () => {
         className={styles.toolVideos}
         onClick={() => {
           if (!preview.show) {
-            dispatch({ type: "SHOW_PREVIEW" });
+            // dispatch({ type: "SHOW_PREVIEW" });
           }
         }}
       >

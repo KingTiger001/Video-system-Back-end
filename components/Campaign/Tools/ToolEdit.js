@@ -74,7 +74,7 @@ const ToolEdit = ({ me }) => {
         className={styles.toolItems}
         onClick={() => {
           if (!preview.show) {
-            dispatch({ type: "SHOW_PREVIEW" });
+            // dispatch({ type: "SHOW_PREVIEW" });
           }
         }}
       >
