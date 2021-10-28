@@ -348,7 +348,11 @@ const VideoPlayer = ({
           src={finalVideo.url}
         />
         {renderScreens()}
-        <Overlays contents={contents} activeContent={activeContent} />
+        <Overlays
+          contact={contact}
+          contents={contents}
+          activeContent={activeContent}
+        />
 
         <Logo data={logo} />
         {showPlayButton && <PlayButton />}

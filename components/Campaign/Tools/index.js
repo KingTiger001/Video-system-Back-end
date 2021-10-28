@@ -23,10 +23,7 @@ const Tools = ({ me }) => {
       type: "SET_SELECTED_CONTENT",
       data: {},
     });
-    dispatch({
-      type: "SET_CURRENT_OVERLAY",
-      data: -1,
-    });
+
     dispatch({
       type: "SELECT_TOOL",
       data: tool === clickedTool ? 0 : clickedTool,
@@ -38,7 +35,7 @@ const Tools = ({ me }) => {
     if (!element) {
       dispatch({ type: "HIDE_PREVIEW" });
     } else {
-      dispatch({ type: "SHOW_PREVIEW", data: { element } });
+      // dispatch({ type: "SHOW_PREVIEW", data: { element } });
     }
   };
 

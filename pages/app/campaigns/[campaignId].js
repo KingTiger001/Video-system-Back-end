@@ -40,6 +40,8 @@ const Campaign = ({ me }) => {
   const name = useSelector((state) => state.campaign.name);
 
   const contents = useSelector((state) => state.campaign.contents);
+  const finalVideo = useSelector((state) => state.campaign.finalVideo);
+
   const [displayMenu, showMenu] = useState(false);
   const [displayPreview, showPreview] = useState(false);
   const [displayShare, showShare] = useState(false);
@@ -82,6 +84,7 @@ const Campaign = ({ me }) => {
           logo,
           name,
           contents: contents.length > 0 ? contents : [],
+          finalVideo,
         })
         .catch((err) => console.log("err", err));
     };
@@ -91,7 +94,7 @@ const Campaign = ({ me }) => {
       type: "HAS_CHANGES",
       data: false,
     });
-  }, [duration, endScreen, helloScreen, logo, name, contents]);
+  }, [duration, endScreen, helloScreen, logo, name, contents, finalVideo]);
 
   const checkBeforeStartShare = () => {
     if (Object.keys(contents).length <= 0) {
@@ -102,12 +105,13 @@ const Campaign = ({ me }) => {
     setShareLoading(true);
     onMerge()
       .then(() => {
-        showShare(true);
-        setShareLoading(false);
+        setTimeout(() => {
+          showShare(true);
+          setShareLoading(false);
+        }, 1000);
       })
       .catch((err) => {
-        console.log("error", err);
-        toast.error("Can't process to the compression");
+        toast.error("The compression failed");
         setShareLoading(false);
       });
   };
@@ -122,12 +126,22 @@ const Campaign = ({ me }) => {
 
   const onMerge = async () => {
     try {
-      await mediaAPI.post("/renderVideo", {
+      const { data } = await mediaAPI.post("/renderVideo", {
         campaignId: campaign._id,
         contents: contents,
       });
+      dispatch({
+        type: "SET_FINALVIDEO",
+        data: { url: data.url },
+      });
+      return data.url;
     } catch (err) {
-      throw createError(500, err);
+      const code = err.response && err.response.data;
+      if (code) {
+        throw new Error(code);
+      } else {
+        throw new Error(err);
+      }
     }
   };
 
@@ -135,12 +149,13 @@ const Campaign = ({ me }) => {
     setPreviewLoading(true);
     onMerge()
       .then(() => {
-        showPreview(true);
-        setPreviewLoading(false);
+        setTimeout(() => {
+          showPreview(true);
+          setPreviewLoading(false);
+        }, 1000);
       })
       .catch((err) => {
-        console.log("error", err);
-        toast.error("Can't process to the compression");
+        toast.error("The compression failed");
         setPreviewLoading(false);
       });
   };
