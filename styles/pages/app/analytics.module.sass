@@ -2,7 +2,7 @@
 
 %campaignItem
   border-radius: 4px
-  box-shadow: 0 5px 16px 0 rgba(24,59,86,0.03)
+  box-shadow: $boxShadow
   height: 40px
   padding: 0 5px
   p
@@ -28,8 +28,23 @@
     .activeCampaignItem
       @extend %campaignItem
       outline: solid $primaryColor
+    .separator
+      height: 2px
+      background-color: $primaryColor
 
-
+.generalDashboard
+  padding: 30px
+  .dashBoardHeader
+    margin-bottom: 20px
+    height: 50px
+    background-color: #fff
+    border-radius: 8px
+    box-shadow: $boxShadow
+    align-items: center
+  .title
+    color: $primaryColor
+    font-size: 24px
+    font-weight: 600
 
 .campaignAnalytics
   padding: 30px
@@ -44,7 +59,7 @@
     height: 50px
     background-color: #fff
     border-radius: 8px
-    box-shadow: 0 5px 16px 0 rgba(24,59,86,0.03)
+    box-shadow: $boxShadow
     align-items: center
     .campaignHeader
       margin-bottom: 20px
@@ -52,7 +67,7 @@
       width: 100%
       background-color: #fff
       border-radius: 8px
-      box-shadow: 0 5px 16px 0 rgba(24,59,86,0.03)
+      box-shadow: $boxShadow
       .informations
         display: grid
         padding: 10px
@@ -63,28 +78,38 @@
     display: grid
     grid-gap: 12px
     .analyticsByContactHeader
-      grid-template-columns: 0.3fr 2fr 1fr 1fr 1fr 1fr
+      grid-template-columns: 0.3fr 2fr 1fr 1fr 1fr 
       p
         color: $primaryColor
     .goodAnalytic
       color: #12AA22
+      font-weight: bold
     .badAnalytic
       color: #D42216
+      font-weight: bold
+    .mediumAnalytic
+      color: #FD810E
+      font-weight: bold
   .analyticItemDetails
-    grid-template-columns: 0.3fr 2fr 1fr 1fr 1fr 1fr
-    box-shadow: 0 5px 16px 0 rgba(24,59,86,0.03)
+    grid-template-columns: 0.3fr 2fr 1fr 1fr 1fr 
+    box-shadow: $boxShadow
+    position: relative
+    button
+      &:last-child
+        background: #D5F3FA
   .analyticDetails
     height: fit-content
     padding-top: 5px
     padding-bottom: 5px
-    grid-template-columns: 0.3fr 2fr 1fr 1fr 2fr
+    grid-template-columns: 0.3fr 2fr 1fr 2fr 
     background-color: #fff
-    box-shadow: 0 5px 16px 0 rgba(24,59,86,0.03)
+    box-shadow: $boxShadow
     color: $textColorOne
     font-size: 14px
+    
   .CTADetail
     display: grid 
-    grid-template-columns: 1fr 2fr
+    grid-template-columns: 1fr 1fr
    
   
 .stats
@@ -94,7 +119,6 @@
   grid-column-start: 1
   grid-column-end: 13
   margin: 20px
-  
 .statsTitle
   color: $primaryColor
   font-size: 24px
@@ -102,9 +126,9 @@
   grid-row: 1
   grid-column-start: 1
   grid-column-end: 5
-
 .stat
   grid-row: 2
+
 
 
     
