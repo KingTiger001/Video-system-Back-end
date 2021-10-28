@@ -16,6 +16,7 @@ import Stat from '@/components/Stat'
 import layoutStyles from '@/styles/layouts/App.module.sass'
 import styles from '@/styles/pages/app/analytics.module.sass'
 import Button from '@/components/Button';
+import PercentStat from '@/components/PercentStat'
 
 
 const Analytics = ({ initialAnalytics,
@@ -70,6 +71,14 @@ const Analytics = ({ initialAnalytics,
     }
   }
 
+  const getGlobalAnalytics = () => {
+    setSelectAllChecked(false)
+    setDetailedContacts([])
+    setSelectedContacts([])
+    setAnalytics([])
+    setSelectedCampaign(null)
+  }
+
   const selectOne = (e) => {
     const contactId = e.target.value;
     setSelectedContacts(
@@ -88,7 +97,7 @@ const Analytics = ({ initialAnalytics,
 
   const renderCampaigns = (campaign = {}) => {
       
-    const empty= Object.keys(campaign).length > 0 ? false : true
+    const empty= Object.keys(campaignsShared).length > 0 ? false : true
 
     return empty ? 
       <Button
@@ -128,7 +137,7 @@ const Analytics = ({ initialAnalytics,
           onClick={() => setShowByContact(false)}>Global</button>
         <button
           src="/assets/analytics/byContacts.svg"
-          onClick={() => setShowByContact(true)}>Contact</button>
+          onClick={() => setShowByContact(true)}>Contacts</button>
       </div>
       )}>
         <p className={styles.title}>{campaign && campaign.name}</p>
@@ -152,22 +161,18 @@ const Analytics = ({ initialAnalytics,
           value="0"
           value={campaign.sentCount}
         />
-        <Stat
+        <PercentStat
           text="Video opening rate"
-          unit="%"
           value={Math.round(totalOpened / analytics.length * 100)}
         />
-        <Stat
+        {/* <Stat
           text="Average view duration"
           unit="%"
           value={stats.averageViewDuration ? stats.averageViewDuration * 1000 : 0}
-        />
-        <Stat
+        /> */}
+        <PercentStat
           text="Links click through rate"
-          unit="%"
-          value={totalCTA > 0 ? 
-            totalClickedCTA ? Math.round((totalClickedCTA / totalCTA) * 100) : 0
-          : ' - '}
+          value={totalCTA > 0 ? Math.round((totalClickedCTA / totalCTA) * 100) : 0}
         />
       </div>
     )
@@ -188,17 +193,18 @@ const Analytics = ({ initialAnalytics,
     const displayReport = detailedContacts.includes(analytic.sentTo._id);
     const totalCTA = analytic.campaign.contents.reduce((acc, data) => 
     (data.links.length > 0 ? acc + data.links.length : acc), 0);
-    const totalClickedCTA = [...new Set(analytic.clickedLinks)]
+    const totalClickedCTA = [...new Set(analytic.clickedLinks)].length
 
     return (
       <div className={styles.analyticItem}>
         <ListItem
         className={styles.analyticItemDetails}
-        renderActions={() => 
-        <button onClick={() => setDetailedContacts( displayReport ? 
-          detailedContacts.filter((c) => c !== analytic.sentTo._id)
-          : [...detailedContacts, analytic.sentTo._id])}>
-          {displayReport ? 'Close Details' : 'Details'}</button>}>
+        renderActions={() => (
+        <button 
+          onClick={() => setDetailedContacts( displayReport ? 
+            detailedContacts.filter((c) => c !== analytic.sentTo._id)
+            : [...detailedContacts, analytic.sentTo._id])}>
+          {displayReport ? 'Close Details' : 'Details'}</button>)}>
           <input
             type="checkbox"
             value={analytic.sentTo._id}
@@ -209,11 +215,14 @@ const Analytics = ({ initialAnalytics,
           {analytic.openedCount.length === 0 ? 
           <p className={styles.badAnalytic}><b>USEEN</b></p> :
           <p className={styles.goodAnalytic}><b>OPEN</b></p>}
-          <p>{ analytic.openedCount.length === 0 ? '-' : analytic.viewDuration ? 
-           analytic.viewDuration + '%' : '0%'}</p>
-          <p>{ totalCTA > 0 ? 
-          analytic.openedCount.length !== 0 ? (analytic.clickedLinks?.length > 0 ? totalClickedCTA.length+'/'+totalCTA : '0/'+totalCTA) : '-'
-        : 'No Links'}</p>
+          {/* <p>{ analytic.openedCount.length === 0 ? '-' : analytic.viewDuration ? 
+           analytic.viewDuration + '%' : '0%'}</p> */}
+          {totalCTA === 0 && <p>No Links</p>}
+          {totalCTA > 0 && analytic.openedCount.length === 0 && <p>-</p>}
+          {totalCTA > 0 && analytic.openedCount.length > 0 && 
+          <p
+          className={`${totalClickedCTA<0.33*totalCTA ? styles.badAnalytic : (totalClickedCTA>0.67*totalCTA ? styles.goodAnalytic : styles.mediumAnalytic)}`}>
+            {totalClickedCTA}/{totalCTA}</p>}
         </ListItem>
         {displayReport && 
           <ListItem 
@@ -224,7 +233,7 @@ const Analytics = ({ initialAnalytics,
               <p>{analytic.sentTo && analytic.sentTo.company}</p>
             </div>
             <p>Views : <b>{analytic.openedCount.length === 0 ? '-' : analytic.openedCount.length}</b></p>
-            <p><b>{analytics.viewDurations ? displayDuration(analytic.viewDurations) : '-'}</b></p>
+            {/* <p><b>{analytics.viewDurations ? displayDuration(analytic.viewDurations) : '-'}</b></p> */}
             <div>
               {totalCTA > 0 ? analytic.campaign.contents.map((content) => 
                 content.links.map(link => displayLinkDetails(analytic, link))) : '-'}
@@ -234,8 +243,7 @@ const Analytics = ({ initialAnalytics,
       )
     }
 
-    console.log(stats, totalCTA)
-  return (
+    return (
     <AppLayout>
       <Head>
         <title>Analytics | FOMO</title>
@@ -250,38 +258,47 @@ const Analytics = ({ initialAnalytics,
                   </div>
               </div>
               <div className={styles.campaignsList}>
+              <Button
+                color={'white'}
+                type={'div'}
+                className={`${selectedCampaign ? 
+                  styles.unactiveCampaignItem : styles.activeCampaignItem}`}
+                onClick={() => getGlobalAnalytics()}>
+                  <p>General Analytics</p>
+              </Button>
+              <div className={styles.separator}/>
               { Object.values(campaignsShared).length > 0 && Object.values(campaignsShared).map((campaign) => renderCampaigns(campaign)) }
               { Object.values(campaignsShared).length <= 0 && renderCampaigns() }
               </div>
             </div>
           </div>
         </div>
-        <div className={styles.generalDashboard}>
         { !selectedCampaign && 
+        <div className={styles.generalDashboard}>
+          <ListItem 
+          className={styles.dashBoardHeader}>
+          <p className={styles.title}>General DashBoard</p>
+        </ListItem>
         <div className={styles.stats}>
-        <p className={styles.statsTitle}>General analytics</p>
         <Stat
-          text="Contacts"
+          text="Total Recipents"
           value="0"
-          value={contactsCount}
+          value={Object.values(initialAnalytics).length}
         />
-        <Stat
+        <PercentStat
           text="Video opening rate"
-          unit="%"
           value={stats.videoOpeningRate}
         />
-        <Stat
+        {/* <Stat
           text="Average view duration"
           unit="%"
           value={stats.averageViewDuration ? stats.averageViewDuration * 1000 : 0}
-        />
-        <Stat
+        /> */}
+        <PercentStat
           text="Links click through rate"
-          unit="%"
-          value={Math.round((stats.totalLinksClicked / totalCTA) * 100)}
+          value={Math.round((stats.totalLinksClicked / totalCTA)*100)}
         />
-      </div>}
-      </div>
+      </div></div>}
       <div className={styles.campaignAnalytics}>
         <div>
           { selectedCampaign && 
@@ -298,7 +315,7 @@ const Analytics = ({ initialAnalytics,
             <input type="checkbox" onChange={selectAll} checked={selectAllChecked}/>
             <div><p>Email</p></div>
             <div><p>State</p></div>
-            <div><p>Watch Time</p></div>
+            {/* <div><p>Watch Time</p></div> */}
             <div><p>CTA</p></div>
           </ListHeader>}
           {selectedCampaign && showByContact && analytics.map((a) => displayAnalyticsByContacts(a))}

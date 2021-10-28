@@ -17,6 +17,7 @@ import ListHeader from "@/components/ListHeader";
 import ListItem from "@/components/ListItem";
 import Preview from "@/components/Campaign/Preview";
 import Stat from "@/components/Stat";
+import PercentStat from "@/components/PercentStat";
 
 import styles from "@/styles/pages/app/dashboard.module.sass";
 
@@ -24,6 +25,7 @@ const Dashboard = ({
   campaignsDraft = [],
   campaignsShared = [],
   contactsCount = 0,
+  campaignsCount = 0,
   me,
   stats = {},
 }) => {
@@ -203,23 +205,16 @@ const Dashboard = ({
         <div className={styles.stats}>
           <p className={styles.statsTitle}>Your analytics</p>
           <Stat text="Contacts" value="0" value={contactsCount} />
-          <Stat
+          <PercentStat
             text="Video opening rate"
-            unit="%"
             value={stats.videoOpeningRate}
           />
-          <Stat
+          {/* <Stat
             text="Average view duration"
             unit="%"
-            value={
-              stats.averageViewDuration ? stats.averageViewDuration * 1000 : 0
-            }
-          />
-          <Stat
-            text="Reply button click through rate"
-            unit="%"
-            value={stats.replyRate}
-          />
+            value={stats.averageViewDuration ? stats.averageViewDuration * 1000 : 0}
+          /> */}
+          <Stat text="Campaigns" value="0" value={campaignsCount} />
         </div>
         <div className={styles.campaignsAndButtons}>
           <div className={styles.campaigns}>
@@ -284,12 +279,16 @@ export const getServerSideProps = withAuthServerSideProps(async () => {
     `/users/me/campaigns?status=shared&limit=${CAMPAIGNS_LIMIT}`
   );
   const { data: contactsCount } = await mainAPI.get("/users/me/contacts/count");
+  const { data: campaignsCount } = await mainAPI.get(
+    "/users/me/campaigns/count"
+  );
   const { data: stats } = await mainAPI.get("/users/me/analytics/stats");
 
   return {
     campaignsDraft,
     campaignsShared,
     contactsCount,
+    campaignsCount,
     stats,
   };
 });
