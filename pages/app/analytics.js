@@ -7,29 +7,35 @@ import withAuthServerSideProps from '@/hocs/withAuthServerSideProps'
 import { mainAPI } from '@/plugins/axios'
 
 import AppLayout from '@/layouts/AppLayout'
-import dayjs from '@/plugins/dayjs'
 
 import ListHeader from '@/components/ListHeader'
 import ListItem from '@/components/ListItem'
 import Stat from '@/components/Stat'
 
+
 import layoutStyles from '@/styles/layouts/App.module.sass'
 import styles from '@/styles/pages/app/analytics.module.sass'
+import Button from '@/components/Button';
+import PercentStat from '@/components/PercentStat'
 
-const Analytics = ({ initialAnalytics }) => {
+
+const Analytics = ({ initialAnalytics,
+  campaignsShared,
+  contactsCount= 0,
+  stats = {} }) => {
+
   const router = useRouter()
 
+  const [selectedCampaign, setSelectedCampaign] = useState(null);
+  const [campaignPreviewed, setCampaignPreviewed] = useState(null)
   const [analytics, setAnalytics] = useState(initialAnalytics)
+  const [selectedContacts, setSelectedContacts] = useState([])
+  const [detailedContacts, setDetailedContacts] = useState([])
+  const [selectAllChecked, setSelectAllChecked] = useState(false)
+  const [showByContact, setShowByContact] = useState(false)
 
-  useEffect(() => {
-    const campaignId = router.query.c
-    if (campaignId) {
-      const el = document.getElementById(campaignId)
-      if (el) {
-        el.scrollIntoView()
-      }
-    }
-  }, [])
+  const totalCTA = campaignsShared.map(campaign => campaign.contents.reduce((acc, data) => 
+  (data.links.length > 0 ? acc + data.links.length : acc), 0)).reduce((a, b) => a + b, 0) * initialAnalytics.length
 
   const displayDuration = (value) => {
     if (!value) {
@@ -41,97 +47,278 @@ const Analytics = ({ initialAnalytics }) => {
     return `${m}:${s < 10 ? `0${s}` : s}`
   }
 
-  const renderAnalytic = (analytic = {}) => (
-    <div
-      className={styles.analyticItem}
-      id={analytic.campaign ? analytic.campaign._id : ''}
-      key={analytic._id}
-    >
-      <ListItem
-        className={styles.analyticItemDetails}
-        empty={Object.keys(analytic).length > 0 ? false : true}
-        renderActions={() => (
-          <div>
-            <button
-              onClick={() => setAnalytics({
-                ...analytics,
-                [analytic._id]: {
-                  ...analytics[analytic._id],
-                  displayReport: !analytics[analytic._id].displayReport,
-                },
-              })}
-            >
-              {analytics[analytic._id].displayReport ? 'Close Analytics' : 'Analytics'}
-            </button>
-          </div>
-        )}
-        renderEmpty={() => (
-          <p>No analytics yet.</p>
-        )}
-      >
-        <p><b>#{analytic.campaign && analytic.campaign.uniqueId}</b></p>
-        <p>{analytic.campaign && analytic.campaign.name}</p>
-        <p>{analytic.campaign && dayjs(analytic.campaign.sentAt).format('MM/DD/YYYY')}</p>
-        <span>{analytic.sentTo && analytic.sentTo.length}</span>
-        <p>{analytic.campaign && displayDuration(analytic.campaign.duration)}</p>
-      </ListItem>
-      { analytic.displayReport && 
-        <div className={styles.analyticItemStats}>
-          <div className={styles.analyticItemStatsText}>
-            <div>
-              <p>From</p>
-              <p>{analytic.campaign.share.from}</p>
-            </div>
-            <div>
-              <p>Message</p>
-              <p>{analytic.campaign.share.message}</p>
-            </div>
-          </div>
-          <Stat
-            text="Video opening rate"
-            unit="%"
-            value={analytic.openingRate}
-          />
-          <Stat
-            text="Average view duration"
-            unit="s"
-            value={displayDuration(analytic.averageViewDuration * 1000)}
-          />
-          <Stat
-            text="Reply button click through rate"
-            unit="%"
-            value={analytic.replyRate}
-          />
-        </div>
-      }
-    </div>
-  )
+  
+  useEffect(() => {
+    const campaignId = router.query.c
+    if (campaignId) {
+      setSelectedCampaign(campaignsShared.find((c) => c._id === campaignId))
+      setAnalytics(Object.values(initialAnalytics)
+      .filter((a) => a.campaign._id === campaignId))
+    }
+  }, [])
 
-  return (
+  const refreshSelectedCampaign = (campaign) => {
+    setSelectAllChecked(false)
+    setDetailedContacts([])
+    setSelectedContacts([])
+    if (campaign !== selectedCampaign) {
+      setAnalytics(Object.values(initialAnalytics)
+      .filter((a) => a.campaign._id === campaign._id))
+      setSelectedCampaign(campaign)
+    } else {
+      setAnalytics([])
+      setSelectedCampaign(null)
+    }
+  }
+
+  const getGlobalAnalytics = () => {
+    setSelectAllChecked(false)
+    setDetailedContacts([])
+    setSelectedContacts([])
+    setAnalytics([])
+    setSelectedCampaign(null)
+  }
+
+  const selectOne = (e) => {
+    const contactId = e.target.value;
+    setSelectedContacts(
+    e.target.checked
+      ? [...selectedContacts, contactId]
+      : selectedContacts.filter((c) => c !== contactId)
+    );
+  };
+
+  const selectAll = (e) => {
+    selectAllChecked ? setSelectAllChecked(false) : setSelectAllChecked(true)
+    setSelectedContacts(
+      e.target.checked ? analytics.map((a) => a.sentTo._id) : []
+    );
+  };
+
+  const renderCampaigns = (campaign = {}) => {
+      
+    const empty= Object.keys(campaignsShared).length > 0 ? false : true
+
+    return empty ? 
+      <Button
+        color={'white'}
+        type={'div'}
+        className={styles.unactiveCampaignItem}>
+          <p>no campaigns yet.</p>
+      </Button> :
+      <div>
+        <Button
+          color={'white'}
+          type={'div'}
+          className={`${campaign != selectedCampaign ? 
+            styles.unactiveCampaignItem : styles.activeCampaignItem}`}
+          onClick={() => refreshSelectedCampaign(campaign)}>
+            <p>{campaign && campaign.name}</p>
+        </Button>
+        
+        {campaignPreviewed && (
+          <Preview 
+            campaign={campaignPreviewed}
+            onClose={() => setCampaignPreviewed(null)} />
+        )}
+      </div>        
+    }
+        
+  const displayCampaignInformations = (campaign) => {
+      
+    return (
+      <div className={styles.campaignGlobalAnalytic}>
+      <ListItem 
+      className={styles.campaignHeader}
+      renderActions={() => (
+      <div className={styles.displayIcon}>
+        <button
+          src="/assets/analytics/DashBoard.svg"
+          onClick={() => setShowByContact(false)}>Global</button>
+        <button
+          src="/assets/analytics/byContacts.svg"
+          onClick={() => setShowByContact(true)}>Contacts</button>
+      </div>
+      )}>
+        <p className={styles.title}>{campaign && campaign.name}</p>
+      </ListItem>
+      </div>
+      )}
+
+  const displayCampaignAnalytics = (campaign) => {
+
+    const totalOpened = analytics.filter(analytic => analytic.openedCount?.length > 0).length
+    const totalCTA = analytics.length * campaign.contents.reduce((acc, data) => 
+    (data.links.length > 0 ? acc + data.links.length : acc), 0);
+    const arrayClickedCTA = analytics.filter(analytic => analytic.clickedLinks?.length > 0)
+    .map(a => [...new Set(a.clickedLinks)].length)
+    const totalClickedCTA = arrayClickedCTA.reduce((a, b) => a + b, 0)
+
+    return (
+        <div className={styles.stats}>
+        <Stat
+          text="Recipients"
+          value="0"
+          value={campaign.sentCount}
+        />
+        <PercentStat
+          text="Video opening rate"
+          value={Math.round(totalOpened / analytics.length * 100)}
+        />
+        {/* <Stat
+          text="Average view duration"
+          unit="%"
+          value={stats.averageViewDuration ? stats.averageViewDuration * 1000 : 0}
+        /> */}
+        <PercentStat
+          text="Links click through rate"
+          value={totalCTA > 0 ? Math.round((totalClickedCTA / totalCTA) * 100) : 0}
+        />
+      </div>
+    )
+  }
+
+  const displayLinkDetails = (analytic, link) => {
+    const clicks = analytic.clickedLinks ? analytic.clickedLinks.filter((l) => l === link._id).length : '-';
+    return (
+      <div className={styles.CTADetail}>
+        <p>Clicks <b>{clicks}</b></p>
+        <p>{link.url}</p>
+      </div>
+    )
+  }
+
+  const displayAnalyticsByContacts = (analytic) => {
+
+    const displayReport = detailedContacts.includes(analytic.sentTo._id);
+    const totalCTA = analytic.campaign.contents.reduce((acc, data) => 
+    (data.links.length > 0 ? acc + data.links.length : acc), 0);
+    const totalClickedCTA = [...new Set(analytic.clickedLinks)].length
+
+    return (
+      <div className={styles.analyticItem}>
+        <ListItem
+        className={styles.analyticItemDetails}
+        renderActions={() => (
+        <button 
+          onClick={() => setDetailedContacts( displayReport ? 
+            detailedContacts.filter((c) => c !== analytic.sentTo._id)
+            : [...detailedContacts, analytic.sentTo._id])}>
+          {displayReport ? 'Close Details' : 'Details'}</button>)}>
+          <input
+            type="checkbox"
+            value={analytic.sentTo._id}
+            onChange={selectOne}
+            checked={selectedContacts.includes(analytic.sentTo._id)}
+          />
+          <p>{analytic.sentTo && analytic.sentTo.email}</p>
+          {analytic.openedCount.length === 0 ? 
+          <p className={styles.badAnalytic}><b>USEEN</b></p> :
+          <p className={styles.goodAnalytic}><b>OPEN</b></p>}
+          {/* <p>{ analytic.openedCount.length === 0 ? '-' : analytic.viewDuration ? 
+           analytic.viewDuration + '%' : '0%'}</p> */}
+          {totalCTA === 0 && <p>No Links</p>}
+          {totalCTA > 0 && analytic.openedCount.length === 0 && <p>-</p>}
+          {totalCTA > 0 && analytic.openedCount.length > 0 && 
+          <p
+          className={`${totalClickedCTA<0.33*totalCTA ? styles.badAnalytic : (totalClickedCTA>0.67*totalCTA ? styles.goodAnalytic : styles.mediumAnalytic)}`}>
+            {totalClickedCTA}/{totalCTA}</p>}
+        </ListItem>
+        {displayReport && 
+          <ListItem 
+            className={styles.analyticDetails}>
+            <div></div>
+            <div>
+              <p>{analytic.sentTo && analytic.sentTo.firstName + ' ' + analytic.sentTo.lastName}</p>
+              <p>{analytic.sentTo && analytic.sentTo.company}</p>
+            </div>
+            <p>Views : <b>{analytic.openedCount.length === 0 ? '-' : analytic.openedCount.length}</b></p>
+            {/* <p><b>{analytics.viewDurations ? displayDuration(analytic.viewDurations) : '-'}</b></p> */}
+            <div>
+              {totalCTA > 0 ? analytic.campaign.contents.map((content) => 
+                content.links.map(link => displayLinkDetails(analytic, link))) : '-'}
+            </div>
+          </ListItem>}
+      </div>
+      )
+    }
+
+    return (
     <AppLayout>
       <Head>
         <title>Analytics | FOMO</title>
       </Head>
 
-      <div className={layoutStyles.container}>
-        <div className={layoutStyles.header}>
-          <div className={layoutStyles.headerTop}>
-            <h1 className={layoutStyles.headerTitle}>Analytics</h1>
+        <div className={styles.campaignsListContainer}>
+          <div className={layoutStyles.container}>
+            <div>
+              <div className={layoutStyles.header}>
+                  <div className={layoutStyles.headerTop}>
+                      <h1 className={layoutStyles.headerTitle}>Analytics</h1>
+                  </div>
+              </div>
+              <div className={styles.campaignsList}>
+              <Button
+                color={'white'}
+                type={'div'}
+                className={`${selectedCampaign ? 
+                  styles.unactiveCampaignItem : styles.activeCampaignItem}`}
+                onClick={() => getGlobalAnalytics()}>
+                  <p>General Analytics</p>
+              </Button>
+              <div className={styles.separator}/>
+              { Object.values(campaignsShared).length > 0 && Object.values(campaignsShared).map((campaign) => renderCampaigns(campaign)) }
+              { Object.values(campaignsShared).length <= 0 && renderCampaigns() }
+              </div>
+            </div>
           </div>
         </div>
-
-        <ListHeader className={styles.analyticsHeader}>
-          <p>ID</p>
-          <p>Video name</p>
-          <p>Sent date</p>
-          <p>Recipients</p>
-          <p>Duration</p>
-          <p>Actions</p>
-        </ListHeader>
-
-        <div className={styles.analyticsList}>
-          { Object.values(analytics).length > 0 && Object.values(analytics).map((analytic) => renderAnalytic(analytic)) }
-          { Object.values(analytics).length <= 0 && renderAnalytic() }
+        { !selectedCampaign && 
+        <div className={styles.generalDashboard}>
+          <ListItem 
+          className={styles.dashBoardHeader}>
+          <p className={styles.title}>General DashBoard</p>
+        </ListItem>
+        <div className={styles.stats}>
+        <Stat
+          text="Total Recipents"
+          value="0"
+          value={Object.values(initialAnalytics).length}
+        />
+        <PercentStat
+          text="Video opening rate"
+          value={stats.videoOpeningRate}
+        />
+        {/* <Stat
+          text="Average view duration"
+          unit="%"
+          value={stats.averageViewDuration ? stats.averageViewDuration * 1000 : 0}
+        /> */}
+        <PercentStat
+          text="Links click through rate"
+          value={Math.round((stats.totalLinksClicked / totalCTA)*100)}
+        />
+      </div></div>}
+      <div className={styles.campaignAnalytics}>
+        <div>
+          { selectedCampaign && 
+          displayCampaignInformations(selectedCampaign)}
+        </div>
+        <div>
+          { selectedCampaign && !showByContact &&
+          displayCampaignAnalytics(selectedCampaign)}
+        </div>
+        
+        <div className={styles.analyticsByContact}>
+          {selectedCampaign && showByContact && 
+          <ListHeader className={styles.analyticsByContactHeader}>
+            <input type="checkbox" onChange={selectAll} checked={selectAllChecked}/>
+            <div><p>Email</p></div>
+            <div><p>State</p></div>
+            {/* <div><p>Watch Time</p></div> */}
+            <div><p>CTA</p></div>
+          </ListHeader>}
+          {selectedCampaign && showByContact && analytics.map((a) => displayAnalyticsByContacts(a))}
         </div>
       </div>
     </AppLayout>
@@ -139,20 +326,15 @@ const Analytics = ({ initialAnalytics }) => {
 }
 
 export default Analytics
-export const getServerSideProps = withAuthServerSideProps(async ({ query }) => {
-  let { data: initialAnalytics } = await mainAPI.get('/users/me/analytics')
-  const campaignId = query.c
-  initialAnalytics = initialAnalytics
-    .map(analytic => ({
-      [analytic._id]: {
-        ...analytic,
-        displayReport: campaignId && analytic.campaign && campaignId === analytic.campaign._id ? true : false,
-      }
-    }))
-    .reduce(function(result, current) {
-      return Object.assign(result, current);
-    }, {});
+export const getServerSideProps = withAuthServerSideProps(async () => {
+  const { data: campaignsShared } = await mainAPI.get(`/users/me/campaigns?status=shared`)
+  const { data: contactsCount } = await mainAPI.get('/users/me/contacts/count')
+  const { data: initialAnalytics } = await mainAPI.get('/users/me/analytics')
+  const { data: stats } = await mainAPI.get('/users/me/analytics/stats')
   return {
+    campaignsShared,
     initialAnalytics,
+    contactsCount,
+    stats,
   }
 })

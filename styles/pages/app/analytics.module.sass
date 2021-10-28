@@ -1,28 +1,139 @@
-@import '../../_variables'
+@import '../../_variables.sass'
 
-.analyticsHeader, .analyticItemDetails
-  grid-template-columns: 100px repeat(5, 1fr)
+%campaignItem
+  border-radius: 4px
+  box-shadow: $boxShadow
+  height: 40px
+  padding: 0 5px
+  p
+    color: $textColorOne
+    font-size: 14px
+    letter-spacing: 0.2px
+    text-align: left
+    overflow: auto
+  
+.campaignsListContainer
+  float: left
+  margin-right: 30px
+  width: 25%
+  height: 100%
+  background-color: rgba($primaryColor, 0.1)
+  .campaignsList
+    display: grid
+    grid-gap: 15px
+    .unactiveCampaignItem
+      @extend %campaignItem
+      &:hover
+        outline: groove rgba($primaryColor, 0.5)
+    .activeCampaignItem
+      @extend %campaignItem
+      outline: solid $primaryColor
+    .separator
+      height: 2px
+      background-color: $primaryColor
 
-.analyticsList
-  display: grid
-  grid-gap: 20px
+.generalDashboard
+  padding: 30px
+  .dashBoardHeader
+    margin-bottom: 20px
+    height: 50px
+    background-color: #fff
+    border-radius: 8px
+    box-shadow: $boxShadow
+    align-items: center
+  .title
+    color: $primaryColor
+    font-size: 24px
+    font-weight: 600
 
-.analyticItemStats
+.campaignAnalytics
+  padding: 30px
+  .title
+    color: $primaryColor
+    font-size: 24px
+    font-weight: 600
+  .campaignHeader
+    display: grid
+    margin-bottom: 20px
+    grid-template-columns: 8.3fr 1fr 1fr
+    height: 50px
+    background-color: #fff
+    border-radius: 8px
+    box-shadow: $boxShadow
+    align-items: center
+    .campaignHeader
+      margin-bottom: 20px
+      height: fit-content
+      width: 100%
+      background-color: #fff
+      border-radius: 8px
+      box-shadow: $boxShadow
+      .informations
+        display: grid
+        padding: 10px
+    .displayIcon
+      display: grid
+
+  .analyticsByContact
+    display: grid
+    grid-gap: 12px
+    .analyticsByContactHeader
+      grid-template-columns: 0.3fr 2fr 1fr 1fr 1fr 
+      p
+        color: $primaryColor
+    .goodAnalytic
+      color: #12AA22
+      font-weight: bold
+    .badAnalytic
+      color: #D42216
+      font-weight: bold
+    .mediumAnalytic
+      color: #FD810E
+      font-weight: bold
+  .analyticItemDetails
+    grid-template-columns: 0.3fr 2fr 1fr 1fr 1fr 
+    box-shadow: $boxShadow
+    position: relative
+    button
+      &:last-child
+        background: #D5F3FA
+  .analyticDetails
+    height: fit-content
+    padding-top: 5px
+    padding-bottom: 5px
+    grid-template-columns: 0.3fr 2fr 1fr 2fr 
+    background-color: #fff
+    box-shadow: $boxShadow
+    color: $textColorOne
+    font-size: 14px
+    
+  .CTADetail
+    display: grid 
+    grid-template-columns: 1fr 1fr
+   
+  
+.stats
   display: grid
   grid-gap: 10px
-  grid-template-columns: 30% repeat(3, 1fr)
-  padding: 10px 30px
+  grid-template-columns: repeat(4, 1fr)
+  grid-column-start: 1
+  grid-column-end: 13
+  margin: 20px
+.statsTitle
+  color: $primaryColor
+  font-size: 24px
+  font-weight: 600
+  grid-row: 1
+  grid-column-start: 1
+  grid-column-end: 5
+.stat
+  grid-row: 2
 
-.analyticItemStatsText
-  align-content: center
-  display: grid
-  grid-auto-rows: max-content
-  grid-gap: 20px
-  div
-    p
-      color: $textColorTwo
-      font-size: 12px
-      letter-spacing: 0.2px
-      &:first-child
-        font-weight: 600
-        margin-bottom: 5px
+
+
+    
+
+
+    
+    
+

@@ -308,6 +308,12 @@ const reducer = (state = initialState, action) => {
         ...state,
         currentOverlay: action.data,
       };
+
+    case "SET_FINALVIDEO":
+      return {
+        ...state,
+        finalVideo: action.data,
+      };
     case "CALC_VIDEOS_OFFSET":
       const videosOffset = [];
       for (let i = 0; i < action.data.length; i++) {

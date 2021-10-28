@@ -306,10 +306,7 @@ const Player = () => {
                 <Placeholder of={preview.element} />
               )}
               {logo && <Logo data={logo} />}
-              <div
-                className={styles.overlaySection}
-                style={{ pointerEvents: "none" }}
-              >
+              <div className={styles.overlaySection}>
                 <Overlays playerRef={playerRef.current} />
               </div>
             </div>
