@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 
-import { handleProgression, useDebounce } from "@/hooks";
+import { getDataByType, handleProgression, useDebounce } from "@/hooks";
 
 import { mainAPI } from "@/plugins/axios";
 
@@ -66,19 +66,25 @@ const ToolScreens = () => {
     }
   }, [selectedContent]);
 
-  const selectScreen = (elem) => {
-    const index = contents.findIndex((content) => content._id === elem._id);
-    console.log("index", index, elem, contents);
+  const selectScreen = (elem, array) => {
+    if (!array) {
+      array = contents.slice();
+    }
+    const index = array.findIndex((content) => content._id === elem._id);
+    console.log("index", index, array);
     if (index !== -1) {
-      const position = contents[index].position;
-      const timePosition = videosOffset[position];
-
+      const position = array[index].position;
+      const timePosition =
+        videosOffset[position] ||
+        videosOffset[position - 1] +
+          getDataByType(array[position - 1]).duration;
+      console.log("time", timePosition);
       dispatch({
         type: "SET_PROGRESSION",
         data: timePosition * 1000 + 10,
       });
       handleProgression(
-        contents,
+        array,
         videosOffset,
         timePosition * 1000 + 10,
         dispatch,
@@ -160,7 +166,7 @@ const ToolScreens = () => {
     });
     dispatch({ type: "SET_VIDEO", data: array });
     dispatch({ type: "CALC_VIDEOS_OFFSET", data: array });
-    selectScreen(array[array.length - 1]);
+    selectScreen(array[array.length - 1], array);
     setShowEdit(true);
   };
 
@@ -266,11 +272,6 @@ const ToolScreens = () => {
                   dispatch({ type: "SET_VIDEO", data });
                   dispatch({ type: "CALC_VIDEOS_OFFSET", data });
                   dispatch({ type: "SET_VIDEOS_REF" });
-                  dispatch({ type: "SET_PROGRESSION", data: 0 });
-                  dispatch({
-                    type: "SET_CURRENT_VIDEO",
-                    data: 0,
-                  });
                 }}
               >
                 <img src="/assets/campaign/librarySelect.svg" />
@@ -292,6 +293,7 @@ const ToolScreens = () => {
                     type: "SET_CURRENT_VIDEO",
                     data: 0,
                   });
+                  dispatch({ type: "SET_CURRENT_OVERLAY", data: 0 });
                 }}
               >
                 <img src="/assets/campaign/libraryUnselect.svg" />
@@ -376,7 +378,6 @@ const ToolScreens = () => {
               <div
                 onClick={() => {
                   setShowEdit(false);
-                  selectScreen({});
                 }}
                 className={styles.backArrow}
               >

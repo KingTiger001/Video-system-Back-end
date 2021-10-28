@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 
-import { handleProgression, useDebounce } from "@/hooks";
+import { getDataByType, handleProgression, useDebounce } from "@/hooks";
 
 import { ObjectID } from "bson";
 
@@ -67,22 +67,25 @@ const ToolVideos = () => {
     }
   }, [selectedContent]);
 
-  const selectVideo = (elem) => {
+  const selectVideo = (elem, array) => {
+    if (!array) {
+      array = contents.slice();
+    }
     dispatch({
       type: "SET_SELECTED_CONTENT",
       data: elem,
     });
-    const index = contents.findIndex((content) => content._id === elem._id);
-
+    const index = array.findIndex((content) => content._id === elem._id);
+    console.log("index?", index, array, elem._id);
     if (index !== -1) {
-      const position = contents[index].position;
+      const position = array[index].position;
       const timePosition = videosOffset[position];
       dispatch({
         type: "SET_PROGRESSION",
         data: timePosition * 1000 + 10,
       });
       handleProgression(
-        contents,
+        array,
         videosOffset,
         timePosition * 1000 + 10,
         dispatch,
@@ -259,15 +262,16 @@ const ToolVideos = () => {
             <div
               onClick={() => {
                 const data = addToContents(vd.video);
+                selectVideo(data[data.length - 1], data);
                 dispatch({ type: "SET_VIDEO", data });
 
                 dispatch({ type: "CALC_VIDEOS_OFFSET", data });
                 dispatch({ type: "SET_VIDEOS_REF" });
-                dispatch({ type: "SET_PROGRESSION", data: 0 });
-                dispatch({
-                  type: "SET_CURRENT_VIDEO",
-                  data: 0,
-                });
+                // dispatch({ type: "SET_PROGRESSION", data: 0 });
+                // dispatch({
+                //   type: "SET_CURRENT_VIDEO",
+                //   data: 0,
+                // });
               }}
             >
               <img src="/assets/campaign/librarySelect.svg" />
@@ -289,6 +293,7 @@ const ToolVideos = () => {
                   type: "SET_CURRENT_VIDEO",
                   data: 0,
                 });
+                dispatch({ type: "SET_CURRENT_OVERLAY", data: 0 });
               }}
             >
               <img src="/assets/campaign/libraryUnselect.svg" />
