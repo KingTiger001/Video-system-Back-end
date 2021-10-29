@@ -78,7 +78,7 @@ const ToolVideos = () => {
     const index = array.findIndex((content) => content._id === elem._id);
     if (index !== -1) {
       const position = array[index].position;
-      let timePosition;
+      let timePosition = 0;
       if (videosOffset[position]) {
         timePosition = videosOffset[position];
       } else if (videosOffset[position - 1]) {
@@ -271,7 +271,7 @@ const ToolVideos = () => {
             <div
               onClick={() => {
                 const data = addToContents(vd.video);
-                selectVideo(data[data.length - 1], data);
+                selectVideo(data[data.length - 1], data); //need to fix if -1 not exists
                 dispatch({ type: "SET_VIDEO", data });
 
                 dispatch({ type: "CALC_VIDEOS_OFFSET", data });

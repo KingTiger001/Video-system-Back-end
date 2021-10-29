@@ -30,13 +30,21 @@ const Overlays = ({ contact, contents, activeContent }) => {
     return text;
   };
 
+  const convertToUrl = (url) => {
+    // return url;
+    return url.includes("https://") || url.includes("http://")
+      ? url
+      : `https://${url}`;
+  };
+
   const renderElement = (elem, type) => {
     elem.value = replaceVariables(elem.value);
     return (
       <div
         onClick={() =>
           type === "link"
-            ? window.open(elem.url, "_blank") && createLinkAnalytic(elem._id)
+            ? window.open(convertToUrl(elem.url), "_blank") &&
+              createLinkAnalytic(elem._id)
             : null
         }
         key={elem._id}
@@ -74,26 +82,3 @@ const Overlays = ({ contact, contents, activeContent }) => {
 };
 
 export default Overlays;
-
-const Draggable = ({ children, defaultPosition }) => {
-  const [position, setPosition] = useState(defaultPosition);
-
-  return (
-    <div
-      style={{
-        left: `${position.x}%`,
-        top: `${position.y}%`,
-      }}
-      className={styles.draggable}
-      // draggable
-      // onDragEnd={handleDrag}
-      // onDrag={handleDrag}
-
-      // ******** do with ***********
-
-      onMouseDown={handleMouseDown}
-    >
-      {children}
-    </div>
-  );
-};

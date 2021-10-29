@@ -74,11 +74,10 @@ const ToolScreens = () => {
 
     if (index !== -1) {
       const position = array[index].position;
-
       let timePosition;
-      if (videosOffset[position]) {
+      if (videosOffset[position] !== undefined) {
         timePosition = videosOffset[position];
-      } else if (videosOffset[position - 1]) {
+      } else if (videosOffset[position - 1] !== undefined) {
         timePosition =
           videosOffset[position - 1] +
           getDataByType(array[position - 1]).duration;
@@ -300,6 +299,11 @@ const ToolScreens = () => {
                     type: "SET_CURRENT_VIDEO",
                     data: 0,
                   });
+                  if (data.length > 0)
+                    dispatch({
+                      type: "SET_PREVIEW_END_SCREEN",
+                      data: data[0],
+                    });
                   dispatch({ type: "SET_CURRENT_OVERLAY", data: 0 });
                 }}
               >

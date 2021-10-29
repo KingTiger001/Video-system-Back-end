@@ -144,7 +144,7 @@ const Player = () => {
         currentVideo !== i
       ) {
         if (contents[currentVideo]?.type === "video") {
-          videosRef[getVideoIndex(currentVideo)].pause();
+          videosRef[getVideoIndex(currentVideo)]?.pause();
         }
         dispatch({
           type: "SET_CURRENT_VIDEO",
