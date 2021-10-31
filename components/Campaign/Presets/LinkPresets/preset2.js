@@ -105,7 +105,7 @@ const LinkPreset2 = ({ value, fontSize }) => {
   return (
     <Preset>
       <button
-        style={{ transform: `scale(${fontSize / 2})` }}
+        style={{ transform: `scale(${fontSize / 50})` }}
         class="learn-more"
       >
         <span class="circle" aria-hidden="true">

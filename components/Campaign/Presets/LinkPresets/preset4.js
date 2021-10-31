@@ -240,7 +240,7 @@ const LinkPreset4 = ({ value, color, fontSize }) => {
   return (
     <Preset colorBg={color}>
       <button
-        style={{ fontSize: `${fontSize}rem` }}
+        style={{ fontSize: `${fontSize}px` }}
         ref={ref}
         className="bubbly-button"
       >

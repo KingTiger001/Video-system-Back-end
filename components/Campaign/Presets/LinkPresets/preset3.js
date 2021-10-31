@@ -131,7 +131,7 @@ export const Preset = styled.div`
 const LinkPreset3 = ({ value, color, fontSize }) => {
   return (
     <Preset>
-      <a style={{ fontSize: `${fontSize}rem` }}>
+      <a style={{ fontSize: `${fontSize}px` }}>
         <span className="text">{value}</span>
         <span className="line -right"></span>
         <span className="line -top"></span>

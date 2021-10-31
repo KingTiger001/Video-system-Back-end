@@ -40,7 +40,7 @@ const TextPreset2 = ({ value, color, fontSize }) => {
           </filter>
         </svg>
 
-        <span style={{ color, fontSize: `${fontSize}rem` }} filter-content="5">
+        <span style={{ color, fontSize: `${fontSize}px` }} filter-content="5">
           {value}
         </span>
       </>

@@ -63,10 +63,7 @@ export const Preset = styled.div`
 const TextPreset1 = ({ value, color, fontSize }) => {
   return (
     <Preset>
-      <p
-        style={{ fontSize: `${fontSize}rem`, color: color }}
-        className="popout"
-      >
+      <p style={{ fontSize: `${fontSize}px`, color: color }} className="popout">
         {[...value].map((letter) => (
           <span>{letter}</span>
         ))}

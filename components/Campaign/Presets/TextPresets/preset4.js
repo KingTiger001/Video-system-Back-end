@@ -18,7 +18,7 @@ const TextPreset4 = ({ value, color, fontSize }) => {
   return (
     <Preset>
       <h1>
-        <div style={{ color, fontSize: `${fontSize}rem` }} className="goo">
+        <div style={{ color, fontSize: `${fontSize}px` }} className="goo">
           {value}
         </div>
       </h1>
