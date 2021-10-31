@@ -71,7 +71,11 @@ const Overlays = ({ contact, contents, activeContent, playerWidth }) => {
       </div>
     );
   };
-  if (activeContent !== -1 && contents[activeContent]) {
+  if (
+    activeContent !== -1 &&
+    contents[activeContent] &&
+    Object.keys(contents[activeContent]).length > 0
+  ) {
     return (
       <>
         {contents[activeContent].texts.map((text) =>
