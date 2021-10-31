@@ -83,7 +83,7 @@ const LinkPreset1 = ({ value, color, fontSize }) => {
   return (
     <Preset>
       <button
-        style={{ fontSize: `${fontSize}rem`, color }}
+        style={{ fontSize: `${fontSize}px`, color }}
         className={"button button-mat btn--5"}
       >
         <div className="psuedo-text">{value}</div>

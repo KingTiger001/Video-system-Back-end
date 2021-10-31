@@ -23,7 +23,7 @@ export const Preset = styled.div`
 const TextPreset3 = ({ value, color, fontSize }) => {
   return (
     <Preset>
-      <p style={{ fontSize: `${fontSize}rem`, color: `${color}` }}>
+      <p style={{ fontSize: `${fontSize}px`, color: `${color}` }}>
         <span href="#" class="underlined underlined--thin">
           {value}
         </span>
