@@ -96,7 +96,7 @@ const ToolLogo = () => {
         className={styles.toolLogo}
         onClick={() => {
           if (!preview.show) {
-            dispatch({ type: "SHOW_PREVIEW" });
+            // dispatch({ type: "SHOW_PREVIEW" });
           }
         }}
       >

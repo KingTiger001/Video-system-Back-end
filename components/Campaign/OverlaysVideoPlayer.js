@@ -6,7 +6,7 @@ import { renderPresetElement } from "./Presets";
 
 import { mainAPI } from "@/plugins/axios";
 
-const Overlays = ({ contact, contents, activeContent }) => {
+const Overlays = ({ contact, contents, activeContent, playerWidth }) => {
   const router = useRouter();
 
   const createLinkAnalytic = (linkId) => {
@@ -30,19 +30,33 @@ const Overlays = ({ contact, contents, activeContent }) => {
     return text;
   };
 
+  const convertToUrl = (url) => {
+    // return url;
+    return url.includes("https://") || url.includes("http://")
+      ? url
+      : `https://${url}`;
+  };
+
+  const convertToRelative = (fontSize) => {
+    return playerWidth / (25 / fontSize);
+  };
+
   const renderElement = (elem, type) => {
-    elem.value = replaceVariables(elem.value);
+    let obj = { ...elem };
+    obj.value = replaceVariables(obj.value);
+    obj.fontSize = convertToRelative(obj.fontSize);
     return (
       <div
         onClick={() =>
           type === "link"
-            ? window.open(elem.url, "_blank") && createLinkAnalytic(elem._id)
+            ? window.open(convertToUrl(obj.url), "_blank") &&
+              createLinkAnalytic(obj._id)
             : null
         }
-        key={elem._id}
+        key={obj._id}
         style={{
-          left: `${elem.position.x}%`,
-          top: `${elem.position.y}%`,
+          left: `${obj.position.x}%`,
+          top: `${obj.position.y}%`,
           position: "absolute",
           transform: "translate(-50%,-50%)",
         }}
@@ -52,7 +66,7 @@ const Overlays = ({ contact, contents, activeContent }) => {
             type === "text" ? styles.textDraggable : styles.linkDraggable
           }
         >
-          {renderPresetElement(elem, type)}
+          {renderPresetElement(obj, type)}
         </div>
       </div>
     );
@@ -74,26 +88,3 @@ const Overlays = ({ contact, contents, activeContent }) => {
 };
 
 export default Overlays;
-
-const Draggable = ({ children, defaultPosition }) => {
-  const [position, setPosition] = useState(defaultPosition);
-
-  return (
-    <div
-      style={{
-        left: `${position.x}%`,
-        top: `${position.y}%`,
-      }}
-      className={styles.draggable}
-      // draggable
-      // onDragEnd={handleDrag}
-      // onDrag={handleDrag}
-
-      // ******** do with ***********
-
-      onMouseDown={handleMouseDown}
-    >
-      {children}
-    </div>
-  );
-};

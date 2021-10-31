@@ -79,9 +79,9 @@ const ToolVideos = () => {
     if (index !== -1) {
       const position = array[index].position;
       let timePosition;
-      if (videosOffset[position]) {
+      if (videosOffset[position] !== undefined) {
         timePosition = videosOffset[position];
-      } else if (videosOffset[position - 1]) {
+      } else if (videosOffset[position - 1] !== undefined) {
         timePosition =
           videosOffset[position - 1] +
           getDataByType(array[position - 1]).duration;
@@ -112,7 +112,7 @@ const ToolVideos = () => {
         type: "SET_CURRENT_OVERLAY",
         data: -1,
       });
-      dispatch({ type: "SHOW_PREVIEW" });
+      dispatch({ type: "SHOW_PREVIEW", data: { element: "video", data: {} } });
       // dispatch({ type: "SET_PREVIEW_VIDEO", data: elem.video });
     }
     dispatch({ type: "SET_PREVIEW_VIDEO", data: elem.video });
@@ -225,7 +225,10 @@ const ToolVideos = () => {
               type: "SET_CURRENT_OVERLAY",
               data: -1,
             });
-            dispatch({ type: "SHOW_PREVIEW" });
+            dispatch({
+              type: "SHOW_PREVIEW",
+              data: { element: "video", data: {} },
+            });
             // dispatch({ type: "SET_PREVIEW_VIDEO", data: vd.video });
           }
           dispatch({ type: "SET_PREVIEW_VIDEO", data: vd.video });

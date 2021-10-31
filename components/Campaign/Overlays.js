@@ -36,21 +36,28 @@ const Overlays = ({ playerRef }) => {
     });
   };
 
+  const convertToRelative = (fontSize) => {
+    return playerRef.getBoundingClientRect().width / (25 / fontSize);
+  };
+
   const renderElement = (elem, type) => {
+    let obj = { ...elem };
+    obj.fontSize = convertToRelative(obj.fontSize);
+
     if (playerRef !== undefined)
       return (
         <Draggable
-          key={elem._id}
+          key={obj._id}
           playerRef={playerRef}
-          defaultPosition={elem.position}
-          onMouseUp={(position) => updateContents(elem._id, position, type)}
+          defaultPosition={obj.position}
+          onMouseUp={(position) => updateContents(obj._id, position, type)}
         >
           <div
             className={
               type === "text" ? styles.textDraggable : styles.linkDraggable
             }
           >
-            {renderPresetElement(elem, type)}
+            {renderPresetElement(obj, type)}
           </div>
         </Draggable>
       );

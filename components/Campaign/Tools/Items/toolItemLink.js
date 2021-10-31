@@ -246,7 +246,7 @@ const ToolItemText = () => {
       <div key={index} className={styles.listItem}>
         <span className={styles.subtitle}>Text</span>
         <input
-          placeholder={"enter link"}
+          placeholder={"enter text"}
           onChange={(e) => {
             handleOnChange(e, link._id);
           }}

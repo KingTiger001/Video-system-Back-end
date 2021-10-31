@@ -26,7 +26,7 @@ const ToolRecord = () => {
         className={styles.toolRecord}
         onClick={() => {
           if (!preview.show) {
-            dispatch({ type: "SHOW_PREVIEW" });
+            // dispatch({ type: "SHOW_PREVIEW" });
           }
         }}
       >
