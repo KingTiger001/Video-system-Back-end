@@ -78,10 +78,10 @@ const ToolVideos = () => {
     const index = array.findIndex((content) => content._id === elem._id);
     if (index !== -1) {
       const position = array[index].position;
-      let timePosition = 0;
-      if (videosOffset[position]) {
+      let timePosition;
+      if (videosOffset[position] !== undefined) {
         timePosition = videosOffset[position];
-      } else if (videosOffset[position - 1]) {
+      } else if (videosOffset[position - 1] !== undefined) {
         timePosition =
           videosOffset[position - 1] +
           getDataByType(array[position - 1]).duration;
@@ -112,7 +112,7 @@ const ToolVideos = () => {
         type: "SET_CURRENT_OVERLAY",
         data: -1,
       });
-      dispatch({ type: "SHOW_PREVIEW" });
+      dispatch({ type: "SHOW_PREVIEW", data: { element: "video", data: {} } });
       // dispatch({ type: "SET_PREVIEW_VIDEO", data: elem.video });
     }
     dispatch({ type: "SET_PREVIEW_VIDEO", data: elem.video });
@@ -225,7 +225,10 @@ const ToolVideos = () => {
               type: "SET_CURRENT_OVERLAY",
               data: -1,
             });
-            dispatch({ type: "SHOW_PREVIEW" });
+            dispatch({
+              type: "SHOW_PREVIEW",
+              data: { element: "video", data: {} },
+            });
             // dispatch({ type: "SET_PREVIEW_VIDEO", data: vd.video });
           }
           dispatch({ type: "SET_PREVIEW_VIDEO", data: vd.video });
@@ -271,7 +274,7 @@ const ToolVideos = () => {
             <div
               onClick={() => {
                 const data = addToContents(vd.video);
-                selectVideo(data[data.length - 1], data); //need to fix if -1 not exists
+                selectVideo(data[data.length - 1], data);
                 dispatch({ type: "SET_VIDEO", data });
 
                 dispatch({ type: "CALC_VIDEOS_OFFSET", data });

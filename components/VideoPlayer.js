@@ -45,13 +45,15 @@ const VideoPlayer = ({
   const playerRef = useRef();
   const timelineRef = useRef();
   const volumeRef = useRef();
-  const { height } = useVideoResize({ ref: playerRef, autoHeight: true });
+  const { height, width } = useVideoResize({
+    ref: playerRef,
+    autoHeight: true,
+  });
 
   useEffect(() => {
     const data = Array.from(contents);
     dispatch({ type: "CALC_VIDEOS_OFFSET", data });
   }, []);
-
   useEffect(() => {
     const handleMouseUp = (e) => {
       if (timelineRef.current) {
@@ -348,11 +350,14 @@ const VideoPlayer = ({
           src={finalVideo.url}
         />
         {renderScreens()}
-        <Overlays
-          contact={contact}
-          contents={contents}
-          activeContent={activeContent}
-        />
+        {width > 0 && (
+          <Overlays
+            contact={contact}
+            contents={contents}
+            activeContent={activeContent}
+            playerWidth={width}
+          />
+        )}
 
         <Logo data={logo} />
         {showPlayButton && <PlayButton />}

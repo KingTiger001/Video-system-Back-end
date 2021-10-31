@@ -50,7 +50,8 @@ export const renderPresetElement = (elem, type) => {
         );
       default:
         return (
-          <p style={{ fontSize: `${elem.fontSize}rem`, color: elem.color }}>
+          <p style={{ fontSize: `${elem.fontSize}px`, color: elem.color }}>
+            {/* <p style={{ fontSize: `${elem.fontSize}%`, color: elem.color }}> */}
             {elem.value}
           </p>
         );
@@ -91,7 +92,8 @@ export const renderPresetElement = (elem, type) => {
         );
       default:
         return (
-          <p style={{ fontSize: `${elem.fontSize}rem`, color: elem.color }}>
+          // <p style={{ fontSize: `${elem.fontSize}%`, color: elem.color }}>
+          <p style={{ fontSize: `${elem.fontSize}px`, color: elem.color }}>
             {elem.value}
           </p>
         );

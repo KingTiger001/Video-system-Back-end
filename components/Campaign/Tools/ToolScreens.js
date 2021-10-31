@@ -100,7 +100,10 @@ const ToolScreens = () => {
       );
       dispatch({ type: "HIDE_PREVIEW" });
     } else {
-      dispatch({ type: "SHOW_PREVIEW" });
+      dispatch({
+        type: "SHOW_PREVIEW",
+        data: { element: "screen", data: elem },
+      });
       dispatch({ type: "SET_PREVIEW_VIDEO", data: elem });
     }
 
@@ -235,7 +238,10 @@ const ToolScreens = () => {
               );
               dispatch({ type: "HIDE_PREVIEW" });
             } else {
-              dispatch({ type: "SHOW_PREVIEW" });
+              dispatch({
+                type: "SHOW_PREVIEW",
+                data: { element: "screen", data: obj },
+              });
               dispatch({ type: "SET_PREVIEW_VIDEO", data: obj });
             }
 
@@ -275,6 +281,7 @@ const ToolScreens = () => {
               <div
                 onClick={() => {
                   const data = addToContents(obj);
+                  selectScreen(data[data.length - 1], data);
                   dispatch({ type: "SET_VIDEO", data });
                   dispatch({ type: "CALC_VIDEOS_OFFSET", data });
                   dispatch({ type: "SET_VIDEOS_REF" });

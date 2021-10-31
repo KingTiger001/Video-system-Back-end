@@ -91,6 +91,7 @@ const initialState = {
   preview: {
     show: false,
     element: "video",
+    data: {},
   },
   previewEndScreen: {},
   previewHelloScreen: {},

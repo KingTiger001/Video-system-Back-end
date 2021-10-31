@@ -12,8 +12,8 @@ import Logo from "@/components/Campaign/Logo";
 
 import styles from "@/styles/components/Campaign/Player.module.sass";
 import Placeholder from "./Placeholder";
-import Draggable from "react-draggable";
 import Overlays from "./Overlays";
+import OverlaysStatic from "./OverlaysVideoPlayer";
 
 const Player = () => {
   const dispatch = useDispatch();
@@ -259,7 +259,6 @@ const Player = () => {
       );
     }
   };
-
   return (
     <div className={styles.player}>
       <div className={styles.playerWrap} style={{ width: playerWidth }}>
@@ -268,6 +267,16 @@ const Player = () => {
             <div>
               {preview.element === "record" && (
                 <Placeholder of={preview.element} />
+              )}
+              {preview.element === "screen" && (
+                <>
+                  <EndScreen data={preview.data} />
+                  <OverlaysStatic
+                    contents={[preview.data]}
+                    playerWidth={playerWidth}
+                    activeContent={0}
+                  />
+                </>
               )}
               {preview.element === "video" &&
                 (previewVideo.url || contents.url ? (
@@ -306,9 +315,11 @@ const Player = () => {
                 <Placeholder of={preview.element} />
               )}
               {logo && <Logo data={logo} />}
-              <div className={styles.overlaySection}>
-                <Overlays playerRef={playerRef.current} />
-              </div>
+              {playerWidth > 0 && !preview.show && (
+                <div className={styles.overlaySection}>
+                  <Overlays playerRef={playerRef.current} />
+                </div>
+              )}
             </div>
           ) : null}
           {!resume && contents.length === 0 && <Placeholder of="all" />}
@@ -323,9 +334,11 @@ const Player = () => {
             {!preview.show && (
               <>
                 <Logo data={logo} />
-                <div className={styles.overlaySection}>
-                  <Overlays playerRef={playerRef.current} />
-                </div>
+                {playerWidth > 0 && !preview.show && (
+                  <div className={styles.overlaySection}>
+                    <Overlays playerRef={playerRef.current} />
+                  </div>
+                )}
               </>
             )}
           </div>
