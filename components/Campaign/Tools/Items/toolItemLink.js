@@ -81,7 +81,7 @@ const ToolItemText = () => {
       _id,
       value: "",
       url: "",
-      fontSize: 2,
+      fontSize: 0.5, // Set default button size
       color: "#898989",
       preset: 0,
       position: { x: 50, y: 50 },
@@ -196,9 +196,9 @@ const ToolItemText = () => {
           <RangeSliderContainer color={"#5F59F7"}>
             <InputRange
               maxValue={3}
-              minValue={1}
-              step={0.5}
-              value={link.fontSize}
+              minValue={0}
+              step={0.2}
+              value={parseFloat(link.fontSize).toFixed(2)}
               // value={selectedContent.screen.duration}
               onChange={(value) => {
                 handleChangeSize(value, link._id);

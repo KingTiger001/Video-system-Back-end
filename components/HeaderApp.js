@@ -72,7 +72,8 @@ const HeaderApp = () => {
         >
           Create a video campaign
         </Button>
-        <div className={styles.user}>
+        <div ref={userMenuRef}
+             className={styles.user}>
           { me.firstName &&
             <div
               className={styles.userName}
@@ -86,7 +87,6 @@ const HeaderApp = () => {
           { displayUserMenu &&
             <div
               className={styles.userDropdown}
-              ref={userMenuRef}
             >
               <ul className={styles.userMenu}>
                 <li>
