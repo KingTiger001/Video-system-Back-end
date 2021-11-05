@@ -135,7 +135,7 @@ const ToolItemText = () => {
     obj.texts.push({
       _id,
       value: "",
-      fontSize: 2,
+      fontSize: 1, 
       color: "#898989",
       preset: 0,
       position: { x: 50, y: 50 },
@@ -196,9 +196,9 @@ const ToolItemText = () => {
           <RangeSliderContainer color={"#5F59F7"}>
             <InputRange
               maxValue={5}
-              minValue={1}
-              step={0.5}
-              value={text.fontSize}
+              minValue={0.4}
+              step={0.2}
+              value={parseFloat(text.fontSize).toFixed(2)}
               // value={selectedContent.screen.duration}
               onChange={(value) => {
                 handleChangeSize(value, text._id);
