@@ -50,9 +50,9 @@ export const renderPresetElement = (elem, type) => {
         );
       default:
         return (
-          <p style={{ fontSize: `${elem.fontSize}px`, color: elem.color }}>
+          <p
+          style={{ fontSize: `${elem.fontSize}px`, color: elem.color }} dangerouslySetInnerHTML={{ __html: `${elem.value.replace(/(\r\n|\n|\r)/gm, "<br>")}` }}>
             {/* <p style={{ fontSize: `${elem.fontSize}%`, color: elem.color }}> */}
-            {elem.value}
           </p>
         );
     }

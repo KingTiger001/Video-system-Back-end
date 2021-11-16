@@ -237,7 +237,7 @@ const ToolItemText = () => {
   const renderText = (text, index) => {
     return (
       <div key={index} className={styles.listItem}>
-        <input
+        <textarea
           placeholder={"Add text..."}
           onChange={(e) => {
             handleOnChange(e, text._id);

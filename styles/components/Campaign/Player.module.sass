@@ -39,11 +39,11 @@
   cursor: grab!important
   color:#fff
   font-size: 1.5rem
-  white-space: nowrap
+  word-wrap: break-word
 
 .linkDraggable
   cursor: grab!important
-  white-space: nowrap
+  word-wrap: break-word
   p
     color: #000000
     background: #fff
@@ -62,11 +62,14 @@
   top: 0
   left: 0
   z-index: 1
+  overflow: hidden
+  text-align: center
   .draggable
     position: absolute
     display: inline-block
-    white-space: nowrap
     transform: translate(-50%,-50%)
+    max-width: 98%
+    min-width: 98%
 
 
 .controls
