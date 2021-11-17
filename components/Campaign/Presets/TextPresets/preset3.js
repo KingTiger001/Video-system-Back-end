@@ -24,8 +24,7 @@ const TextPreset3 = ({ value, color, fontSize }) => {
   return (
     <Preset>
       <p style={{ fontSize: `${fontSize}px`, color: `${color}` }}>
-        <span href="#" class="underlined underlined--thin">
-          {value}
+        <span href="#" class="underlined underlined--thin" dangerouslySetInnerHTML={{ __html: `${value.replace(/(\r\n|\n|\r)/gm, "<br>")}` }}>
         </span>
       </p>
     </Preset>

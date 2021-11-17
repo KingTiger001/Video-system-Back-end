@@ -64,12 +64,16 @@ const TextPreset1 = ({ value, color, fontSize }) => {
   return (
     <Preset>
       <p style={{ fontSize: `${fontSize}px`, color: color }} className="popout">
-        {[...value].map((letter) => (
-          <span>{letter}</span>
-        ))}
+        <span dangerouslySetInnerHTML={{ __html: `${value.replace(/(\r\n|\n|\r)/gm, "<br>")}` }}></span>
       </p>
     </Preset>
   );
 };
 
 export default TextPreset1;
+/*
+Don't delete this code until you validate the solution with clieant
+{[...value].map((letter) => (
+          <span>{letter}</span>
+        ))}
+*/
