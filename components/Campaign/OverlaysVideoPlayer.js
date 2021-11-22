@@ -59,6 +59,7 @@ const Overlays = ({ contact, contents, activeContent, playerWidth }) => {
           top: `${obj.position.y}%`,
           position: "absolute",
           transform: "translate(-50%,-50%)",
+          zIndex:99
         }}
       >
         <div
