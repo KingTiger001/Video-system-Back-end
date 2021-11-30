@@ -147,7 +147,7 @@ const Campaign = ({ me }) => {
           data: { url: data.url },
         });
         // Set current video redendered in cookies
-        cookies.set('rendred-video', data);
+        cookies.set('rendred-video', data, { path: '/' });
         return data.url;
       } catch (err) {
         const code = err.response && err.response.data;
