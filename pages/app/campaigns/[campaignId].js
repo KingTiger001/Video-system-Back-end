@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ContentEditable from "react-contenteditable";
 import { toast } from "react-toastify";
+import { CookiesProvider, Cookies } from 'react-cookie';
 
 import withAuthServerSideProps from "@/hocs/withAuthServerSideProps";
 
@@ -125,24 +126,39 @@ const Campaign = ({ me }) => {
   };
 
   const onMerge = async () => {
-    try {
-      const { data } = await mediaAPI.post("/renderVideo", {
-        campaignId: campaign._id,
-        contents: contents,
-      });
+    const cookies = new Cookies();
+    var video_url = cookies.get('rendred-video');
+    if(video_url !== undefined) {
+      console.log('already rendered')
       dispatch({
         type: "SET_FINALVIDEO",
-        data: { url: data.url },
+        data: { url: video_url.url },
       });
-      return data.url;
-    } catch (err) {
-      const code = err.response && err.response.data;
-      if (code) {
-        throw new Error(code);
-      } else {
-        throw new Error(err);
+      return video_url.url
+    } else {
+      console.log('new rendering')
+      try {
+        const { data } = await mediaAPI.post("/renderVideo", {
+          campaignId: campaign._id,
+          contents: contents,
+        });
+        dispatch({
+          type: "SET_FINALVIDEO",
+          data: { url: data.url },
+        });
+        // Set current video redendered in cookies
+        cookies.set('rendred-video', data);
+        return data.url;
+      } catch (err) {
+        const code = err.response && err.response.data;
+        if (code) {
+          throw new Error(code);
+        } else {
+          throw new Error(err);
+        }
       }
     }
+    
   };
 
   const handlePreviewMode = () => {

@@ -1,3 +1,6 @@
+import { Cookies } from 'react-cookie';
+const cookies = new Cookies();
+
 export const defaultHelloScreen = {
   background: "#000",
   duration: 200, // 0.2s
@@ -266,6 +269,7 @@ const reducer = (state = initialState, action) => {
         progression: action.data,
       };
     case "SELECT_TOOL":
+      cookies.remove('rendred-video');
       return {
         ...state,
         tool: action.data,
@@ -276,6 +280,7 @@ const reducer = (state = initialState, action) => {
         toolItem: action.data,
       };
     case "SET_VIDEO":
+      cookies.remove('rendred-video');
       const setVideoDuration = action.data.reduce(
         (prev, cur) => prev + getDurationByType(cur),
         0
