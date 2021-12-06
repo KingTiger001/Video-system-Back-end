@@ -126,17 +126,7 @@ const Campaign = ({ me }) => {
   };
 
   const onMerge = async () => {
-    const cookies = new Cookies();
-    var video_url = cookies.get('rendred-video');
-    if(video_url !== undefined) {
-      console.log('already rendered')
-      dispatch({
-        type: "SET_FINALVIDEO",
-        data: { url: video_url.url },
-      });
-      return video_url.url
-    } else {
-      console.log('new rendering')
+    
       try {
         const { data } = await mediaAPI.post("/renderVideo", {
           campaignId: campaign._id,
@@ -147,7 +137,7 @@ const Campaign = ({ me }) => {
           data: { url: data.url },
         });
         // Set current video redendered in cookies
-        cookies.set('rendred-video', data, { path: '/' });
+        //cookies.set('rendred-video', data, { path: '/' });
         return data.url;
       } catch (err) {
         const code = err.response && err.response.data;
@@ -157,7 +147,7 @@ const Campaign = ({ me }) => {
           throw new Error(err);
         }
       }
-    }
+    
     
   };
 
