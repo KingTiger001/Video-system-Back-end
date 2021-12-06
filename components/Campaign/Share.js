@@ -139,15 +139,15 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
   return (
     <div className={styles.stepThree}>
       <div>
-        <p className={styles.mailHeader}>
+        {/* <p className={styles.mailHeader}>
           Choose how you want to send your Email.
-        </p>
+        </p> */}
         <div className={styles.mailContainer}>
           <p className={styles.mailTitle}>
             You can connect your email address to send your video message
           </p>
           <div className={styles.mailOption}>
-            <input
+            {/* <input
               name="email"
               type="radio"
               value={providers.GOOGLE}
@@ -160,7 +160,7 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
                 sendVia.google &&
                 sendVia.provider === providers.GOOGLE
               }
-            />
+            /> */}
             <img
               className={styles.mailLogo}
               src="/assets/socials/gmail_icon.svg"
@@ -178,7 +178,7 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
             )}
           </div>
           <div className={styles.mailOption}>
-            <input
+            {/* <input
               name="email"
               type="radio"
               value={providers.MICROSOFT}
@@ -195,7 +195,7 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
                 sendVia.microsoft &&
                 sendVia.provider === providers.MICROSOFT
               }
-            />
+            /> */}
             <img
               className={styles.mailLogo}
               src="/assets/socials/outlook_icon.svg"
@@ -213,7 +213,7 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
             )}
           </div>
         </div>
-        <div className={styles.mailContainer}>
+        {/* <div className={styles.mailContainer}>
           <p className={styles.mailTitle}>
             You can use Fomo to send your video message
           </p>
@@ -228,7 +228,7 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
             <img className={styles.mailLogo} src="/logo-circle.svg"></img>
             <b>Fomo</b>
           </div>
-        </div>
+        </div> */}
       </div>
       {stepThreeError && <p className={styles.error}>{stepThreeError}</p>}
     </div>
@@ -263,7 +263,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
   const [stepTwoError, setStepTwoError] = useState("");
   const [stepFourError, setStepFourError] = useState("");
   const [thumbnailLoading, setThumbnailLoading] = useState(false);
-
+  const [copied, setCopied] = useState(false);
   const [displayPopupVariable, showPopupVariables] = useState(false);
   const [variable, setVariable] = useState("firstName");
 
@@ -814,6 +814,13 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
     );
   };
 
+  const handleCopiedLink=()=>{
+    setCopied(true)
+    navigator.clipboard.writeText("https://test.myfomo.io/campaigns/"+campaign._id) ;
+    setTimeout(()=>{
+      setCopied(false)
+    },3000)
+  }
   return (
     <MsalProvider instance={msalInstance}>
       <div className={styles.shareCampaign}>
@@ -849,7 +856,9 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
 
         <div className={styles.backdrop} />
         <div className={styles.box}>
-          <div className={styles.header}>
+          
+
+         {/* <div className={styles.header}>
             <p className={styles.headerTitle}>Your video campaign</p>
             <img
               onClick={() => showPopup({ display: "QUIT_SHARE" })}
@@ -895,50 +904,122 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
                 <img src="/assets/common/doneWhite.svg" />
               </div>
             </div>
+          </div> */}
+
+        <div className={styles.header}>
+            <p className={styles.backLink} onClick={() => showPopup({ display: "QUIT_SHARE" })}>    Back to video edition</p>
+
+            <img
+              onClick={() => showPopup({ display: "QUIT_SHARE" })}
+              src="/assets/common/close.svg"
+            />
           </div>
           <div className={styles.content}>
             {step === 1 && (
               <form className={styles.stepOne} ref={formDetailsRef}>
-                <p className={styles.title}>Message</p>
-                <div>
-                  <div className={styles.detailsMessageHeader}>
-                    <label>Your message</label>
-                    {(me.freeTrial || me.subscription.level === "pro") && (
-                      <span
-                        className={styles.addVariable}
-                        onClick={() => showPopupVariables(true)}
-                      >
-                        Add variable
-                      </span>
-                    )}
-                    {displayPopupVariable && (
-                      <div
-                        className={styles.popupVariables}
-                        ref={variablesPopupRef}
-                      >
-                        <label>Variables</label>
-                        <select
-                          onChange={(e) => setVariable(e.target.value)}
-                          defaultValue={variable}
-                        >
-                          <option value="firstName">First name</option>
-                          <option value="lastName">Last name</option>
-                          <option value="job">Job title</option>
-                          <option value="company">Company</option>
-                          <option value="city">City</option>
-                          <option value="email">Email</option>
-                          <option value="phone">Phone number</option>
-                        </select>
-                        <Button
-                          onClick={() => insertVariableInMessage(variable)}
-                          size="small"
-                          type="div"
-                        >
-                          Add
-                        </Button>
-                      </div>
-                    )}
+
+                   
+            <div  style={{ border:'solid 0px' , display:"flex" ,justifyContent:'space-between' }} >
+   
+   <div  style={{ border:'solid 0px red'  }} >
+     <div className={styles.uploadThumbnail}>
+         <label>Thumbnail</label>
+         <p className={styles.text}>
+           You can upload an image, your logo for example, that will
+           appear in your email.
+           <br /> By default there will be no image.
+         </p>
+         <label
+           className={styles.uploadThumbnailArea}
+           htmlFor="thumbnail"
+         >
+           <img src="/assets/common/thumbnail.svg" />
+           {!thumbnailLoading && <p>Download image</p>}
+           {thumbnailLoading && <p>Downloading...</p>}
+         </label>
+         <input
+           accept="image/*"
+           id="thumbnail"
+           type="file"
+           onChange={(e) => uploadThumbnail(e.target.files[0])}
+           className={styles.uploadThumbnailInput}
+         />
+         {campaign.share && campaign.share.thumbnail && (
+           <div>
+             <img
+               className={styles.uploadThumbnailPreview}
+               src={campaign.share.thumbnail}
+             />
+             <p
+               className={styles.removeThumbnail}
+               onClick={removeThumbnail}
+             >
+               Remove thumbnail
+             </p>
+           </div>
+         )}
+         <p className={styles.uploadThumbnailRecoSize}>
+           (Recommended format: 16/9)
+         </p>
+       </div>
+     </div> 
+        
+   <div style={{ border:'solid 0px green' ,paddingTop:50 , display: "flex",flexDirection: "column" , paddingRight:10,    alignItems: "center" }} >
+
+               <a
+                 href={false}
+                 className={copied ? styles.buttonLinkSuccess : styles.buttonLink}
+                  onClick={handleCopiedLink}
+                >              
+                  <img className={styles.imgLink} src={`/assets/common/${copied ? 'doneWhite' : 'link'}.svg`} />
+
+                   {copied ? 'Copied' : 'Copy links'}
+                
+                </a>
+                <img className={styles.imgLinkBottom} src="/assets/common/linkBottom.svg" />
+
+                <div style={{ border:'solid 0px black',width:'100%' , display: "flex" , alignItems:'center', flexDirection:'row' }} >
+
+                <img className={styles.shareRow} src="/assets/common/shareRow.svg" />
+                <label>Social Share</label>
                   </div>
+
+                   <div style={{ border:'solid 0px black',width:'100%' , display: "flex" , justifyContent:'space-between',    alignItems: "center" }} >
+                   <img className={styles.socialImg} src="/assets/socials/group.svg" />
+                
+                     </div>
+
+
+
+   </div> 
+     </div> 
+
+     <div  style={{ border:'solid 0px black', padding:20,  display:"flex" ,justifyContent:'space-between' ,background: 'white', boxShadow:'0px 4px 4px 5px rgba(0, 0, 0, 0.06)',borderRadius: 6 }} >
+     <div  style={{ border:'solid 0px red' ,width:'40%' }} >
+
+     <div style={{ marginBottom:30, display: "flex" , alignItems:'center', flexDirection:'row' }} >
+
+    <img className={styles.mailShare} src="/assets/common/mail.svg" />
+    <h2 className={styles.EmailTitle}>Email Share </h2>
+     
+      </div>
+  
+     <RenderStepTree sendVia={sendVia} setSendVia={setSendVia} />
+     </div>
+     <div style={{ border:'solid 0px green' ,width:'55%' }} >
+              
+                 <div style={{display:'flex',flexDirection: "row",  alignItems: "end" , width:"100%"}}>
+                  <div className={styles.detailsMessageHeader}>
+                  <label>Subject: </label>
+                  </div>
+                  <input type="text" />                
+                  </div>
+
+                <div style={{display:'flex',flexDirection: "row",marginTop:20,  alignItems: "end" , width:"100%"}}>
+                  <div className={styles.detailsMessageHeader}>
+                  <label>Message: </label>
+                  </div>
+                    
                   <textarea
                     onChange={(e) =>
                       setFormDetails({
@@ -950,55 +1031,17 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
                     type="text"
                     value={formDetails.message}
                   />
-                </div>
-                <div className={styles.uploadThumbnail}>
-                  <label>Thumbnail</label>
-                  <p className={styles.text}>
-                    You can upload an image, your logo for example, that will
-                    appear in your email.
-                    <br /> By default there will be no image.
-                  </p>
-                  <label
-                    className={styles.uploadThumbnailArea}
-                    htmlFor="thumbnail"
-                  >
-                    <img src="/assets/common/thumbnail.svg" />
-                    {!thumbnailLoading && <p>Download image</p>}
-                    {thumbnailLoading && <p>Downloading...</p>}
-                  </label>
-                  <input
-                    accept="image/*"
-                    id="thumbnail"
-                    type="file"
-                    onChange={(e) => uploadThumbnail(e.target.files[0])}
-                    className={styles.uploadThumbnailInput}
-                  />
-                  {campaign.share && campaign.share.thumbnail && (
-                    <div>
-                      <img
-                        className={styles.uploadThumbnailPreview}
-                        src={campaign.share.thumbnail}
-                      />
-                      <p
-                        className={styles.removeThumbnail}
-                        onClick={removeThumbnail}
-                      >
-                        Remove thumbnail
-                      </p>
-                    </div>
-                  )}
-                  <p className={styles.uploadThumbnailRecoSize}>
-                    (Recommended format: 16/9)
-                  </p>
-                </div>
-                <p className={styles.error}>{stepOneError}</p>
+                  </div>
+</div>
+
+      </div>
               </form>
             )}
             {step === 2 && RenderStepTwo()}
-            {step === 3 && (
+            {/* {step === 3 && (
               <RenderStepTree sendVia={sendVia} setSendVia={setSendVia} />
-            )}
-            {step === 4 && (
+            )} */}
+            {step === 3 && (
               <div className={styles.stepFour}>
                 <p className={styles.title}>Your video is ready to be sent.</p>
                 <p className={styles.text}>
@@ -1087,15 +1130,15 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
               )}
             </div>
             <div>
-              {step < 4 && (
+              {step < 3 && (
                 <Button
                   disabled={step == 3 && !sendVia.provider}
                   onClick={next}
                 >
-                  Next
+                  { step==1 ? "Select Contacts" : "Next" }
                 </Button>
               )}
-              {step === 4 && (
+              {step === 3 && (
                 <Button loading={shareLoading} onClick={share}>
                   Share
                 </Button>

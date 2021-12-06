@@ -116,9 +116,9 @@
     width: 14px
 
 .content
-  height: 65vh
+  min-height: 72vh
   overflow: auto
-  padding: 35px 50px
+  padding: 10px 50px
 
 .title
   color: $textColorTwo
@@ -147,19 +147,24 @@
     margin-bottom: 10px
   input[type=text], textarea
     border: 1px solid rgba(90,113,132,0.2)
-    border-radius: 8px
     display: block
     font-size: 14px
     width: 100%
+  input[type=text]
+    height: 30px
+    margin-left:10px  
   input
     height: 55px
     padding: 0 20px
   textarea
-    height: 110px
+    height: 210px
     padding: 20px
     resize: none
   .detailsMessageHeader
     align-items: center
+    margin-right:10px
+    font-size:15px
+    color:#5A7184
     display: grid
     grid-auto-flow: column
     justify-content: space-between
@@ -192,6 +197,8 @@
         width: 100%
   .uploadThumbnail
     display: grid
+    margin-left:30px
+    margin-top:20px
     grid-auto-columns: max-content
     gap: 0 8px
     & > label
@@ -363,8 +370,6 @@
   grid-gap: 15px
 
 .mailContainer
-  border: 1px solid $primaryColor
-  border-radius: 4px
   overflow: auto
   padding: 10px
   margin: 10px
@@ -373,6 +378,7 @@
   color: $textColorOne
   font-weight: 600
   text-align: center
+  margin-bottom: 20px
 
 .mailHeader
   color: $textColorTwo
@@ -385,6 +391,11 @@
   align-items: center 
   display: flex
   padding: 0 10px 
+  border:2px solid #5a7184
+  border-radius:4px
+  height: 40px
+  margin-top : 5px
+  color:black
 
 .mailLogo
   width: 30px
@@ -458,3 +469,76 @@
     display: grid
     grid-auto-flow: column
     grid-gap: 10px
+
+p.backLink
+  letter-spacing: 0.2px
+  font-size: 18px
+  color: #5B5FEE
+  text-decoration: underline
+  font-weight: 600
+  cursor : pointer
+
+.imgLink
+  width: 20px
+  height:20px
+  margin-right:10px
+  
+.imgLinkBottom
+  margin-top: 30px
+  width: 40%
+  margin-bottom:40px
+
+
+.socialImg
+  margin-top: 20px
+  width: 140px
+
+.EmailTitle
+   color:#183B56
+
+
+.mailShare
+  width : 25px
+  height:25px
+  margin-right : 10px     
+
+
+.buttonLink
+  height:48px
+  align-items: center
+  border-style: solid
+  border-width: 2px
+  border-radius: 8px
+  cursor: pointer
+  display: -webkit-flex
+  display: flex
+  height: 48px
+  -webkit-justify-content: center
+  justify-content: center
+  padding: 0 20px
+  text-decoration: none
+  background: #5F59F7
+  border-color: #5F59F7
+  color: #fff
+  font-weight:600
+  min-width: 144px
+
+.buttonLinkSuccess
+  height:48px
+  align-items: center
+  border-style: solid
+  border-width: 2px
+  border-radius: 8px
+  cursor: pointer
+  display: -webkit-flex
+  display: flex
+  height: 48px
+  -webkit-justify-content: center
+  justify-content: center
+  padding: 0 20px
+  text-decoration: none
+  background: green
+  border-color: green
+  color: #fff
+  font-weight:600
+  min-width: 144px  
