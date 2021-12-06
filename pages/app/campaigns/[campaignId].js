@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ContentEditable from "react-contenteditable";
 import { toast } from "react-toastify";
-import { CookiesProvider, Cookies } from 'react-cookie';
+//import { CookiesProvider, Cookies } from 'react-cookie';
 
 import withAuthServerSideProps from "@/hocs/withAuthServerSideProps";
 
