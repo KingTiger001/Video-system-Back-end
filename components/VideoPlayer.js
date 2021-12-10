@@ -41,6 +41,7 @@ const VideoPlayer = ({
   const [autoPlayFlag, setAutoPlayFlag] = useState(false);
   const [replay, setReplay] = useState(false);
   const [showPlayButton, setShowPlayButton] = useState(false);
+  const [showDivPlayButton, setShowDivPlayButton] = useState(false);
 
   const playerRef = useRef();
   const timelineRef = useRef();
@@ -195,6 +196,7 @@ const VideoPlayer = ({
 
   useEffect(() => {
     setShowPlayButton(true);
+    setShowDivPlayButton(true);
     return () => {
       dispatch({ type: "videoPlayer/PAUSE" });
       dispatch({ type: "videoPlayer/SET_PROGRESSION", data: 0 });
@@ -388,6 +390,8 @@ const VideoPlayer = ({
         <Logo data={logo} />
         {showPlayButton && <PlayButton />}
       </div>
+
+      {showDivPlayButton &&
       <div className={styles.controls}>
         <div
           className={styles.timeline}
@@ -457,6 +461,7 @@ const VideoPlayer = ({
           <p>{displayProgression(duration)}</p>
         </div>
       </div>
+}
     </div>
   );
 };
