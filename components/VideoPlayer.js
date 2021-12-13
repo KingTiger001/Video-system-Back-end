@@ -373,9 +373,14 @@ const VideoPlayer = ({
           key={finalVideo.url}
           playsInline={true}
           ref={videoRefCb}
-          preload="auto"
+          muted
+          playsInline
+          preload
+          loop
+          autoPlay
           src={finalVideo.url}
         />
+
         {renderFirstScreen()}
         {renderScreens()}
         {width > 0 && (
@@ -387,6 +392,7 @@ const VideoPlayer = ({
           />
         )}
 
+        
         <Logo data={logo} />
         {showPlayButton && <PlayButton />}
       </div>
