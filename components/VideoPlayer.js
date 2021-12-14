@@ -332,9 +332,7 @@ const VideoPlayer = ({
                 position: "relative",
                 background: contents[0].screen.background.color,
               }}
-
             >
-               
                {contents[0].texts.length > 0 && 
                (<span style={{ color:contents[0].texts[0]['color'] , fontSize:contents[0].texts[0]['fontSize'] * 30,
                left :  `${contents[0].texts[0]['position']['x']-5}%`, top :  `${contents[0].texts[0]['position']['x']}%`,position:'absolute'
@@ -366,15 +364,12 @@ const VideoPlayer = ({
         ref={playerRef}
         style={{ height }}
       >
-        {!showDivPlayButton &&  <img
-          src={ "/assets/common/loading.gif"}
-        />}
         <video
           className={styles.videoElement}
           height="100%"
           width="100%"
           key={finalVideo.url}
-          onCanPlay={()=> setShowDivPlayButton(true)}
+          onCanPlay={()=>setShowDivPlayButton(true)}
           playsInline={true}
           ref={videoRefCb}
           src={finalVideo.url}

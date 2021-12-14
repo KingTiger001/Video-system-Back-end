@@ -816,7 +816,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
 
   const handleCopiedLink=()=>{
     setCopied(true)
-    navigator.clipboard.writeText("https://test.myfomo.io/campaigns/"+campaign._id) ;
+    navigator.clipboard.writeText("https://www.myfomo.io/campaigns/"+campaign._id) ;
     setTimeout(()=>{
       setCopied(false)
     },3000)
