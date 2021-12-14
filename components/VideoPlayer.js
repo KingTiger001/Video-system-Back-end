@@ -196,7 +196,7 @@ const VideoPlayer = ({
 
   useEffect(() => {
     setShowPlayButton(true);
-    setShowDivPlayButton(true);
+   // setShowDivPlayButton(true);
     return () => {
       dispatch({ type: "videoPlayer/PAUSE" });
       dispatch({ type: "videoPlayer/SET_PROGRESSION", data: 0 });
@@ -366,18 +366,17 @@ const VideoPlayer = ({
         ref={playerRef}
         style={{ height }}
       >
+        {!showDivPlayButton &&  <img
+          src={ "/assets/common/loading.gif"}
+        />}
         <video
           className={styles.videoElement}
           height="100%"
           width="100%"
           key={finalVideo.url}
+          onCanPlay={()=> setShowDivPlayButton(true)}
           playsInline={true}
           ref={videoRefCb}
-          muted
-          playsInline
-          preload
-          loop
-          autoPlay
           src={finalVideo.url}
         />
 
@@ -395,6 +394,12 @@ const VideoPlayer = ({
         
         <Logo data={logo} />
         {showPlayButton && <PlayButton />}
+        {!showDivPlayButton && <div className={styles.playButton}>
+        <img
+          className={styles.loadingImg}
+          src="/assets/common/loading.gif"
+        ></img>
+      </div>}
       </div>
 
       {showDivPlayButton &&
