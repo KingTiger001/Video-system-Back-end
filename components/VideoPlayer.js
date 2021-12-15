@@ -15,6 +15,7 @@ const endScreen = { duration: 0 }; // need to remove, only here temporary to fix
 
 const VideoPlayer = ({
   contact,
+  fromPreview,
   data = {},
   onPause = () => {},
   onPlay = () => {},
@@ -41,7 +42,7 @@ const VideoPlayer = ({
   const [autoPlayFlag, setAutoPlayFlag] = useState(false);
   const [replay, setReplay] = useState(false);
   const [showPlayButton, setShowPlayButton] = useState(false);
-  const [showDivPlayButton, setShowDivPlayButton] = useState(false);
+  const [showDivPlayButton, setShowDivPlayButton] = useState(fromPreview ? true : false);
 
   const playerRef = useRef();
   const timelineRef = useRef();
@@ -333,7 +334,7 @@ const VideoPlayer = ({
                 background: contents[0].screen.background.color,
               }}
             >
-               {contents[0].texts.length > 0 && 
+               {!fromPreview && contents[0].texts.length > 0 && 
                (<span style={{ color:contents[0].texts[0]['color'] , fontSize:contents[0].texts[0]['fontSize'] * 30,
                left :  `${contents[0].texts[0]['position']['x']-5}%`, top :  `${contents[0].texts[0]['position']['x']}%`,position:'absolute'
                 }}>
@@ -342,10 +343,11 @@ const VideoPlayer = ({
               }
               </div>
           )
-      
     }
   }
 
+ 
+   
   return (
     <div
       className={styles.videoPlayer}
@@ -374,7 +376,6 @@ const VideoPlayer = ({
           ref={videoRefCb}
           src={finalVideo.url}
         />
-
         {renderFirstScreen()}
         {renderScreens()}
         {width > 0 && (

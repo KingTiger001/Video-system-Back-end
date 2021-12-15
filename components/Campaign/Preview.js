@@ -29,7 +29,7 @@ const Preview = ({ campaign, onClose }) => {
         >
           <img src="/assets/common/closeW.svg" />
         </div>
-        <VideoPlayer data={campaign} />
+        <VideoPlayer fromPreview={true} data={campaign} />
       </div>
     </div>
   )
