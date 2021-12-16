@@ -325,29 +325,17 @@ const VideoPlayer = ({
   };
   const renderFirstScreen=()=>{
     if (progression ===0 && contents.length > 0 && contents[0].type==="screen" && !isPlaying) {
-           return (
-            <div
-              style={{
-                width: "100%",
-                height: "100%",
-                position: "relative",
-                background: contents[0].screen.background.color,
-              }}
-            >
-               {!fromPreview && contents[0].texts.length > 0 && 
-               (<span style={{ color:contents[0].texts[0]['color'] , fontSize:contents[0].texts[0]['fontSize'] * 30,
-               left :  `${contents[0].texts[0]['position']['x']-5}%`, top :  `${contents[0].texts[0]['position']['x']}%`,position:'absolute'
-                }}>
-                    {contents[0].texts[0]['value']}
-              </span>)
-              }
-              </div>
-          )
+      return <Overlays
+      fromPlayer={true}
+      contact={contact}
+      contents={contents}
+      activeContent={0}
+      playerWidth={width}
+    />
     }
   }
 
  
-   
   return (
     <div
       className={styles.videoPlayer}

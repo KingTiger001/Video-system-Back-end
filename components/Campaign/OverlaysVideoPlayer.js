@@ -6,7 +6,7 @@ import { renderPresetElement } from "./Presets";
 
 import { mainAPI } from "@/plugins/axios";
 
-const Overlays = ({ contact, contents, activeContent, playerWidth }) => {
+const Overlays = ({ contact, contents, activeContent, playerWidth,fromPlayer }) => {
   const router = useRouter();
 
   const createLinkAnalytic = (linkId) => {
@@ -72,11 +72,38 @@ const Overlays = ({ contact, contents, activeContent, playerWidth }) => {
       </div>
     );
   };
+  
+  if(fromPlayer){
+    return (
+    <div
+      className="xxxx"
+      style={{
+        width: "100%",
+        height: "100%",
+        position: "relative",
+        background: contents[0].screen.background.color,
+      }}
+    >
+      
+        {contents[activeContent].texts.map((text) =>
+          renderElement(text, "text")
+        )}
+        {contents[activeContent].links.map((link) =>
+          renderElement(link, "link")
+        )}
+      </div>
+      
+      )
+  }
   if (
+    !fromPlayer
+    &&
     activeContent !== -1 &&
     contents[activeContent] &&
     Object.keys(contents[activeContent]).length > 0
   ) {
+   
+    
     return (
       <>
         {contents[activeContent].texts.map((text) =>
