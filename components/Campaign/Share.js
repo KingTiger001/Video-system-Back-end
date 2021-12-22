@@ -19,11 +19,12 @@ import { useGoogleLogin } from "react-google-login";
 import { googleConfig } from "config/GoogleConfig";
 import { Collapse } from "react-collapse";
 import "react-tabs/style/react-tabs.css";
+import Popup from "../Popups/Popup";
 
 const providers = {
   GOOGLE: "GOOGLE",
   MICROSOFT: "MICROSOFT",
-  FOMO: "FOMO",
+  // FOMO: "FOMO",
 };
 
 const RenderStepTree = ({ setSendVia, sendVia }) => {
@@ -128,12 +129,12 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
           email: outlookInstance.getAllAccounts()[0].username,
         },
       });
-    event.target.value === providers.FOMO &&
-      setSendVia({
-        ...sendVia,
-        provider: providers.FOMO,
-        fomo: { email: "noreply@myfomo.io" },
-      });
+    // event.target.value === providers.FOMO &&
+    //   setSendVia({
+    //     ...sendVia,
+    //     provider: providers.FOMO,
+    //     fomo: { email: "noreply@myfomo.io" },
+    //   });
   };
 
   return (
@@ -252,7 +253,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
   const [formDetails, setFormDetails] = useState({
     from: `${_FROM} via FOMO`,
     message: "",
-    subject: SUBJECT,
+    subject: "",
   });
   const [lists, setLists] = useState({});
   const [listsSelected, setListsSelected] = useState([]);
@@ -264,6 +265,8 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
   const [stepFourError, setStepFourError] = useState("");
   const [thumbnailLoading, setThumbnailLoading] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [copiedWithThumbnail, setCopiedWithThumbnail] = useState(false);
+  const [showProvidersNotification, setShowProvidersNotification] = useState(false);
   const [displayPopupVariable, showPopupVariables] = useState(false);
   const [variable, setVariable] = useState("firstName");
 
@@ -273,8 +276,10 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
 
   const msalInstance = new PublicClientApplication(msalConfig);
   const [sendVia, setSendVia] = useState({
-    provider: providers.FOMO,
-    fomo: { email: "noreply@myfomo.io" },
+    provider: '',
+    fomo: { email: "" },
+    // provider: providers.FOMO,
+    // fomo: { email: "noreply@myfomo.io" },
   });
 
   // Close click outside text style
@@ -308,7 +313,8 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
         ? sendVia.google.email
         : sendVia.provider === providers.MICROSOFT && sendVia.microsoft
         ? sendVia.microsoft.email
-        : providers.FOMO;
+        : '';
+        // : providers.FOMO;
     setFormDetails({
       ...formDetails,
       from: `${_FROM} via ${via}`,
@@ -342,7 +348,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
     setFormDetails({
       from: `${_FROM} via FOMO`,
       message: campaign.share ? campaign.share.message : "",
-      subject: SUBJECT,
+      subject: campaign.share ? campaign.share.subject : "",
     });
     if (campaign.share.sendVia) setSendVia(campaign.share.sendVia);
 
@@ -588,6 +594,40 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
     }
   };
 
+  // Process for copy link with thumbnail process
+  // to change and link to copy link with thumb function of 
+
+  const handleCopiedLinkWithThumbnail=()=>{
+    
+    if (campaign.share.thumbnail) {
+      setCopiedWithThumbnail(true);
+      // add thumbnile process
+      try {
+        // setThumbnailLoading(true);
+        navigator.clipboard.writeText("https://test.myfomo.io/campaigns/"+campaign._id+"?thumbnail=1") ;
+      } catch (err) {
+        console.log(err);
+        // const code = err.response && err.response.data;
+        setStepOneError("Can't show the thumbnail.");
+      } finally {
+        setTimeout(()=>{
+          setCopiedWithThumbnail(false);
+          setStepOneError("")
+        },5000)
+      }
+    } else {
+      console.log("thumbnail is not loaded");
+    }
+  }
+
+
+  const showWarningMessage=()=>{
+    setShowProvidersNotification(true);
+    // console.log("showWarningMessage");
+  }
+  
+  // end
+
   const renderContact = (contact, checked = true) =>
     contact ? (
       <div className={styles.contactsItem} key={contact._id}>
@@ -816,7 +856,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
 
   const handleCopiedLink=()=>{
     setCopied(true)
-    navigator.clipboard.writeText("https://app.myfomo.io/campaigns/"+campaign._id) ;
+    navigator.clipboard.writeText("https://test.myfomo.io/campaigns/"+campaign._id) ;
     setTimeout(()=>{
       setCopied(false)
     },3000)
@@ -925,15 +965,19 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
      <div className={styles.uploadThumbnail}>
          <label>Thumbnail</label>
          <p className={styles.text}>
-           You can upload an image, your logo for example, that will
-           appear in your email.
+           You can upload an image, your logo for example, 
+           <br />that will appear in your email.
            <br /> By default there will be no image.
          </p>
          <label
            className={styles.uploadThumbnailArea}
            htmlFor="thumbnail"
          >
-           <img src="/assets/common/thumbnail.svg" />
+           <img 
+            src={(!campaign.share || !campaign.share.thumbnail)? "/assets/common/thumbnail.svg" : campaign.share.thumbnail} 
+            className={(campaign.share && campaign.share.thumbnail)? styles.thumbnailSecStyle : ''}
+           />
+
            {!thumbnailLoading && <p>Download image</p>}
            {thumbnailLoading && <p>Downloading...</p>}
          </label>
@@ -944,7 +988,17 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
            onChange={(e) => uploadThumbnail(e.target.files[0])}
            className={styles.uploadThumbnailInput}
          />
-         {campaign.share && campaign.share.thumbnail && (
+          {(campaign.share && campaign.share.thumbnail) && (
+            <div>
+              <p
+                className={styles.removeThumbnail}
+                onClick={removeThumbnail}
+              >
+                Remove thumbnail
+              </p>
+            </div>
+          )}
+         {/* {campaign.share && campaign.share.thumbnail && (
            <div>
              <img
                className={styles.uploadThumbnailPreview}
@@ -957,7 +1011,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
                Remove thumbnail
              </p>
            </div>
-         )}
+         )} */}
          <p className={styles.uploadThumbnailRecoSize}>
            (Recommended format: 16/9)
          </p>
@@ -966,28 +1020,49 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
         
    <div style={{ border:'solid 0px green' ,paddingTop:50 , display: "flex",flexDirection: "column" , paddingRight:10,    alignItems: "center" }} >
 
-               <a
-                 href={false}
-                 className={copied ? styles.buttonLinkSuccess : styles.buttonLink}
-                  onClick={handleCopiedLink}
-                >              
-                  <img className={styles.imgLink} src={`/assets/common/${copied ? 'doneWhite' : 'link'}.svg`} />
+              <div className={styles.fomoCopyLinksContainer}>
+                  <a
+                    href={false}
+                    className={copiedWithThumbnail ? styles.buttonLinkSuccess : styles.buttonLinkWithThumb }
+                    onClick={handleCopiedLinkWithThumbnail}
+                  >              
+                    <img className={styles.imgLinkWithThumb} src={`/assets/common/${copiedWithThumbnail ? 'doneWhite' : 'cpThumbFull'}.svg`} />
 
-                   {copied ? 'Copied' : 'Copy links'}
-                
-                </a>
-                <img className={styles.imgLinkBottom} src="/assets/common/linkBottom.svg" />
+                    {copiedWithThumbnail ? 'Copied' : `Copy link  + thumbnail`}
 
-                <div style={{ border:'solid 0px black',width:'100%' , display: "flex" , alignItems:'center', flexDirection:'row' }} >
+                    {/* <input
+                      accept="image/*"
+                      id="linkandthumbnail"
+                      type="file"
+                      onChange={(e) => uploadThumbnailForLink(e.target.files[0])}
+                      className={styles.uploadThumbnailForLinkInput}
+                    /> */}
+                  
+                  </a>
+                  
+                  <a
+                    href={false}
+                    className={copied ? styles.buttonLinkSuccess : styles.buttonLink}
+                    onClick={handleCopiedLink}
+                  >              
+                    <img className={styles.imgLink} src={`/assets/common/${copied ? 'doneWhite' : 'link'}.svg`} />
 
-                <img className={styles.shareRow} src="/assets/common/shareRow.svg" />
-                <label>Social Share</label>
-                  </div>
+                    {copied ? 'Copied' : 'Copy links'}
+                  
+                  </a>
+              </div>
+              <div className={styles.socialShareAndBtImage} style={{ "margin-top": '35px' }}>
+                {/* <img className={styles.imgLinkBottom} src="/assets/common/linkBottom.svg" /> */}
+                <div style={{ border:'solid 0px black', display: "flex" , alignItems:'center', flexDirection:'row' }} >
 
-                   <div style={{ border:'solid 0px black',width:'100%' , display: "flex" , justifyContent:'space-between',    alignItems: "center" }} >
-                   <img className={styles.socialImg} src="/assets/socials/group.svg" />
-                
-                     </div>
+                  <img className={styles.shareRow} src="/assets/common/shareRow.svg" />
+                  <label>Social Share</label>
+                </div>
+
+                <div style={{ border:'solid 0px black', display: "flex" , justifyContent:'space-between',    alignItems: "center" }} >
+                  <img className={styles.socialImg} src="/assets/socials/group.svg" />
+                </div>
+              </div>
 
 
 
@@ -1012,10 +1087,18 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
                   <div className={styles.detailsMessageHeader}>
                   <label>Subject: </label>
                   </div>
-                  <input type="text" />                
+                  <input   onChange={(e) =>
+                      setFormDetails({
+                        ...formDetails,
+                        subject: e.target.value,
+                      })
+                    }
+                    required
+                    value={formDetails.subject}
+                    type="text" />                
                   </div>
 
-                <div style={{display:'flex',flexDirection: "row",marginTop:20,  alignItems: "end" , width:"100%"}}>
+                <div style={{display:'flex',flexDirection: "row",marginTop:20,  alignItems: "start" , width:"100%"}}>
                   <div className={styles.detailsMessageHeader}>
                   <label>Message: </label>
                   </div>
@@ -1132,11 +1215,19 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
             <div>
               {step < 3 && (
                 <Button
-                  disabled={step == 3 && !sendVia.provider}
+                  disabled={step == 1 && !sendVia.provider}
                   onClick={next}
+                  onMouseEnter={showWarningMessage}
+                  alt={showProvidersNotification? 'Please select a provider to continue' : ''}
                 >
-                  { step==1 ? "Select Contacts" : "Next" }
+                  {step==1 ? "Select Contacts" : "Next" }
                 </Button>
+              )}
+              {(showProvidersNotification && step==1) && (
+                <Popup
+                  title={'Select a provider'}
+                  showCloseIcon={true}
+                >Please select a provider to continue</Popup>
               )}
               {step === 3 && (
                 <Button loading={shareLoading} onClick={share}>

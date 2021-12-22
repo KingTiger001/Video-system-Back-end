@@ -196,7 +196,6 @@
       button
         width: 100%
   .uploadThumbnail
-    display: grid
     margin-left:30px
     margin-top:20px
     grid-auto-columns: max-content
@@ -241,6 +240,60 @@
       cursor: pointer
       grid-column: 2
       grid-row: 4
+  .fomoCopyLinksContainer
+    display: flex
+    flex-direction: row
+    margin-right: 0 !important
+    justify-content: space-between
+  .uploadThumbnailForLinkInput
+    display: none
+  .buttonLinkWithThumb
+    margin-right: 26px
+    background: #fff
+    padding: 0 10px
+    width: 97px
+    height: 48px
+    align-items: center
+    border-style: solid
+    border-width: 2px
+    border-radius: 5px
+    cursor: pointer
+    display: -webkit-flex
+    display: flex
+    -webkit-justify-content: center
+    justify-content: center
+    text-decoration: none
+    border-color: #5F59F7
+    color: #5B5FEE
+    font-weight:600
+    min-width: 144px
+  .imgLinkWithThumb
+    margin-right:10px
+  .socialShareAndBtImage
+    text-align: center
+  .buttonLinkSuccess
+    margin-right: 26px
+    padding: 0 10px
+    width: 97px
+    height: 48px
+    align-items: center
+    border-style: solid
+    border-width: 2px
+    border-radius: 5px
+    cursor: pointer
+    display: -webkit-flex
+    display: flex
+    -webkit-justify-content: center
+    justify-content: center
+    text-decoration: none
+    font-weight:600
+    min-width: 144px
+    background: green
+    border-color: green
+    color: #fff
+  .thumbnailSecStyle
+    height: 93px
+    margin-top: 15px
 
 .uploadThumbnailInput
   height: 0px
@@ -508,7 +561,7 @@ p.backLink
   align-items: center
   border-style: solid
   border-width: 2px
-  border-radius: 8px
+  border-radius: 5px
   cursor: pointer
   display: -webkit-flex
   display: flex

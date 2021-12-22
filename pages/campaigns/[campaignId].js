@@ -15,11 +15,13 @@ const Campaign = ({ campaign }) => {
 
   const campaignId = router.query.campaignId
   const contactId = router.query.c
+  const showthumbnail = router.query.thumbnail
 
   const sessionId = useRef()
   const [viewDuration, setViewDuration] = useState(-1)
   const viewDurationRef = useRef()
   const [isPlaying, setIsPlaying] = useState(false)
+  const [thumbnailPath, setThumbnailPath] = useState(false)
 
   let contact = campaign.share.contacts.find((c) => c._id === contactId)
 
@@ -29,6 +31,12 @@ const Campaign = ({ campaign }) => {
     }) 
 
   useEffect(() => {
+
+    console.log("show thumbnail param");
+    console.log(router.query.thumbnail);
+    console.log(showthumbnail);
+    console.log("end show");
+
     sessionId.current = Math.floor(Math.random() * Date.now())
     if (contactId) {
       mainAPI.post(`/analytics/${campaignId}/opened?c=${contactId}`)
@@ -66,8 +74,26 @@ const Campaign = ({ campaign }) => {
         setViewDuration(duration => duration + 1)
       }, 1000);
     }
+
+    console.log(campaign);
     return () => clearInterval(interval);
   }, [isPlaying])
+
+
+  // const getThumbnail = async () => {
+  //   // if (showthumbnail) {
+  //   //   const { data: campaignthumb } = await mainAPI.get(`/campaigns/${campaignId}/thumbnail`);
+  //   //   setThumbnailPath(campaignthumb.share.thumbnail);
+  //   //   console.log(campaignthumb);
+  //   // }
+  //   // else {
+  //   //   console.log("Thumbnial is not displayed");
+  //   // }
+  // };
+
+  // useEffect(() => {
+  //   getThumbnail();
+  // }, [])
 
   const reply = () => {
     if (contactId) {
@@ -109,11 +135,15 @@ const Campaign = ({ campaign }) => {
             Reply to {campaign.user.firstName}
           </Button>
         </div>
+        {/* {campaign} */}
+        {/* {campaign.share} */}
+        {/* {campaign.share.thumbnail} */}
         <VideoPlayer
           contact={contact}
           data={campaign}
           onPlay={() => setIsPlaying(true)}
           onPause={() => setIsPlaying(false)}
+          thumbnail={showthumbnail? true : false}
         />
       </div>
     </div>

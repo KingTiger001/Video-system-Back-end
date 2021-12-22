@@ -19,6 +19,7 @@ const VideoPlayer = ({
   data = {},
   onPause = () => {},
   onPlay = () => {},
+  thumbnail,
 }) => {
   const dispatch = useDispatch();
   const { logo, finalVideo, contents } = data;
@@ -196,6 +197,7 @@ const VideoPlayer = ({
   };
 
   useEffect(() => {
+    console.log(thumbnail);
     setShowPlayButton(true);
    // setShowDivPlayButton(true);
     return () => {
@@ -363,6 +365,7 @@ const VideoPlayer = ({
           playsInline={true}
           ref={videoRefCb}
           src={finalVideo.url}
+          poster={thumbnail? data.share.thumbnail : ''}
         />
         {renderFirstScreen()}
         {renderScreens()}
