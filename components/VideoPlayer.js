@@ -356,7 +356,7 @@ const VideoPlayer = ({
         ref={playerRef}
         style={{ height }}
       >
-        <video
+        <video controls
           className={styles.videoElement}
           height="100%"
           width="100%"

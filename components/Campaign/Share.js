@@ -277,7 +277,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
   const msalInstance = new PublicClientApplication(msalConfig);
   const [sendVia, setSendVia] = useState({
     provider: '',
-    fomo: { email: "" },
+    // fomo: { email: "" },
     // provider: providers.FOMO,
     // fomo: { email: "noreply@myfomo.io" },
   });
@@ -350,6 +350,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
       message: campaign.share ? campaign.share.message : "",
       subject: campaign.share ? campaign.share.subject : "",
     });
+    console.log("send via", campaign.share.sendVia);
     if (campaign.share.sendVia) setSendVia(campaign.share.sendVia);
 
     setContactsSelected(
@@ -385,6 +386,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
 
   const getLastUsedProvider = async () => {
     const lastSendVia = localStorage.getItem("sendVia");
+    console.log("send via get last user provider", campaign.share.sendVia);
     if (lastSendVia) setSendVia(JSON.parse(lastSendVia));
   };
 
@@ -1215,7 +1217,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
             <div>
               {step < 3 && (
                 <Button
-                  disabled={step == 1 && !sendVia.provider}
+                  disabled={(step == 1 && (!sendVia.google || !sendVia.google.credentials) && (!sendVia.microsoft || sendVia.microsoft.accessTokent))}
                   onClick={next}
                   onMouseEnter={showWarningMessage}
                   alt={showProvidersNotification? 'Please select a provider to continue' : ''}
