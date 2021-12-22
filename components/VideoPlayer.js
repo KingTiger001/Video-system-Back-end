@@ -297,12 +297,19 @@ const VideoPlayer = ({
 
   const PlayButton = () => {
     return (
-      <div className={styles.playButton}>
+      <div className={styles.coverImageVidContainer}>
         <img
-          className={styles.playButtonImage}
-          src="/assets/video/play.png"
+          className={styles.coverImageVid}
+          src={thumbnail? data.share.thumbnail : ''}
         ></img>
+        <div className={styles.playButton}>
+          <img
+            className={styles.playButtonImage}
+            src="/assets/video/play.png"
+          ></img>
+        </div>
       </div>
+      
     );
   };
 
