@@ -20,6 +20,7 @@ import { googleConfig } from "config/GoogleConfig";
 import { Collapse } from "react-collapse";
 import "react-tabs/style/react-tabs.css";
 import Popup from "../Popups/Popup";
+import { set } from "nprogress";
 
 const providers = {
   GOOGLE: "GOOGLE",
@@ -45,12 +46,22 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
     outlookInstance
       .loginPopup(requestScopes)
       .then(() => {
+        console.log('Signed in with outlook success!!');
+        // setSendVia({
+        //   ...sendVia,
+        //   provider: providers.MICROSOFT,
+        //   // email: outlookInstance.getAllAccounts()[0].username,
+        //   // maybe delete it all
+        // });
         setSendVia({
           ...sendVia,
           provider: providers.MICROSOFT,
-          // email: outlookInstance.getAllAccounts()[0].username,
-          // maybe delete it all
+          microsoft: {
+            accessToken: msAccesToken,
+            email: outlookInstance.getAllAccounts()[0].username,
+          },
         });
+        console.log(sendVia);
       })
       .catch((e) => {
         setStepThreeError("Error occurred");
@@ -90,6 +101,15 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
 
       setGoogleProfile(profile);
       setGoogleCredentials(credentials);
+
+      // changeProvider();
+      console.log('Signed in with gmail success!! && refreshed token');
+      setSendVia({
+        ...sendVia,
+        provider: providers.GOOGLE,
+        google: { credentials: googleCredentials, email: googleProfile.email },
+      });
+      console.log(sendVia.provider);
     } else {
       setGoogleProfile(session.profileObj);
     }
@@ -266,6 +286,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
   const [thumbnailLoading, setThumbnailLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [copiedWithThumbnail, setCopiedWithThumbnail] = useState(false);
+  const [thumbnailFile, setThumbnailFile] = useState(false);
   const [showProvidersNotification, setShowProvidersNotification] = useState(false);
   const [displayPopupVariable, showPopupVariables] = useState(false);
   const [variable, setVariable] = useState("firstName");
@@ -386,7 +407,6 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
 
   const getLastUsedProvider = async () => {
     const lastSendVia = localStorage.getItem("sendVia");
-    console.log("send via get last user provider", campaign.share.sendVia);
     if (lastSendVia) setSendVia(JSON.parse(lastSendVia));
   };
 
@@ -553,6 +573,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
   };
 
   const uploadThumbnail = async (file) => {
+    setThumbnailFile(file);
     const formData = new FormData();
     formData.append("file", file);
     formData.append("folder", "thumbnails");
@@ -606,7 +627,18 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
       // add thumbnile process
       try {
         // setThumbnailLoading(true);
-        navigator.clipboard.writeText("https://test.myfomo.io/campaigns/"+campaign._id+"?thumbnail=1") ;
+        console.log(thumbnailFile);
+        // linkToCopie = "https://test.myfomo.io/campaigns/"+campaign._id+"?thumbnail=1";
+        navigator.clipboard.writeText("https://test.myfomo.io/campaigns/"+campaign._id+"?thumbnail=1");
+        // navigator.clipboard.write([
+        //     new ClipboardItem({
+        //       'image/png': thumbnailFile
+        //     })
+        //     // new ClipboardItem({
+        //     //   'text/plain': new Blob([linkToCopie], { type: "text/plain" })
+        //     // })
+        //   ]
+        // );
       } catch (err) {
         console.log(err);
         // const code = err.response && err.response.data;
@@ -1217,12 +1249,13 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
             <div>
               {step < 3 && (
                 <Button
-                  disabled={(step == 1 && (!sendVia.google || !sendVia.google.credentials) && (!sendVia.microsoft || sendVia.microsoft.accessTokent))}
+                // optimize
+                  disabled={(step == 1 && (!sendVia || !sendVia.google || !sendVia.google.credentials) && (!sendVia || !sendVia.microsoft || sendVia.microsoft.accessTokent))}
                   onClick={next}
                   onMouseEnter={showWarningMessage}
                   alt={showProvidersNotification? 'Please select a provider to continue' : ''}
                 >
-                  {step==1 ? "Select Contacts" : "Next" }
+                  {step==1 ? "Select Contacts" : "Next"}
                 </Button>
               )}
               {(showProvidersNotification && step==1) && (
