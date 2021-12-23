@@ -61,6 +61,11 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
             email: outlookInstance.getAllAccounts()[0].username,
           },
         });
+        setSendedVia(sendVia.provider);
+        setFormDetails({
+          ...formDetails,
+          from: `${_FROM} via ${sendVia.provider}`,
+        });
         console.log(sendVia);
       })
       .catch((e) => {
@@ -101,13 +106,17 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
 
       setGoogleProfile(profile);
       setGoogleCredentials(credentials);
-
-      // changeProvider();
+      
       console.log('Signed in with gmail success!! && refreshed token');
       setSendVia({
         ...sendVia,
         provider: providers.GOOGLE,
         google: { credentials: googleCredentials, email: googleProfile.email },
+      });
+      setSendedVia(sendVia.provider);
+      setFormDetails({
+        ...formDetails,
+        from: `${_FROM} via ${sendVia.provider}`,
       });
       console.log(sendVia.provider);
     } else {
@@ -270,8 +279,9 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
   const [campaign, setCampaign] = useState({});
   const [contacts, setContacts] = useState({});
   const [contactsSelected, setContactsSelected] = useState([]);
+  const [sendedVia, setSendedVia] = useState(undefined);
   const [formDetails, setFormDetails] = useState({
-    from: `${_FROM} via FOMO`,
+    from: `${_FROM} via ${sendedVia}`,
     message: "",
     subject: "",
   });
@@ -367,7 +377,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
     }
     setCampaign(campaign);
     setFormDetails({
-      from: `${_FROM} via FOMO`,
+      from: `${_FROM} via ${sendedVia}`,
       message: campaign.share ? campaign.share.message : "",
       subject: campaign.share ? campaign.share.subject : "",
     });
@@ -1258,12 +1268,12 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
                   {step==1 ? "Select Contacts" : "Next"}
                 </Button>
               )}
-              {(showProvidersNotification && step==1) && (
+              {/* {(showProvidersNotification && step==1) && (
                 <Popup
                   title={'Select a provider'}
                   showCloseIcon={true}
                 >Please select a provider to continue</Popup>
-              )}
+              )} */}
               {step === 3 && (
                 <Button loading={shareLoading} onClick={share}>
                   Share
