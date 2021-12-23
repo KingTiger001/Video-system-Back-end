@@ -309,7 +309,6 @@ const VideoPlayer = ({
           ></img>
         </div>
       </div>
-      
     );
   };
 
@@ -363,7 +362,7 @@ const VideoPlayer = ({
         ref={playerRef}
         style={{ height }}
       >
-        <video controls
+        <video 
           className={styles.videoElement}
           height="100%"
           width="100%"
@@ -372,7 +371,7 @@ const VideoPlayer = ({
           playsInline={true}
           ref={videoRefCb}
           src={finalVideo.url}
-          poster={thumbnail? data.share.thumbnail : ''}
+          // poster={thumbnail? data.share.thumbnail : ''}
         />
         {renderFirstScreen()}
         {renderScreens()}
