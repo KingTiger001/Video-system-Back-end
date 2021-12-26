@@ -42,6 +42,7 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
 
   const [stepThreeError, setStepThreeError] = useState("");
 
+
   const handleOutlookLogin = (outlookInstance) => {
     outlookInstance
       .loginPopup(requestScopes)
@@ -61,11 +62,12 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
             email: outlookInstance.getAllAccounts()[0].username,
           },
         });
-        setSendedVia(sendVia.provider);
-        setFormDetails({
-          ...formDetails,
-          from: `${_FROM} via ${sendVia.provider}`,
-        });
+        // setSendedVia(sendVia.provider);
+        // setFormDetails({
+        //   ...formDetails,
+        //   from: `${_FROM} via ${sendVia.provider}`,
+        // });
+        // refrechSendVia();
         console.log(sendVia);
       })
       .catch((e) => {
@@ -106,6 +108,8 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
 
       setGoogleProfile(profile);
       setGoogleCredentials(credentials);
+      console.log("googleProfile", googleProfile);
+      console.log("googleCredentials", googleCredentials);
       
       console.log('Signed in with gmail success!! && refreshed token');
       setSendVia({
@@ -113,14 +117,28 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
         provider: providers.GOOGLE,
         google: { credentials: googleCredentials, email: googleProfile.email },
       });
-      setSendedVia(sendVia.provider);
-      setFormDetails({
-        ...formDetails,
-        from: `${_FROM} via ${sendVia.provider}`,
-      });
+      // setSendedVia(sendVia.provider);
+      // setFormDetails({
+      //   ...formDetails,
+      //   from: `${_FROM} via ${sendVia.provider}`,
+      // });
+      // refrechSendVia();
       console.log(sendVia.provider);
     } else {
       setGoogleProfile(session.profileObj);
+      console.log('Signed in with gmail success!!', session.profileObj);
+      setSendVia({
+        ...sendVia,
+        provider: providers.GOOGLE,
+        google: { credentials: session.profileObj.googleId, email: session.profileObj.email },
+      });
+      // setSendedVia(sendVia.provider);
+      // setFormDetails({
+      //   ...formDetails,
+      //   from: `${_FROM} via ${sendVia.provider}`,
+      // });
+      // refrechSendVia();
+      console.log(sendVia.provider);
     }
   };
 
@@ -281,7 +299,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
   const [contactsSelected, setContactsSelected] = useState([]);
   const [sendedVia, setSendedVia] = useState(undefined);
   const [formDetails, setFormDetails] = useState({
-    from: `${_FROM} via ${sendedVia}`,
+    from: `${_FROM} via FOMO`,
     message: "",
     subject: "",
   });
@@ -352,6 +370,19 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
     });
   }, [sendVia]);
 
+  const refrechSendVia = () => {
+    const via =
+      sendVia.provider === providers.GOOGLE && sendVia.google
+        ? sendVia.google.email
+        : sendVia.provider === providers.MICROSOFT && sendVia.microsoft
+        ? sendVia.microsoft.email
+        : '';
+    setFormDetails({
+      ...formDetails,
+      from: `${_FROM} via ${via}`,
+    });
+  };
+
   useEffect(() => {
     if (
       campaign.share &&
@@ -377,12 +408,16 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
     }
     setCampaign(campaign);
     setFormDetails({
-      from: `${_FROM} via ${sendedVia}`,
+      from: `${_FROM} via FOMO`,
       message: campaign.share ? campaign.share.message : "",
       subject: campaign.share ? campaign.share.subject : "",
     });
-    console.log("send via", campaign.share.sendVia);
-    if (campaign.share.sendVia) setSendVia(campaign.share.sendVia);
+    
+    if (campaign.share.sendVia) {
+      console.log("send via", campaign.share.sendVia);
+      setSendVia(campaign.share.sendVia);
+      refrechSendVia();
+    }
 
     setContactsSelected(
       campaign.share && campaign.share.contacts ? campaign.share.contacts : []
@@ -417,7 +452,10 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
 
   const getLastUsedProvider = async () => {
     const lastSendVia = localStorage.getItem("sendVia");
-    if (lastSendVia) setSendVia(JSON.parse(lastSendVia));
+    if (lastSendVia) {
+      setSendVia(JSON.parse(lastSendVia));
+      refrechSendVia();
+    }
   };
 
   const searchLists = async (query) => {
