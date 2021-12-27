@@ -110,6 +110,8 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
       setGoogleCredentials(credentials);
       console.log("googleProfile", googleProfile);
       console.log("googleCredentials", googleCredentials);
+      console.log("data returned from api", data);
+      console.log("data in the session", session);
       
       console.log('Signed in with gmail success!! && refreshed token');
       setSendVia({

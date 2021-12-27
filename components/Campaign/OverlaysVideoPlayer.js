@@ -58,7 +58,8 @@ const Overlays = ({ contact, contents, activeContent, playerWidth,fromPlayer }) 
           left: `${obj.position.x}%`,
           top: `${obj.position.y}%`,
           position: "absolute",
-          transform: "translate(-50%,-50%)",
+          transform: (obj.fontSize>60)? "translate(-46%, -43%)": "translate(-50%,-50%)",
+          width: (obj.fontSize>60)? "100%": "",
           zIndex:99
         }}
       >
