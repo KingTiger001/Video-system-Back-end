@@ -1131,7 +1131,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
                   >              
                     <img className={styles.imgLink} src={`/assets/common/${copied ? 'doneWhite' : 'link'}.svg`} />
 
-                    {copied ? 'Copied' : 'Copy links'}
+                    {copied ? 'Copied' : 'Copy link'}
                   
                   </a>
               </div>

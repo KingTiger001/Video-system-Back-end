@@ -10,10 +10,11 @@ import LinkPreset2 from "./LinkPresets/preset2";
 import LinkPreset3 from "./LinkPresets/preset3";
 import LinkPreset4 from "./LinkPresets/preset4";
 
-export const textPresets = [0, 1, 2, 3, 4];
+export const textPresets = [0];
 export const linkPresets = [0, 1, 2, 3, 4];
 
 export const renderPresetElement = (elem, type) => {
+  console.log(elem.preset);
   if (type === "text") {
     switch (elem.preset) {
       case 1:
@@ -50,7 +51,7 @@ export const renderPresetElement = (elem, type) => {
         );
       default:
         return (
-          <p
+          <p id="default"
           style={{ fontSize: `${elem.fontSize}px`, color: elem.color }} dangerouslySetInnerHTML={{ __html: `${elem.value.replace(/(\r\n|\n|\r)/gm, "<br>")}` }}>
             {/* <p style={{ fontSize: `${elem.fontSize}%`, color: elem.color }}> */}
           </p>

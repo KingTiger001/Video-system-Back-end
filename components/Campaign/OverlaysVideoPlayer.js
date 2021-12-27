@@ -60,6 +60,7 @@ const Overlays = ({ contact, contents, activeContent, playerWidth,fromPlayer }) 
           position: "absolute",
           transform: (obj.fontSize>60)? "translate(-46%, -43%)": "translate(-50%,-50%)",
           width: (obj.fontSize>60)? "100%": "",
+          textAlign: (obj.fontSize>60)? "center": "",
           zIndex:99
         }}
       >
