@@ -106,6 +106,9 @@ const RenderStepTree = ({ setSendVia, sendVia }) => {
 
       const { profile, credentials } = data;
 
+      console.log("profile from data", profile);
+      console.log("credentials from data", credentials);
+      console.log("Session code", session.code);
       setGoogleProfile(profile);
       setGoogleCredentials(credentials);
       console.log("googleProfile", googleProfile);
