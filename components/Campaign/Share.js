@@ -395,14 +395,15 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
       campaign.share.lists &&
       (campaign.share.contacts.length > 0 || campaign.share.lists.length > 0)
     ) {
-      setStep(3);
+      setStep(1);
+      
     } else if (
       campaign.share &&
       campaign.share.from &&
       campaign.share.message &&
-      campaign.share.subject
+      campaign.share.subject 
     ) {
-      setStep(2);
+      setStep(1);
     }
   }, [mounted]);
 
@@ -1156,7 +1157,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
    </div> 
      </div> 
 
-     <div  style={{ border:'solid 0px black', padding:20,  display:"flex" ,justifyContent:'space-between' ,background: 'white', boxShadow:'0px 4px 4px 5px rgba(0, 0, 0, 0.06)',borderRadius: 6 }} >
+     <div  style={{ border:'solid 0px black', padding:20,  display:"none" ,justifyContent:'space-between' ,background: 'white', boxShadow:'0px 4px 4px 5px rgba(0, 0, 0, 0.06)',borderRadius: 6 }} >
      <div  style={{ border:'solid 0px red' ,width:'40%' }} >
 
      <div style={{ marginBottom:30, display: "flex" , alignItems:'center', flexDirection:'row' }} >
@@ -1300,7 +1301,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
               )}
             </div>
             <div>
-              {step < 3 && (
+              {/*step < 3 && (
                 <Button
                 // optimize
                   disabled={(step == 1 && (!sendVia || !sendVia.google || !sendVia.google.credentials) && (!sendVia || !sendVia.microsoft || sendVia.microsoft.accessTokent))}
@@ -1310,7 +1311,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
                 >
                   {step==1 ? "Select Contacts" : "Next"}
                 </Button>
-              )}
+              )*/}
               {/* {(showProvidersNotification && step==1) && (
                 <Popup
                   title={'Select a provider'}
