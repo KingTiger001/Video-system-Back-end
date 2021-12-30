@@ -683,7 +683,7 @@ const Share = ({ campaignId, onClose, onDone, me }) => {
         // setThumbnailLoading(true);
         console.log(thumbnailFile);
         // linkToCopie = "https://test.myfomo.io/campaigns/"+campaign._id+"?thumbnail=1";
-        navigator.clipboard.writeText("https://test.myfomo.io/campaigns/"+campaign._id+"?thumbnail=1");
+        navigator.clipboard.writeText("https://app.myfomo.io/campaigns/"+campaign._id+"?thumbnail=1");
         // navigator.clipboard.write([
         //     new ClipboardItem({
         //       'image/png': thumbnailFile
