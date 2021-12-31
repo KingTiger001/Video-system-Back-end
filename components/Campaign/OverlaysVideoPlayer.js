@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 
 import styles from "@/styles/components/Campaign/Player.module.sass";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { renderPresetElement } from "./Presets";
 
 import { mainAPI } from "@/plugins/axios";
@@ -41,6 +41,19 @@ const Overlays = ({ contact, contents, activeContent, playerWidth,fromPlayer }) 
     return playerWidth / (25 / fontSize);
   };
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    if(navigator && (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))){
+      // console.log("user agent is mobile");
+      setIsMobile(true);
+    } else {
+      // console.log("user agent is not mobile");
+      setIsMobile(false);
+    }
+  });
+  
+
   const renderElement = (elem, type) => {
     let obj = { ...elem };
     obj.value = replaceVariables(obj.value);
@@ -58,11 +71,10 @@ const Overlays = ({ contact, contents, activeContent, playerWidth,fromPlayer }) 
           left: `${obj.position.x}%`,
           top: `${obj.position.y}%`,
           position: "absolute",
-          transform: (obj.fontSize>60)? "translate(-46%, -43%)": "translate(-50%,-50%)",
-          // width: (obj.fontSize>60)? "100%": "",
-          // textAlign: (obj.fontSize>60)? "center": "",
-          width: "100%",
-          textAlign: "center",
+          // transform: (obj.fontSize>60)? "translate(-46%, -43%)": "translate(-50%,-50%)",
+          transform: "translate(-50%,-50%)",
+          width: (obj.fontSize>60 || isMobile)? "100%": "",
+          textAlign: (obj.fontSize>60 || isMobile)? "center": "",
           zIndex:99
         }}
       >
