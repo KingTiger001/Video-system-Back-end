@@ -175,10 +175,11 @@ const ToolItemText = () => {
   const renderStyleOption = (text) => (
     <div className={styles.styleOption}>
       <div className={styles.styles}>
-        <div className={styles.subtitle}>Styles</div>
+        {/* <div className={styles.subtitle}>Styles</div> */}
         <div className={styles.content}>
           {textPresets.map((preset, i) => (
             <div
+              style={{ display: 'none' }}
               key={i}
               className={`${styles.presetBtn} ${
                 text.preset === preset ? styles.selected : null
@@ -223,15 +224,15 @@ const ToolItemText = () => {
   );
 
   const renderVariablesOption = (text) => {
-    return (
-      <div className={styles.styleOption}>
-        <div className={styles.variables}>
-          <TextVariables
-            onChange={({ variable }) => handleAddVariables(variable, text._id)}
-          />
-        </div>
-      </div>
-    );
+    // return (
+    //   <div className={styles.styleOption}>
+    //     <div className={styles.variables}>
+    //       <TextVariables
+    //         onChange={({ variable }) => handleAddVariables(variable, text._id)}
+    //       />
+    //     </div>
+    //   </div>
+    // );
   };
 
   const renderText = (text, index) => {
@@ -255,15 +256,15 @@ const ToolItemText = () => {
             style
             <img src="/assets/campaign/toolItemPaint.svg" />
           </div>
-          <div
+          {/* <div
             className={styles.toolItemOption}
-            onClick={() => {
+            onClick={() => { 
               handleOptionSelect(index, "variables");
             }}
           >
             variables
             <img src="/assets/campaign/toolItemVariable.svg" />
-          </div>
+          </div> */}
 
           <div
             className={styles.toolItemOption}
