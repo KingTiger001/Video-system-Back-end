@@ -1,161 +1,239 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
-import { useEffect, useRef, useState } from 'react'
+import {useRouter} from 'next/router'
+import {useEffect, useRef, useState} from 'react'
 
-import { mainAPI } from '@/plugins/axios'
+import {mainAPI} from '@/plugins/axios'
 
 import Button from '@/components/Button'
 import VideoPlayer from '@/components/VideoPlayer'
 
 import styles from '@/styles/pages/campaign.module.sass'
 
-const Campaign = ({ campaign }) => {
-  const router = useRouter()
+const Campaign = ({campaign}) => {
+    const router = useRouter()
 
-  const campaignId = router.query.campaignId
-  const contactId = router.query.c
-  const showthumbnail = router.query.thumbnail
+    const campaignId = router.query.campaignId
+    const contactId = router.query.c
+    const showthumbnail = router.query.thumbnail
 
-  const sessionId = useRef()
-  const [viewDuration, setViewDuration] = useState(-1)
-  const viewDurationRef = useRef()
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [thumbnailPath, setThumbnailPath] = useState(false)
+    const sessionId = useRef()
+    const [viewDuration, setViewDuration] = useState(-1)
+    const viewDurationRef = useRef()
+    const [isPlaying, setIsPlaying] = useState(false)
+    const [thumbnailPath, setThumbnailPath] = useState(false)
 
-  let contact = campaign.share.contacts.find((c) => c._id === contactId)
+    let contact = campaign.share.contacts.find((c) => c._id === contactId)
 
-  if (contact == null)
-    campaign.share.lists.forEach((item) => {
-      if (contact == null) contact = item.list.find((c) => c._id === contactId)
-    }) 
+    if (contact == null)
+        campaign.share.lists.forEach((item) => {
+            if (contact == null) contact = item.list.find((c) => c._id === contactId)
+        })
 
-  useEffect(() => {
+    useEffect(() => {
 
-    console.log("show thumbnail param");
-    console.log(router.query.thumbnail);
-    console.log(showthumbnail);
-    console.log("end show");
+        console.log("show thumbnail param");
+        console.log(router.query.thumbnail);
+        console.log(showthumbnail);
+        console.log("end show");
 
-    sessionId.current = Math.floor(Math.random() * Date.now())
-    if (contactId) {
-      mainAPI.post(`/analytics/${campaignId}/opened?c=${contactId}`)
+        sessionId.current = Math.floor(Math.random() * Date.now())
+        if (contactId) {
+            mainAPI.post(`/analytics/${campaignId}/opened?c=${contactId}`)
+        }
+        let interval
+        interval = setInterval(() => {
+            if (sessionId.current && viewDurationRef.current > 0 && contactId) {
+                mainAPI.post(`/analytics/${campaignId}/viewDuration`, {
+                    sessionId: sessionId.current,
+                    duration: viewDurationRef.current
+                })
+            }
+        }, 1000)
+        return () => {
+            clearInterval(interval)
+            if (sessionId.current && viewDurationRef.current > 0 && contactId) {
+                mainAPI.post(`/analytics/${campaignId}/viewDuration`, {
+                    sessionId: sessionId.current,
+                    duration: viewDurationRef.current
+                })
+            }
+        }
+    }, [])
+
+    useEffect(() => {
+        const videoDuration = Math.round(campaign.duration / 1000)
+        if (viewDuration > videoDuration) {
+            setViewDuration(videoDuration)
+            viewDurationRef.current = videoDuration
+            return
+        }
+        viewDurationRef.current = viewDuration
+    }, [campaign, viewDuration])
+
+    useEffect(() => {
+        let interval = null;
+        if (!isPlaying) {
+            clearInterval(interval)
+        } else if (isPlaying) {
+            interval = setInterval(() => {
+                setViewDuration(duration => duration + 1)
+            }, 1000);
+        }
+
+        console.log(campaign);
+        return () => clearInterval(interval);
+    }, [isPlaying])
+
+
+    // const getThumbnail = async () => {
+    //   // if (showthumbnail) {
+    //   //   const { data: campaignthumb } = await mainAPI.get(`/campaigns/${campaignId}/thumbnail`);
+    //   //   setThumbnailPath(campaignthumb.share.thumbnail);
+    //   //   console.log(campaignthumb);
+    //   // }
+    //   // else {
+    //   //   console.log("Thumbnial is not displayed");
+    //   // }
+    // };
+
+    // useEffect(() => {
+    //   getThumbnail();
+    // }, [])
+
+    const reply = () => {
+        if (contactId) {
+            mainAPI.post(`/analytics/${campaignId}/replied?c=${contactId}`)
+        }
+        window.location = `mailto:${campaign.user.email}`
     }
-    let interval
-    interval = setInterval(() => {
-      if (sessionId.current && viewDurationRef.current > 0 && contactId) {
-        mainAPI.post(`/analytics/${campaignId}/viewDuration`, { sessionId: sessionId.current, duration: viewDurationRef.current })
-      }
-    }, 1000)
-    return () => {
-      clearInterval(interval)
-      if (sessionId.current && viewDurationRef.current > 0 && contactId) {
-        mainAPI.post(`/analytics/${campaignId}/viewDuration`, { sessionId: sessionId.current, duration: viewDurationRef.current })
-      }
-    }
-  }, [])
 
-  useEffect(() => {
-    const videoDuration = Math.round(campaign.duration / 1000)
-    if (viewDuration > videoDuration) {
-      setViewDuration(videoDuration)
-      viewDurationRef.current = videoDuration
-      return
-    }
-    viewDurationRef.current = viewDuration
-  }, [campaign, viewDuration])
+    console.log('compaign', campaign.share.thumbnail);
 
-  useEffect(() => {
-    let interval = null;
-    if (!isPlaying) {
-      clearInterval(interval)
-    } else if (isPlaying) {
-      interval = setInterval(() => {
-        setViewDuration(duration => duration + 1)
-      }, 1000);
-    }
-
-    console.log(campaign);
-    return () => clearInterval(interval);
-  }, [isPlaying])
+    return (
+        <div className={styles.campaign}>
+            <Head>
+                <title>{campaign.user.firstName} from {campaign.user.company} sent you a video message | FOMO</title>
 
 
-  // const getThumbnail = async () => {
-  //   // if (showthumbnail) {
-  //   //   const { data: campaignthumb } = await mainAPI.get(`/campaigns/${campaignId}/thumbnail`);
-  //   //   setThumbnailPath(campaignthumb.share.thumbnail);
-  //   //   console.log(campaignthumb);
-  //   // }
-  //   // else {
-  //   //   console.log("Thumbnial is not displayed");
-  //   // }
-  // };
+                {/*<meta property="og:url" content={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}/>*/}
+                {/*<meta property="og:type" content="article"/>*/}
+                {/*<meta property="og:title" content={campaign?.name} />*/}
+                {/*<meta property="og:description" content=""/>*/}
+                {/*<meta property="og:image" content={campaign?.share?.thumbnail}/>*/}
 
-  // useEffect(() => {
-  //   getThumbnail();
-  // }, [])
+                {/*<meta name="twitter:title" content={campaign?.name}/>*/}
+                {/*<meta name="twitter:description" content=""/>*/}
+                {/*<meta name="twitter:image" content={campaign?.share?.thumbnail}/>*/}
+                {/*<meta name="twitter:card" content="summary_large_image"/>*/}
 
-  const reply = () => {
-    if (contactId) {
-      mainAPI.post(`/analytics/${campaignId}/replied?c=${contactId}`)
-    }
-    window.location = `mailto:${campaign.user.email}`
-  }
+                <meta property="al:ios:url" content={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}/>
+                <meta property="al:android:url" content={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}/>
+                <meta property="al:web:url" content={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}/>
+                <meta property="al:web:image" content={campaign?.share.thumbnail}/>
 
-  return (
-    <div className={styles.campaign}>
-      <Head>
-        <title>{campaign.user.firstName} from {campaign.user.company} sent you a video message | FOMO</title>
-      </Head>
+                <meta name="medium" content="video"/>
+                <meta name="title" content={campaign?.name}/>
+                <meta name="description" content=""/>
+                <meta name="video_type" content="application/x-shockwave-flash"/>
+                <meta name="video_height" content="360"/>
+                <meta name="video_width" content="640"/>
 
-      <div className={styles.header}>
-        <div className={styles.container}>
-          <Link href="/">
-            <a className={styles.logo}>
-              <img src="/logo-simple.svg" />
-            </a>
-          </Link>
-          <Button
-            href="/"
-            outline={true}
-            type="link"
-          >
-            Discover Fomo
-          </Button>
+                <meta property="fb:app_id" content=""/>
+                <meta property="fb:admins" content=""/>
+                <meta name="slack-app-id" content=""/>
+
+                <meta property="og:url" content={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}/>
+                <meta property="og:title" content={campaign?.name}/>
+                <meta property="og:description" content=""/>
+
+                <meta property="og:image" content={campaign?.share.thumbnail}/>
+                <meta property="og:image:width" content="470"/>
+                <meta property="og:image:height" content="264"/>
+                <meta property="og:type" content="video.movie"/>
+                <meta property="video:duration" content="11"/>
+                <meta property="og:video:type" content="text/html"/>
+                <meta property="og:video:width" content="470"/>
+                <meta property="og:video:height" content="264"/>
+                <meta property="og:video" content={campaign?.finalVideo.url}/>
+                <meta property="og:video:secure_url" content={campaign?.finalVideo.url}/>
+                <meta property="og:video:type" content="application/x-shockwave-flash"/>
+                <meta property="og:video:width" content="470"/>
+                <meta property="og:video:height" content="264"/>
+                <meta property="og:video:type" content="video/mp4"/>
+                <meta property="og:video:width" content="470"/>
+                <meta property="og:video:height" content="264"/>
+                <meta property="og:video" content={campaign?.finalVideo.url}/>
+                <meta property="og:video:secure_url" content={campaign?.finalVideo.url}/>
+
+                <meta name="twitter:player:stream" content={campaign?.finalVideo.url}/>
+                <meta name="twitter:player:stream:content_type" content="video/mp4; codecs=&quot;avc1.42E01E1, mp4a.40.2&quot;"/>
+                <meta name="twitter:card" content="player"/>
+                <meta name="twitter:url" content={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}/>
+                <meta name="twitter:title" content={campaign?.name}/>
+                <meta name="twitter:description" content=""/>
+                <meta name="twitter:player:width" content="435"/>
+                <meta name="twitter:player:height" content="245"/>
+                <meta name="twitter:player" content={campaign?.finalVideo.url}/>
+                <meta name="twitter:image" content={campaign?.share.thumbnail}/>
+
+            </Head>
+
+
+            <div className={styles.header}>
+                <div className={styles.container}>
+                    <Link href="/">
+                        <a className={styles.logo}>
+                            <img src="/logo-simple.svg"/>
+                        </a>
+                    </Link>
+                    <Button
+                        href="/"
+                        outline={true}
+                        type="link"
+                    >
+                        Discover Fomo
+                    </Button>
+                </div>
+            </div>
+            <div className={styles.content}>
+                <div className={styles.reply}>
+                    <div className={styles.titleContainer}>
+                        <h1 className={styles.title}>{campaign.user.firstName} from {campaign.user.company}</h1>
+                        <p>sent you a video message</p>
+                    </div>
+                    <Button onClick={reply}>
+                        <img src="/assets/common/reply.svg" style={{marginRight: 5}}/>
+                        Reply to {campaign.user.firstName}
+                    </Button>
+                </div>
+                {/* {campaign} */}
+                {/* {campaign.share} */}
+                {/* {campaign.share.thumbnail} */}
+                <VideoPlayer
+                    contact={contact}
+                    data={campaign}
+                    onPlay={() => setIsPlaying(true)}
+                    onPause={() => setIsPlaying(false)}
+                    thumbnail={showthumbnail ? true : false}
+                />
+            </div>
         </div>
-      </div>
-      <div className={styles.content}>
-        <div className={styles.reply}>
-          <div className={styles.titleContainer}>
-            <h1 className={styles.title}>{campaign.user.firstName} from {campaign.user.company}</h1> 
-            <p>sent you a video message</p>
-          </div>
-          <Button onClick={reply}>
-            <img src="/assets/common/reply.svg" style={{ marginRight: 5 }} />
-            Reply to {campaign.user.firstName}
-          </Button>
-        </div>
-        {/* {campaign} */}
-        {/* {campaign.share} */}
-        {/* {campaign.share.thumbnail} */}
-        <VideoPlayer
-          contact={contact}
-          data={campaign}
-          onPlay={() => setIsPlaying(true)}
-          onPause={() => setIsPlaying(false)}
-          thumbnail={showthumbnail? true : false}
-        />
-      </div>
-    </div>
-  )
+)
 }
 
 export default Campaign
-export const getServerSideProps = async ({ params }) => {
-  const { data: campaign } = await mainAPI.get(`/campaigns/${params.campaignId}`)
-  return {
-    props: {
-      campaign,
-    },
-  }
-};
+export const getServerSideProps = async (
+    {
+        params
+    }
+) =>
+    {
+        const {data: campaign} = await mainAPI.get(`/campaigns/${params.campaignId}`)
+        return {
+            props: {
+                campaign,
+            },
+        }
+    }
+;
