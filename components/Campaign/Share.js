@@ -692,8 +692,7 @@ const Share = ({campaignId, onClose, onDone, me}) => {
             try {
                 // setThumbnailLoading(true);
                 console.log(thumbnailFile);
-                // linkToCopie = "https://fuzzy-pug-17.loca.lt//campaigns/"+campaign._id+"?thumbnail=1";
-                navigator.clipboard.writeText("https://fuzzy-pug-17.loca.lt//campaigns/" + campaign._id + "?thumbnail=1");
+                navigator.clipboard.writeText(`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`);
                 // navigator.clipboard.write([
                 //     new ClipboardItem({
                 //       'image/png': thumbnailFile
@@ -954,7 +953,7 @@ const Share = ({campaignId, onClose, onDone, me}) => {
 
     const handleCopiedLink = () => {
         setCopied(true)
-        navigator.clipboard.writeText("https://fuzzy-pug-17.loca.lt//campaigns/" + campaign._id);
+        navigator.clipboard.writeText(`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`);
         setTimeout(() => {
             setCopied(false)
         }, 3000)
