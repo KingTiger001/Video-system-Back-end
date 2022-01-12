@@ -1181,25 +1181,25 @@ const Share = ({campaignId, onClose, onDone, me}) => {
                                             }}>
 
                                                 <FacebookShareButton
-                                                    url={`https://fuzzy-pug-17.loca.lt//campaigns/${campaign._id}?thumbnail=1`}
+                                                    url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
                                                 >
                                                     <FacebookIcon size={32} borderRadius={5}/>
                                                 </FacebookShareButton>
 
                                                 <LinkedinShareButton
-                                                    url={`https://fuzzy-pug-17.loca.lt//campaigns/${campaign._id}?thumbnail=1`}
+                                                    url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
                                                 >
                                                     <LinkedinIcon size={32} borderRadius={5}/>
                                                 </LinkedinShareButton>
 
                                                 <TwitterShareButton
-                                                    url={`https://fuzzy-pug-17.loca.lt//campaigns/${campaign._id}?thumbnail=1`}
+                                                    url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
                                                 >
                                                     <TwitterIcon size={32} borderRadius={5}/>
                                                 </TwitterShareButton>
 
                                                 <WhatsappShareButton
-                                                    url={`https://fuzzy-pug-17.loca.lt//campaigns/${campaign._id}?thumbnail=1`}
+                                                    url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
                                                 >
                                                     <WhatsappIcon size={32} borderRadius={5}/>
                                                 </WhatsappShareButton>
