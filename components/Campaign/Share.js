@@ -953,7 +953,7 @@ const Share = ({campaignId, onClose, onDone, me}) => {
 
     const handleCopiedLink = () => {
         setCopied(true)
-        navigator.clipboard.writeText(`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`);
+        navigator.clipboard.writeText(`https://test.myfomo.io/campaigns/${campaign?._id}`);
         setTimeout(() => {
             setCopied(false)
         }, 3000)
@@ -1180,25 +1180,25 @@ const Share = ({campaignId, onClose, onDone, me}) => {
                                             }}>
 
                                                 <FacebookShareButton
-                                                    url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
+                                                    url={`https://test.myfomo.io/campaigns/${campaign?._id}`}
                                                 >
                                                     <FacebookIcon size={32} borderRadius={5}/>
                                                 </FacebookShareButton>
 
                                                 <LinkedinShareButton
-                                                    url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
+                                                    url={`https://test.myfomo.io/campaigns/${campaign?._id}`}
                                                 >
                                                     <LinkedinIcon size={32} borderRadius={5}/>
                                                 </LinkedinShareButton>
 
                                                 <TwitterShareButton
-                                                    url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
+                                                    url={`https://test.myfomo.io/campaigns/${campaign?._id}`}
                                                 >
                                                     <TwitterIcon size={32} borderRadius={5}/>
                                                 </TwitterShareButton>
 
                                                 <WhatsappShareButton
-                                                    url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
+                                                    url={`https://test.myfomo.io/campaigns/${campaign?._id}`}
                                                 >
                                                     <WhatsappIcon size={32} borderRadius={5}/>
                                                 </WhatsappShareButton>
