@@ -108,77 +108,109 @@ const Campaign = ({campaign}) => {
         window.location = `mailto:${campaign.user.email}`
     }
 
-    console.log('compaign', campaign.share.thumbnail);
+    console.log('compaign', campaign);
 
     return (
         <div className={styles.campaign}>
             <Head>
                 <title>{campaign.user.firstName} from {campaign.user.company} sent you a video message | FOMO</title>
 
+                {/*<meta name="msapplication-TileImage" content={campaign?.share?.thumbnail}/>*/}
+
+                {/*<meta property="og:site_name" content="FOMO"/>*/}
+                {/*<meta property="og:title" content={campaign?.name}/>*/}
+                {/*<meta property="og:description" content="The best video studio for your campaigns"/>*/}
+                {/*<meta property="og:image" itemprop="image" content={campaign?.share?.thumbnail}/>*/}
+
+                {/*<meta property="og:type" content="website"/>*/}
+                {/*<meta property="og:image:type" content="image/png"/>*/}
+
+                {/*<meta property="og:image:width" content="300"/>*/}
+                {/*<meta property="og:image:height" content="300"/>*/}
 
                 {/*<meta property="og:url" content={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}/>*/}
-                {/*<meta property="og:type" content="article"/>*/}
-                {/*<meta property="og:title" content={campaign?.name} />*/}
-                {/*<meta property="og:description" content=""/>*/}
-                {/*<meta property="og:image" content={campaign?.share?.thumbnail}/>*/}
 
-                {/*<meta name="twitter:title" content={campaign?.name}/>*/}
-                {/*<meta name="twitter:description" content=""/>*/}
-                {/*<meta name="twitter:image" content={campaign?.share?.thumbnail}/>*/}
-                {/*<meta name="twitter:card" content="summary_large_image"/>*/}
-
-                <meta property="al:ios:url" content={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}/>
-                <meta property="al:android:url" content={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}/>
-                <meta property="al:web:url" content={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}/>
-                <meta property="al:web:image" content={campaign?.share.thumbnail}/>
+                {/*<meta property="fb:app_id" content="198021633865294"/>*/}
+                {/*<meta property="fb:admins" content="42301029"/>*/}
 
                 <meta name="medium" content="video"/>
                 <meta name="title" content={campaign?.name}/>
                 <meta name="description" content=""/>
                 <meta name="video_type" content="application/x-shockwave-flash"/>
-                <meta name="video_height" content="360"/>
-                <meta name="video_width" content="640"/>
 
-                <meta property="fb:app_id" content=""/>
-                <meta property="fb:admins" content=""/>
-                <meta name="slack-app-id" content=""/>
+                {/*<meta property="fb:app_id" content="198021633865294"/>*/}
+                {/*<meta property="fb:admins" content="42301029"/>*/}
+                {/*<meta name="slack-app-id" content="A0166HRL7E3"/>*/}
 
-                <meta property="og:url" content={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}/>
+                <meta
+                    property="og:url"
+                    content={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
+                />
+                />
                 <meta property="og:title" content={campaign?.name}/>
                 <meta property="og:description" content=""/>
 
-                <meta property="og:image" content={campaign?.share.thumbnail}/>
-                <meta property="og:image:width" content="470"/>
-                <meta property="og:image:height" content="264"/>
-                <meta property="og:type" content="video.movie"/>
-                <meta property="video:duration" content="11"/>
-                <meta property="og:video:type" content="text/html"/>
-                <meta property="og:video:width" content="470"/>
-                <meta property="og:video:height" content="264"/>
-                <meta property="og:video" content={campaign?.finalVideo.url}/>
-                <meta property="og:video:secure_url" content={campaign?.finalVideo.url}/>
-                <meta property="og:video:type" content="application/x-shockwave-flash"/>
-                <meta property="og:video:width" content="470"/>
-                <meta property="og:video:height" content="264"/>
-                <meta property="og:video:type" content="video/mp4"/>
-                <meta property="og:video:width" content="470"/>
-                <meta property="og:video:height" content="264"/>
-                <meta property="og:video" content={campaign?.finalVideo.url}/>
-                <meta property="og:video:secure_url" content={campaign?.finalVideo.url}/>
+                <meta
+                    property="og:image"
+                    content={campaign?.share?.thumbnail}
+                />
 
-                <meta name="twitter:player:stream" content={campaign?.finalVideo.url}/>
-                <meta name="twitter:player:stream:content_type" content="video/mp4; codecs=&quot;avc1.42E01E1, mp4a.40.2&quot;"/>
+                <meta property="og:type" content="video.movie"/>
+
+                <meta property="og:video:type" content="text/html"/>
+                <meta property="og:video:width" content="300"/>
+                <meta property="og:video:height" content="264"/>
+                <meta
+                    property="og:video"
+                    content={campaign?.finalVideo.url}
+                />
+                <meta
+                    property="og:video:secure_url"
+                    content={campaign?.finalVideo.url}
+                />
+
+                <meta property="og:video:type" content="application/x-shockwave-flash"/>
+
+                <meta property="og:video:type" content="video/mp4"/>
+                <meta property="og:video:width" content="300"/>
+                <meta property="og:video:height" content="264"/>
+                <meta
+                    property="og:video"
+                    content={campaign?.finalVideo.url}
+                />
+                <meta
+                    property="og:video:secure_url"
+                    content={campaign?.finalVideo.url}
+                />
+
+                <meta
+                    name="twitter:player:stream"
+                    content={campaign?.finalVideo.url}
+                />
+                <meta
+                    name="twitter:player:stream:content_type"
+                    content='video/mp4; codecs="avc1.42E01E1, mp4a.40.2"'
+                />
+
                 <meta name="twitter:card" content="player"/>
-                <meta name="twitter:url" content={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}/>
+                <meta
+                    name="twitter:url"
+                    content={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
+                />
                 <meta name="twitter:title" content={campaign?.name}/>
                 <meta name="twitter:description" content=""/>
-                <meta name="twitter:player:width" content="435"/>
+                <meta name="twitter:player:width" content="300"/>
                 <meta name="twitter:player:height" content="245"/>
-                <meta name="twitter:player" content={campaign?.finalVideo.url}/>
-                <meta name="twitter:image" content={campaign?.share.thumbnail}/>
+                <meta
+                    name="twitter:player"
+                    content={campaign?.finalVideo.url}
+                />
+                <meta
+                    name="twitter:image"
+                    content={campaign?.share?.thumbnail}
+                />
 
             </Head>
-
 
             <div className={styles.header}>
                 <div className={styles.container}>
@@ -219,16 +251,15 @@ const Campaign = ({campaign}) => {
                 />
             </div>
         </div>
-)
+    )
 }
 
 export default Campaign
 export const getServerSideProps = async (
-    {
-        params
-    }
-) =>
-    {
+        {
+            params
+        }
+    ) => {
         const {data: campaign} = await mainAPI.get(`/campaigns/${params.campaignId}`)
         return {
             props: {

@@ -681,18 +681,53 @@ const Share = ({campaignId, onClose, onDone, me}) => {
         }
     };
 
+    // @return Promise<boolean>
+    async function askWritePermission() {
+        try {
+            const {state} = await navigator.permissions.query({name: 'clipboard-write', allowWithoutGesture: false})
+            return state === 'granted'
+        } catch (error) {
+            errorEl.textContent = `Compatibility error (ONLY CHROME > V66): ${error.message}`
+            console.log(error)
+            return false
+        }
+    }
+
+    const setToClipboard = () => {
+        const data = [
+            new ClipboardItem({
+                'text/html': new Blob([`
+                <div>
+                    <img src="${campaign?.share?.thumbnail}" />
+                    <h4><a href="https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1">${campaign?.name}</a></h4>
+                </div>
+                `], {type: "text/html"})
+            })
+        ]
+        return navigator.clipboard.write(data)
+    }
+
     // Process for copy link with thumbnail process
     // to change and link to copy link with thumb function of
-
-    const handleCopiedLinkWithThumbnail = () => {
+    const handleCopiedLinkWithThumbnail = async () => {
 
         if (campaign.share.thumbnail) {
+
             setCopiedWithThumbnail(true);
             // add thumbnile process
             try {
                 // setThumbnailLoading(true);
                 console.log(thumbnailFile);
-                navigator.clipboard.writeText(`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`);
+                // Can we copy a text or an image ?
+                const canWriteToClipboard = await askWritePermission()
+
+                // Copy a PNG image to clipboard
+                if (canWriteToClipboard) {
+                    //const response = await fetch(campaign?.share?.thumbnail);
+                    //const blob = await response.blob();
+                    await setToClipboard();
+                }
+                //navigator.clipboard.writeText(`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`);
                 // navigator.clipboard.write([
                 //     new ClipboardItem({
                 //       'image/png': thumbnailFile
@@ -725,34 +760,33 @@ const Share = ({campaignId, onClose, onDone, me}) => {
 
     // end
 
-    const renderContact = (contact, checked = true) =>
-        contact ? (
-            <div className={styles.contactsItem} key={contact._id}>
-                {(me.freeTrial ||
-                    me.subscription.level !== "business" ||
-                    (me.subscription.level === "business" &&
-                        (contactsSelected.length < 1 ||
-                            contactsSelected.includes(contact._id)))) &&
-                checked && (
-                    <input
-                        checked={contactsSelected.includes(contact._id)}
-                        onChange={handleSelectedContact}
-                        type="checkbox"
-                        value={contact._id}
-                    />
-                )}
-                <p>
-                    {contact.firstName} {contact.lastName}
-                </p>
-                <p>{contact.email}</p>
-                <p>{contact.company}</p>
-                <p>{contact.job}</p>
-            </div>
-        ) : (
-            <div className={`${styles.contactsItem} ${styles.empty}`}>
-                <p>No contacts found</p>
-            </div>
-        );
+    const renderContact = (contact, checked = true) => contact ? (
+        <div className={styles.contactsItem} key={contact._id}>
+            {(me.freeTrial ||
+                me.subscription.level !== "business" ||
+                (me.subscription.level === "business" &&
+                    (contactsSelected.length < 1 ||
+                        contactsSelected.includes(contact._id)))) &&
+            checked && (
+                <input
+                    checked={contactsSelected.includes(contact._id)}
+                    onChange={handleSelectedContact}
+                    type="checkbox"
+                    value={contact._id}
+                />
+            )}
+            <p>
+                {contact.firstName} {contact.lastName}
+            </p>
+            <p>{contact.email}</p>
+            <p>{contact.company}</p>
+            <p>{contact.job}</p>
+        </div>
+    ) : (
+        <div className={`${styles.contactsItem} ${styles.empty}`}>
+            <p>No contacts found</p>
+        </div>
+    );
 
     const [show, setShow] = useState(undefined);
     const [listContent, setListContent] = useState({});
@@ -953,11 +987,12 @@ const Share = ({campaignId, onClose, onDone, me}) => {
 
     const handleCopiedLink = () => {
         setCopied(true)
-        navigator.clipboard.writeText(`https://test.myfomo.io/campaigns/${campaign?._id}`);
+        navigator.clipboard.writeText(`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`);
         setTimeout(() => {
             setCopied(false)
         }, 3000)
     }
+
     return (
         <MsalProvider instance={msalInstance}>
             <div className={styles.shareCampaign}>
@@ -1180,25 +1215,25 @@ const Share = ({campaignId, onClose, onDone, me}) => {
                                             }}>
 
                                                 <FacebookShareButton
-                                                    url={`https://test.myfomo.io/campaigns/${campaign?._id}`}
+                                                    url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
                                                 >
                                                     <FacebookIcon size={32} borderRadius={5}/>
                                                 </FacebookShareButton>
 
                                                 <LinkedinShareButton
-                                                    url={`https://test.myfomo.io/campaigns/${campaign?._id}`}
+                                                    url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
                                                 >
                                                     <LinkedinIcon size={32} borderRadius={5}/>
                                                 </LinkedinShareButton>
 
                                                 <TwitterShareButton
-                                                    url={`https://test.myfomo.io/campaigns/${campaign?._id}`}
+                                                    url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
                                                 >
                                                     <TwitterIcon size={32} borderRadius={5}/>
                                                 </TwitterShareButton>
 
                                                 <WhatsappShareButton
-                                                    url={`https://test.myfomo.io/campaigns/${campaign?._id}`}
+                                                    url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
                                                 >
                                                     <WhatsappIcon size={32} borderRadius={5}/>
                                                 </WhatsappShareButton>
