@@ -698,7 +698,9 @@ const Share = ({campaignId, onClose, onDone, me}) => {
             new ClipboardItem({
                 'text/html': new Blob([`
                 <div>
-                    <img src="${campaign?.share?.thumbnail}" />
+                    <a href="https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1">
+                        <img src="${campaign?.share?.thumbnail}" width="250px" height="250px" />
+                    </a>
                     <h4><a href="https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1">${campaign?.name}</a></h4>
                 </div>
                 `], {type: "text/html"})
@@ -1215,6 +1217,7 @@ const Share = ({campaignId, onClose, onDone, me}) => {
                                             }}>
 
                                                 <FacebookShareButton
+                                                    quote={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
                                                     url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
                                                 >
                                                     <FacebookIcon size={32} borderRadius={5}/>

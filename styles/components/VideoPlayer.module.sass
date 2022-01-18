@@ -1,5 +1,6 @@
 @import '../_variables.sass'
-  
+
+
 .videoPlayer
   background: #F3F7F9
   border-radius: 8px
@@ -22,6 +23,20 @@
   top: 0
   width: 100%
 
+.playButton > img
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1)
+  transition: all 0.3s ease 0s
+  cursor: pointer
+  outline: none
+  border-radius: 50% !important
+  width: 150px
+  height: 150px
+
+
+.button:hover
+  box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4)
+  transform: translateY(-7px)
+  
 .playButton
   position: absolute
   top: 0
@@ -31,8 +46,15 @@
   display: flex
   justify-content: center
   align-items: center
+@media (max-width: 768px)
+  .playButton > img
+    width: 70px !important
+    height: 70px !important
+    border-radius: 50% !important
+
 .loadingImg
   width: 10%
+
 .playButtonImage
   width: 300px
   opacity: .9
@@ -44,7 +66,7 @@
   margin: auto
   padding: 32px 10%
   width: 100%
-  background : black
+  background: black
 
 .timeline
   align-content: center
@@ -55,17 +77,20 @@
   grid-row: 1
   height: 20px
   position: relative
+
   &:hover
     .timelineProgression
       &:after
         height: 20px
         width: 20px
+
 .timelineDuration
   background: rgba(#fff, 0.1)
   border-radius: 8px
   height: 8px
   transition: all .1s ease-out
   width: 100%
+
 .timelineProgression
   background: $primaryColor
   border-radius: 8px 0 0 8px
@@ -74,6 +99,7 @@
   position: absolute
   top: 50%
   transform: translateY(-50%)
+
   &:after
     background: $primaryColor
     border-radius: 50%
@@ -92,15 +118,19 @@
   grid-gap: 12px
   grid-template-columns: 24px auto
   height: 24px
+
 .volumeIcon
   cursor: pointer
+
   img
     display: block
+
 .volumeBar
   cursor: pointer
   height: 100%
   position: relative
   width: 80px
+
 .volumeTotal
   background: rgba(#fff, 0.3)
   border-radius: 8px
@@ -109,6 +139,7 @@
   top: 50%
   transform: translateY(-50%)
   width: 100%
+
 .volumeAmount
   background: #fff
   border-radius: 8px
@@ -132,7 +163,7 @@
   grid-gap: 4px
   grid-auto-flow: column
   justify-self: flex-end
-  
+
 .coverImageVid
   position: absolute
   top: 0
@@ -142,5 +173,6 @@
   display: flex
   justify-content: center
   align-items: center
+
 .coverImageVidContainer
   text-align: center
