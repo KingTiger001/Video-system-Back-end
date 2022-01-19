@@ -1217,7 +1217,6 @@ const Share = ({campaignId, onClose, onDone, me}) => {
                                             }}>
 
                                                 <FacebookShareButton
-                                                    quote={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
                                                     url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
                                                 >
                                                     <FacebookIcon size={32} borderRadius={5}/>
