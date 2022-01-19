@@ -24,17 +24,17 @@
   width: 100%
 
 .playButton > img
-  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1)
+  //box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1)
   transition: all 0.3s ease 0s
   cursor: pointer
   outline: none
   border-radius: 50% !important
-  width: 150px
-  height: 150px
+  width: 180px
+  height: 180px
 
 
 .button:hover
-  box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4)
+  //box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4)
   transform: translateY(-7px)
   
 .playButton
@@ -46,11 +46,13 @@
   display: flex
   justify-content: center
   align-items: center
+
 @media (max-width: 768px)
   .playButton > img
-    width: 70px !important
-    height: 70px !important
+    width: 90px !important
+    height: 90px !important
     border-radius: 50% !important
+    box-shadow: 0px 15px 20px rgba(255, 255, 255, 0.1)
 
 .loadingImg
   width: 10%
