@@ -699,7 +699,7 @@ const Share = ({campaignId, onClose, onDone, me}) => {
                 'text/html': new Blob([`
                 <div>
                     <a href="https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1">
-                        <img src="${campaign?.share?.thumbnail}" width="250px" height="250px" />
+                        <img src="${campaign?.share?.thumbnail}" width="230px" height="129px" />
                     </a>
                     <h4><a href="https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1">${campaign?.name}</a></h4>
                 </div>
@@ -1092,7 +1092,6 @@ const Share = ({campaignId, onClose, onDone, me}) => {
                     <div className={styles.content}>
                         {step === 1 && (
                             <form className={styles.stepOne} ref={formDetailsRef}>
-
 
                                 <div style={{border: 'solid 0px', display: "flex", justifyContent: 'space-between'}}>
 

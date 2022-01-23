@@ -24,7 +24,7 @@ const VideoPlayer = ({
                          thumbnail,
                      }) => {
     const dispatch = useDispatch();
-    const {logo, finalVideo, contents} = data;
+    const {logo, finalVideo, contents, share} = data;
 
     const videosOffset = useSelector((state) => state.campaign.videosOffset);
     const duration = useSelector((state) => state.videoPlayer.duration);
@@ -383,10 +383,14 @@ const VideoPlayer = ({
                     playsInline={true}
                     ref={videoRefCb}
                     src={finalVideo.url}
-                    // poster={thumbnail? data.share.thumbnail : ''}
+                    //poster={thumbnail? data.share.thumbnail : ''}
                 />
-                {renderFirstScreen()}
-                {renderScreens()}
+
+
+
+                {!share?.thumbnail && renderFirstScreen()}
+                {!share?.thumbnail && renderScreens()}
+
                 {width > 0 && (
                     <Overlays
                         contact={contact}
