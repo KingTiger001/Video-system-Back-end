@@ -212,6 +212,7 @@ const Campaign = ({campaign}) => {
 
             </Head>
 
+
             <div className={styles.header}>
                 <div className={styles.container}>
                     <Link href="/">

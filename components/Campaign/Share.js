@@ -1031,78 +1031,41 @@ const Share = ({campaignId, onClose, onDone, me}) => {
                 <div className={styles.backdrop}/>
                 <div className={styles.box}>
 
-
-                    {/* <div className={styles.header}>
-            <p className={styles.headerTitle}>Your video campaign</p>
-            <img
-              onClick={() => showPopup({ display: "QUIT_SHARE" })}
-              src="/assets/common/close.svg"
-            />
-          </div>
-          <div className={styles.steps}>
-            <div
-              className={`${styles.step} ${step === 1 ? styles.current : ""} ${
-                step > 1 ? styles.valid : ""
-              }`}
-            >
-              <p>Message</p>
-              <div className={styles.stepStatus}>
-                <img src="/assets/common/doneWhite.svg" />
-              </div>
-            </div>
-            <div
-              className={`${styles.step} ${step === 2 ? styles.current : ""} ${
-                step > 2 ? styles.valid : ""
-              }`}
-            >
-              <p>Contacts</p>
-              <div className={styles.stepStatus}>
-                <img src="/assets/common/doneWhite.svg" />
-              </div>
-            </div>
-            <div
-              className={`${styles.step} ${step === 3 ? styles.current : ""} ${
-                step > 3 ? styles.valid : ""
-              }`}
-            >
-              <p>Send via</p>
-              <div className={styles.stepStatus}>
-                <img src="/assets/common/doneWhite.svg" />
-              </div>
-            </div>
-            <div
-              className={`${styles.step} ${step === 4 ? styles.current : ""}`}
-            >
-              <p>Confirmation</p>
-              <div className={styles.stepStatus}>
-                <img src="/assets/common/doneWhite.svg" />
-              </div>
-            </div>
-          </div> */}
-
                     <div className={styles.header}>
                         <p className={styles.backLink} onClick={() => showPopup({display: "QUIT_SHARE"})}> Back to video
                             edition</p>
 
-                        <img
-                            onClick={() => showPopup({display: "QUIT_SHARE"})}
-                            src="/assets/common/close.svg"
-                        />
+                        <Button
+                            style={{
+                                boxShadow: "0px 7px 14px -8px rgba(0,0,0,0.5)",
+                            }}
+                            onClick={() => {
+                            }}
+                        >
+                            Create New Video
+                        </Button>
                     </div>
                     <div className={styles.content}>
                         {step === 1 && (
                             <form className={styles.stepOne} ref={formDetailsRef}>
-
                                 <div style={{border: 'solid 0px', display: "flex", justifyContent: 'space-between'}}>
-
-                                    <div style={{border: 'solid 0px red'}}>
-                                        <div className={styles.uploadThumbnail}>
-                                            <label>Thumbnail</label>
-                                            <p className={styles.text}>
-                                                You can upload an image, your logo for example,
-                                                <br/>that will appear in your email.
-                                                <br/> By default there will be no image.
-                                            </p>
+                                    <div style={{
+                                        border: 'solid 0px red',
+                                        display: "flex",
+                                        flexDirection: 'column',
+                                    }}>
+                                        <div className={styles.uploadThumbnail}
+                                             style={{padding: '0px 34px', marginBottom: '35px'}}>
+                                            <div className={styles.thumbnailRow}>
+                                                <img src="/assets/campaign/thumbnail.svg"/>
+                                                <span>Thumbnail</span>
+                                            </div>
+                                            <div style={{width: '360px', marginBottom: '24px'}}>
+                                                <p className={styles.text}>
+                                                    Upload an image that will be displayed in your email or with your
+                                                    link
+                                                </p>
+                                            </div>
                                             <label
                                                 className={styles.uploadThumbnailArea}
                                                 htmlFor="thumbnail"
@@ -1132,85 +1095,69 @@ const Share = ({campaignId, onClose, onDone, me}) => {
                                                     </p>
                                                 </div>
                                             )}
-                                            {/* {campaign.share && campaign.share.thumbnail && (
-           <div>
-             <img
-               className={styles.uploadThumbnailPreview}
-               src={campaign.share.thumbnail}
-             />
-             <p
-               className={styles.removeThumbnail}
-               onClick={removeThumbnail}
-             >
-               Remove thumbnail
-             </p>
-           </div>
-         )} */}
                                             <p className={styles.uploadThumbnailRecoSize}>
-                                                (Recommended format: 16/9)
+                                                Recommended format: 16/9
                                             </p>
+                                        </div>
+
+                                        <div>
+                                            <div className={styles.fomoCopyLinksContainer} style={{
+                                                display: 'flex',
+
+                                            }}>
+                                                <a
+                                                    href={false}
+                                                    className={copied ? styles.buttonLinkSuccess : styles.buttonLink}
+                                                    onClick={handleCopiedLink}
+                                                >
+                                                    <img className={styles.imgLink}
+                                                         src={`/assets/common/${copied ? 'doneWhite' : 'link'}.svg`}/>
+
+                                                    {copied ? 'Copied' : 'Copy link'}
+
+                                                </a>
+                                                <a
+                                                    href={false}
+                                                    className={copiedWithThumbnail ? styles.buttonLinkSuccess : styles.buttonLinkWithThumb}
+                                                    onClick={handleCopiedLinkWithThumbnail}
+                                                >
+                                                    <img className={styles.imgLinkWithThumb}
+                                                         src={`${copiedWithThumbnail ? '/assets/common/doneWhite' : '/assets/campaign/thumbnail-white'}.svg`}/>
+
+                                                    {copiedWithThumbnail ? 'Copied' : `+ Copy link`}
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
 
                                     <div style={{
                                         border: 'solid 0px green',
-                                        paddingTop: 50,
                                         display: "flex",
                                         flexDirection: "column",
                                         paddingRight: 10,
                                         alignItems: "center"
                                     }}>
+                                        <div className={styles.socialShareAndBtImage} style={{"margin-top": '0px'}}>
 
-                                        <div className={styles.fomoCopyLinksContainer}>
-                                            <a
-                                                href={false}
-                                                className={copiedWithThumbnail ? styles.buttonLinkSuccess : styles.buttonLinkWithThumb}
-                                                onClick={handleCopiedLinkWithThumbnail}
-                                            >
-                                                <img className={styles.imgLinkWithThumb}
-                                                     src={`/assets/common/${copiedWithThumbnail ? 'doneWhite' : 'cpThumbFull'}.svg`}/>
-
-                                                {copiedWithThumbnail ? 'Copied' : `Copy link  + thumbnail`}
-
-                                                {/* <input
-                      accept="image/*"
-                      id="linkandthumbnail"
-                      type="file"
-                      onChange={(e) => uploadThumbnailForLink(e.target.files[0])}
-                      className={styles.uploadThumbnailForLinkInput}
-                    /> */}
-
-                                            </a>
-
-                                            <a
-                                                href={false}
-                                                className={copied ? styles.buttonLinkSuccess : styles.buttonLink}
-                                                onClick={handleCopiedLink}
-                                            >
-                                                <img className={styles.imgLink}
-                                                     src={`/assets/common/${copied ? 'doneWhite' : 'link'}.svg`}/>
-
-                                                {copied ? 'Copied' : 'Copy link'}
-
-                                            </a>
-                                        </div>
-                                        <div className={styles.socialShareAndBtImage} style={{"margin-top": '35px'}}>
-                                            {/* <img className={styles.imgLinkBottom} src="/assets/common/linkBottom.svg" /> */}
                                             <div style={{
                                                 border: 'solid 0px black',
                                                 display: "flex",
-                                                alignItems: 'center',
+                                                alignItems: 'start',
                                                 flexDirection: 'row'
                                             }}>
-
-                                                <img className={styles.shareRow} src="/assets/common/shareRow.svg"/>
-                                                <label>Social Share</label>
+                                                <img className={styles.text} style={{
+                                                }} src="/assets/common/shareRow.svg"/>
+                                                <label style={{
+                                                    fontSize: '20px',
+                                                    marginRight: '20px'
+                                                }}>Share</label>
                                             </div>
 
                                             <div style={{
                                                 border: 'solid 0px black',
-                                                display: "inline-flex",
-                                                gap: '3px',
+                                                display: "flex",
+                                                flexDirection: "column",
+                                                gap: '10px',
                                                 justifyContent: 'center',
                                                 alignItems: "center"
                                             }}>
@@ -1218,25 +1165,25 @@ const Share = ({campaignId, onClose, onDone, me}) => {
                                                 <FacebookShareButton
                                                     url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
                                                 >
-                                                    <FacebookIcon size={32} borderRadius={5}/>
+                                                    <FacebookIcon size={32} borderRadius={7}/>
                                                 </FacebookShareButton>
 
                                                 <LinkedinShareButton
                                                     url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
                                                 >
-                                                    <LinkedinIcon size={32} borderRadius={5}/>
+                                                    <LinkedinIcon size={32} borderRadius={7}/>
                                                 </LinkedinShareButton>
 
                                                 <TwitterShareButton
                                                     url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
                                                 >
-                                                    <TwitterIcon size={32} borderRadius={5}/>
+                                                    <TwitterIcon size={32} borderRadius={7}/>
                                                 </TwitterShareButton>
 
                                                 <WhatsappShareButton
                                                     url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
                                                 >
-                                                    <WhatsappIcon size={32} borderRadius={5}/>
+                                                    <WhatsappIcon size={32} borderRadius={7}/>
                                                 </WhatsappShareButton>
 
 
@@ -1340,8 +1287,8 @@ const Share = ({campaignId, onClose, onDone, me}) => {
                                             </div>
                                             <p>Message</p>
                                             <span onClick={() => setStep(1)}>
-                        Return to this step
-                      </span>
+                                                Return to this step
+                                              </span>
                                         </div>
                                         <div className={styles.summaryItemContent}>
                                             <p>

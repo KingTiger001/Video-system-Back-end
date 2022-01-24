@@ -389,7 +389,7 @@ const VideoPlayer = ({
 
 
                 {!share?.thumbnail && renderFirstScreen()}
-                {!share?.thumbnail && renderScreens()}
+                {renderScreens()}
 
                 {width > 0 && (
                     <Overlays
