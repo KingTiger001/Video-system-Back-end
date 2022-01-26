@@ -297,6 +297,68 @@ const VideoPlayer = ({
         }
     };
 
+    const BlackButton = () => {
+        return (
+            <>
+                <button className={styles.buttonPlayCustom} style={{
+                    position: ' absolute',
+                    top: ' 50%',
+                    left: ' 50%',
+                    width: ' 16%',
+                    margin: ' -8%',
+                    border: ' 2px solid transparent',
+                    borderRadius: ' 50%',
+                    padding: ' 0',
+                    overflow: ' hidden',
+                    background: ' none',
+                    pointerEvents: ' none',
+                    zIndex: ' 2',
+                }} tabIndex="0" type="button">
+                    <div style={{
+                        position: ' absolute',
+                        width: ' 100%',
+                        height: ' 100%',
+                        borderRadius: ' 50%',
+                        top: ' 0',
+                        zIndex: ' 1',
+                        opacity: ' 0.65',
+                        transition: ' opacity 0.2s',
+                        backgroundColor: 'rgb(46, 46, 46)'
+                    }}/>
+                    <div style={{
+                        backgroundImage: `url(${data?.share?.thumbnail ?? '/assets/video/play-icon.png'})`,
+                        filter: 'blur(1.2vmin)',
+                        width: '666.6666666666666%',
+                        height: '100vh',
+                        position: 'absolute',
+                        left: '50%',
+                        top: '50%',
+                        backgroundSize: 'contain',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
+                        transform: 'translate(-50%, -50%)',
+                        opacity: '1',
+                    }}/>
+                    <svg style={{
+                        position: 'absolute',
+                        height: '100%',
+                        width: '100%',
+                        top: '50%',
+                        left: '55%',
+                        zIndex: '2',
+                        fill: 'white',
+                        transform: 'translate(-50%, -50%) scale(0.5)',
+                    }} viewBox="0 0 32 32" aria-label="Lire la vidéo" fill="#fff" focusable="false"
+                         role="img">
+                        <title>Lire la vidéo</title>
+                        <path id="play" data-testid="play"
+                              d="M6.484 4.094l20.75 11.225c0.226 0.121 0.41 0.427 0.41 0.683s-0.184 0.563-0.41 0.683l-20.75 11.222c-0.095 0.051-0.26 0.093-0.367 0.093-0.427 0-0.774-0.346-0.774-0.773v-22.451c0-0.428 0.347-0.774 0.774-0.774 0.108 0 0.272 0.042 0.367 0.093z"></path>
+                    </svg>
+                </button>
+            </>
+        );
+    }
+
     const PlayButton = () => {
         return (
             (thumbnail ? (
@@ -305,21 +367,11 @@ const VideoPlayer = ({
                             className={styles.coverImageVid}
                             src={thumbnail ? data.share.thumbnail : ''}
                         />
-                        <div className={styles.playButton}>
-                            <img
-                                className={styles.playButtonImage}
-                                src="/assets/video/play-rounded.svg"
-                            />
-                        </div>
+                        <BlackButton/>
                     </div>
                 ) :
                 (
-                    <div className={styles.playButton}>
-                        <img
-                            className={styles.playButtonImage}
-                            src="/assets/video/play-rounded.svg"
-                        />
-                    </div>
+                    <BlackButton/>
                 ))
         );
     };
@@ -355,6 +407,7 @@ const VideoPlayer = ({
         }
     }
 
+    console.log('share', share?.thumbnail);
 
     return (
         <div
@@ -387,8 +440,7 @@ const VideoPlayer = ({
                 />
 
 
-
-                {!share?.thumbnail && renderFirstScreen()}
+                {!thumbnail && renderFirstScreen()}
                 {renderScreens()}
 
                 {width > 0 && (

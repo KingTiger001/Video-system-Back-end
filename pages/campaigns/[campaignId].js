@@ -209,7 +209,6 @@ const Campaign = ({campaign}) => {
                     name="twitter:image"
                     content={campaign?.share?.thumbnail}
                 />
-
             </Head>
 
 
