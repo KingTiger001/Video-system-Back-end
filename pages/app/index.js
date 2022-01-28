@@ -244,7 +244,7 @@ const Dashboard = ({
           {/*</div>*/}
         </div>
         <div className={styles.campaigns}>
-          <p className={styles.campaignsTitle}>Video Sent </p>
+          <p className={styles.campaignsTitle}>Videos Sent </p>
           {renderCampaignsHeader({ draft: false })}
           <div>
             {campaignsShared.length > 0 &&

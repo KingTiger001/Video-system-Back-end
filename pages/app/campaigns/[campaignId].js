@@ -266,17 +266,17 @@ const Campaign = ({me}) => {
                     </div>
                 </div>
                 <div className={styles.headerActions}>
-                    <Button
-                        color="white"
-                        // onClick={() => showPreview(true)}
-                        onClick={handlePreviewMode}
-                        textColor="dark"
-                        style={{
-                            boxShadow: "0px 7px 14px -8px rgba(0,0,0,0.5)",
-                        }}
-                    >
-                        {previewLoading ? "Processing..." : "Preview mode"}
-                    </Button>
+                    {/*<Button*/}
+                    {/*    color="white"*/}
+                    {/*    // onClick={() => showPreview(true)}*/}
+                    {/*    onClick={handlePreviewMode}*/}
+                    {/*    textColor="dark"*/}
+                    {/*    style={{*/}
+                    {/*        boxShadow: "0px 7px 14px -8px rgba(0,0,0,0.5)",*/}
+                    {/*    }}*/}
+                    {/*>*/}
+                    {/*    {previewLoading ? "Processing..." : "Preview mode"}*/}
+                    {/*</Button>*/}
                     <Button
                         style={{
                             boxShadow: "0px 7px 14px -8px rgba(0,0,0,0.5)",

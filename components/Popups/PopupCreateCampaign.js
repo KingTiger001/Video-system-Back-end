@@ -34,16 +34,18 @@ const PopupCreateCampaign = () => {
   }
 
   return (
-    <Popup
-      title="Create a video"
-    >
+    <Popup title="Video title">
+      <p style={{
+        marginBottom: '10px',
+        fontSize: '10px',
+      }} className={styles.cancel}>the title will appear when you share the video</p>
       <form
         className={styles.form}
         onSubmit={create}
       >
         <Input
           onChange={(e) => setName(e.target.value)}
-          placeholder="Name*"
+          placeholder="Title*"
           type="text"
           required
         />
