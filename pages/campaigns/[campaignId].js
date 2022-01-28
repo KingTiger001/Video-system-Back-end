@@ -9,6 +9,8 @@ import Button from '@/components/Button'
 import VideoPlayer from '@/components/VideoPlayer'
 
 import styles from '@/styles/pages/campaign.module.sass'
+import PopupCreateCampaign from "@/components/Popups/PopupCreateCampaign";
+import {useSelector} from "react-redux";
 
 const Campaign = ({campaign}) => {
     const router = useRouter()
@@ -107,8 +109,6 @@ const Campaign = ({campaign}) => {
         }
         window.location = `mailto:${campaign.user.email}`
     }
-
-    console.log('compaign', campaign);
 
     return (
         <div className={styles.campaign}>
@@ -210,7 +210,6 @@ const Campaign = ({campaign}) => {
                     content={campaign?.share?.thumbnail}
                 />
             </Head>
-
 
             <div className={styles.header}>
                 <div className={styles.container}>

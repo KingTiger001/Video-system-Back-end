@@ -64,8 +64,7 @@ const Dashboard = ({
     >
       <p>ID</p>
       <p>Video name</p>
-      <p>{draft ? "Creation date" : "Sent date"}</p>
-      {!draft && <p>Recipients</p>}
+      <p>Creation date</p>
       {!draft && <p>Duration</p>}
       <p>Actions</p>
     </ListHeader>
@@ -164,9 +163,9 @@ const Dashboard = ({
         {(!me.emailConfirmed || contactsCount <= 0) && (
           <div className={styles.welcome}>
             <p className={styles.welcomeTitle}>Welcome to your dasboard !</p>
-            <p className={styles.welcomeSubtitle}>
-              To send your first video campaign, you will have to:
-            </p>
+            {/*<p className={styles.welcomeSubtitle}>*/}
+            {/*  To send your first video campaign, you will have to:*/}
+            {/*</p>*/}
             <ul className={styles.welcomeList}>
               {!me.emailConfirmed && (
                 <li className={styles.welcomeListItem}>
@@ -186,25 +185,26 @@ const Dashboard = ({
                   </span>
                 </li>
               )}
-              {contactsCount <= 0 && (
-                <li className={styles.welcomeListItem}>
-                  <div>
-                    <span />
-                  </div>
-                  <Link href="/app/contacts">
-                    <p className={styles.welcomeContact}>
-                      Import your first contacts
-                    </p>
-                  </Link>
-                  <span>You can import your contacts now or later.</span>
-                </li>
-              )}
+              {/*{contactsCount <= 0 && (*/}
+              {/*  <li className={styles.welcomeListItem}>*/}
+              {/*    <div>*/}
+              {/*      <span />*/}
+              {/*    </div>*/}
+              {/*    <Link href="/app/contacts">*/}
+              {/*      <p className={styles.welcomeContact}>*/}
+              {/*        Import your first contacts*/}
+              {/*      </p>*/}
+              {/*    </Link>*/}
+              {/*    <span>You can import your contacts now or later.</span>*/}
+              {/*  </li>*/}
+              {/*)}*/}
             </ul>
           </div>
         )}
         <div className={styles.stats}>
           <p className={styles.statsTitle}>Your analytics</p>
-          <Stat text="Contacts" value="0" value={contactsCount} />
+          {/*<Stat text="Contacts" value="0" value={contactsCount} />*/}
+          <Stat text="Videos" value="0" value={campaignsCount} />
           <PercentStat
             text="Video opening rate"
             value={stats.videoOpeningRate}
@@ -214,11 +214,10 @@ const Dashboard = ({
             unit="%"
             value={stats.averageViewDuration ? stats.averageViewDuration * 1000 : 0}
           /> */}
-          <Stat text="Campaigns" value="0" value={campaignsCount} />
         </div>
         <div className={styles.campaignsAndButtons}>
           <div className={styles.campaigns}>
-            <p className={styles.campaignsTitle}>Campaign Drafts</p>
+            <p className={styles.campaignsTitle}>Videos Drafts</p>
             {renderCampaignsHeader({ draft: true })}
             <div>
               {campaignsDraft.length > 0 &&
@@ -226,7 +225,7 @@ const Dashboard = ({
             </div>
             <div className={styles.campaignsFooter}>
               <Link href="/app/campaigns">
-                <a>See all my videos campaigns</a>
+                <a>All videos</a>
               </Link>
             </div>
           </div>
@@ -235,17 +234,17 @@ const Dashboard = ({
               color="white"
               onClick={() => showPopup({ display: "CREATE_CAMPAIGN" })}
             >
-              Create a video campaign
+              Create a video
             </Button>
           </div>
-          <div className={styles.importContacts}>
-            <Button href="/app/contacts" outline={true} type="link">
-              Import contacts
-            </Button>
-          </div>
+          {/*<div className={styles.importContacts}>*/}
+          {/*  <Button href="/app/contacts" outline={true} type="link">*/}
+          {/*    Import contacts*/}
+          {/*  </Button>*/}
+          {/*</div>*/}
         </div>
         <div className={styles.campaigns}>
-          <p className={styles.campaignsTitle}>My Video Campaigns</p>
+          <p className={styles.campaignsTitle}>Video Sent </p>
           {renderCampaignsHeader({ draft: false })}
           <div>
             {campaignsShared.length > 0 &&
@@ -253,7 +252,7 @@ const Dashboard = ({
           </div>
           <div className={styles.campaignsFooter}>
             <Link href="/app/campaigns">
-              <a>See all my videos campaigns</a>
+              <a>All videos</a>
             </Link>
           </div>
         </div>

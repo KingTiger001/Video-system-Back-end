@@ -56,21 +56,21 @@ const HeaderApp = () => {
 
         <nav className={styles.menu}>
           <Link href="/app/campaigns">
-            <a className={router.route === '/app/campaigns' ? styles.selected : ''}>Videos campaigns</a>
+            <a className={router.route === '/app/campaigns' ? styles.selected : ''}>My Videos</a>
           </Link>
           <Link href="/app/analytics">
             <a className={router.route === '/app/analytics' ? styles.selected : ''}>Analytics</a>
           </Link>
-          <Link href="/app/contacts">
-            <a className={router.route.includes('/app/contacts') ? styles.selected : ''}>Contacts</a>
-          </Link>
+          {/*<Link href="/app/contacts">*/}
+          {/*  <a className={router.route.includes('/app/contacts') ? styles.selected : ''}>Contacts</a>*/}
+          {/*</Link>*/}
         </nav>
 
         <a className={styles.needHelp} href="mailto:contact@myfomo.io">Need help ?</a>
         <Button
           onClick={() => showPopup({ display: 'CREATE_CAMPAIGN' })}
         >
-          Create a video campaign
+          Create a video
         </Button>
         <div ref={userMenuRef}
              className={styles.user}>

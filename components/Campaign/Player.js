@@ -259,6 +259,15 @@ const Player = () => {
       );
     }
   };
+  const renderFirstScreen = () => {
+    if (progression === 0 && contents.length > 0 && contents[0].type === "screen" && !isPlaying) {
+      return <Overlays
+          fromPlayer={true}
+          contents={contents}
+          activeContent={0}
+      />
+    }
+  }
   return (
     <div className={styles.player}>
       <div className={styles.playerWrap} style={{ width: playerWidth }}>
@@ -331,6 +340,8 @@ const Player = () => {
             {/* || !resume */}
             {renderVideos()}
             {renderScreens()}
+
+
             {!preview.show && (
               <>
                 <Logo data={logo} />

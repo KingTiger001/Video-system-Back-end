@@ -8,7 +8,6 @@ import {mainAPI, mediaAPI} from "@/plugins/axios";
 import Button from "@/components/Button";
 import PopupAddContact from "@/components/Popups/PopupAddContact";
 import PopupImportContacts from "@/components/Popups/PopupImportContacts";
-import PopupQuitShare from "@/components/Popups/PopupQuitShare";
 
 import {MsalProvider, useIsAuthenticated, useMsal} from "@azure/msal-react";
 import {PublicClientApplication} from "@azure/msal-browser";
@@ -20,16 +19,7 @@ import {googleConfig} from "config/GoogleConfig";
 import {Collapse} from "react-collapse";
 import "react-tabs/style/react-tabs.css";
 
-import {
-    FacebookIcon,
-    FacebookShareButton,
-    LinkedinIcon,
-    LinkedinShareButton,
-    TwitterIcon,
-    TwitterShareButton,
-    WhatsappIcon,
-    WhatsappShareButton
-} from "react-share";
+import {FacebookShareButton, LinkedinShareButton, TwitterShareButton, WhatsappShareButton} from "react-share";
 
 const providers = {
     GOOGLE: "GOOGLE",
@@ -297,7 +287,7 @@ const RenderStepTree = ({setSendVia, sendVia}) => {
     );
 };
 
-const Share = ({campaignId, onClose, onDone, me}) => {
+const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked}) => {
     const _FROM = `${me.firstName} ${me.lastName} `;
     const SUBJECT = `${me.firstName} from ${me.company} sent you a video message`;
 
@@ -1016,6 +1006,7 @@ const Share = ({campaignId, onClose, onDone, me}) => {
                         }}
                     />
                 )}
+
                 {popup.display === "IMPORT_CONTACTS" && (
                     <PopupImportContacts
                         me={me}
@@ -1041,20 +1032,17 @@ const Share = ({campaignId, onClose, onDone, me}) => {
 
                     <div className={styles.header}>
                         {/*<p className={styles.backLink} onClick={() => showPopup({display: "QUIT_SHARE"})}> Back to video*/}
-
                         <p className={styles.backLink} onClick={() => {
                             onClose();
                             hidePopup();
-                        }}> Back to video
-                            edition</p>
+                        }}> Back to video edition</p>
 
                         <Button
-                            style={{
-
-                            }}
+                            style={{}}
                             onClick={() => {
                                 onClose();
                                 hidePopup();
+                                onCreateCampaignClicked();
                             }}
                         >
                             Create New Video
@@ -1063,22 +1051,26 @@ const Share = ({campaignId, onClose, onDone, me}) => {
                     <div className={styles.content}>
                         {step === 1 && (
                             <form className={styles.stepOne} ref={formDetailsRef}>
-                                <div style={{border: 'solid 0px', display: "flex", justifyContent: 'space-between', alignItems: 'center'}}>
+                                <div style={{
+                                    border: 'solid 0px yellow',
+                                    display: "flex",
+                                    margin: '0 55px',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center'
+                                }}>
                                     <div style={{
                                         border: 'solid 0px red',
                                         display: "flex",
                                         flexDirection: 'column',
                                     }}>
-                                        <div className={styles.uploadThumbnail}
-                                             style={{padding: '0px 34px', marginBottom: '35px'}}>
+                                        <div className={styles.uploadThumbnail}>
                                             <div className={styles.thumbnailRow}>
                                                 <img src="/assets/campaign/thumbnail.svg"/>
                                                 <span>Thumbnail</span>
                                             </div>
-                                            <div style={{width: '360px', marginBottom: '24px'}}>
+                                            <div style={{width: '255px', marginBottom: '14px'}}>
                                                 <p className={styles.text}>
-                                                    Upload an image that will be displayed in your email or with your
-                                                    link
+                                                    Upload an image that will be the preview of your video
                                                 </p>
                                             </div>
                                             <label
@@ -1124,116 +1116,129 @@ const Share = ({campaignId, onClose, onDone, me}) => {
                                         flexDirection: "column",
                                     }}>
 
-                                        <div className={styles.thumbnailRow}
-                                            style={{
-                                                marginBottom: '20px',
-                                            }}
-                                        >
-                                            <img src="/assets/common/shareRow.svg"/>
-                                            <span>Share</span>
-                                        </div>
-
                                         <div>
-                                            <div className={styles.fomoCopyLinksContainer} style={{
-                                                display: 'flex',
-                                                flexDirection: "column",
-                                                gap: 40,
+                                            <div className={styles.thumbnailRow}
+                                                 style={{
+                                                     marginBottom: '20px',
+                                                 }}
+                                            >
+                                                <img src="/assets/common/shareRow.svg"/>
+                                                <span>Share</span>
+                                            </div>
+
+                                            <div style={{
                                                 marginLeft: '40px',
-
                                             }}>
-                                                <a
-                                                    href={false}
-                                                    className={copied ? styles.buttonLinkSuccess : styles.buttonLink}
-                                                    onClick={handleCopiedLink}
-                                                >
-                                                    <img className={styles.imgLink}
-                                                         src={`/assets/common/${copied ? 'doneWhite' : 'link'}.svg`}/>
+                                                <div className={styles.fomoCopyLinksContainer} style={{
+                                                    display: 'flex',
+                                                    flexDirection: "column",
+                                                    gap: 27,
+                                                    alignItems: 'center',
 
-                                                    {copied ? 'Copied' : 'Copy link'}
+                                                }}>
+                                                    <a
+                                                        href={false}
+                                                        className={copied ? styles.buttonLinkSuccess : styles.buttonLink}
+                                                        onClick={handleCopiedLink}
+                                                    >
+                                                        <img className={styles.imgLink}
+                                                             src={`/assets/common/${copied ? 'doneWhite' : 'link'}.svg`}/>
 
-                                                </a>
-                                                <a
-                                                    href={false}
-                                                    className={copiedWithThumbnail ? styles.buttonLinkSuccess : styles.buttonLinkWithThumb}
-                                                    onClick={handleCopiedLinkWithThumbnail}
-                                                >
-                                                    <img className={styles.imgLinkWithThumb}
-                                                         src={`${copiedWithThumbnail ? '/assets/common/doneWhite' : '/assets/campaign/thumbnail-white'}.svg`}/>
+                                                        {copied ? 'Copied' : 'Copy link'}
 
-                                                    {copiedWithThumbnail ? 'Copied' : `+ Copy link`}
-                                                </a>
+                                                    </a>
+                                                    <a
+                                                        href={false}
+                                                        className={copiedWithThumbnail ? styles.buttonLinkSuccess : styles.buttonLinkWithThumb}
+                                                        onClick={handleCopiedLinkWithThumbnail}
+                                                    >
+                                                        <img className={styles.imgLinkWithThumb}
+                                                             src={`${copiedWithThumbnail ? '/assets/common/doneWhite' : '/assets/campaign/thumbnail-white'}.svg`}/>
+
+                                                        {copiedWithThumbnail ? 'Copied' : `+ Copy link`}
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
 
-                                        <div
-                                            style={{
-                                                marginTop: '80px',
-                                                marginBottom: '20px'
-                                            }}
-                                            className={styles.thumbnailRow}>
-                                            <img src="/assets/common/shareRow.svg"/>
-                                            <span>Social Share</span>
-                                        </div>
+                                        <div>
+                                            <div
+                                                style={{
+                                                    marginTop: '140px',
+                                                    marginBottom: '20px'
+                                                }}
+                                                className={styles.thumbnailRow}>
+                                                <img src="/assets/common/shareRow.svg"/>
+                                                <span>Social Share</span>
+                                            </div>
 
-                                        <div className={styles.socialShareAndBtImage} style={{
-                                            "margin": '0 auto'
-                                        }}>
-
-                                            <div style={{
-                                                border: 'solid 0px black',
-                                                display: "flex",
-                                                flexDirection: 'column',
-                                                gap: '40px',
+                                            <div className={styles.socialShareAndBtImage} style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
                                                 justifyContent: 'center',
-                                                alignItems: "center",
-                                                margingLeft: '20px'
+                                                marginLeft: '40px',
                                             }}>
-
-                                                <div style={{
-                                                    display: "flex",
-                                                    gap: '40px',
-                                                    justifyContent: 'center',
-                                                    alignItems: "center",
-                                                    margingLeft: '20px',
-
-                                                }}>
-
-                                                    <LinkedinShareButton
-                                                        url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
-                                                    >
-                                                        <img src="/assets/socials/linkedin-icon.svg" alt="facebook icon share"/>
-                                                    </LinkedinShareButton>
-
-                                                    <TwitterShareButton
-                                                        url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
-                                                    >
-                                                        <img src="/assets/socials/twitter-icon.svg" alt="facebook icon share"/>
-                                                    </TwitterShareButton>
-                                                </div>
 
                                                 <div style={{
                                                     border: 'solid 0px black',
                                                     display: "flex",
-                                                    gap: '40px',
+                                                    flexDirection: 'column',
+                                                    gap: '27px',
                                                     justifyContent: 'center',
                                                     alignItems: "center",
                                                     margingLeft: '20px'
                                                 }}>
 
-                                                    <FacebookShareButton
-                                                        url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
-                                                    >
-                                                        <img src="/assets/socials/facebook-icon.svg" alt="facebook icon share"/>
-                                                    </FacebookShareButton>
+                                                    <div style={{
+                                                        display: "flex",
+                                                        gap: '60px',
+                                                        justifyContent: 'center',
+                                                        alignItems: "center",
+                                                        margingLeft: '20px',
 
-                                                    <WhatsappShareButton
-                                                        url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
-                                                    >
-                                                        <img src="/assets/socials/whatsapp-icon.svg" alt="facebook icon share"/>
-                                                    </WhatsappShareButton>
+                                                    }}>
+
+                                                        <LinkedinShareButton
+                                                            url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
+                                                        >
+                                                            <img src="/assets/socials/linkedin-icon.svg"
+                                                                 alt="facebook icon share"/>
+                                                        </LinkedinShareButton>
+
+                                                        <TwitterShareButton
+                                                            url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
+                                                        >
+                                                            <img src="/assets/socials/twitter-icon.svg"
+                                                                 alt="facebook icon share"/>
+                                                        </TwitterShareButton>
+                                                    </div>
+
+                                                    <div style={{
+                                                        border: 'solid 0px black',
+                                                        display: "flex",
+                                                        gap: '60px',
+                                                        justifyContent: 'center',
+                                                        alignItems: "center",
+                                                        margingLeft: '20px'
+                                                    }}>
+
+                                                        <FacebookShareButton
+                                                            url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
+                                                        >
+                                                            <img src="/assets/socials/facebook-icon.svg"
+                                                                 alt="facebook icon share"/>
+                                                        </FacebookShareButton>
+
+                                                        <WhatsappShareButton
+                                                            url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
+                                                        >
+                                                            <img src="/assets/socials/whatsapp-icon.svg"
+                                                                 alt="facebook icon share"/>
+                                                        </WhatsappShareButton>
+                                                    </div>
+
+
                                                 </div>
-
-
                                             </div>
                                         </div>
 

@@ -35,7 +35,7 @@ const PopupCreateCampaign = () => {
 
   return (
     <Popup
-      title="Create a video campaign"
+      title="Create a video"
     >
       <form
         className={styles.form}

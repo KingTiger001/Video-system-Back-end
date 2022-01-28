@@ -59,8 +59,9 @@ const Tools = ({ me }) => {
           className={`${styles.tool} ${tool === 1 ? styles.toolSelected : ""}`}
           onClick={() => selectTool(1, "record")}
         >
-          <img src="/assets/campaign/record2.png" />
-          <p>Record</p>
+          <img src="/assets/video/video-camera-1.svg" width='28px' height='28px' />
+          <p>Record/</p>
+          <p>Import</p>
         </li>
         <li
           className={`${styles.tool} ${tool === 2 ? styles.toolSelected : ""}`}

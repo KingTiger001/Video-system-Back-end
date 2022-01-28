@@ -133,8 +133,7 @@ const Campaigns = ({ initialCampaignsDraft, initialCampaignsShared, me }) => {
     >
       <p>ID</p>
       <p>Video name</p>
-      <p>{draft ? "Creation date" : "Sent date"}</p>
-      {!draft && <p>Recipients</p>}
+      <p>Creation date</p>
       <p>Duration</p>
       <p>Actions</p>
     </ListHeader>
@@ -211,7 +210,7 @@ const Campaigns = ({ initialCampaignsDraft, initialCampaignsShared, me }) => {
           campaign.status === "draft" ? campaign.createdAt : campaign.sentAt
         ).format("MM/DD/YYYY")}
       </p>
-      {campaign.status === "shared" && <p>{campaign.sentCount || 0}</p>}
+
       <p>{displayDuration(campaign.duration)}</p>
     </ListItem>
   );
@@ -260,7 +259,7 @@ const Campaigns = ({ initialCampaignsDraft, initialCampaignsShared, me }) => {
       <div className={layoutStyles.container}>
         <div className={layoutStyles.header}>
           <div className={layoutStyles.headerTop}>
-            <h1 className={layoutStyles.headerTitle}>My videos campaigns</h1>
+            <h1 className={layoutStyles.headerTitle}>My videos</h1>
           </div>
         </div>
 
