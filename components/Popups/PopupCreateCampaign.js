@@ -37,8 +37,8 @@ const PopupCreateCampaign = () => {
     <Popup title="Video title">
       <p style={{
         marginBottom: '10px',
-        fontSize: '10px',
-      }} className={styles.cancel}>the title will appear when you share the video</p>
+        fontSize: '12px',
+      }} className={styles.cancel}>The title will appear when you share the video</p>
       <form
         className={styles.form}
         onSubmit={create}
