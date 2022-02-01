@@ -252,6 +252,9 @@ const Campaigns = ({initialCampaignsDraft, initialCampaignsShared, me}) => {
                         getCampaigns();
                         setCampaignShared(null);
                     }}
+                    onCreateCampaignClicked={() => {
+                        showPopup({display: 'CREATE_CAMPAIGN'})
+                    }}
                 />
             )}
 
