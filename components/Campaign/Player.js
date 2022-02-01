@@ -85,9 +85,6 @@ const Player = () => {
             }
         }
 
-        setTimeout(() => dispatch({type: "SET_PROGRESSION", data: 1}), 1);
-        setTimeout(() => dispatch({type: "SET_PROGRESSION", data: 0}), 2);
-
         return () => {
             if (videosRef.length > 0)
                 for (let i = 0; i < videosRef; i++) {

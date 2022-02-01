@@ -74,6 +74,9 @@ const Campaign = ({me}) => {
                 },
             });
         }
+
+        setTimeout(() => dispatch({type: "SET_PROGRESSION", data: 1}), 1);
+        setTimeout(() => dispatch({type: "SET_PROGRESSION", data: 0}), 2);
     }, []);
 
     // Save campaign

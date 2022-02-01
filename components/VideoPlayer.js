@@ -312,7 +312,7 @@ const VideoPlayer = ({
                     overflow: ' hidden',
                     background: ' none',
                     pointerEvents: ' none',
-                    zIndex: ' 2',
+                    zIndex: ' 99',
                 }} tabIndex="0" type="button">
                     <div style={{
                         position: ' absolute',
