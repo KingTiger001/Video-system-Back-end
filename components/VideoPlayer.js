@@ -442,6 +442,7 @@ const VideoPlayer = ({
 
                 {!thumbnail && renderFirstScreen()}
                 {(thumbnail && share?.thumbnail === null) && renderFirstScreen()}
+                {(thumbnail && share?.thumbnail === undefined) && renderFirstScreen()}
                 {renderScreens()}
 
                 {width > 0 && (
