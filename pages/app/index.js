@@ -217,7 +217,7 @@ const Dashboard = ({
         </div>
         <div className={styles.campaignsAndButtons}>
           <div className={styles.campaigns}>
-            <p className={styles.campaignsTitle}>Videos Drafts</p>
+            <p className={styles.campaignsTitle}>My Videos</p>
             {renderCampaignsHeader({ draft: true })}
             <div>
               {campaignsDraft.length > 0 &&
@@ -243,19 +243,19 @@ const Dashboard = ({
           {/*  </Button>*/}
           {/*</div>*/}
         </div>
-        <div className={styles.campaigns}>
-          <p className={styles.campaignsTitle}>Videos Sent </p>
-          {renderCampaignsHeader({ draft: false })}
-          <div>
-            {campaignsShared.length > 0 &&
-              campaignsShared.map((campaign) => renderCampaignsItem(campaign))}
-          </div>
-          <div className={styles.campaignsFooter}>
-            <Link href="/app/campaigns">
-              <a>All videos</a>
-            </Link>
-          </div>
-        </div>
+        {/*<div className={styles.campaigns}>*/}
+        {/*  <p className={styles.campaignsTitle}>Videos Sent </p>*/}
+        {/*  {renderCampaignsHeader({ draft: false })}*/}
+        {/*  <div>*/}
+        {/*    {campaignsShared.length > 0 &&*/}
+        {/*      campaignsShared.map((campaign) => renderCampaignsItem(campaign))}*/}
+        {/*  </div>*/}
+        {/*  <div className={styles.campaignsFooter}>*/}
+        {/*    <Link href="/app/campaigns">*/}
+        {/*      <a>All videos</a>*/}
+        {/*    </Link>*/}
+        {/*  </div>*/}
+        {/*</div>*/}
 
         {campaignPreviewed && (
           <Preview

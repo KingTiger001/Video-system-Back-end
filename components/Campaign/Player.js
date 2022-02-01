@@ -6,7 +6,7 @@ import {getDataByType, useVideoResize} from "@/hooks";
 import dayjs from "@/plugins/dayjs";
 
 import EndScreen from "@/components/Campaign/EndScreen";
-import campaign, {defaultEndScreen} from "../../store/reducers/campaign";
+import {defaultEndScreen} from "../../store/reducers/campaign";
 
 import Logo from "@/components/Campaign/Logo";
 
@@ -85,8 +85,8 @@ const Player = () => {
             }
         }
 
-        setTimeout(() => dispatch({type: "PLAY"}), 200);
-        setTimeout(() => dispatch({type: "PAUSE"}), 400);
+        setTimeout(() => dispatch({type: "SET_PROGRESSION", data: 1}), 1);
+        setTimeout(() => dispatch({type: "SET_PROGRESSION", data: 0}), 2);
 
         return () => {
             if (videosRef.length > 0)

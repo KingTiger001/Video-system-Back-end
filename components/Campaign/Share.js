@@ -287,7 +287,7 @@ const RenderStepTree = ({setSendVia, sendVia}) => {
     );
 };
 
-const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked}) => {
+const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backText}) => {
     const _FROM = `${me.firstName} ${me.lastName} `;
     const SUBJECT = `${me.firstName} from ${me.company} sent you a video message`;
 
@@ -1035,7 +1035,7 @@ const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked}) => {
                         <p className={styles.backLink} onClick={() => {
                             onClose();
                             hidePopup();
-                        }}> Back to video edition</p>
+                        }}> {backText ?? 'Back'}</p>
 
                         <Button
                             style={{}}

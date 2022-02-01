@@ -314,6 +314,7 @@ const Campaign = ({me}) => {
                         toast.success("Campaign sent.");
                         router.push("/app/campaigns");
                     }}
+                    backText='Back to video edition'
                 />
             )}
         </div>
