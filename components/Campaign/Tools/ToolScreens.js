@@ -168,7 +168,7 @@ const ToolScreens = () => {
       screen: {
         name: `screen${selectedScreens.length}`,
         background: { type: "color", color: "#9E9CFC" },
-        duration: 5,
+        duration: 3,
       },
       texts: [],
       links: [],
