@@ -144,7 +144,7 @@ const Campaign = ({campaign}) => {
 
                 <meta
                     property="og:url"
-                    content={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
+                    content={`https://app.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
                 />
                 />
                 <meta property="og:title" content={campaign?.name}/>
@@ -195,7 +195,7 @@ const Campaign = ({campaign}) => {
                 <meta name="twitter:card" content="player"/>
                 <meta
                     name="twitter:url"
-                    content={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
+                    content={`https://app.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
                 />
                 <meta name="twitter:title" content={campaign?.name}/>
                 <meta name="twitter:description" content=""/>
