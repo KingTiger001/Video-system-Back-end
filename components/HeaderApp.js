@@ -58,9 +58,9 @@ const HeaderApp = () => {
           <Link href="/app/campaigns">
             <a className={router.route === '/app/campaigns' ? styles.selected : ''}>My Videos</a>
           </Link>
-          <Link href="/app/analytics">
-            <a className={router.route === '/app/analytics' ? styles.selected : ''}>Analytics</a>
-          </Link>
+          {/*<Link href="/app/analytics">*/}
+          {/*  <a className={router.route === '/app/analytics' ? styles.selected : ''}>Analytics</a>*/}
+          {/*</Link>*/}
           {/*<Link href="/app/contacts">*/}
           {/*  <a className={router.route.includes('/app/contacts') ? styles.selected : ''}>Contacts</a>*/}
           {/*</Link>*/}

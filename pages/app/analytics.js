@@ -243,84 +243,86 @@ const Analytics = ({ initialAnalytics,
       )
     }
 
+
+
     return (
     <AppLayout>
       <Head>
         <title>Analytics | FOMO</title>
       </Head>
 
-        <div className={styles.campaignsListContainer}>
-          <div className={layoutStyles.container}>
-            <div>
-              <div className={layoutStyles.header}>
-                  <div className={layoutStyles.headerTop}>
-                      <h1 className={layoutStyles.headerTitle}>Analytics</h1>
-                  </div>
-              </div>
-              <div className={styles.campaignsList}>
-              <Button
-                color={'white'}
-                type={'div'}
-                className={`${selectedCampaign ? 
-                  styles.unactiveCampaignItem : styles.activeCampaignItem}`}
-                onClick={() => getGlobalAnalytics()}>
-                  <p>General Analytics</p>
-              </Button>
-              <div className={styles.separator}/>
-              { Object.values(campaignsShared).length > 0 && Object.values(campaignsShared).map((campaign) => renderCampaigns(campaign)) }
-              { Object.values(campaignsShared).length <= 0 && renderCampaigns() }
-              </div>
-            </div>
-          </div>
-        </div>
-        { !selectedCampaign && 
-        <div className={styles.generalDashboard}>
-          <ListItem 
-          className={styles.dashBoardHeader}>
-          <p className={styles.title}>General DashBoard</p>
-        </ListItem>
-        <div className={styles.stats}>
-        <Stat
-          text="Total Recipents"
-          value="0"
-          value={Object.values(initialAnalytics).length}
-        />
-        <PercentStat
-          text="Video opening rate"
-          value={stats.videoOpeningRate}
-        />
-        {/* <Stat
-          text="Average view duration"
-          unit="%"
-          value={stats.averageViewDuration ? stats.averageViewDuration * 1000 : 0}
-        /> */}
-        <PercentStat
-          text="Links click through rate"
-          value={Math.round((stats.totalLinksClicked / totalCTA)*100)}
-        />
-      </div></div>}
-      <div className={styles.campaignAnalytics}>
-        <div>
-          { selectedCampaign && 
-          displayCampaignInformations(selectedCampaign)}
-        </div>
-        <div>
-          { selectedCampaign && !showByContact &&
-          displayCampaignAnalytics(selectedCampaign)}
-        </div>
-        
-        <div className={styles.analyticsByContact}>
-          {selectedCampaign && showByContact && 
-          <ListHeader className={styles.analyticsByContactHeader}>
-            <input type="checkbox" onChange={selectAll} checked={selectAllChecked}/>
-            <div><p>Email</p></div>
-            <div><p>State</p></div>
-            {/* <div><p>Watch Time</p></div> */}
-            <div><p>CTA</p></div>
-          </ListHeader>}
-          {selectedCampaign && showByContact && analytics.map((a) => displayAnalyticsByContacts(a))}
-        </div>
-      </div>
+      {/*  <div className={styles.campaignsListContainer}>*/}
+      {/*    <div className={layoutStyles.container}>*/}
+      {/*      <div>*/}
+      {/*        <div className={layoutStyles.header}>*/}
+      {/*            <div className={layoutStyles.headerTop}>*/}
+      {/*                <h1 className={layoutStyles.headerTitle}>Analytics</h1>*/}
+      {/*            </div>*/}
+      {/*        </div>*/}
+      {/*        <div className={styles.campaignsList}>*/}
+      {/*        <Button*/}
+      {/*          color={'white'}*/}
+      {/*          type={'div'}*/}
+      {/*          className={`${selectedCampaign ? */}
+      {/*            styles.unactiveCampaignItem : styles.activeCampaignItem}`}*/}
+      {/*          onClick={() => getGlobalAnalytics()}>*/}
+      {/*            <p>General Analytics</p>*/}
+      {/*        </Button>*/}
+      {/*        <div className={styles.separator}/>*/}
+      {/*        { Object.values(campaignsShared).length > 0 && Object.values(campaignsShared).map((campaign) => renderCampaigns(campaign)) }*/}
+      {/*        { Object.values(campaignsShared).length <= 0 && renderCampaigns() }*/}
+      {/*        </div>*/}
+      {/*      </div>*/}
+      {/*    </div>*/}
+      {/*  </div>*/}
+      {/*  { !selectedCampaign && */}
+      {/*  <div className={styles.generalDashboard}>*/}
+      {/*    <ListItem */}
+      {/*    className={styles.dashBoardHeader}>*/}
+      {/*    <p className={styles.title}>General DashBoard</p>*/}
+      {/*  </ListItem>*/}
+      {/*  <div className={styles.stats}>*/}
+      {/*  <Stat*/}
+      {/*    text="Total Recipents"*/}
+      {/*    value="0"*/}
+      {/*    value={Object.values(initialAnalytics).length}*/}
+      {/*  />*/}
+      {/*  <PercentStat*/}
+      {/*    text="Video opening rate"*/}
+      {/*    value={stats.videoOpeningRate}*/}
+      {/*  />*/}
+      {/*  /!* <Stat*/}
+      {/*    text="Average view duration"*/}
+      {/*    unit="%"*/}
+      {/*    value={stats.averageViewDuration ? stats.averageViewDuration * 1000 : 0}*/}
+      {/*  /> *!/*/}
+      {/*  <PercentStat*/}
+      {/*    text="Links click through rate"*/}
+      {/*    value={Math.round((stats.totalLinksClicked / totalCTA)*100)}*/}
+      {/*  />*/}
+      {/*</div></div>}*/}
+      {/*<div className={styles.campaignAnalytics}>*/}
+      {/*  <div>*/}
+      {/*    { selectedCampaign && */}
+      {/*    displayCampaignInformations(selectedCampaign)}*/}
+      {/*  </div>*/}
+      {/*  <div>*/}
+      {/*    { selectedCampaign && !showByContact &&*/}
+      {/*    displayCampaignAnalytics(selectedCampaign)}*/}
+      {/*  </div>*/}
+      {/*  */}
+      {/*  <div className={styles.analyticsByContact}>*/}
+      {/*    {selectedCampaign && showByContact && */}
+      {/*    <ListHeader className={styles.analyticsByContactHeader}>*/}
+      {/*      <input type="checkbox" onChange={selectAll} checked={selectAllChecked}/>*/}
+      {/*      <div><p>Email</p></div>*/}
+      {/*      <div><p>State</p></div>*/}
+      {/*      /!* <div><p>Watch Time</p></div> *!/*/}
+      {/*      <div><p>CTA</p></div>*/}
+      {/*    </ListHeader>}*/}
+      {/*    {selectedCampaign && showByContact && analytics.map((a) => displayAnalyticsByContacts(a))}*/}
+      {/*  </div>*/}
+      {/*</div>*/}
     </AppLayout>
   )
 }

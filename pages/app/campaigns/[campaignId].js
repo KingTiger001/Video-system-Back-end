@@ -233,11 +233,11 @@ const Campaign = ({me}) => {
                                         <a>My videos</a>
                                     </Link>
                                 </li>
-                                <li>
-                                    <Link href="/app/analytics">
-                                        <a>Analytics</a>
-                                    </Link>
-                                </li>
+                                {/*<li>*/}
+                                {/*    <Link href="/app/analytics">*/}
+                                {/*        <a>Analytics</a>*/}
+                                {/*    </Link>*/}
+                                {/*</li>*/}
                                 {/*<li>*/}
                                 {/*    <Link href="/app/contacts">*/}
                                 {/*        <a>Contacts</a>*/}
