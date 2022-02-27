@@ -205,10 +205,10 @@ const Dashboard = ({
           <p className={styles.statsTitle}>Your analytics</p>
           {/*<Stat text="Contacts" value="0" value={contactsCount} />*/}
           <Stat text="Videos" value="0" value={campaignsCount} />
-          <PercentStat
-            text="Video opening rate"
-            value={stats.videoOpeningRate}
-          />
+          {/*<PercentStat*/}
+          {/*  text="Video opening rate"*/}
+          {/*  value={stats.videoOpeningRate}*/}
+          {/*/>*/}
           {/* <Stat
             text="Average view duration"
             unit="%"

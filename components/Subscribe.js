@@ -52,6 +52,7 @@ const Subscribe = ({ onClose, onDone, me: meProps }) => {
   const [checkoutError, setCheckoutError] = useState(null)
   const [checkoutLoading, setCheckoutLoading] = useState(false)
 
+
   const handleSelectPlan = (plan) => {
     setPlan(plan)
     setStep(2)
@@ -279,9 +280,9 @@ const Subscribe = ({ onClose, onDone, me: meProps }) => {
                 renderAction={(plan) => (
                   <Button
                     onClick={() => handleSelectPlan(plan)}
-                    outline={true}
+                    //outline={true}
                   >
-                    Choose this plan
+                    Try it free
                   </Button>
                 )}
               />

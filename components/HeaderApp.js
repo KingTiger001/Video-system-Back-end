@@ -72,6 +72,7 @@ const HeaderApp = () => {
         >
           Create a video
         </Button>
+        <Link style={styles.needHelp} href="/app/upgrade">Upgrade</Link>
         <div ref={userMenuRef}
              className={styles.user}>
           { me.firstName &&

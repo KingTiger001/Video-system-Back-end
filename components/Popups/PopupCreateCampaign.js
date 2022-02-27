@@ -8,6 +8,16 @@ import Button from '../Button'
 import Input from '../Input'
 import Popup from './Popup'
 
+//user with multiple users (3 users, user1, user2, user3) = customer
+
+//super-admin
+
+
+
+
+
+
+
 import styles from '@/styles/components/Popups/PopupCreateCampaign.module.sass'
 
 const PopupCreateCampaign = () => {
