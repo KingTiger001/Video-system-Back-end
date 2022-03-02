@@ -79,8 +79,6 @@ const Checkout = () => {
                 }))
                 .sort((a, b) => (a.metadata.order > b.metadata.order ? 1 : -1));
 
-            console.log('plan', prices);
-
             const businessPlan = productsOrdered.find(prod => prod.name === "Business");
 
             if (businessPlan) {
@@ -245,8 +243,8 @@ const Checkout = () => {
             const {data} = await mainAPI.get('/users/me')
             setMe(data)
             setCheckoutLoading(false)
-            toast.success('Your subscription has been created successfully.')
-            router.push('/app/billing');
+            //toast.success('Your subscription has been created successfully.')
+            router.push('/app/upgrade/success');
         } else {
             let countCheck = 0
             const {data: user} = await mainAPI.get('/users/me')
@@ -289,7 +287,7 @@ const Checkout = () => {
                 gap: '110px',
                 marginBottom: '68px',
             }}>
-                <img src='/assets/socials/fomo-logo.svg'/>
+                <img src='/assets/socials/myfomo_logopurple.svg' width='30px' height='30px'/>
                 <h2 style={{
                     fontSize: '26px',
                     color: '#4C4A60'
