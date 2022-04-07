@@ -8,178 +8,183 @@ const offsetX = 15;
 const offsetY = 10;
 
 const Overlays = ({ playerRef }) => {
-  const dispatch = useDispatch();
-  const contents = useSelector((state) => state.campaign.contents);
-  const currentOverlay = useSelector((state) => state.campaign.currentOverlay);
+   const dispatch = useDispatch();
+   const contents = useSelector((state) => state.campaign.contents);
+   const currentOverlay = useSelector((state) => state.campaign.currentOverlay);
 
-  const updateContents = (id, position, type) => {
-    const obj = { ...contents[currentOverlay] };
+   const convertToRelative = (fontSize) => {
+      return playerRef.getBoundingClientRect().width / (25 / fontSize);
+   };
 
-    const index =
-      type === "text"
-        ? obj.texts.findIndex((text) => text._id === id)
-        : obj.links.findIndex((link) => link._id === id);
-    if (index < 0) return;
+   const updateContents = (id, position, type) => {
+      const obj = { ...contents[currentOverlay] };
 
-    if (type === "text") {
-      obj.texts[index].position = position;
-    } else {
-      obj.links[index].position = position;
-    }
+      const index =
+         type === "text"
+            ? obj.texts.findIndex((text) => text._id === id)
+            : obj.links.findIndex((link) => link._id === id);
+      if (index < 0) return;
 
-    const indexArr = contents.findIndex((content) => content._id === obj._id);
-    let array = contents.slice();
-    array[indexArr] = obj;
-    dispatch({
-      type: "SET_VIDEO",
-      data: array,
-    });
-  };
+      if (type === "link") obj.links[index].position = position;
+      else obj.texts[index].position = position;
 
-  const convertToRelative = (fontSize) => {
-    return playerRef.getBoundingClientRect().width / (25 / fontSize);
-  };
+      const indexArr = contents.findIndex((content) => content._id === obj._id);
+      let array = contents.slice();
+      array[indexArr] = obj;
+      dispatch({
+         type: "SET_VIDEO",
+         data: array,
+      });
+   };
 
-  const renderElement = (elem, type) => {
-    let obj = { ...elem };
-    obj.fontSize = convertToRelative(obj.fontSize);
+   const renderElement = (elem, type) => {
+      let obj = { ...elem };
+      obj.fontSize = convertToRelative(obj.fontSize);
 
-    if (playerRef !== undefined)
+      if (playerRef !== undefined)
+         return (
+            <Draggable
+               key={obj._id}
+               playerRef={playerRef}
+               defaultPosition={obj.position}
+               onMouseUp={(position) => updateContents(obj._id, position, type)}
+            >
+               <div
+                  className={
+                     type === "text"
+                        ? styles.textDraggable
+                        : styles.linkDraggable
+                  }
+               >
+                  {renderPresetElement(obj, type)}
+               </div>
+            </Draggable>
+         );
+   };
+   if (currentOverlay !== -1 && contents[currentOverlay]) {
       return (
-        <Draggable
-          key={obj._id}
-          playerRef={playerRef}
-          defaultPosition={obj.position}
-          onMouseUp={(position) => updateContents(obj._id, position, type)}
-        >
-          <div
-            className={
-              type === "text" ? styles.textDraggable : styles.linkDraggable
-            }
-          >
-            {renderPresetElement(obj, type)}
-          </div>
-        </Draggable>
+         <>
+            {contents[currentOverlay].texts.map((text) =>
+               renderElement(text, "text")
+            )}
+            {contents[currentOverlay].links.map((link) =>
+               renderElement(link, "link")
+            )}
+         </>
       );
-  };
-  if (currentOverlay !== -1 && contents[currentOverlay]) {
-    return (
-      <>
-        {contents[currentOverlay].texts.map((text) =>
-          renderElement(text, "text")
-        )}
-        {contents[currentOverlay].links.map((link) =>
-          renderElement(link, "link")
-        )}
-      </>
-    );
-  } else {
-    return null;
-  }
+   } else {
+      return null;
+   }
 };
 
 export default Overlays;
 
 const Draggable = ({ children, playerRef, defaultPosition, onMouseUp }) => {
-  const ref = useRef();
+   const ref = useRef();
 
-  const [dragging, setDragging] = useState(false);
-  const [position, setPosition] = useState(defaultPosition);
-  const positionRef = useRef({ x: 0, y: 0 });
+   const [dragging, setDragging] = useState(false);
+   const [position, setPosition] = useState(defaultPosition);
+   const positionRef = useRef({ x: 0, y: 0 });
 
-  useEffect(() => {
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", handleMouseUp);
+   useEffect(() => {
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
 
-    return () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
-    };
-  }, [dragging]);
+      return () => {
+         document.removeEventListener("mousemove", handleMouseMove);
+         document.removeEventListener("mouseup", handleMouseUp);
+      };
+   }, [dragging]);
 
-  const handleMouseDown = (e) => {
-    setDragging(true);
-    e.stopPropagation();
-    e.preventDefault();
-  };
+   useEffect(() => {
+      setPosition((s) => {
+         return { ...s, ...defaultPosition };
+      });
+   }, [defaultPosition]);
 
-  const handleMouseUp = (e) => {
-    if (dragging) {
-      setDragging(false);
+   const handleMouseDown = (e) => {
+      setDragging(true);
       e.stopPropagation();
       e.preventDefault();
+   };
 
-      onMouseUp(positionRef.current);
-    }
-  };
+   const handleMouseUp = (e) => {
+      if (dragging) {
+         setDragging(false);
+         e.stopPropagation();
+         e.preventDefault();
 
-  const handleMouseMove = (e) => {
-    if (!dragging) return;
-
-    let { x, y } = { x: e.clientX, y: e.clientY };
-
-    if (playerRef.offsetWidth > 0) {
-      const offsetLeft = playerRef.getBoundingClientRect().x;
-      if (
-        x > offsetLeft + playerRef.offsetWidth / 2 - 20 &&
-        x < offsetLeft + playerRef.offsetWidth / 2 + 20
-      ) {
-        x = 50;
-
-        y = Math.min(
-          Math.max(
-            ((y - playerRef.getBoundingClientRect().y) /
-              playerRef.offsetHeight) *
-              100,
-            0 + offsetY
-          ),
-          100 - offsetY
-        );
-      } else {
-        x = Math.min(
-          Math.max(
-            ((x - playerRef.getBoundingClientRect().x) /
-              playerRef.offsetWidth) *
-              100,
-            0 + offsetX
-          ),
-          100 - offsetX
-        );
-        y = Math.min(
-          Math.max(
-            ((y - playerRef.getBoundingClientRect().y) /
-              playerRef.offsetHeight) *
-              100,
-            0 + offsetY
-          ),
-          100 - offsetY
-        );
+         onMouseUp(positionRef.current);
       }
-      positionRef.current = { x, y };
-      setPosition({ x, y });
-    }
+   };
 
-    e.stopPropagation();
-    e.preventDefault();
-  };
+   const handleMouseMove = (e) => {
+      if (!dragging) return;
 
-  return (
-    <div
-      ref={ref}
-      style={{
-        left: `${position.x}%`,
-        top: `${position.y}%`,
-      }}
-      className={styles.draggable}
-      // draggable
-      // onDragEnd={handleDrag}
-      // onDrag={handleDrag}
+      let { x, y } = { x: e.clientX, y: e.clientY };
 
-      // ******** do with ***********
+      if (playerRef.offsetWidth > 0) {
+         const offsetLeft = playerRef.getBoundingClientRect().x;
+         if (
+            x > offsetLeft + playerRef.offsetWidth / 2 - 20 &&
+            x < offsetLeft + playerRef.offsetWidth / 2 + 20
+         ) {
+            x = 50;
 
-      onMouseDown={handleMouseDown}
-    >
-      {children}
-    </div>
-  );
+            y = Math.min(
+               Math.max(
+                  ((y - playerRef.getBoundingClientRect().y) /
+                     playerRef.offsetHeight) *
+                     100,
+                  0 + offsetY
+               ),
+               100 - offsetY
+            );
+         } else {
+            x = Math.min(
+               Math.max(
+                  ((x - playerRef.getBoundingClientRect().x) /
+                     playerRef.offsetWidth) *
+                     100,
+                  0 + offsetX
+               ),
+               100 - offsetX
+            );
+            y = Math.min(
+               Math.max(
+                  ((y - playerRef.getBoundingClientRect().y) /
+                     playerRef.offsetHeight) *
+                     100,
+                  0 + offsetY
+               ),
+               100 - offsetY
+            );
+         }
+         positionRef.current = { x, y };
+         setPosition({ x, y });
+      }
+
+      e.stopPropagation();
+      e.preventDefault();
+   };
+
+   return (
+      <div
+         ref={ref}
+         style={{
+            left: `${position.x}%`,
+            top: `${position.y}%`,
+         }}
+         className={styles.draggable}
+         // draggable
+         // onDragEnd={handleDrag}
+         // onDrag={handleDrag}
+
+         // ******** do with ***********
+
+         onMouseDown={handleMouseDown}
+      >
+         {children}
+      </div>
+   );
 };

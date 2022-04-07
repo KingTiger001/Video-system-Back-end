@@ -14,90 +14,104 @@ export const textPresets = [0];
 export const linkPresets = [0, 1, 2, 3, 4];
 
 export const renderPresetElement = (elem, type) => {
-  console.log(elem.preset);
-  if (type === "text") {
-    switch (elem.preset) {
-      case 1:
-        return (
-          <TextPreset1
-            value={elem.value}
-            color={elem.color}
-            fontSize={elem.fontSize}
-          />
-        );
-      case 2:
-        return (
-          <TextPreset2
-            value={elem.value}
-            color={elem.color}
-            fontSize={elem.fontSize}
-          />
-        );
-      case 3:
-        return (
-          <TextPreset3
-            value={elem.value}
-            color={elem.color}
-            fontSize={elem.fontSize}
-          />
-        );
-      case 4:
-        return (
-          <TextPreset4
-            value={elem.value}
-            color={elem.color}
-            fontSize={elem.fontSize}
-          />
-        );
-      default:
-        return (
-          <p id="default"
-          style={{ fontSize: `${elem.fontSize}px`, color: elem.color }} dangerouslySetInnerHTML={{ __html: `${elem.value.replace(/(\r\n|\n|\r)/gm, "<br>")}` }}>
-            {/* <p style={{ fontSize: `${elem.fontSize}%`, color: elem.color }}> */}
-          </p>
-        );
-    }
-  } else if (type === "link") {
-    switch (elem.preset) {
-      case 1:
-        return (
-          <LinkPreset1
-            color={elem.color}
-            fontSize={elem.fontSize}
-            value={elem.value}
-          />
-        );
-      case 2:
-        return (
-          <LinkPreset2
-            color={elem.color}
-            fontSize={elem.fontSize}
-            value={elem.value}
-          />
-        );
-      case 3:
-        return (
-          <LinkPreset3
-            color={elem.color}
-            fontSize={elem.fontSize}
-            value={elem.value}
-          />
-        );
-      case 4:
-        return (
-          <LinkPreset4
-            color={elem.color}
-            fontSize={elem.fontSize}
-            value={elem.value}
-          />
-        );
-      default:
-        return (
-          // <p style={{ fontSize: `${elem.fontSize}%`, color: elem.color }}>
-          <p style={{ fontSize: `${elem.fontSize}px`, color: elem.color }}>
-            {elem.value}
-          </p>
-        );
-    }
-  }
+   console.log(elem.preset);
+   if (type === "text") {
+      switch (elem.preset) {
+         case 1:
+            return (
+               <TextPreset1
+                  value={elem.value}
+                  color={elem.color}
+                  fontSize={elem.fontSize}
+               />
+            );
+         case 2:
+            return (
+               <TextPreset2
+                  value={elem.value}
+                  color={elem.color}
+                  fontSize={elem.fontSize}
+               />
+            );
+         case 3:
+            return (
+               <TextPreset3
+                  value={elem.value}
+                  color={elem.color}
+                  fontSize={elem.fontSize}
+               />
+            );
+         case 4:
+            return (
+               <TextPreset4
+                  value={elem.value}
+                  color={elem.color}
+                  fontSize={elem.fontSize}
+               />
+            );
+         default:
+            return (
+               <p
+                  id="default"
+                  style={{
+                     fontSize: `${elem.fontSize}px`,
+                     fontFamily: elem.fontFamily,
+                     fontWeight: elem.bold ? 800 : 400,
+                     fontStyle: elem.italic ? "italic" : "normal",
+                     textDecoration: elem.underline ? "underline" : "none",
+                     textAlign: elem.textAlign,
+                     display: "inline-block",
+                     color: elem.color,
+                  }}
+                  dangerouslySetInnerHTML={{
+                     __html: `${elem.value.replace(/(\r\n|\n|\r)/gm, "<br>")}`,
+                  }}
+               >
+                  {/* <p style={{ fontSize: `${elem.fontSize}%`, color: elem.color }}> */}
+               </p>
+            );
+      }
+   } else if (type === "link") {
+      switch (elem.preset) {
+         case 1:
+            return (
+               <LinkPreset1
+                  color={elem.color}
+                  fontSize={elem.fontSize}
+                  value={elem.value}
+               />
+            );
+         case 2:
+            return (
+               <LinkPreset2
+                  color={elem.color}
+                  fontSize={elem.fontSize}
+                  value={elem.value}
+               />
+            );
+         case 3:
+            return (
+               <LinkPreset3
+                  color={elem.color}
+                  fontSize={elem.fontSize}
+                  value={elem.value}
+               />
+            );
+         case 4:
+            return (
+               <LinkPreset4
+                  color={elem.color}
+                  fontSize={elem.fontSize}
+                  value={elem.value}
+               />
+            );
+         default:
+            return (
+               // <p style={{ fontSize: `${elem.fontSize}%`, color: elem.color }}>
+               <p style={{ fontSize: `${elem.fontSize}px`, color: elem.color }}>
+                  {elem.value}
+               </p>
+            );
+      }
+   }
 };

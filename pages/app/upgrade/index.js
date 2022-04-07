@@ -21,9 +21,9 @@ const Upgrade = ({initialCampaignsDraft, initialCampaignsShared, me}) => {
             </Head>
 
             <div className={layoutStyles.container}>
-                <p style={{
+                {/* <p style={{
                     fontSize: '26px',color: '#4C4A60', fontWeight: '900px'
-                }}>Upgrade your My Fomo plan</p>
+                }}>Upgrade your My Fomo plan</p> */}
                 <div style={{
                     marginTop: '50px'
                 }}>

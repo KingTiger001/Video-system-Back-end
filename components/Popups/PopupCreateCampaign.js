@@ -59,7 +59,7 @@ const PopupCreateCampaign = () => {
           type="text"
           required
         />
-        <Button loading={loading}>Create</Button>
+        <Button loading={loading} color="orange">Create</Button>
         <p
           onClick={hidePopup}
           className={styles.cancel}

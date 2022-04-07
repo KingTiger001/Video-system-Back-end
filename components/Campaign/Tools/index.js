@@ -10,7 +10,7 @@ import ToolVideos from "./ToolVideos";
 import ToolItems from "./ToolItems";
 import ToolScreens from "./ToolScreens";
 
-const Tools = ({ me }) => {
+const Tools = ({ me, screen }) => {
   const dispatch = useDispatch();
   const isPlaying = useSelector((state) => state.campaign.isPlaying);
   const tool = useSelector((state) => state.campaign.tool);
@@ -54,7 +54,13 @@ const Tools = ({ me }) => {
 
   return (
     <div className={styles.tools}>
-      <ul className={styles.toolList}>
+      <div className={styles.toolBox}>
+        {screen == 'MEDIA' && <ToolVideos />}
+        {screen == 'SCREEN' && <ToolScreens me={me} />}
+        {screen == 'LOGO' && <ToolLogo />}
+      </div>
+
+      {/* <ul className={styles.toolList}>
         <li
           className={`${styles.tool} ${tool === 1 ? styles.toolSelected : ""}`}
           onClick={() => selectTool(1, "record")}
@@ -89,8 +95,8 @@ const Tools = ({ me }) => {
           <img src={`/assets/campaign/toolLogoWhite.svg`} />
           <p>Logo</p>
         </li>
-      </ul>
-      {tool !== 0 && (
+      </ul> */}
+      {/* {tool !== 0 && (
         <div className={styles.toolBox}>
           {tool === 1 && (
             <img
@@ -101,11 +107,10 @@ const Tools = ({ me }) => {
           )}
           <ToolRecord />
           <ToolVideos />
-          {/* <ToolItems me={me} /> */}
           <ToolScreens me={me} />
           <ToolLogo />
         </div>
-      )}
+      )} */}
     </div>
   );
 };

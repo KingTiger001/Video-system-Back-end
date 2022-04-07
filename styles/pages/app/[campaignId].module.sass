@@ -4,16 +4,20 @@
   background: #F3F7F9
   display: grid
   grid-template-rows: max-content minmax(0, 1fr) max-content
-  grid-gap: 20px
+  // grid-gap: 20px
   height: 100vh
+  // cursor: url('/assets/campaign/cursor.svg') 10 10, auto !important
+  // *
+  //   cursor: inherit !important
 
 // HEADER
 .header
   display: grid
   grid-gap: 30px
-  grid-template-columns: max-content 1fr max-content
+  grid-template-columns: 1fr max-content
   padding: 0px 20px
-  padding-top: 20px
+  padding-top: 28px
+  height: 64px
 
 .headerMenu
   position: relative
@@ -21,7 +25,6 @@
 .headerMenuButton
   background: #fff
   border-radius: 8px
-  cursor: pointer
   display: grid
   height: 70px
   justify-items: center
@@ -37,7 +40,6 @@
 
 .headerMenuClose
   align-items: center
-  cursor: pointer
   display: grid
   grid-gap: 12px
   grid-template-columns: auto 1fr
@@ -72,56 +74,115 @@
       padding: 0
     p, a
       color: $textColorTwo
-      cursor: pointer
       font-size: 14px
       line-height: 14px
-    
 
 .headerVideoTitle
+  padding: 0 40px
   div
     height: 100%
     position: relative
     width: max-content
   .headerVideoInput
-    background: transparent
-    border: 0
-    color: $textColorOne
-    font-size: 1.4rem
-    font-weight: 700
-    line-height: 70px
-    height: 70px
-    padding-right: 30px
+    width: 322px
+    height: 36px
     position: relative
-    width: fit-content
+    font-weight: 800
+    font-size: 18px
+    letter-spacing: -0.01px
+    color: #E8E8E8 !important
     z-index: 2
+    background: $leftSidebarBg
+    border: 1px solid #2E2D39
+    border-radius: 4px
+    padding: 0 9px
+    display: flex
+    align-items: center
+    box-sizing: border-box
+    border-radius: 4px
     &::placeholder
-      color: rgba($textColorThree, 0.2)
+      color: #E8E8E8
     &:focus
       outline: none
   img
     position: absolute
-    right: 0
+    right: 4px
     top: 50%
     transform: translateY(-50%)
     width: 16px
+    z-index: 2
 
 .headerActions
   display: grid
   grid-gap: 10px
   grid-template-columns: repeat(2, 1fr)
 
-  
 // MAIN
 .main
-  display: flex
-  grid-gap: 20px
-  grid-template-columns: auto 1fr
-  padding: 0px 20px
+  height: calc(100% - 64px)
+  margin-top: 70px
+  > div
+    display: flex
+    grid-gap: 20px
+    grid-template-columns: auto 1fr
+    display: flex
 
+.container
+  display: flex
+  height: calc(100vh - 150px)
+  min-height: 832px
+  // grid-auto-columns: 69px calc( 100% - 69px )
+.rightSide
+  width: calc( 100% - 69px )
+  background-color: #444356
 
 // FOOTER
 .footer
   // background: #fff
-  height: 140px
+  height: 137px
   padding: 0px 20px
   z-index: 3
+  background: $leftSidebarBg
+  box-sizing: border-box
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25)
+  border: 5px solid #444356
+
+.createPanel
+  width: 100%
+  height: 100%
+  display: flex
+  align-items: center
+  justify-content: center
+  position: relative
+  // &:after
+  //   content: ""
+  //   position: absolute
+  //   background-image: url(/assets/campaign/myfomo_logopurple.svg)
+  //   opacity: 0.12
+  //   background-repeat: no-repeat
+  //   background-position: center
+  //   background-size: contain
+  //   height: calc(100% - 80px)
+  //   width: 100%
+
+  table
+    // width: 62%
+    // height: 65%
+    width: 894px
+    height: 501px
+    border-collapse: collapse
+    z-index: 1
+    background-color: $leftSidebarBg
+    tr
+      width: 100%
+      td
+        width: 50%
+        height: 50%
+        text-align: center
+        border: 2.5px dashed $orangeColor
+        color: white
+        font-weight: 600
+        font-size: 19px
+        letter-spacing: -0.01px
+    tr:first-child > td:first-child
+      color: $orangeColor

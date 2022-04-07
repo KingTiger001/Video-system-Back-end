@@ -1,5 +1,5 @@
 @import '../../_variables.sass'
-  
+
 .shareCampaign
   height: 100%
   display: flex
@@ -8,10 +8,12 @@
   top: 0
   width: 100%
   z-index: 9
+  overflow-y: auto
 
 .backdrop
   background: rgba(#B3BAC5, 0.8)
   height: 100%
+  min-height: 715px
   left: 0
   position: absolute
   top: 0
@@ -20,9 +22,10 @@
 
 .box
   background: #fff
-  border-radius: 8px
+  border-radius: 6px
   margin: auto
-  max-width: 960px
+  max-width: 775px
+  height: 715px
   overflow: hidden
   position: relative
   width: 100%
@@ -116,13 +119,10 @@
     width: 14px
 
 .content
-  min-height: 72vh
+  height: 100%
   overflow: auto
-  padding: 10px 50px
-  box-shadow: 0px 4px 4px 5px rgba(0, 0, 0, 0.06)
+  // box-shadow: 0px 4px 4px 5px rgba(0, 0, 0, 0.06)
   border-radius: 6px
-  margin: 30px
-  padding: 90px
 
 .title
   color: $textColorTwo
@@ -131,10 +131,23 @@
   letter-spacing: 0.2px
 
 .text
-  font-size: 12px
-  font-weight: 600
-  letter-spacing: 0.5px
-  color: rgba(53, 79, 101, 0.9)
+  font-size: 10.5px
+  line-height: 13px
+  font-weight: bold
+  letter-spacing: -0.01px
+  color: $textColorSeven
+
+.textCenter
+  font-weight: normal
+  font-size: 13px
+  line-height: 8px
+  display: flex
+  align-items: center
+  text-align: center
+  letter-spacing: -0.01px
+  text-transform: capitalize
+  color: #6C7E8E
+  margin-bottom: 23px
 
 .error
   color: red
@@ -143,6 +156,20 @@
 .stepOne
   display: grid
   grid-gap: 20px
+  height: 100%
+  .leftSidebar
+    width: calc( 100% - #{$shareSidebarWidth} )
+    height: 100%
+    padding: 18px
+  .rightSidebar
+    width: $shareSidebarWidth
+    height: 100%
+    padding: 18px
+    background-color: $leftSidebarBg
+    .createVideo
+      justify-content: end
+      display: flex
+      cursor: pointer
   label
     color: $textColorTwo
     display: block
@@ -157,7 +184,7 @@
     width: 100%
   input[type=text]
     height: 30px
-    margin-left:10px  
+    margin-left: 10px
   input
     height: 55px
     padding: 0 20px
@@ -167,9 +194,9 @@
     resize: none
   .detailsMessageHeader
     align-items: center
-    margin-right:10px
-    font-size:15px
-    color:#5A7184
+    margin-right: 10px
+    font-size: 15px
+    color: #5A7184
     display: grid
     grid-auto-flow: column
     justify-content: space-between
@@ -200,9 +227,69 @@
         width: 100%
       button
         width: 100%
+  .uploadThumbnailBlock
+    background: #F7F8FB
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1)
+    border-radius: 4px
+    width: 100%
+    height: 300px
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+    &.listVideos
+      justify-content: start
+      padding-top: 17px
+      overflow-y: auto
+      &.emptyList
+        justify-content: center
+    .uploadThumbnailBlockItem
+      width: 214px
+    .previewInfo
+      width: 279px
+      display: flex
+      flex-direction: row
+      align-items: center
+      justify-content: start
+      margin-bottom: 20px
+      cursor: pointer
+      .previewImg
+        width: 53px
+        height: 30px
+        background: #FFFFFF
+        box-sizing: border-box
+        margin-right: 5px
+        img
+          width: 100%
+          height: 100%
+      .previewDetail
+        width: 224px
+        height: 30px
+        display: flex
+        flex-direction: row
+        align-items: center
+        justify-content: space-between
+        padding: 0 20px
+        background-color: white
+        border-radius: 4px
+        &.active
+          border: 1px dashed $orangeColor
+      .previewTitle
+        font-weight: 500
+        font-size: 13px
+        letter-spacing: -0.01px
+        color: $textColorEight
+      .previewDuration
+        font-size: 7px
+        font-weight: 500
+        letter-spacing: -0.01px
+
   .uploadThumbnail
+    margin: 17px auto 0 auto
+    width: 322px
     grid-auto-columns: max-content
     gap: 0 8px
+    margin-bottom: 6.16px
     & > label
       grid-row: 1
       grid-column-start: 1
@@ -213,26 +300,28 @@
       grid-column-end: 3
     .uploadThumbnailRecoSize
       align-self: center
-      color: $textColorThree
-      font-size: 12px
+      color: $textColorSeven
+      font-weight: 500
+      font-size: 10px
+      line-height: 8px
       grid-row: 4
     label.uploadThumbnailArea
       align-content: center
-      border: 2.5px dashed rgba(31, 59, 84, 0.4)
+      border: 2.5px dashed $orangeColor
       box-sizing: border-box
-      border-radius: 4px
+      // border-radius: 4px
       cursor: pointer
       display: grid
       grid-column: 1
       grid-gap: 5px
       grid-row: 3
-      height: 149px
+      height: 121px
       justify-items: center
-      margin-top: 15px
-      width: 255px
+      width: 213px
       p
-        color: #98A1AD
-        font-weight: 400
+        color: $textColorSeven
+        font-weight: 600
+        line-height: 31px
         text-align: center
     .uploadThumbnailPreview
       grid-column: 2
@@ -252,8 +341,8 @@
   .uploadThumbnailForLinkInput
     display: none
   .buttonLinkWithThumb
-    background: #fff
-    padding: 0 10px
+    background: $orangeColor
+    // padding: 0 10px
     align-items: center
     border-radius: 5px
     cursor: pointer
@@ -263,16 +352,17 @@
     justify-content: center
     text-decoration: none
     color: white
-    width: 125px
-    min-width: 125px
+    width: 103.04px
     font-size: 12px
-    height: 36.39px
-    background: linear-gradient(180deg, #0BB3FF 0%, #535BFF 100%)
+    letter-spacing: -0.01px
+    height: 34.41px
+    // background: linear-gradient(180deg, #0BB3FF 0%, #535BFF 100%)
     box-sizing: border-box
-    font-weight: 700
+    font-weight: bold
   .imgLinkWithThumb
-    margin-right: 10px
-    color: white
+    width: 14.22px
+    height: 10.7px
+    margin-right: 9.62px
   .socialShareAndBtImage
     text-align: center
     display: flex
@@ -294,8 +384,8 @@
     height: 36.39px
     background: green
   .thumbnailSecStyle
-    height: 93px
-    margin-top: 15px
+    width: 184px
+    height: 105px
 
 .uploadThumbnailInput
   height: 0px
@@ -370,21 +460,18 @@
   cursor: pointer
   color: $primaryColor!important
 
-
 .listsItemSubRow
   display: flex
   display: flex
   flex-direction: column
   border-left: 1px solid #ece3e3
   border-bottom: 1px solid #ece3e3
-  margin-left: 45px 
+  margin-left: 45px
   max-height: 200px
   height: auto
   overflow: auto
   &>.contactsItem
     grid-template-columns: 1fr 2fr 1fr 1fr
-
-
 
 .contactsHeader, .listsHeader
   display: grid
@@ -443,13 +530,13 @@
   margin-left: 30px
 
 .mailOption
-  align-items: center 
+  align-items: center
   display: flex
-  padding: 0 10px 
-  border:2px solid #5a7184
-  border-radius:4px
+  padding: 0 10px
+  border: 2px solid #5a7184
+  border-radius: 4px
   height: 40px
-  margin-top : 5px
+  margin-top: 5px
   color: black
 
 .mailLogo
@@ -457,7 +544,7 @@
   height: 30px
   margin: 10px
 
-.mailButton 
+.mailButton
   height: 40px
   margin: 10px
 
@@ -526,37 +613,35 @@
     grid-gap: 10px
 
 p.backLink
-  letter-spacing: 0.2px
-  font-size: 18px
+  letter-spacing: -0.01px
+  font-size: 16px
   color: #5B5FEE
   text-decoration: underline
-  font-weight: 600
-  cursor : pointer
+  font-weight: bold
+  cursor: pointer
 
 .imgLink
-  width: 20px
-  height:20px
-  margin-right:10px
-  
+  width: 13.15px
+  height: 12.8px
+  margin-right: 9.62px
+
 .imgLinkBottom
   margin-top: 30px
   width: 40%
-  margin-bottom:40px
-
+  margin-bottom: 40px
 
 .socialImg
-  margin-top: 20px
-  width: 140px
+  margin-bottom: 20px
+  width: 30px
+  height: 30px
 
 .EmailTitle
-   color:#183B56
-
+  color: #183B56
 
 .mailShare
-  width : 25px
-  height:25px
-  margin-right : 10px     
-
+  width: 25px
+  height: 25px
+  margin-right: 10px
 
 .buttonLink
   align-items: center
@@ -566,21 +651,21 @@ p.backLink
   display: flex
   -webkit-justify-content: center
   justify-content: center
-  padding: 0 20px
+  // padding: 0 20px
   text-decoration: none
-  background: #5F59F7
+  background: $orangeColor
   color: #fff
-  font-weight: 700
-  min-width: 125px
+  font-weight: bold
+  letter-spacing: -0.01px
+  width: 104px
   font-size: 12px
-  width: 125px
-  height: 36.39px
-  background: linear-gradient(180deg, #0BB3FF 0%, #535BFF 100%)
+  height: 34.41px
+  // background: linear-gradient(180deg, #0BB3FF 0%, #535BFF 100%)
 
   box-sizing: border-box
 
 .buttonLinkSuccess
-  height:48px
+  height: 48px
   align-items: center
   border-style: solid
   border-width: 2px
@@ -602,18 +687,34 @@ p.backLink
 .thumbnailRow
   display: flex
   align-items: center
-  margin-bottom: 27px
+  margin-bottom: 41px
+
+.thumbnailRowRight
+  margin-top: 53px
+  margin-bottom: 41px
+  padding: 0 33px
 
 .thumbnailRow > span
   //font-family: Roboto
   font-style: normal
-  font-weight: 600
+  line-height: 36px
+  letter-spacing: 0.99px
+  text-transform: capitalize
   font-size: 20px
+  font-weight: 800
+  color: $leftSidebarBg
+
+.thumbnailRowRight > span
+  //font-family: Roboto
+  font-style: normal
   line-height: 8px
   letter-spacing: 0.99px
   text-transform: capitalize
-  color: rgba(53, 79, 101, 0.9)
   line-height: 8px
+  font-size: 20px
+  font-weight: 600
+  color: rgba(255, 255, 255, 0.9)
+  margin-left: 9px
 
 .thumbnailRow > img
   width: 28px
@@ -621,10 +722,90 @@ p.backLink
   margin-right: 10px
 
 .thumbnailDescription
-  font-family: Roboto
   font-style: normal
   font-weight: 500
   font-size: 9px
   line-height: 8px
   letter-spacing: -0.01px
   text-transform: capitalize
+
+.shareVideosBlock
+  .shareSearchBlock
+    width: 100%
+    .shareSearchIcon
+      position: absolute
+      padding: 6.5px 10px
+  .shareSearch
+    width: 100%
+    margin-bottom: 13px
+    height: 30px
+    border: 1px solid rgba(83, 104, 124, 0.37)
+    box-sizing: border-box
+    border-radius: 4px
+    padding-left: 36px
+
+.reviewRow
+  margin-top: 46px
+  margin-bottom: 0
+
+.reviewBlock
+  margin-top: 28px
+  height: 95px
+  padding: 31px 0 0 13px
+  background-color: #F7F8FB
+  box-sizing: border-box
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1)
+  border-radius: 4px
+  &.none
+    border: 1px solid #D7DCE1
+    padding: 0
+    display: flex
+    align-items: center
+    justify-content: center
+    padding-top: 23px
+  .previewInfo
+    width: 279px
+    display: flex
+    flex-direction: row
+    align-items: center
+    justify-content: start
+  .previewImg
+    width: 59px
+    height: 34px
+    background: #FFFFFF
+    border: 0.5px solid $orangeColor
+    box-sizing: border-box
+    margin-right: 3px
+    img
+      width: 100%
+      height: 100%
+  .previewDetail
+    width: 224px
+    height: 30px
+    display: flex
+    flex-direction: row
+    align-items: center
+    justify-content: space-between
+    padding: 0 10px 0 20px
+    background-color: white
+  .previewTitle
+    font-weight: 500
+    font-size: 13px
+    letter-spacing: -0.01px
+    color: $textColorEight
+  .previewDuration
+    font-size: 7px
+    font-weight: 500
+    letter-spacing: -0.01px
+  .previewFooter
+    width: 279px
+    padding: 4px 0
+  .previewButton
+    background: $leftSidebarBg
+    color: $white
+    padding: 0 10px
+    height: 13.2px
+    float: right
+    font-size: 5px
+    cursor: pointer
+    border-radius: 5px

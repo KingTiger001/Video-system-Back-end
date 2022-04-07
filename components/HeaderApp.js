@@ -48,16 +48,36 @@ const HeaderApp = () => {
   return (
     <div className={styles.header}>
       <div className={styles.container}>
-        <Link href="/app">
+        {/* <Link href="/app">
           <a className={styles.logo}>
             <img src="/logo-simple.svg" />
           </a>
-        </Link>
+        </Link> */}
 
         <nav className={styles.menu}>
-          <Link href="/app/campaigns">
+          {
+            router.route === '/app' &&
+            <p className={styles.dashboard_title}>{me.firstName} - {me.company}</p>
+          }
+          {
+            router.route === '/app/campaigns' &&
+            <p>Library</p>
+          }
+          {
+            router.route === '/app/upgrade' &&
+            <p>Upgrade your My Fomo plan</p>
+          }
+          {/* {
+            router.route === '/app' &&
+            <p>{me.firstName} - {me.company}</p>
+          }
+          {
+            router.route === '/app' &&
+            <p>{me.firstName} - {me.company}</p>
+          } */}
+          {/* <Link href="/app/campaigns">
             <a className={router.route === '/app/campaigns' ? styles.selected : ''}>My Videos</a>
-          </Link>
+          </Link> */}
           {/*<Link href="/app/analytics">*/}
           {/*  <a className={router.route === '/app/analytics' ? styles.selected : ''}>Analytics</a>*/}
           {/*</Link>*/}
@@ -66,23 +86,23 @@ const HeaderApp = () => {
           {/*</Link>*/}
         </nav>
 
-        <a className={styles.needHelp} href="mailto:contact@myfomo.io">Need help ?</a>
-        <Button
-          onClick={() => showPopup({ display: 'CREATE_CAMPAIGN' })}
-        >
-          Create a video
-        </Button>
-        <Link style={styles.needHelp} href="/app/upgrade">Upgrade</Link>
+        {/* <a className={styles.needHelp} href="mailto:contact@myfomo.io">Need help ?</a> */}
+        {/* <Link style={styles.needHelp} href="/app/upgrade">Upgrade</Link> */}
         <div ref={userMenuRef}
              className={styles.user}>
+          <Button color="orange" size="small" width="120px" style={{marginRight: '30px'}}
+            onClick={() => showPopup({ display: 'CREATE_CAMPAIGN' })}
+          >
+            New Video
+          </Button>
           { me.firstName &&
             <div
               className={styles.userName}
               onClick={() => showUserMenu(!displayUserMenu)}
             >
-              <img src="/assets/common/profile.svg" />
               <p>{me.firstName}</p>
-              <img src={`/assets/common/${displayUserMenu ? 'expandLess' : 'expandMore'}.svg`} />
+              <img src="/assets/common/profile_dark.svg" />
+              {/* <img src={`/assets/common/${displayUserMenu ? 'expandLess' : 'expandMore'}.svg`} /> */}
             </div>
           }
           { displayUserMenu &&

@@ -1,5 +1,5 @@
 @import '../../../_variables'
-  
+
 .videoRecorder
   display: flex
   height: 100%
@@ -8,7 +8,7 @@
   position: fixed
   top: 0
   width: 100%
-  z-index: 9
+  z-index: 8
 
 .videoRecorderBackground
   background: rgba(#eee, 0.7)
@@ -20,14 +20,14 @@
   z-index: 1
 
 .videoRecorderContent
-  border: 5px solid $secondaryColor
-  border-radius: 8px
   margin: auto
   max-width: 1600px
   overflow: hidden
   position: relative
   width: 100%
   z-index: 2
+  > div
+    border: 3px solid $orangeColor
 
 .uploadProgress
   align-items: center

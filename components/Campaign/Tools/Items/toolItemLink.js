@@ -1,6 +1,6 @@
 import PopupDeleteLink from "@/components/Popups/PopupDeleteText";
-import styles from "@/styles/components/Campaign/Tools.module.sass";
-import { useState } from "react";
+import styles from "@/styles/components/Campaign/Elements.module.sass";
+import { useEffect, useRef, useState } from "react";
 import { ObjectID } from "bson";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
@@ -9,258 +9,384 @@ import { linkPresets } from "../../Presets";
 import InputRange from "react-input-range";
 
 const RangeSliderContainer = styled.div`
-  .input-range__track--active,
-  .input-range__slider {
-    background: ${(props) => props.color};
-    border-color: ${(props) => props.color};
-  }
-  .input-range {
-    border: 50px;
-  }
+   .input-range__track--active,
+   .input-range__slider {
+      background: ${(props) => props.color};
+      border-color: ${(props) => props.color};
+   }
+   .input-range {
+      border: 50px;
+   }
 `;
 
+const textSizes = [
+   { value: 0.5, label: "1" },
+   { value: 1, label: "2" },
+   { value: 1.5, label: "3" },
+   { value: 2, label: "4" },
+   { value: 2.5, label: "5" },
+];
+
 const ToolItemText = () => {
-  const dispatch = useDispatch();
-  const showPopup = (popupProps) =>
-    dispatch({ type: "SHOW_POPUP", ...popupProps });
+   const dispatch = useDispatch();
+   const showPopup = (popupProps) =>
+      dispatch({ type: "SHOW_POPUP", ...popupProps });
 
-  const [showContent, setShowContent] = useState(false);
-  const [optionSelected, setOptionSelected] = useState({
-    index: null,
-    option: null,
-  });
+   const [linkFocused, setLinkFocused] = useState(false);
+   const [showContentLink, setShowContentLink] = useState(false);
+   const [optionSelected, setOptionSelected] = useState({
+      index: null,
+      option: null,
+   });
 
-  const popup = useSelector((state) => state.popup);
-  const selectedContent = useSelector(
-    (state) => state.campaign.selectedContent
-  );
-  const contents = useSelector((state) => state.campaign.contents);
-  const hidePopup = () => dispatch({ type: "HIDE_POPUP" });
+   const popup = useSelector((state) => state.popup);
+   const selectedContent = useSelector(
+      (state) => state.campaign.selectedContent
+   );
+   const contents = useSelector((state) => state.campaign.contents);
+   const hidePopup = () => dispatch({ type: "HIDE_POPUP" });
 
-  const handleOnChange = (event, id) => {
-    const { value } = event.target;
-    const obj = { ...selectedContent };
-    const index = obj.links.findIndex((link) => link._id === id);
-    if (index < 0) return;
-    obj.links[index].value = value;
+   const handleOnChange = (event, id) => {
+      const { value } = event.target;
+      const obj = { ...selectedContent };
+      const index = obj.links.findIndex((link) => link._id === linkFocused._id);
+      if (index < 0) return;
+      obj.links[index].value = value;
 
-    const indexArr = contents.findIndex(
-      (content) => content._id === selectedContent._id
-    );
-    let array = contents.slice();
-    array[indexArr] = obj;
+      const indexArr = contents.findIndex(
+         (content) => content._id === selectedContent._id
+      );
+      let array = contents.slice();
+      array[indexArr] = obj;
 
-    dispatch({
-      type: "SET_VIDEO",
-      data: array,
-    });
-  };
+      dispatch({
+         type: "SET_VIDEO",
+         data: array,
+      });
+   };
 
-  const handleRemove = (id) => {
-    const obj = { ...selectedContent };
-    const index = obj.links.findIndex((link) => link._id === id);
-    if (index < 0) return;
-    obj.links.splice(index, 1);
+   const handleRemove = (id) => {
+      const obj = { ...selectedContent };
+      const index = obj.links.findIndex((link) => link._id === id);
+      if (index < 0) return;
+      obj.links.splice(index, 1);
 
-    const indexArr = contents.findIndex(
-      (content) => content._id === selectedContent._id
-    );
-    let array = contents.slice();
-    array[indexArr] = obj;
+      const indexArr = contents.findIndex(
+         (content) => content._id === selectedContent._id
+      );
+      let array = contents.slice();
+      array[indexArr] = obj;
 
-    dispatch({
-      type: "SET_VIDEO",
-      data: array,
-    });
-  };
+      dispatch({
+         type: "SET_VIDEO",
+         data: array,
+      });
+   };
 
-  const handleAdd = () => {
-    const _id = new ObjectID().toString();
-    const obj = { ...selectedContent };
-    obj.links.push({
-      _id,
-      value: "",
-      url: "",
-      fontSize: 0.5, // Set default button size
-      color: "#898989",
-      preset: 0,
-      position: { x: 50, y: 50 },
-    });
-    dispatch({
-      type: "SET_SELECTED_CONTENT",
-      data: obj,
-    });
-  };
+   const handleAdd = () => {
+      const _id = new ObjectID().toString();
+      const obj = { ...selectedContent };
+      const newLink = {
+         _id,
+         value: "",
+         url: "",
+         fontSize: 0.5, // Set default button size
+         color: "#898989",
+         preset: 0,
+         position: { x: 50, y: 50 },
+      };
+      setLinkFocused(newLink);
+      obj.links.push(newLink);
+      dispatch({
+         type: "SET_SELECTED_CONTENT",
+         data: obj,
+      });
+      setShowContentLink(true);
+   };
 
-  const handleOptionSelect = (index, option) => {
-    if (optionSelected.index === index && optionSelected.option === option) {
-      setOptionSelected({ index: null, option: null });
-    } else {
-      setOptionSelected({ index, option });
-    }
-  };
+   const toggleAdd = (show = null) => {
+      if (show !== null) {
+         setShowContentLink(show);
+      }
+      setShowContentLink(!showContentLink);
+   };
 
-  const handleOnChangeUrl = (event, id) => {
-    const { value } = event.target;
-    const obj = { ...selectedContent };
-    const index = obj.links.findIndex((link) => link._id === id);
-    if (index < 0) return;
-    obj.links[index].url = value;
+   const handleOptionSelect = (index, option) => {
+      if (optionSelected.index === index && optionSelected.option === option) {
+         setOptionSelected({ index: null, option: null });
+      } else {
+         setOptionSelected({ index, option });
+      }
+   };
 
-    const indexArr = contents.findIndex(
-      (content) => content._id === selectedContent._id
-    );
-    let array = contents.slice();
-    array[indexArr] = obj;
+   const handleOnChangeUrl = (event, id) => {
+      const { value } = event.target;
+      const obj = { ...selectedContent };
+      const index = obj.links.findIndex((link) => link._id === id);
+      if (index < 0) return;
+      obj.links[index].url = value;
 
-    dispatch({
-      type: "SET_VIDEO",
-      data: array,
-    });
-  };
+      const indexArr = contents.findIndex(
+         (content) => content._id === selectedContent._id
+      );
+      let array = contents.slice();
+      array[indexArr] = obj;
 
-  const handleChangeSize = (value, id) => {
-    const obj = { ...selectedContent };
-    const index = obj.links.findIndex((text) => text._id === id);
-    if (index < 0) return;
-    obj.links[index].fontSize = value;
+      dispatch({
+         type: "SET_VIDEO",
+         data: array,
+      });
+   };
 
-    const indexArr = contents.findIndex(
-      (content) => content._id === selectedContent._id
-    );
-    let array = contents.slice();
-    array[indexArr] = obj;
+   const handleChangeSize = (value, id) => {
+      const obj = { ...selectedContent };
+      const index = obj.links.findIndex((text) => text._id === id);
+      if (index < 0) return;
+      obj.links[index].fontSize = value;
 
-    dispatch({
-      type: "SET_VIDEO",
-      data: array,
-    });
-  };
+      const indexArr = contents.findIndex(
+         (content) => content._id === selectedContent._id
+      );
+      let array = contents.slice();
+      array[indexArr] = obj;
 
-  const handleChangeColor = (value, id) => {
-    const obj = { ...selectedContent };
-    const index = obj.links.findIndex((links) => links._id === id);
-    if (index < 0) return;
-    obj.links[index].color = value;
+      dispatch({
+         type: "SET_VIDEO",
+         data: array,
+      });
+   };
 
-    const indexArr = contents.findIndex(
-      (content) => content._id === selectedContent._id
-    );
-    let array = contents.slice();
-    array[indexArr] = obj;
+   const handleChangeColor = (value, id) => {
+      const obj = { ...selectedContent };
+      const index = obj.links.findIndex((links) => links._id === id);
+      if (index < 0) return;
+      obj.links[index].color = value;
 
-    dispatch({
-      type: "SET_VIDEO",
-      data: array,
-    });
-  };
+      const indexArr = contents.findIndex(
+         (content) => content._id === selectedContent._id
+      );
+      let array = contents.slice();
+      array[indexArr] = obj;
 
-  const selectPreset = (value, id) => {
-    const obj = { ...selectedContent };
-    const index = obj.links.findIndex((link) => link._id === id);
-    if (index < 0) return;
-    obj.links[index].preset = value;
+      dispatch({
+         type: "SET_VIDEO",
+         data: array,
+      });
+   };
 
-    const indexArr = contents.findIndex(
-      (content) => content._id === selectedContent._id
-    );
-    let array = contents.slice();
-    array[indexArr] = obj;
+   const selectPreset = (value, id) => {
+      const obj = { ...selectedContent };
+      const index = obj.links.findIndex((link) => link._id === linkFocused._id);
+      if (index < 0) return;
+      obj.links[index].preset = value;
 
-    dispatch({
-      type: "SET_VIDEO",
-      data: array,
-    });
-  };
+      const indexArr = contents.findIndex(
+         (content) => content._id === selectedContent._id
+      );
+      let array = contents.slice();
+      array[indexArr] = obj;
 
-  const renderStyleOption = (link) => (
-    <div className={styles.styleOption}>
-      <div className={styles.styles}>
-        <div className={styles.subtitle}>Styles</div>
-        <div className={styles.content}>
-          {linkPresets.map((preset) => (
-            <div
-              className={`${styles.presetBtn} ${
-                link.preset === preset ? styles.selected : null
-              }`}
-              onClick={() => selectPreset(preset, link._id)}
-            >
-              Preset {preset + 1}
+      dispatch({
+         type: "SET_VIDEO",
+         data: array,
+      });
+   };
+
+   const colorpickerRef = useRef(null);
+
+   useEffect(() => {
+      function handleClickOutside(event) {
+         if (
+            colorpickerRef.current &&
+            !colorpickerRef.current.contains(event.target)
+         ) {
+            setOptionSelected({ id: null, option: null });
+         }
+      }
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+         document.removeEventListener("mousedown", handleClickOutside);
+      };
+   }, [colorpickerRef]);
+
+   // const renderStyleOption = (link) => (
+   //    <div className={styles.styleOption}>
+   //       <div className={styles.styles}>
+   //          <div className={styles.subtitle}>Styles</div>
+   //          <div className={styles.content}>
+   //             {linkPresets.map((preset) => (
+   //                <>
+   //                   {preset !== 2 && (
+   //                      <div
+   //                         className={`${styles.presetBtn} ${
+   //                            link.preset === linkFocused.preset
+   //                               ? styles.selected
+   //                               : null
+   //                         }`}
+   //                         onClick={() => selectPreset(preset, link._id)}
+   //                      >
+   //                         Preset {preset <= 1 ? preset + 1 : preset}
+   //                      </div>
+   //                   )}
+   //                </>
+   //             ))}
+   //          </div>
+   //       </div>
+   //       <div className={styles.fontSize}>
+   //          <div className={styles.subtitle}>Size</div>
+   //          <div className={styles.content}>
+   //             <RangeSliderContainer color={"#5F59F7"}>
+   //                <InputRange
+   //                   maxValue={3}
+   //                   minValue={0}
+   //                   step={0.2}
+   //                   value={parseFloat(link.fontSize).toFixed(2)}
+   //                   // value={selectedContent.screen.duration}
+   //                   onChange={(value) => {
+   //                      handleChangeSize(value, link._id);
+   //                   }}
+   //                />
+   //             </RangeSliderContainer>
+   //          </div>
+   //       </div>
+
+   //       <div className={styles.color}>
+   //          <div className={styles.subtitle}>Color</div>
+   //          <div className={styles.content}>
+   //             <ChromePicker
+   //                className={styles.colorPicker}
+   //                disableAlpha={true}
+   //                color={link.color}
+   //                onChange={(color) => handleChangeColor(color.hex, link._id)}
+   //             />
+   //          </div>
+   //       </div>
+   //    </div>
+   // );
+   const renderStyleOption = (link) => (
+      <div className={styles.styleOption}>
+         <div className={styles.styles}>
+            {/* <div className={styles.subtitle}>Styles</div> */}
+            <div className={styles.content}>
+               {linkPresets.map((preset, i) => (
+                  <div
+                     style={{ display: "none" }}
+                     key={i}
+                     className={`${styles.presetBtn} ${
+                        link.preset === preset ? styles.selected : null
+                     }`}
+                     onClick={() => selectPreset(preset, link._id)}
+                  >
+                     Preset {preset + 1}
+                  </div>
+               ))}
             </div>
-          ))}
-        </div>
-      </div>
-      <div className={styles.fontSize}>
+         </div>
+         {/* <div className={styles.fontSize}>
         <div className={styles.subtitle}>Size</div>
         <div className={styles.content}>
           <RangeSliderContainer color={"#5F59F7"}>
             <InputRange
-              maxValue={3}
-              minValue={0}
+              maxValue={5}
+              minValue={0.4}
               step={0.2}
-              value={parseFloat(link.fontSize).toFixed(2)}
+              value={parseFloat(text.fontSize).toFixed(2)}
               // value={selectedContent.screen.duration}
               onChange={(value) => {
-                handleChangeSize(value, link._id);
+                handleChangeSize(value, text._id);
               }}
             />
           </RangeSliderContainer>
         </div>
+      </div> */}
+
+         <div className={styles.color}>
+            <div className={styles.content}>
+               <ChromePicker
+                  className={styles.colorPicker}
+                  disableAlpha={true}
+                  color={link.color}
+                  onChange={(color) => handleChangeColor(color.hex, link._id)}
+               />
+            </div>
+         </div>
       </div>
+   );
 
-      {(link.preset === 0 || link.preset === 4) && (
-        <div className={styles.color}>
-          <div className={styles.subtitle}>Color</div>
-          <div className={styles.content}>
-            <ChromePicker
-              className={styles.colorPicker}
-              disableAlpha={true}
-              color={link.color}
-              onChange={(color) => handleChangeColor(color.hex, link._id)}
-            />
-          </div>
-        </div>
-      )}
-    </div>
-  );
+   const renderUrlOption = (link) => {
+      return (
+         <div className={styles.styleOption}>
+            <div className={styles.url}>
+               <input
+                  placeholder={"insert url"}
+                  onChange={(e) => {
+                     handleOnChangeUrl(e, link._id);
+                  }}
+                  value={link.url}
+                  required
+               />
+            </div>
+         </div>
+      );
+   };
 
-  const renderUrlOption = (link) => {
-    return (
-      <div className={styles.styleOption}>
-        <div className={styles.url}>
-          <input
-            placeholder={"insert url"}
-            onChange={(e) => {
-              handleOnChangeUrl(e, link._id);
-            }}
-            value={link.url}
-            required
-          />
-        </div>
-      </div>
-    );
-  };
+   const renderLink = (link, index) => {
+      return (
+         <div
+            key={index}
+            className={`${styles.listItem} ${
+               link._id === linkFocused._id ? styles.focused : ""
+            }`}
+         >
+            {/* <div className={styles.toolSize}>
+               <label className={styles.toolLabel}>Size</label>
+               <div className={styles.toolSlider}>
+                  <RangeSliderContainer color={"#FF5C00"}>
+                     <InputRange
+                        maxValue={3}
+                        minValue={0}
+                        step={0.2}
+                        value={parseFloat(link.fontSize).toFixed(2)}
+                        // value={selectedContent.screen.duration}
+                        onChange={(value) => {
+                           handleChangeSize(value, link._id);
+                        }}
+                     />
+                  </RangeSliderContainer>
+               </div>
+            </div> */}
 
-  const renderLink = (link, index) => {
-    return (
-      <div key={index} className={styles.listItem}>
-        <span className={styles.subtitle}>Text</span>
-        <input
-          placeholder={"enter text"}
-          onChange={(e) => {
-            handleOnChange(e, link._id);
-          }}
-          value={link.value}
-        />
-        <span className={styles.subtitle}>Url</span>
-        <input
-          placeholder={"https://..."}
-          onChange={(e) => {
-            handleOnChangeUrl(e, link._id);
-          }}
-          value={link.url}
-        />
-        <div className={styles.toolItemOptions}>
+            <div className={styles.textMain}>
+               <div
+                  className={styles.toolItemOption}
+                  onClick={() => {
+                     showPopup({ display: "DELETE_LINK", data: link._id });
+                  }}
+               >
+                  <img
+                     className={styles.removeText}
+                     src="/assets/campaign/removeText.svg"
+                  />
+               </div>
+               <input
+                  onFocus={() => setLinkFocused(link)}
+                  className={styles.first}
+                  placeholder={"enter text"}
+                  onChange={(e) => {
+                     handleOnChange(e, link._id);
+                  }}
+                  value={link.value}
+               />
+               <input
+                  onFocus={() => setLinkFocused(link)}
+                  placeholder={"https://..."}
+                  onChange={(e) => {
+                     handleOnChangeUrl(e, link._id);
+                  }}
+                  value={link.url}
+               />
+            </div>
+            {/* <div className={styles.toolItemOptions}>
           <div
             className={styles.toolItemOption}
             onClick={() => {
@@ -270,75 +396,165 @@ const ToolItemText = () => {
             style
             <img src="/assets/campaign/toolItemPaint.svg" />
           </div>
-          {/* <div
-            className={styles.toolItemOption}
-            onClick={() => {
-              handleOptionSelect(index, "url");
-            }}
-          >
-            url
-            <img src="/assets/campaign/toolItemLink.svg" />
-          </div> */}
+        </div> */}
+         </div>
+      );
+   };
 
-          <div
-            className={styles.toolItemOption}
-            onClick={() => {
-              showPopup({ display: "DELETE_LINK", data: link._id });
-            }}
-          >
-            remove
-            <img src="/assets/campaign/toolItemDelete.svg" />
-          </div>
-        </div>
-        {optionSelected.index === index && (
-          <div className={styles.toolItemOptionContent}>
-            {optionSelected.option === "style" && renderStyleOption(link)}
-          </div>
-        )}
-        {/* {optionSelected.index === index && (
-          <div className={styles.toolItemOptionContent}>
-            {optionSelected.option === "url" && renderUrlOption(link)}
-          </div>
-        )} */}
-      </div>
-    );
-  };
-
-  return (
-    <>
-      {popup.display === "DELETE_LINK" && (
-        <PopupDeleteLink
-          onDelete={() => {
-            handleRemove(popup.data);
-            hidePopup();
-          }}
-        />
-      )}
-      <div className={`${styles.toolItem} ${styles.links}`}>
-        <div
-          className={styles.toolItemName}
-          onClick={() => setShowContent(!showContent)}
-        >
-          <p>Links</p>
-          <img src="/assets/campaign/toolLink.svg" />
-        </div>
-        {showContent && (
-          <div className={styles.toolItemContent}>
-            <div className={styles.listItems}>
-              {selectedContent.links.length > 0 ? (
-                selectedContent.links.map((link, i) => renderLink(link, i))
-              ) : (
-                <span>no link for the moment...</span>
-              )}
+   return (
+      <>
+         {popup.display === "DELETE_LINK" && (
+            <PopupDeleteLink
+               onDelete={() => {
+                  handleRemove(popup.data);
+                  hidePopup();
+               }}
+            />
+         )}
+         <div className={`${styles.toolItem} ${styles.links}`}>
+            <div
+               className={`${styles.toolItemName} ${
+                  showContentLink &&
+                  selectedContent.links &&
+                  selectedContent.links.length > 0
+                     ? styles.expand
+                     : ""
+               }`}
+               onClick={
+                  selectedContent.links && selectedContent.links.length > 0
+                     ? toggleAdd
+                     : handleAdd
+               }
+            >
+               <img src="/assets/campaign/timeline_add.svg" />
+               <span>Add call to action</span>
             </div>
-            <div onClick={handleAdd} className={styles.addLinkBtn}>
-              <img src={"/assets/common/addRounded.svg"} />
-            </div>
-          </div>
-        )}
-      </div>
-    </>
-  );
+            {showContentLink && (
+               <>
+                  <div className={styles.toolItemContent}>
+                     <div className={styles.listItems}>
+                        {selectedContent.links &&
+                           selectedContent.links.length > 0 && (
+                              <>
+                                 <div className={styles.toolItemOptions}>
+                                    <div className={styles.styleOption}>
+                                       {linkPresets.map(
+                                          (preset) =>
+                                             preset !== 2 && (
+                                                <div
+                                                   className={`${
+                                                      styles.presetBtn
+                                                   } ${
+                                                      linkFocused.preset ===
+                                                      preset
+                                                         ? styles.selected
+                                                         : null
+                                                   }`}
+                                                   onClick={() =>
+                                                      selectedContent.links.map(
+                                                         (link) =>
+                                                            selectPreset(
+                                                               preset,
+                                                               link._id
+                                                            )
+                                                      )
+                                                   }
+                                                >
+                                                   Preset{" "}
+                                                   {preset <= 1
+                                                      ? preset + 1
+                                                      : preset}
+                                                </div>
+                                             )
+                                       )}
+                                    </div>
+                                 </div>
+                                 <div className={styles.styleOption}>
+                                    <div className={`${styles.labelControl}`}>
+                                       Size
+                                    </div>
+                                    <div
+                                       className={`${styles.presetBtn} ${styles.selected}`}
+                                    >
+                                       <div
+                                          className={`${styles.styleOptionItem}`}
+                                       >
+                                          <select
+                                             className={styles.select}
+                                             onChange={(e) => {
+                                                handleChangeSize(
+                                                   e.target.value,
+                                                   linkFocused._id
+                                                );
+                                             }}
+                                             disabled={!linkFocused}
+                                          >
+                                             {textSizes.map((f) => (
+                                                <option value={f.value}>
+                                                   {f.label}
+                                                </option>
+                                             ))}
+                                          </select>
+                                       </div>
+                                    </div>
+                                    <div className={`${styles.labelControl}`}>
+                                       Color
+                                    </div>
+                                    <div
+                                       className={`${styles.presetBtn} ${styles.selected}`}
+                                    >
+                                       <div
+                                          className={`${styles.styleOptionItem} ${styles.fontColor}`}
+                                       >
+                                          <div
+                                             className={styles.styleColor}
+                                             style={{
+                                                background: linkFocused
+                                                   ? linkFocused.color
+                                                   : "white",
+                                             }}
+                                             onClick={() => {
+                                                handleOptionSelect(
+                                                   linkFocused
+                                                      ? linkFocused._id
+                                                      : 0,
+                                                   "style"
+                                                );
+                                             }}
+                                          ></div>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </>
+                           )}
+                        {selectedContent.links &&
+                        selectedContent.links.length > 0
+                           ? selectedContent.links.map((link, i) =>
+                                renderLink(link, i)
+                             )
+                           : ""}
+                     </div>
+                     {optionSelected.option === "style" && (
+                        <div
+                           className={styles.toolItemOptionContent}
+                           ref={colorpickerRef}
+                        >
+                           {renderStyleOption(linkFocused)}
+                        </div>
+                     )}
+                  </div>
+                  {selectedContent.links && selectedContent.links.length > 0 ? (
+                     <div className={styles.toolItemAdd} onClick={handleAdd}>
+                        <img src="/assets/campaign/addTextOrange.svg" />
+                     </div>
+                  ) : (
+                     ""
+                  )}
+               </>
+            )}
+         </div>
+      </>
+   );
 };
 
 export default ToolItemText;

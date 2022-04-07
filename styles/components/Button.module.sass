@@ -4,7 +4,7 @@
   align-items: center
   border-style: solid
   border-width: 2px
-  border-radius: 8px
+  border-radius: 7px
   cursor: pointer
   display: flex
   height: 48px
@@ -29,9 +29,17 @@
     background: rgba($primaryColor, 0.1)
     border-color: rgba($primaryColor, 0)
     color: $primaryColor
+  &.lightOrangeColor
+    background: rgba($orangeColor, 0.1)
+    border-color: rgba($orangeColor, 0)
+    color: $orangeColor
   &.primaryColor
     background: $primaryColor
     border-color: $primaryColor
+    color: #fff
+  &.orangeColor
+    background: $orangeColor
+    border-color: $orangeColor
     color: #fff
   &.secondaryColor
     background: $secondaryColor
@@ -51,6 +59,9 @@
     &.primaryColor
       border-color: $primaryColor
       color: $primaryColor
+    &.orangeColor
+      border-color: $orangeColor
+      color: $orangeColor
     &.secondaryColor
       border-color: $secondaryColor
       color: $secondaryColor
@@ -68,9 +79,11 @@
     color: $textColorOne
   &.smallSize
     height: 38px
-    padding: 0 15px
+    padding: 0
     span
-      font-size: 12px
+      font: caption
+      font-size: 17px
+      font-weight: 700
   &.disabled
     opacity: 0.9
     cursor: not-allowed

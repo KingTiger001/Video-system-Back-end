@@ -24,7 +24,7 @@ const Timer = ({
 
   return (
     <div className={styles.timer}>
-      {dayjs(time).format('mm:ss')}/{dayjs(timeLimit).format('mm:ss')}
+      {dayjs(time).format('mm:ss')}
     </div>
   )
 }

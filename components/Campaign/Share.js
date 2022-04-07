@@ -1,25 +1,26 @@
-import {useEffect, useRef, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {toast} from "react-toastify";
-import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 
-import {mainAPI, mediaAPI} from "@/plugins/axios";
+import { mainAPI, mediaAPI } from "@/plugins/axios";
 
 import Button from "@/components/Button";
 import PopupAddContact from "@/components/Popups/PopupAddContact";
 import PopupImportContacts from "@/components/Popups/PopupImportContacts";
 
-import {MsalProvider, useIsAuthenticated, useMsal} from "@azure/msal-react";
-import {PublicClientApplication} from "@azure/msal-browser";
-import {msalConfig, requestScopes} from "config/MsConfig";
+import { MsalProvider, useIsAuthenticated, useMsal } from "@azure/msal-react";
+import { PublicClientApplication } from "@azure/msal-browser";
+import { msalConfig, requestScopes } from "config/MsConfig";
 
 import styles from "@/styles/components/Campaign/Share.module.sass";
-import {useGoogleLogin} from "react-google-login";
-import {googleConfig} from "config/GoogleConfig";
-import {Collapse} from "react-collapse";
+import { useGoogleLogin } from "react-google-login";
+import { googleConfig } from "config/GoogleConfig";
+import { Collapse } from "react-collapse";
 import "react-tabs/style/react-tabs.css";
+import dayjs from "@/plugins/dayjs";
 
-import {FacebookShareButton, LinkedinShareButton, TwitterShareButton, WhatsappShareButton} from "react-share";
+import { FacebookShareButton, LinkedinShareButton, TwitterShareButton, WhatsappShareButton } from "react-share";
 
 const providers = {
     GOOGLE: "GOOGLE",
@@ -27,14 +28,14 @@ const providers = {
     // FOMO: "FOMO",
 };
 
-const RenderStepTree = ({setSendVia, sendVia}) => {
-    const {instance: outlookInstance} = useMsal();
+const RenderStepTree = ({ setSendVia, sendVia }) => {
+    const { instance: outlookInstance } = useMsal();
     const [msAccesToken, setMsAccessToken] = useState(undefined);
     const isOutlookAuthentified = useIsAuthenticated();
 
     const [googleCredentials, setGoogleCredentials] = useState(undefined);
     const [googleProfile, setGoogleProfile] = useState(undefined);
-    const {signIn: handleGmailSignIn} = useGoogleLogin({
+    const { signIn: handleGmailSignIn } = useGoogleLogin({
         onSuccess: (session) => refreshGmailToken(session),
         ...googleConfig,
     });
@@ -93,17 +94,17 @@ const RenderStepTree = ({setSendVia, sendVia}) => {
         if (googleCredentials)
             setSendVia({
                 ...sendVia,
-                google: {credentials: googleCredentials, email: googleProfile.email},
+                google: { credentials: googleCredentials, email: googleProfile.email },
             });
     }, [msAccesToken, googleCredentials]);
 
     const refreshGmailToken = async (session) => {
         if (session.code) {
-            const {data} = await mainAPI.post(`/campaigns/googleToken`, {
+            const { data } = await mainAPI.post(`/campaigns/googleToken`, {
                 code: session.code,
             });
 
-            const {profile, credentials} = data;
+            const { profile, credentials } = data;
 
             console.log("profile from data", profile);
             console.log("credentials from data", credentials);
@@ -119,7 +120,7 @@ const RenderStepTree = ({setSendVia, sendVia}) => {
             setSendVia({
                 ...sendVia,
                 provider: providers.GOOGLE,
-                google: {credentials: googleCredentials, email: googleProfile.email},
+                google: { credentials: googleCredentials, email: googleProfile.email },
             });
             // setSendedVia(sendVia.provider);
             // setFormDetails({
@@ -134,7 +135,7 @@ const RenderStepTree = ({setSendVia, sendVia}) => {
             setSendVia({
                 ...sendVia,
                 provider: providers.GOOGLE,
-                google: {credentials: session.profileObj.googleId, email: session.profileObj.email},
+                google: { credentials: session.profileObj.googleId, email: session.profileObj.email },
             });
             // setSendedVia(sendVia.provider);
             // setFormDetails({
@@ -166,20 +167,20 @@ const RenderStepTree = ({setSendVia, sendVia}) => {
 
     const changeProvider = (event) => {
         event.target.value === providers.GOOGLE &&
-        setSendVia({
-            ...sendVia,
-            provider: providers.GOOGLE,
-            google: {credentials: googleCredentials, email: googleProfile.email},
-        });
+            setSendVia({
+                ...sendVia,
+                provider: providers.GOOGLE,
+                google: { credentials: googleCredentials, email: googleProfile.email },
+            });
         event.target.value === providers.MICROSOFT &&
-        setSendVia({
-            ...sendVia,
-            provider: providers.MICROSOFT,
-            microsoft: {
-                accessToken: msAccesToken,
-                email: outlookInstance.getAllAccounts()[0].username,
-            },
-        });
+            setSendVia({
+                ...sendVia,
+                provider: providers.MICROSOFT,
+                microsoft: {
+                    accessToken: msAccesToken,
+                    email: outlookInstance.getAllAccounts()[0].username,
+                },
+            });
         // event.target.value === providers.FOMO &&
         //   setSendVia({
         //     ...sendVia,
@@ -287,18 +288,26 @@ const RenderStepTree = ({setSendVia, sendVia}) => {
     );
 };
 
-const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backText}) => {
+const Share = ({ campaignId, onClose, onDone, me, onCreateCampaignClicked, onPreviewClicked, backText }) => {
     const _FROM = `${me.firstName} ${me.lastName} `;
     const SUBJECT = `${me.firstName} from ${me.company} sent you a video message`;
 
     const dispatch = useDispatch();
 
     const popup = useSelector((state) => state.popup);
-    const hidePopup = () => dispatch({type: "HIDE_POPUP"});
+    const hidePopup = () => dispatch({ type: "HIDE_POPUP" });
     const showPopup = (popupProps) =>
-        dispatch({type: "SHOW_POPUP", ...popupProps});
+        dispatch({ type: "SHOW_POPUP", ...popupProps });
 
-    const [campaign, setCampaign] = useState({});
+    const [campaign, setCampaign] = useState(false);
+
+    const [campaignsDraft, setCampaignsDraft] = useState([]);
+    const [campaignsShared, setCampaignsShared] = useState([]);
+    const [campaignsDraftAll, setCampaignsDraftAll] = useState([]);
+    const [campaignsSharedAll, setCampaignsSharedAll] = useState([]);
+
+    const [campaignsLoading, setCampaignsLoading] = useState(true);
+
     const [contacts, setContacts] = useState({});
     const [contactsSelected, setContactsSelected] = useState([]);
     const [sendedVia, setSendedVia] = useState(undefined);
@@ -355,7 +364,11 @@ const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backTe
 
     // mounted
     useEffect(() => {
-        getCampaign();
+        if (campaignId) {
+            getCampaign();
+        } else {
+            getCampaigns();
+        }
         getContacts();
         getLists();
         getLastUsedProvider();
@@ -408,7 +421,27 @@ const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backTe
     }, [mounted]);
 
     const getCampaign = async () => {
-        const {data: campaign} = await mainAPI.get(`/campaigns/${campaignId}`);
+        const { data: campaign } = await mainAPI.get(`/campaigns/${campaignId}`);
+        setCampaign(campaign);
+    };
+
+    const getCampaigns = async () => {
+        const { data: campaignsDraftUpdated } = await mainAPI.get(
+            "/users/me/campaigns?status=draft"
+        );
+        const { data: campaignsSharedUpdated } = await mainAPI.get(
+            "/users/me/campaigns?status=shared"
+        );
+        // console.log(campaignsDraftUpdated)
+        setCampaignsDraft(campaignsDraftUpdated);
+        setCampaignsShared(campaignsSharedUpdated);
+        setCampaignsDraftAll(campaignsDraftUpdated);
+        setCampaignsSharedAll(campaignsSharedUpdated);
+
+        setCampaignsLoading(false);
+    };
+
+    const selectCampain = (campaign) => {
         if (campaign.share && campaign.share.contacts) {
             campaign.share.contacts = campaign.share.contacts.map((c) => c._id);
         }
@@ -436,7 +469,7 @@ const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backTe
         setMounted(true);
     };
     const getContacts = async () => {
-        const {data: contacts} = await mainAPI.get(
+        const { data: contacts } = await mainAPI.get(
             `/users/me/contacts?pagination=false`
         );
         setContacts(contacts);
@@ -445,12 +478,12 @@ const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backTe
         if (!query) {
             return getContacts();
         }
-        const {data} = await mainAPI.get(`/contacts/search?query=${query}`);
+        const { data } = await mainAPI.get(`/contacts/search?query=${query}`);
         setContacts(data);
     };
 
     const getLists = async () => {
-        const {data: lists} = await mainAPI.get(
+        const { data: lists } = await mainAPI.get(
             `/users/me/contactLists?pagination=false`
         );
         setLists(lists);
@@ -468,15 +501,29 @@ const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backTe
         if (!query) {
             return getLists();
         }
-        const {data} = await mainAPI.get(`/contactLists/search?query=${query}`);
+        const { data } = await mainAPI.get(`/contactLists/search?query=${query}`);
         setLists(data);
+    };
+
+    const searchVideos = async (query) => {
+        let Draft = campaignsDraftAll
+        let Shared = campaignsSharedAll
+
+        setCampaign(false)
+
+        if (query && query.length) {
+            Draft = campaignsDraftAll.filter(elm => elm.name.indexOf(query) >= 0)
+            Shared = campaignsSharedAll.filter(elm => elm.name.indexOf(query) >= 0)
+        }
+        setCampaignsDraft(Draft)
+        setCampaignsShared(Shared)
     };
 
     const extractDataFromCSV = async (e) => {
         const formData = new FormData();
         formData.append("file", e.target.files[0]);
-        const {data} = await mainAPI.post("/contacts/csv", formData);
-        showPopup({display: "IMPORT_CONTACTS", data});
+        const { data } = await mainAPI.post("/contacts/csv", formData);
+        showPopup({ display: "IMPORT_CONTACTS", data });
     };
 
     const handleSelectedContact = (e) => {
@@ -533,7 +580,7 @@ const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backTe
     const share = async () => {
         try {
             setShareLoading(true);
-            await mainAPI.post("/campaigns/share", {campaign, sendVia});
+            await mainAPI.post("/campaigns/share", { campaign, sendVia });
             onDone();
         } catch (err) {
             setStepFourError("An error has occured.");
@@ -547,7 +594,7 @@ const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backTe
             throw formDetailsRef.current.reportValidity();
         }
         try {
-            const {data: campaignUpdated} = await mainAPI.patch(
+            const { data: campaignUpdated } = await mainAPI.patch(
                 `/campaigns/${campaignId}`,
                 {
                     share: {
@@ -573,7 +620,7 @@ const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backTe
             if (contactsSelected.length <= 0 && listsSelected.length <= 0) {
                 throw new Error("You need at least one contact or one list selected.");
             }
-            const {data: campaignUpdated} = await mainAPI.patch(
+            const { data: campaignUpdated } = await mainAPI.patch(
                 `/campaigns/${campaignId}`,
                 {
                     share: {
@@ -609,7 +656,7 @@ const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backTe
                 url: campaign.share.thumbnail,
             },
         });
-        const {data: campaignUpdated} = await mainAPI.patch(
+        const { data: campaignUpdated } = await mainAPI.patch(
             `/campaigns/${campaignId}`,
             {
                 share: {
@@ -634,7 +681,7 @@ const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backTe
         formData.append("width", 800);
         try {
             setThumbnailLoading(true);
-            const {data: url} = await mediaAPI.post("/images", formData);
+            const { data: url } = await mediaAPI.post("/images", formData);
             if (campaign.share && campaign.share.thumbnail) {
                 await mediaAPI.delete("/", {
                     data: {
@@ -642,7 +689,7 @@ const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backTe
                     },
                 });
             }
-            const {data: campaignUpdated} = await mainAPI.patch(
+            const { data: campaignUpdated } = await mainAPI.patch(
                 `/campaigns/${campaignId}`,
                 {
                     share: {
@@ -674,7 +721,7 @@ const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backTe
     // @return Promise<boolean>
     async function askWritePermission() {
         try {
-            const {state} = await navigator.permissions.query({name: 'clipboard-write', allowWithoutGesture: false})
+            const { state } = await navigator.permissions.query({ name: 'clipboard-write', allowWithoutGesture: false })
             return state === 'granted'
         } catch (error) {
             errorEl.textContent = `Compatibility error (ONLY CHROME > V66): ${error.message}`
@@ -701,7 +748,7 @@ const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backTe
                     <a href="https://app.myfomo.io/campaigns/${campaign?._id}?thumbnail=1">${campaign?.name}</a>
                   </h4>
                 </ifram>
-                `], {type: "text/html"})
+                `], { type: "text/html" })
             })
         ]
         return navigator.clipboard.write(data)
@@ -767,14 +814,14 @@ const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backTe
                 (me.subscription.level === "business" &&
                     (contactsSelected.length < 1 ||
                         contactsSelected.includes(contact._id)))) &&
-            checked && (
-                <input
-                    checked={contactsSelected.includes(contact._id)}
-                    onChange={handleSelectedContact}
-                    type="checkbox"
-                    value={contact._id}
-                />
-            )}
+                checked && (
+                    <input
+                        checked={contactsSelected.includes(contact._id)}
+                        onChange={handleSelectedContact}
+                        type="checkbox"
+                        value={contact._id}
+                    />
+                )}
             <p>
                 {contact.firstName} {contact.lastName}
             </p>
@@ -792,7 +839,7 @@ const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backTe
     const [listContent, setListContent] = useState({});
 
     const getContactList = async (id) => {
-        const {data} = await mainAPI.get(`/contactLists/${id}`);
+        const { data } = await mainAPI.get(`/contactLists/${id}`);
         setListContent(data);
     };
 
@@ -829,8 +876,8 @@ const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backTe
                 <Collapse isOpened={show === list._id && listContent}>
                     <div className={styles.listsItemSubRow}>
                         {listContent &&
-                        listContent.list &&
-                        listContent.list.map((contact) => renderContact(contact, false))}
+                            listContent.list &&
+                            listContent.list.map((contact) => renderContact(contact, false))}
                     </div>
                 </Collapse>
             </div>
@@ -870,14 +917,14 @@ const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backTe
                         <TabPanel>
                             <div className={styles.sectionHeaderButton}>
                                 <div className={styles.search}>
-                                    <img src="/assets/common/search.svg"/>
+                                    <img src="/assets/common/search.svg" />
                                     <input
                                         placeholder="Search"
                                         onChange={(e) => searchContacts(e.target.value)}
                                     />
                                 </div>
                                 <Button
-                                    onClick={() => showPopup({display: "ADD_CONTACT"})}
+                                    onClick={() => showPopup({ display: "ADD_CONTACT" })}
                                     outline={true}
                                     size="small"
                                 >
@@ -914,23 +961,23 @@ const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backTe
                             </div>
                             <div className={styles.contactsList}>
                                 {contacts.totalDocs > 0 &&
-                                sortBySelected(contacts.docs).map((contact) =>
-                                    renderContact(contact)
-                                )}
+                                    sortBySelected(contacts.docs).map((contact) =>
+                                        renderContact(contact)
+                                    )}
                                 {!contacts.totalDocs &&
-                                contacts.length > 0 &&
-                                sortBySelected(contacts).map((contact) =>
-                                    renderContact(contact)
-                                )}
+                                    contacts.length > 0 &&
+                                    sortBySelected(contacts).map((contact) =>
+                                        renderContact(contact)
+                                    )}
                                 {(contacts.totalDocs <= 0 ||
                                     (!contacts.totalDocs && contacts.length <= 0)) &&
-                                renderContact()}
+                                    renderContact()}
                             </div>
                         </TabPanel>
                         <TabPanel>
                             <div className={styles.sectionHeaderButton}>
                                 <div className={styles.search}>
-                                    <img src="/assets/common/search.svg"/>
+                                    <img src="/assets/common/search.svg" />
                                     <input
                                         placeholder="Search"
                                         onChange={(e) => searchLists(e.target.value)}
@@ -938,20 +985,20 @@ const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backTe
                                 </div>
                             </div>
                             <div className={styles.listsHeader}>
-                                <div/>
+                                <div />
                                 <p>ID</p>
                                 <p>Name</p>
                                 <p>Number of contacts</p>
                             </div>
                             <div className={styles.listsList}>
                                 {lists.totalDocs > 0 &&
-                                lists.docs.map((list) => renderList(list))}
+                                    lists.docs.map((list) => renderList(list))}
                                 {!lists.totalDocs &&
-                                lists.length > 0 &&
-                                lists.map((list) => renderList(list))}
+                                    lists.length > 0 &&
+                                    lists.map((list) => renderList(list))}
                                 {(lists.totalDocs <= 0 ||
                                     (!lists.totalDocs && lists.length <= 0)) &&
-                                renderList()}
+                                    renderList()}
                             </div>
                         </TabPanel>
                     </Tabs>
@@ -993,6 +1040,36 @@ const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backTe
         }, 3000)
     }
 
+    const displayDuration = (value) => {
+        if (!value) {
+            return "00:00";
+        }
+        const t = dayjs.duration(parseInt(Math.round(value), 10));
+        const m = t.minutes();
+        const s = t.seconds();
+        return `${m < 10 ? `0${m}` : m}:${s < 10 ? `0${s}` : s}`;
+    };
+
+    const renderCampaign = (cp, key) => {
+        return (
+            <div className={styles.previewInfo} key={key} onClick={() => setCampaign(cp)}>
+                <div className={styles.previewImg}>
+                    {(cp.share && cp.share.thumbnail) && (
+                        <img src={cp.share.thumbnail} />
+                    )}
+                </div>
+                <div className={`${styles.previewDetail} ${campaign && cp._id === campaign._id ? styles.active : ''}`}>
+                    <span className={styles.previewTitle}>
+                        {cp ? cp.name : ''}
+                    </span>
+                    <span className={styles.previewDuration}>
+                        {cp ? displayDuration(cp.duration) : ''}
+                    </span>
+                </div>
+            </div>
+        )
+    }
+
     return (
         <MsalProvider instance={msalInstance}>
             <div className={styles.shareCampaign}>
@@ -1027,11 +1104,11 @@ const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backTe
                 {/*    />*/}
                 {/*)}*/}
 
-                <div className={styles.backdrop}/>
+                <div className={styles.backdrop} />
                 <div className={styles.box}>
 
-                    <div className={styles.header}>
-                        {/*<p className={styles.backLink} onClick={() => showPopup({display: "QUIT_SHARE"})}> Back to video*/}
+                    {/* <div className={styles.header}>
+                        <p className={styles.backLink} onClick={() => showPopup({display: "QUIT_SHARE"})}> Back to video
                         <p className={styles.backLink} onClick={() => {
                             onClose();
                             hidePopup();
@@ -1045,90 +1122,182 @@ const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backTe
                                 onCreateCampaignClicked();
                             }}
                         >
-                            Create New Video
+                            <img src="/assets/common/videos.svg" />
                         </Button>
-                    </div>
+                    </div> */}
                     <div className={styles.content}>
                         {step === 1 && (
                             <form className={styles.stepOne} ref={formDetailsRef}>
                                 <div style={{
                                     border: 'solid 0px yellow',
                                     display: "flex",
-                                    margin: '0 55px',
-                                    justifyContent: 'space-between',
+                                    justifyContent: 'space-around',
                                     alignItems: 'center'
                                 }}>
-                                    <div style={{
-                                        border: 'solid 0px red',
-                                        display: "flex",
-                                        flexDirection: 'column',
-                                    }}>
+                                    <div
+                                        className={styles.leftSidebar}
+                                        style={{
+                                            border: 'solid 0px red',
+                                            display: "flex",
+                                            flexDirection: 'column',
+                                        }}>
+
+                                        <p className={styles.backLink} onClick={() => {
+                                            onClose();
+                                            hidePopup();
+                                        }}> {backText ?? 'Back'}</p>
+
                                         <div className={styles.uploadThumbnail}>
                                             <div className={styles.thumbnailRow}>
-                                                <img src="/assets/campaign/thumbnail.svg"/>
-                                                <span>Thumbnail</span>
+                                                <span>{campaignId ? 'Upload Thumbnail' : 'Select video to share'}</span>
                                             </div>
-                                            <div style={{width: '255px', marginBottom: '14px'}}>
-                                                <p className={styles.text}>
-                                                    Upload an image that will be the preview of your video
-                                                </p>
-                                            </div>
-                                            <label
-                                                className={styles.uploadThumbnailArea}
-                                                htmlFor="thumbnail"
-                                            >
-                                                <img
-                                                    src={(!campaign.share || !campaign.share.thumbnail) ? "/assets/campaign/upload.svg" : campaign.share.thumbnail}
-                                                    className={(campaign.share && campaign.share.thumbnail) ? styles.thumbnailSecStyle : ''}
-                                                />
+                                            {campaignId &&
+                                                <div className={styles.uploadThumbnailBlock}>
+                                                    <div className={styles.uploadThumbnailBlockItem}>
+                                                        <div style={{ marginBottom: '33px' }}>
+                                                            <p className={styles.text}>
+                                                                Upload an image that will be the preview of your video
+                                                            </p>
+                                                        </div>
+                                                        <label
+                                                            className={styles.uploadThumbnailArea}
+                                                            htmlFor="thumbnail"
+                                                        >
+                                                            <img
+                                                                src={(!campaign.share || !campaign.share.thumbnail) ? "/assets/campaign/upload_new.svg" : campaign.share.thumbnail}
+                                                                className={(campaign.share && campaign.share.thumbnail) ? styles.thumbnailSecStyle : ''}
+                                                            />
 
-                                                {!thumbnailLoading && <p style={{
-                                                    color: '#309EFF'
-                                                }}>Upload image</p>}
-                                                {thumbnailLoading && <p>Downloading...</p>}
-                                            </label>
-                                            <input
-                                                accept="image/*"
-                                                id="thumbnail"
-                                                type="file"
-                                                onChange={(e) => uploadThumbnail(e.target.files[0])}
-                                                className={styles.uploadThumbnailInput}
-                                            />
-                                            {(campaign.share && campaign.share.thumbnail) && (
-                                                <div>
-                                                    <p
-                                                        className={styles.removeThumbnail}
-                                                        onClick={removeThumbnail}
-                                                    >
-                                                        Remove thumbnail
+                                                            {!thumbnailLoading && (!campaign.share || !campaign.share.thumbnail) && <p className={styles.uploadThumbnailAreaText}>Upload image</p>}
+                                                            {thumbnailLoading && <p>Downloading...</p>}
+                                                        </label>
+                                                        <input
+                                                            accept="image/*"
+                                                            id="thumbnail"
+                                                            type="file"
+                                                            onChange={(e) => uploadThumbnail(e.target.files[0])}
+                                                            className={styles.uploadThumbnailInput}
+                                                        />
+                                                        {/* {(campaign.share && campaign.share.thumbnail) && (
+                                                        <div>
+                                                            <p
+                                                                className={styles.removeThumbnail}
+                                                                onClick={removeThumbnail}
+                                                            >
+                                                                Remove thumbnail
+                                                            </p>
+                                                        </div>
+                                                    )} */}
+                                                        <p className={styles.uploadThumbnailRecoSize}>
+                                                            Recommended format: 16/9
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            }
+                                            {!campaignId &&
+                                                <div className={styles.shareVideosBlock}>
+                                                    <div className={styles.shareSearchBlock}>
+                                                        <img className={styles.shareSearchIcon} src="/assets/common/search.svg" />
+                                                        <input className={styles.shareSearch} placeholder="Search in Library" onChange={(e) => searchVideos(e.target.value)}></input>
+                                                    </div>
+                                                    <div className={`${styles.uploadThumbnailBlock} ${!campaignId ? styles.listVideos : ''} ${!campaignsDraft.length && !campaignsShared.length ? styles.emptyList : ''}`}>
+                                                        {
+                                                            campaignsDraft.length > 0 ? campaignsDraft.map((cp, key) => (
+                                                                renderCampaign(cp, key)
+                                                            )) : ''
+                                                        }
+                                                        {
+                                                            campaignsShared.length > 0 ? campaignsShared.map((cp, key) => (
+                                                                renderCampaign(cp, key)
+                                                            )) : ''
+                                                        }
+                                                        {
+                                                            (campaignsDraft.length == 0 && !campaignsShared.length > 0) ? (
+                                                                <div style={{ marginBottom: '33px' }}>
+                                                                    <p className={styles.textCenter}>
+                                                                        {campaignsLoading ? 'Loading...' : 'no video in Library'}
+                                                                    </p>
+                                                                    {!campaignsLoading && (
+                                                                        <Button color="orange" size="small" width="120px" style={{ margin: 'auto' }}
+                                                                            onClick={() => {
+                                                                                onClose();
+                                                                                hidePopup();
+                                                                                onCreateCampaignClicked();
+                                                                            }}
+                                                                        >New Video</Button>
+                                                                    )}
+                                                                </div>
+                                                            ) : ''
+                                                        }
+                                                    </div>
+                                                </div>
+                                            }
+                                            <div className={`${styles.thumbnailRow} ${styles.reviewRow}`}>
+                                                <span>{campaignId ? 'Video review' : 'Video selected'}</span>
+                                            </div>
+                                            {campaign ? (
+                                                <div className={styles.reviewBlock}>
+                                                    <div className={styles.previewInfo}>
+                                                        <div className={styles.previewImg}>
+                                                            {(campaign.share && campaign.share.thumbnail) && (
+                                                                <img src={campaign.share.thumbnail} />
+                                                            )}
+                                                        </div>
+                                                        <div className={styles.previewDetail}>
+                                                            <span className={styles.previewTitle}>
+                                                                {campaign ? campaign.name : ''}
+                                                            </span>
+                                                            <span className={styles.previewDuration}>
+                                                                {campaign ? displayDuration(campaign.duration) : ''}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div className={styles.previewFooter}>
+                                                        <button
+                                                            onClick={() => {
+                                                                onClose();
+                                                                hidePopup();
+                                                                onPreviewClicked(campaign);
+                                                            }}
+                                                            className={styles.previewButton}>Preview</button>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <div className={`${styles.reviewBlock} ${styles.none}`}>
+                                                    <p className={styles.textCenter}>
+                                                        no video in Library
                                                     </p>
                                                 </div>
                                             )}
-                                            <p className={styles.uploadThumbnailRecoSize}>
-                                                Recommended format: 16/9
-                                            </p>
                                         </div>
                                     </div>
 
-                                    <div style={{
-                                        border: 'solid 0px green',
-                                        display: "flex",
-                                        flexDirection: "column",
-                                    }}>
+                                    <div
+                                        className={styles.rightSidebar}
+                                        style={{
+                                            border: 'solid 0px green',
+                                            display: "flex",
+                                            flexDirection: "column",
+                                        }}>
+                                        <div
+                                            className={styles.createVideo}
+                                            style={{}}
+                                            onClick={() => {
+                                                onClose();
+                                                hidePopup();
+                                                onCreateCampaignClicked();
+                                            }}
+                                        >
+                                            <img src="/assets/common/videos.svg" />
+                                        </div>
 
                                         <div>
-                                            <div className={styles.thumbnailRow}
-                                                 style={{
-                                                     marginBottom: '20px',
-                                                 }}
-                                            >
-                                                <img src="/assets/common/shareRow.svg"/>
+                                            <div className={styles.thumbnailRowRight} >
+                                                <img src="/assets/common/shareRowLight.svg" />
                                                 <span>Share</span>
                                             </div>
 
-                                            <div style={{
-                                                marginLeft: '40px',
-                                            }}>
+                                            <div>
                                                 <div className={styles.fomoCopyLinksContainer} style={{
                                                     display: 'flex',
                                                     flexDirection: "column",
@@ -1136,27 +1305,29 @@ const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backTe
                                                     alignItems: 'center',
 
                                                 }}>
-                                                    <a
+                                                    <button
+                                                        disabled={!campaign}
                                                         href={false}
                                                         className={copied ? styles.buttonLinkSuccess : styles.buttonLink}
                                                         onClick={handleCopiedLink}
                                                     >
                                                         <img className={styles.imgLink}
-                                                             src={`/assets/common/${copied ? 'doneWhite' : 'link'}.svg`}/>
+                                                            src={`/assets/common/${copied ? 'doneWhite' : 'link'}.svg`} />
 
                                                         {copied ? 'Copied' : 'Copy link'}
 
-                                                    </a>
-                                                    <a
+                                                    </button>
+                                                    <button
+                                                        disabled={!campaign}
                                                         href={false}
                                                         className={copiedWithThumbnail ? styles.buttonLinkSuccess : styles.buttonLinkWithThumb}
                                                         onClick={handleCopiedLinkWithThumbnail}
                                                     >
                                                         <img className={styles.imgLinkWithThumb}
-                                                             src={`${copiedWithThumbnail ? '/assets/common/doneWhite' : '/assets/campaign/thumbnail-white'}.svg`}/>
+                                                            src={`${copiedWithThumbnail ? '/assets/common/doneWhite' : '/assets/campaign/thumbnail-white'}.svg`} />
 
                                                         {copiedWithThumbnail ? 'Copied' : `+ Copy link`}
-                                                    </a>
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
@@ -1167,8 +1338,8 @@ const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backTe
                                                     marginTop: '140px',
                                                     marginBottom: '20px'
                                                 }}
-                                                className={styles.thumbnailRow}>
-                                                <img src="/assets/common/shareRow.svg"/>
+                                                className={styles.thumbnailRowRight}>
+                                                <img src="/assets/common/shareRowLight.svg" />
                                                 <span>Social Share</span>
                                             </div>
 
@@ -1176,68 +1347,47 @@ const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backTe
                                                 display: 'flex',
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
-                                                marginLeft: '40px',
                                             }}>
 
                                                 <div style={{
                                                     border: 'solid 0px black',
                                                     display: "flex",
                                                     flexDirection: 'column',
-                                                    gap: '27px',
                                                     justifyContent: 'center',
                                                     alignItems: "center",
-                                                    margingLeft: '20px'
                                                 }}>
 
-                                                    <div style={{
-                                                        display: "flex",
-                                                        gap: '60px',
-                                                        justifyContent: 'center',
-                                                        alignItems: "center",
-                                                        margingLeft: '20px',
+                                                    <LinkedinShareButton
+                                                        disabled={!campaign}
+                                                        url={`https://app.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
+                                                    >
+                                                        <img className={styles.socialImg} src="/assets/socials/linkedin-icon.svg"
+                                                            alt="facebook icon share" />
+                                                    </LinkedinShareButton>
 
-                                                    }}>
+                                                    <TwitterShareButton
+                                                        disabled={!campaign}
+                                                        url={`https://app.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
+                                                    >
+                                                        <img className={styles.socialImg} src="/assets/socials/twitter-icon.svg"
+                                                            alt="facebook icon share" />
+                                                    </TwitterShareButton>
 
-                                                        <LinkedinShareButton
-                                                            url={`https://app.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
-                                                        >
-                                                            <img src="/assets/socials/linkedin-icon.svg"
-                                                                 alt="facebook icon share"/>
-                                                        </LinkedinShareButton>
+                                                    <FacebookShareButton
+                                                        disabled={!campaign}
+                                                        url={`https://app.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
+                                                    >
+                                                        <img className={styles.socialImg} src="/assets/socials/facebook-icon.png"
+                                                            alt="facebook icon share" />
+                                                    </FacebookShareButton>
 
-                                                        <TwitterShareButton
-                                                            url={`https://app.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
-                                                        >
-                                                            <img src="/assets/socials/twitter-icon.svg"
-                                                                 alt="facebook icon share"/>
-                                                        </TwitterShareButton>
-                                                    </div>
-
-                                                    <div style={{
-                                                        border: 'solid 0px black',
-                                                        display: "flex",
-                                                        gap: '60px',
-                                                        justifyContent: 'center',
-                                                        alignItems: "center",
-                                                        margingLeft: '20px'
-                                                    }}>
-
-                                                        <FacebookShareButton
-                                                            url={`https://app.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
-                                                        >
-                                                            <img src="/assets/socials/facebook-icon.svg"
-                                                                 alt="facebook icon share"/>
-                                                        </FacebookShareButton>
-
-                                                        <WhatsappShareButton
-                                                            url={`https://app.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
-                                                        >
-                                                            <img src="/assets/socials/whatsapp-icon.svg"
-                                                                 alt="facebook icon share"/>
-                                                        </WhatsappShareButton>
-                                                    </div>
-
-
+                                                    <WhatsappShareButton
+                                                        disabled={!campaign}
+                                                        url={`https://app.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
+                                                    >
+                                                        <img className={styles.socialImg} src="/assets/socials/whatsapp-icon.svg"
+                                                            alt="facebook icon share" />
+                                                    </WhatsappShareButton>
                                                 </div>
                                             </div>
                                         </div>
@@ -1255,7 +1405,7 @@ const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backTe
                                     boxShadow: '0px 4px 4px 5px rgba(0, 0, 0, 0.06)',
                                     borderRadius: 6
                                 }}>
-                                    <div style={{border: 'solid 0px red', width: '40%'}}>
+                                    <div style={{ border: 'solid 0px red', width: '40%' }}>
 
                                         <div style={{
                                             marginBottom: 30,
@@ -1264,14 +1414,14 @@ const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backTe
                                             flexDirection: 'row'
                                         }}>
 
-                                            <img className={styles.mailShare} src="/assets/common/mail.svg"/>
+                                            <img className={styles.mailShare} src="/assets/common/mail.svg" />
                                             <h2 className={styles.EmailTitle}>Email Share </h2>
 
                                         </div>
 
-                                        <RenderStepTree sendVia={sendVia} setSendVia={setSendVia}/>
+                                        <RenderStepTree sendVia={sendVia} setSendVia={setSendVia} />
                                     </div>
-                                    <div style={{border: 'solid 0px green', width: '55%'}}>
+                                    <div style={{ border: 'solid 0px green', width: '55%' }}>
 
                                         <div style={{
                                             display: 'flex',
@@ -1288,9 +1438,9 @@ const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backTe
                                                     subject: e.target.value,
                                                 })
                                             }
-                                                   required
-                                                   value={formDetails.subject}
-                                                   type="text"/>
+                                                required
+                                                value={formDetails.subject}
+                                                type="text" />
                                         </div>
 
                                         <div style={{
@@ -1335,12 +1485,12 @@ const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backTe
                                     <div className={styles.summaryItem}>
                                         <div className={styles.summaryItemHeader}>
                                             <div className={styles.summaryChecked}>
-                                                <img src="/assets/common/doneWhite.svg"/>
+                                                <img src="/assets/common/doneWhite.svg" />
                                             </div>
                                             <p>Message</p>
                                             <span onClick={() => setStep(1)}>
                                                 Return to this step
-                                              </span>
+                                            </span>
                                         </div>
                                         <div className={styles.summaryItemContent}>
                                             <p>
@@ -1355,13 +1505,13 @@ const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backTe
                                                 <b>Message: </b>
                                                 {(campaign.share.message &&
                                                     campaign.share.message.trim()) ||
-                                                "none"}
+                                                    "none"}
                                             </p>
                                             <div>
                                                 <b>Thumbnail: </b>
                                                 {campaign.share && campaign.share.thumbnail ? (
                                                     <div>
-                                                        <br/>
+                                                        <br />
                                                         <img
                                                             className={styles.summaryThumbnailPreview}
                                                             src={campaign.share.thumbnail}
@@ -1376,12 +1526,12 @@ const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backTe
                                     <div className={styles.summaryItem}>
                                         <div className={styles.summaryItemHeader}>
                                             <div className={styles.summaryChecked}>
-                                                <img src="/assets/common/doneWhite.svg"/>
+                                                <img src="/assets/common/doneWhite.svg" />
                                             </div>
                                             <p>Contacts</p>
                                             <span onClick={() => setStep(2)}>
-                        Return to this step
-                      </span>
+                                                Return to this step
+                                            </span>
                                         </div>
                                         <div className={styles.summaryItemContent}>
                                             <p>
@@ -1392,7 +1542,7 @@ const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backTe
                                                 <b>Lists: </b>
                                                 {campaign.share.lists.length} selected
                                                 {campaign.share.lists.length &&
-                                                campaign.share.lists.length < 10
+                                                    campaign.share.lists.length < 10
                                                     ? ` ( ${getListNames()} )`
                                                     : ``}
                                             </p>
@@ -1405,16 +1555,17 @@ const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backTe
                             </div>
                         )}
                     </div>
-                    <div className={styles.footer}>
-                        <div>
-                            {step > 1 && (
-                                <Button outline={true} onClick={() => setStep(step - 1)}>
-                                    Back
-                                </Button>
-                            )}
-                        </div>
-                        <div>
-                            {/*step < 3 && (
+                    {step > 1 &&
+                        <div className={styles.footer}>
+                            <div>
+                                {step > 1 && (
+                                    <Button outline={true} onClick={() => setStep(step - 1)}>
+                                        Back
+                                    </Button>
+                                )}
+                            </div>
+                            <div>
+                                {/*step < 3 && (
                 <Button
                 // optimize
                   disabled={(step == 1 && (!sendVia || !sendVia.google || !sendVia.google.credentials) && (!sendVia || !sendVia.microsoft || sendVia.microsoft.accessTokent))}
@@ -1425,19 +1576,19 @@ const Share = ({campaignId, onClose, onDone, me, onCreateCampaignClicked, backTe
                   {step==1 ? "Select Contacts" : "Next"}
                 </Button>
               )*/}
-                            {/* {(showProvidersNotification && step==1) && (
+                                {/* {(showProvidersNotification && step==1) && (
                 <Popup
                   title={'Select a provider'}
                   showCloseIcon={true}
                 >Please select a provider to continue</Popup>
               )} */}
-                            {step === 3 && (
-                                <Button loading={shareLoading} onClick={share}>
-                                    Share
-                                </Button>
-                            )}
-                        </div>
-                    </div>
+                                {step === 3 && (
+                                    <Button loading={shareLoading} onClick={share}>
+                                        Share
+                                    </Button>
+                                )}
+                            </div>
+                        </div>}
                 </div>
             </div>
         </MsalProvider>

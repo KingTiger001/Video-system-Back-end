@@ -1,55 +1,72 @@
 @import '../_variables'
-  
+
 .listItem
   align-items: center
-  background: #fff
   border-radius: 4px
   box-shadow: 0 5px 16px 0 rgba(24,59,86,0.03)
   display: grid
-  height: 40px
-  padding: 0 30px
+  height: 31px
+  // padding: 0 11px 0 45px
   &.empty
     grid-template-columns: 1fr
     justify-items: center
   p, a
-    color: $textColorTwo
-    font-size: 12px
+    color: $textColorEight
+    // font-size: 12px
     letter-spacing: 0.2px
     text-align: left
-    overflow: auto
+    // overflow: auto
   span
-    color: $primaryColor
-    font-size: 12px
+    // color: $primaryColor
+    // font-size: 12px
     font-weight: 600
-  .actions
+  .actions, .more
+    background: white
+    height: 100%
+    display: flex
+    align-items: center
+    .dots
+      font-weight: 800
+      font-size: 13px
+      line-height: 8px
+      display: flex
+      align-items: center
+      text-align: center
+      letter-spacing: -0.01px
+      color: $textColorEight
+      cursor: pointer
     & > div
       display: grid
       grid-auto-flow: column
-      grid-gap: 5px
+      grid-gap: 26px
       justify-content: flex-start
     a, button
       align-items: center
-      // border: 1px solid #98A1AD
-      color: $textColorTwo
+      border: none
+      // color: $textColorTwo
       cursor: pointer
       display: flex
-      font-size: 12px
-      font-weight: 600
-      height: 26px
+      font-weight: 700
+      height: 16px
       justify-content: center
-      padding : 0 10px
-      &:nth-child(1)
-        background: #D5F3FA
-      &:last-child
-        background: #CEF0E9
-      &:nth-child(2)
-        background: #DFDEFD
+      padding: 0 8px
+      border-radius: 3px
+      width: 52px
+      span
+        font-size: 10px !important
+      // &:nth-child(1)
+      //   background: #D5F3FA
+      // &:last-child
+      //   background: #CEF0E9
+      // &:nth-child(2)
+      //   background: #DFDEFD
   .more
     align-items: center
     display: flex
     height: 100%
     position: relative
     & > img
+      width: 17px
       cursor: pointer
       display: block
   .dropdown

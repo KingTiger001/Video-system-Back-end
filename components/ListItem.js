@@ -41,11 +41,8 @@ const ListItem = ({
         </div>
       }
       {renderDropdownActions && 
-        <div className={styles.more}>
-          <img
-            onClick={() => showDropdown(!displayDropdown)}
-            src="/assets/common/more.svg"
-          />
+        <div className={styles.more} onClick={() => showDropdown(!displayDropdown)}>
+          <span className={styles.dots}>...</span>
           { displayDropdown &&
             <div
               className={styles.dropdown}

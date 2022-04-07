@@ -1,0 +1,110 @@
+@import '../../_variables'
+
+aside
+  &.menu
+    background-color: $leftSidebarBg
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: space-between
+    overflow-x: visible
+    div, a, button
+      overflow-x: visible
+    &.create
+      background-color: #444356
+      border: 4px solid #3D3C4C
+      height: 100%
+    .bottom_group
+      margin-bottom: 0
+      width: $sidebarWidth
+      .menu_item
+        margin-bottom: 5px !important
+    .top_group
+      width: 100%
+    .menu_title
+      color: white
+      font-size: 14px
+      margin-bottom: 56px
+      text-align: center
+      &.orange
+        color: $orangeColor
+    .menu_item
+      margin: auto
+      align-items: center
+      justify-content: center
+      width: 100%
+      height: 53px
+      display: flex
+      // overflow: hidden
+      border-radius: 4px
+      position: relative
+      // margin-bottom: 2px
+      margin-bottom: 58px
+      &.withTitle
+        margin-bottom: 2px
+      &.no_tooltip
+        margin-bottom: 20px
+      .tooltip
+        color: white
+        background: #2C2A38
+        height: 53px
+        align-items: center
+        justify-content: center
+        position: absolute
+        z-index: 3
+        width: 0
+        opacity: 0
+        left: 69px
+        border-radius: 0 5px 5px 0
+        display: flex
+        transition: width 1s, opacity 1s
+        white-space: nowrap
+        font-size: 14px
+      .orange_border
+        height: 100%
+        position: absolute
+        border-left: 5px solid $orangeColor
+        border-radius: 1px
+        left: 0
+        display: none
+      &.new_video
+        padding-left: 8.67px
+      &:first-child
+        margin-top: 28px
+        margin-bottom: 58px
+        img
+          width: 28.52px
+      &:hover
+        background-color: $menuItemActive
+        &:not(.no_tooltip)
+          border-top-right-radius: 0
+          border-bottom-right-radius: 0
+        .tooltip
+          width: $tooltipWidth
+          opacity: 1
+      &.active
+        background-color: $menuItemActive
+        border-top-left-radius: 1px
+        border-bottom-left-radius: 1px
+        .orange_border
+          display: flex
+    .menu_item_orange
+      color: $orangeColor
+      font-size: 14px
+      font-weight: 800
+      letter-spacing: -0.01px
+
+@keyframes menu-item-sliding-on
+  from
+    width: 0
+    opacity: 0
+  to
+    width: $tooltipWidth
+    opacity: 1
+@keyframes menu-item-sliding-off
+  from
+    width: $tooltipWidth
+    opacity: 1
+  to
+    width: 0
+    opacity: 0

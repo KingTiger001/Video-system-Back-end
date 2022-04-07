@@ -1,0 +1,906 @@
+@import '../../_variables.sass'
+
+.tools
+  display: grid
+  grid-auto-flow: column
+  grid-gap: 4px
+  min-height: 0
+
+.error
+  color: red
+  font-size: 13px
+  margin-bottom: 16px
+
+/**
+ *
+ *
+ *
+ *   TOOL LIST
+ *
+ *
+ */
+.toolList
+  background: $primaryColor
+  border-radius: 8px
+  display: grid
+  grid-auto-rows: max-content
+  grid-gap: 10px
+  padding: 10px 0
+  width: 80px
+  box-shadow: 0px 5px 8px 0px rgba(0,0,0,0.3)
+
+.tool
+  align-items: center
+  cursor: pointer
+  display: grid
+  grid-gap: 4px
+  width: 70%
+  justify-self: center
+  height: 80px
+  justify-items: center
+  position: relative
+  user-select: none
+  img
+    align-self: flex-end
+  p
+    align-self: flex-start
+    color: $white
+    font-size: 12px
+    font-weight: 500
+
+.toolSelected
+  // background: rgba(232, 231, 254, 0.3)
+  -webkit-box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.6)
+  box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.6)
+  border-radius: .6rem
+
+/**
+ *
+ *
+ *
+ *   TOOL BOX
+ *
+ *
+ */
+.toolBox
+  overflow: auto
+  position: relative
+  width: 425px
+  background: rgba(76, 74, 96, 0.9)
+  border: 5px solid #444356
+  color: white
+  & > div
+    min-height: 100%
+
+.close
+  cursor: pointer
+  position: absolute
+  right: 20px
+  top: 20px
+  width: 20px
+  z-index: 4
+
+.toolSection
+  margin-bottom: 15px
+
+.spliter
+  width: 50px
+  height: 2px
+  background: #dadada
+
+.toolSlider
+  margin: 30px 5px
+
+.toolTitleSection
+  display: flex
+  flex-direction: row
+  align-items: center
+  margin-bottom: 1.5rem
+  .backArrow
+    cursor: pointer
+    transition: transform .4s cubic-bezier(.2,.81,.22,.83)
+    margin-right: .4rem
+    &:hover
+      transform: scale(1.2)
+    img
+      height: 1rem
+
+.toolTitle
+  color: $textColorOne
+  font-size: 16px
+  font-weight: 900
+  // margin-bottom: 24px
+  position: relative
+  align-content: center
+  &:after
+    background: $primaryColor
+    content: ''
+    height: 2px
+    left: 0
+    top: calc(100% + 5px)
+    position: absolute
+    width: 55px
+
+.createScreenBtn
+  border-radius: .6rem
+  padding: 0 1rem
+  background: none
+  display: flex
+  height: 3rem
+  align-items: center
+  justify-content: space-between
+  transition: transform .4s cubic-bezier(.2,.81,.22,.83)
+  cursor: pointer
+  img
+    filter: invert(1)
+  span
+    color: $white
+  &:hover
+    transform: scale(.92)
+
+.toolAdd
+  align-items: center
+  border-bottom: 1px solid rgba(152,161,173,0.15)
+  cursor: pointer
+  display: grid
+  grid-gap: 15px
+  grid-template-columns: 20px 1fr
+  p
+    font-size: 14px
+    font-weight: 500
+    line-height: 13px
+
+.toolSubtitle
+  align-items: center
+  color: $textColorThree
+  display: grid
+  font-size: 14px
+  font-weight: 700
+  grid-gap: 8px
+  grid-template-columns: 4px 1fr 1fr
+  line-height: 16px
+  margin-bottom: 12px
+  margin-top: 30px
+  &:before
+    background: $primaryColor
+    border-radius: 50%
+    content: ''
+    height: 4px
+    width: 4px
+
+.toolSubtitleH1
+  align-items: center
+  color: $textColorOne
+  display: grid
+  font-size: 14px
+  font-weight: 700
+  grid-gap: 8px
+  line-height: 16px
+  margin-bottom: 10px
+  margin-top: 30px
+
+.toolDescription
+  color: #98A1AD
+  font-size: 11px
+  font-weight: 500
+  line-height: 14px
+  padding-left: 12px
+
+.toolLabel
+  color: $textColorThree
+  display: block
+  font-size: 14px
+  line-height: 13px
+  margin-bottom: 8px
+
+.toolInput
+  border: 1px solid rgba(90,113,132,0.2)
+  border-radius: 8px
+  height: 35px
+  display: block
+  padding: 0 10px
+  width: 100%
+  &:focus
+    & ~ img
+      display: block
+
+.toolInputGrid
+  display: grid
+  grid-gap: 10px
+  grid-template-columns: repeat(2, 1fr)
+.toolBack
+  color: $primaryColor
+  font-weight: 600
+  cursor: pointer
+  font-size: 13px
+  letter-spacing: 0.2px
+  margin-bottom: 6px
+  &>span
+    border: solid $primaryColor 2px
+    border-width: 0 3px 3px 0
+    display: inline-block
+    padding: 3px
+    .up
+      transform: rotate(-45deg)
+      -webkit-transform: rotate(-45deg)
+
+.toolShowColors
+  color: $primaryColor
+  display: flex
+  align-items: center
+  cursor: pointer
+  padding-top: 7px
+  font-size: 11px
+  letter-spacing: 0.2px
+  margin-bottom: 6px
+  text-decoration: underline
+
+.toolLibrary
+  display: grid
+  grid-gap: 12px
+  margin-bottom: 20px
+
+.toolLibraryItem
+  align-items: center
+  display: grid
+  display: flex
+  justify-content: space-between
+  gap: 0 6px
+  grid-template-columns: 1fr repeat(2, 38px)
+  .videoImg
+    width: 54px
+    height: 30px
+    background-color: black
+  // img
+  //   cursor: pointer
+  //   width: 20px
+  p
+    font-weight: 500
+    font-size: 15.0228px
+    color: white
+    &.videosItemStatus
+      font-size: 9.0137px
+
+.toolLibraryItemName
+  align-items: center
+  justify-content: space-between
+  -moz-box-flex: 1
+  flex-grow: 1
+  border: 1px dashed transparent
+  border-radius: 8px
+  cursor: pointer
+  display: flex
+  font-size: 13px
+  font-weight: 500
+  border: 2px solid $textColorNine
+  border-radius: 4.00609px
+  height: 100%
+  padding: 0 11px
+  // &.toolLibraryItemPreview
+  //   border: 1px dashed $secondaryColor
+  &.orangeBorder
+    border: 1px solid $orangeColor
+  &.toolLibraryItemSelected
+    border: 1px solid $primaryColor
+  &.toolLibraryItemNotSelected
+    border: 1px solid #e5e6da
+
+.toolLibraryItemEdit, .toolLibraryItemDelete
+  cursor: pointer
+  display: grid
+  background: #D5F3FA
+  border-radius: 10%
+  justify-items: center
+  align-items: center
+  height: 100%
+  img
+    height: 16px
+    margin-bottom: 2px
+    transform: rotate(90deg)
+  p
+    color: #000
+    font-size: 10px
+    font-weight: 600
+.toolLibraryItemDelete
+  background: #e5e6da
+  position: relative
+
+.toolLibraryItemOptions
+  display: flex
+  align-items: center
+  justify-content: space-between
+  width: 29px
+  position: relative
+  .dropdown
+    background: #fff
+    border-radius: 4px
+    box-shadow: 0 5px 16px 0 rgba(24,59,86,0.13)
+    position: absolute
+    right: 0
+    top: 30px
+    width: 145px
+    z-index: 2
+    li
+      align-items: center
+      border-bottom: 1px solid #F3F7F9
+      cursor: pointer
+      display: grid
+      grid-auto-flow: column
+      grid-gap: 8px
+      grid-auto-column: max-content
+      height: 45px
+      padding: 0 16px
+      &:last-child
+        border-bottom: 0
+      p
+        color: $textColorTwo
+        font-size: 12px
+
+.toolLibraryItemOption
+  cursor: pointer
+  display: flex
+  // margin: 0 .5rem
+  border-radius: 10%
+  justify-items: center
+  align-items: center
+  height: 100%
+  div
+    flex-direction: column
+    display: flex
+    justify-content: center
+    align-items: center
+    height: 18px
+  img
+    height: 16px
+    margin-bottom: 2px
+    &.delete
+      height: auto
+      margin: 0
+  p
+    color: #000
+    font-size: 10px
+
+.popupOptions
+  top: 0
+  right: 0
+  transform: translateY(40px)
+  position: absolute
+  width: auto
+  z-index: 4
+  border-radius: 3px
+  background: #f8f8f8
+  box-shadow: 1px 1px 4px rgba(#000, 0.3)
+  padding: 10px
+  display: flex
+  flex-direction: column
+  &>span
+    font-size: 12px
+    padding: 7px
+    width: 120px
+    font-weight: 500
+    &:hover
+      background: #ecedee
+
+.toolLibraryEmptyText
+  color: #B3BAC5
+  font-size: 12px
+  font-weight: 500
+  line-height: 18px
+  letter-spacing: 0.2px
+
+.toolDraftItem
+  @extend .toolLibraryItem
+  margin-bottom: 16px
+
+.toolDraftItemName
+  @extend .toolLibraryItemName
+  background: rgba($secondaryColor, 0.2)
+  color: $textColorTwo
+
+// Tool "Record"
+.toolRecord
+  align-content: center
+  display: grid
+  justify-items: center
+  padding: 0 66px
+  .toolRecordImage
+    height: 36px
+    margin-bottom: 5px
+    width: 36px
+  .toolRecordName
+    color: $textColorOne
+    font-size: 25px
+    font-weight: 600
+    line-height: 25px
+    margin-bottom: 15px
+  .toolRecordText
+    color: $textColorThree
+    font-size: 13px
+    line-height: 18px
+    margin-bottom: 20px
+    text-align: center
+  .unsuportedBrowser
+    color: $textColorThree
+    font-size: 13px
+    line-height: 18px
+    text-align: center
+    border-radius: 5px
+    padding: 5px
+    border: 1px solid $textColorThree
+  .recordBtn
+    color: $white
+    padding: 0 1rem
+    flex-grow: 1
+    display: flex
+    flex-direction: row
+    align-items: center
+    justify-content: center
+    background: none
+    border-radius: .6rem
+    width: 100%
+    height: 3.1rem
+    margin: 1rem 0
+    transition: transform .4s cubic-bezier(.2,.81,.22,.83)
+    &:hover
+      cursor: pointer
+      transform: scale(.92)
+  button, label
+    // margin-top: 10px
+    // width: 150px
+    width: 100%
+
+// Tool "Add video"
+.toolVideos
+  display: grid
+  grid-auto-rows: max-content
+  padding: 56px 13px 0 35px
+  .toolItemName
+    display: flex
+    align-items: center
+    margin-bottom: 24px
+    padding: 0 39px
+    cursor: pointer
+    user-select: none
+    span
+      position: relative
+      font-weight: 600
+      font-size: 16px
+      &:after
+        position: absolute
+        content: ""
+        top: 8px
+        right: -14px
+        width: 0
+        height: 0
+        border: 3.5px solid transparent
+        border-color: #fff transparent transparent transparent
+    &.expand span::after
+      top: 4.5px
+      border-color: transparent transparent #fff transparent
+    &.orangeColor
+      span
+        color: $orangeColor
+        &:after
+          border-color: $orangeColor transparent transparent transparent
+      &.expand span::after
+        border-color: transparent transparent $orangeColor transparent
+
+.videosList
+  display: grid
+  grid-gap: 14px
+  margin-bottom: 60px
+
+.videosItem
+  .toolLibraryItemEdit
+    & > div
+      display: grid
+      justify-items: center
+
+.videosItemStatus
+  color: $textColorThree
+  font-size: 11px
+  &.waiting
+    color: $textColorThree
+    font-style: italic
+  &.processing
+    color: #fbc531
+    font-style: italic
+
+.videosItemDelete
+  align-self: center
+  cursor: pointer
+  grid-column: 2
+  grid-row-start: 1
+  grid-row-end: 3
+  height: 20px
+  justify-self: flex-end
+  width: 20px
+
+// Tool "Start Screen" & "End Screen"
+.toolHelloScreen, .toolEndScreen,.toolItems
+  button
+    margin-bottom: 10px
+    width: 100%
+
+.networks
+  display: grid
+  grid-gap: 4px
+
+.network
+  align-items: center
+  display: grid
+  grid-gap: 8px
+  grid-template-columns: auto 1fr auto
+
+.networkAdd
+  color: $primaryColor
+  cursor: pointer
+  font-size: 12px
+  margin-top: 8px
+  text-decoration: underline
+
+.networkDelete
+  cursor: pointer
+  width: 16px
+
+.networkSelect
+  @extend .toolInput
+
+// Tool "Logo" 
+.toolLogo
+  padding: 20px
+  .error
+    margin-bottom: 0
+  button
+    width: 100%
+  .toolSection
+    display: flex
+    margin-top: 3rem
+    flex-direction: row
+    .toolLabel
+      margin-right: 1rem
+    .content
+      display: flex
+      flex-direction: column
+      align-items: center
+    .toolSlider
+      width: 70%
+    .placement
+      width: calc(70% - 1rem)
+
+.logo
+  align-items: center
+  border: 1px solid rgba(90, 113, 132, 0.2)
+  border-radius: 4px
+  cursor: pointer
+  display: flex
+  height: 100px
+  justify-content: center
+  margin-bottom: 8px
+  overflow: hidden
+  position: relative
+  width: 100px
+  .add
+    height: 30px
+    opacity: 0.4
+    width: 30px
+  .loading
+    align-items: center
+    background: rgba(#000, 0.6)
+    color: red
+    display: grid
+    justify-items: center
+    height: 100%
+    left: 0
+    position: absolute
+    top: 0
+    width: 100%
+    z-index: 2
+    img
+      animation: rotating 2s linear infinite
+      height: 30px
+      width: 30px
+  .image
+    width: 100%
+
+.logoRecoSize
+  color: $textColorThree
+  font-size: 12px
+
+@keyframes rotating
+  from
+    transform: rotate(0deg)
+  to
+    transform: rotate(-360deg)
+
+.logoInput
+  height: 0px
+  overflow: hidden
+  opacity: 0
+  position: absolute
+  width: 0px
+  z-index: -1
+
+.logoRemove
+  color: red
+  cursor: pointer
+  margin-bottom: 5px
+
+.placement
+  align-content: space-between
+  background: #F3F7F9
+  border-radius: 8px
+  display: grid
+  grid-template-columns: repeat(2, 30px)
+  height: 130px
+  justify-content: space-between
+  padding: 10px
+  position: relative
+  width: 100%
+  & > div
+    background: darken(#F3F7F9, 5%)
+    border-radius: 4px
+    cursor: pointer
+    height: 30px
+    width: 30px
+    &.selected
+      background: $primaryColor
+
+.colorPicker
+  border: 1px solid rgba(90,113,132,0.2)
+  border-radius: 8px !important
+  box-shadow: none !important
+  width: 100% !important
+
+// Tool Templates
+
+.toolItems
+  .toolItem
+    .toolItemName
+      padding: 0 1rem
+      flex-grow: 1
+      display: flex
+      flex-direction: row
+      align-items: center
+      border-radius: .6rem
+      width: 100%
+      height: 3.7rem
+      margin: 1rem 0
+      // &:hover
+      //   cursor: pointer
+      //   transform: scale(.92)
+      p
+        color: $white
+      // img
+      //   height: 2.5rem
+      //   width: 2.5rem
+    .toolItemContent
+      display: flex
+      padding: 1rem
+      flex-grow: 1
+      flex-direction: column
+      justify-content: center
+      // align-items: center
+      background: $white
+      border-radius: .6rem
+    &.background
+      .toolItemContent
+        padding: 0
+      .toolItemName
+        background: none
+    &.duration
+      .toolItemName
+        background: none
+    &.texts,&.links,&.save
+      .toolItemContent
+        .addTextBtn
+          background: $blueText
+        .addLinkBtn
+          background: $pinkLink
+        .addTextBtn,.addLinkBtn
+          width: 100%
+          height: 2.5rem
+          padding: 0.8rem 1rem
+          border-radius: .4rem
+          align-self: end
+          cursor: pointer
+          position: relative
+          display: flex
+          transition: transform .4s cubic-bezier(.2,.81,.22,.83)
+          img
+            position: absolute
+            left: 50%
+            top: 50%
+            transform: translate(-50%,-50%)
+          &:hover
+            transform: scale(.92)
+        .listItems
+          display: flex
+          flex-direction: column
+          width: 100%
+          > span
+            font-size: .8rem
+            text-align: center
+            color: $grey
+          .listItem
+            margin-bottom: 2rem
+            display: flex
+            flex-direction: column
+            .subtitle
+              font-size: .8rem
+              color: $textColorOne
+              &:nth-child(3)
+                margin-top: 1rem
+            >textarea
+              background: #F5F5F5
+              padding: .8rem 1rem
+              box-shadow: 0px 4px 6px 0px rgba(0,0,0,0.25)
+              border-radius: .4rem
+              text-align: center
+              background: transparent
+              border: none
+              flex-grow: 1
+              &:nth-child(4)
+                font-size: .8rem
+                padding: .4rem 1rem
+            >input
+              background: #F5F5F5
+              padding: .8rem 1rem
+              box-shadow: 0px 4px 6px 0px rgba(0,0,0,0.25)
+              border-radius: .4rem
+              text-align: center
+              background: transparent
+              border: none
+              flex-grow: 1
+              &:nth-child(4)
+                font-size: .8rem
+                padding: .4rem 1rem
+
+            .toolItemOptions
+              margin-top: .4rem
+              display: flex
+              .toolItemOption
+                -ms-user-select: none // edge | intermet explorer
+                -webkit-user-select: none // safari
+                user-select: none
+                color: $white
+                font-weight: 700
+                padding: .2rem 0
+                justify-content: center
+                display: flex
+                width: 33%
+                border-radius: 1rem
+                cursor: pointer
+                margin: .3rem .2rem
+                transition: background .2s ease
+                img
+                  display: none
+                &:last-child
+                  background: #b3b3b3
+                  &:hover
+                    background: #c5c5c5
+            .toolItemOptionContent
+              .styleOption
+                >div
+                  display: flex
+                  flex-direction: row
+                  margin-top: 3rem
+                .subtitle
+                  margin-right: 1rem
+                .content
+                  flex-grow: 1
+                .styles
+                  .content
+                    display: flex
+                    flex-wrap: wrap
+                  .presetBtn
+                    cursor: pointer
+                    border-radius: .4rem
+                    padding: .2rem .4rem
+                    box-shadow: 0px 3px 8px 0px rgba(0,0,0,0.4)
+                    margin: 0 .4rem
+                    margin-bottom: 1rem
+                    display: flex
+                    &.selected
+                      color: $white
+                      background: $blueText
+                .variables
+                  margin-top: 1rem
+                  >div
+                    width: 100%
+                    border: initial
+                    background: initial
+                  ul
+                    width: 100%
+                    border: initial
+                    background: initial
+                    li
+                      box-shadow: 0px 2px 6px 0px rgba(0,0,0,0.2)
+                      margin: .4rem 0
+                      border-radius: .4rem
+                      transition: transform .4s cubic-bezier(.2,.81,.22,.83)
+                      &:hover
+                        border: inherit
+                        transform: scale(.94)
+
+                .url
+                  margin-top: 1rem
+                  width: 100%
+                  >input
+                    text-align: center
+                    width: 100%
+                    border-radius: 1rem
+                    border: 1px solid $pinkLink
+                    padding: .2rem 1rem
+                    color: $textColorOne
+
+    &.links
+      .toolItemName
+        background: none
+      .toolItemContent
+        border: 1px solid $pinkLink
+        .presetBtn
+          &.selected
+            background: $pinkLink!important
+      .toolItemOption
+        background: $pinkLink
+        &:hover
+          background: rgba($pinkLink, 0.7)
+    &.texts
+      .toolItemName
+        background: none
+      .toolItemOption
+        background: $blueText
+        &:hover
+          background: rgba($blueText, 0.7)
+      .toolItemContent
+        border: 1px solid $blueText
+      .presetBtn
+        border: 1px solid $blueText
+    &.save
+      .toolItemName
+        background: none
+      .toolItemContent
+        .subtitle
+          color: $grey
+          margin-top: 1.5rem
+          margin-bottom: 1rem
+          position: relative
+          display: flex
+          align-items: center
+          &::before
+            background: $primaryColor
+            border-radius: 50%
+            content: ''
+            display: inline-block
+            margin-right: .5rem
+            height: 4px
+            width: 4px
+        .nameInput
+          margin-bottom: 2rem
+          display: flex
+          border-bottom: 1px solid rgba($grey,.5)
+          &:focus-within
+            border-bottom: solid 1px rgba($primaryColor,.5)
+          input
+            border: none
+            flex-grow: 1
+        .saveTemplate
+          .saveBtn
+            width: 100%
+            padding: 0 1rem
+            border: 2px solid $primaryColor
+            border-radius: .6rem
+            margin: 1rem 0
+            height: 3rem
+            cursor: pointer
+            display: flex
+            align-items: center
+            justify-content: space-between
+            transition: transform .4s cubic-bezier(.2,.81,.22,.83)
+            img
+              opacity: 0.6
+            span
+              color: $grey
+            &:hover
+              transform: scale(.92)

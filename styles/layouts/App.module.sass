@@ -1,11 +1,17 @@
 @import '../_common.sass'
 @import '../_variables.sass'
 
+.main
+  display: flex
+
 .layout
   background: #F3F7F9
   display: grid
   min-height: 100vh
   grid-template-rows: 90px 1fr
+  width: calc(100% - 69px)
+  height: $pageHeight
+  overflow-y: scroll
 
 .content
   .container

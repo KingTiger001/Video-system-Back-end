@@ -87,14 +87,14 @@ const Actions = ({
 
   return (
     <div className={styles.actions}>
-      { !isConnecting && !isReplayingVideo &&
+      {!isConnecting &&
         <Timer
           timeLimit={timeLimit}
           isRecording={isRecording}
         />
       }
-      { isRunningCountdown && <Countdown countdownTime={countdownTime} /> }
-      { !isRunningCountdown && !isRecording &&
+      {isRunningCountdown && <Countdown countdownTime={countdownTime} />}
+      {!isRunningCountdown && !isRecording &&
         <div
           onClick={() => {
             onTurnOffCamera()

@@ -1,58 +1,75 @@
 import styles from "@/styles/components/Campaign/Tools.module.sass";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChromePicker } from "react-color";
 import { useDispatch, useSelector } from "react-redux";
 
 const ToolItemBackground = () => {
-  const dispatch = useDispatch();
-  const [showContent, setShowContent] = useState(false);
-  const endScreen = useSelector((state) => state.campaign.endScreen);
-  const contents = useSelector((state) => state.campaign.contents);
-  const selectedContent = useSelector(
-    (state) => state.campaign.selectedContent
-  );
+   const dispatch = useDispatch();
+   const colorpickerRef = useRef(null);
+   const [showContent, setShowContent] = useState(false);
+   const endScreen = useSelector((state) => state.campaign.endScreen);
+   const contents = useSelector((state) => state.campaign.contents);
+   const selectedContent = useSelector(
+      (state) => state.campaign.selectedContent
+   );
 
-  const handleChangeColor = (color) => {
-    const obj = { ...selectedContent };
-    obj.screen.background.color = color.hex;
+   useEffect(() => {
+      function handleClickOutside(event) {
+         if (
+            colorpickerRef.current &&
+            !colorpickerRef.current.contains(event.target)
+         )
+            setShowContent(false);
+      }
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+         document.removeEventListener("mousedown", handleClickOutside);
+      };
+   }, [colorpickerRef]);
 
-    const indexArr = contents.findIndex(
-      (content) => content._id === selectedContent._id
-    );
-    let array = contents.slice();
-    array[indexArr] = obj;
+   const handleChangeColor = (color) => {
+      const obj = { ...selectedContent };
+      obj.screen.background.color = color.hex;
 
-    dispatch({
-      type: "SET_VIDEO",
-      data: array,
-    });
-  };
+      const indexArr = contents.findIndex(
+         (content) => content._id === selectedContent._id
+      );
+      let array = contents.slice();
+      array[indexArr] = obj;
 
-  return (
-    <div className={`${styles.toolItem} ${styles.background}`}>
-      <div
-        className={styles.toolItemName}
-        onClick={() => setShowContent(!showContent)}
-      >
-        <p>Background</p>
-        <img src="/assets/campaign/toolBackground.svg" />
+      dispatch({
+         type: "SET_VIDEO",
+         data: array,
+      });
+   };
+
+   return (
+      <div className={`${styles.toolItem} ${styles.background}`}>
+         <div
+            className={styles.styleColor}
+            style={{
+               background: selectedContent.screen
+                  ? selectedContent.screen.background.color
+                  : "white",
+            }}
+            onClick={() => setShowContent(!showContent)}
+         ></div>
+
+         {/* need to enable */}
+         {showContent && (
+            <div className={styles.toolItemContent} ref={colorpickerRef}>
+               <ChromePicker
+                  className={styles.colorPicker}
+                  disableAlpha={true}
+                  color={selectedContent.screen.background.color}
+                  onChange={(color) => handleChangeColor(color)}
+               />
+            </div>
+         )}
+
+         {/*  */}
       </div>
-
-      {/* need to enable */}
-      {showContent && (
-        <div className={styles.toolItemContent}>
-          <ChromePicker
-            className={styles.colorPicker}
-            disableAlpha={true}
-            color={selectedContent.screen.background.color}
-            onChange={(color) => handleChangeColor(color)}
-          />
-        </div>
-      )}
-
-      {/*  */}
-    </div>
-  );
+   );
 };
 
 export default ToolItemBackground;

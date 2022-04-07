@@ -1,14 +1,47 @@
 @import '../../_variables'
 
 .campaignsHeader, .campaignsItem
-  grid-template-columns: 100px repeat(4, 1fr) 300px 24px
+  grid-template-columns: 5% 34% repeat(auto-fill, 15%) 22% 4%
   &.draft
-    grid-template-columns: 100px repeat(3, 1fr) 300px 24px
-
+    grid-template-columns: 5% 34% repeat(auto-fill, 15%) 22% 4%
+.campaignsHeader
+  p
+    font-weight: 500
+    font-size: 14px
+    line-height: 8px
+    display: flex
+    align-items: center
+    letter-spacing: -0.01px
+    text-transform: capitalize
+    color: $previewColor
+    &.firstHeader
+      padding-left: 45px
+.campaignsItem
+  p
+    background: white
+    height: 100%
+    font-weight: 500
+    font-size: 13px
+    line-height: 8px
+    display: flex
+    align-items: center
+    letter-spacing: -0.01px
+    color: $textColorEight
+    &.campaignImg
+      background-color: transparent
+      img
+        width: 90%
+        max-width: 53px
+        height: 30px
+    &.campaignName
+      padding-left: 45px
+      font-weight: 600
+      font-size: 15px
+      text-transform: capitalize
 .campaignsList
   display: grid
   grid-gap: 20px
-
+  height: 31px
 .videosDraftTitle, .videosSentTitle
   font-size: 18px
   font-weight: 700

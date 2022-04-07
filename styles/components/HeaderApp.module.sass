@@ -2,8 +2,8 @@
 @import '../_variables.sass'
 
 .header
-  background: #fff
-  box-shadow: 0 2px 15px 0 rgba(0,0,0,0.05)
+  // background: #fff
+  // box-shadow: 0 2px 15px 0 rgba(0,0,0,0.05)
   height: 90px
   position: relative
   z-index: 2
@@ -15,8 +15,10 @@
   height: 100%
   grid-auto-flow: column
   grid-gap: 40px
-  grid-template-columns: auto 1fr auto auto auto
-  justify-content: space-between
+  // grid-template-columns: auto 1fr auto auto auto
+  float: right
+  letter-spacing: -0.01px
+  font-style: normal
 
 .logo
   width: 120px
@@ -28,6 +30,15 @@
   grid-auto-flow: column
   grid-auto-columns: max-content
   grid-gap: 40px
+  p
+    font-size: 23px
+    letter-spacing: 0.99
+    font-weight: 800
+    color: $textColorSix
+    &.dashboard_title
+      font-size: 26px
+      letter-spacing: 0.01
+      color: $textColorFive
   a
     color: $textColorTwo
     font-size: 14px
@@ -53,18 +64,19 @@
   display: flex
   height: 100%
   position: relative
+  justify-self: end
   .userName
     align-items: center
     cursor: pointer
     display: grid
     grid-gap: 12px
     grid-auto-flow: column
-    grid-template-columns: auto 1fr auto
+    // grid-template-columns: auto 1fr auto
     height: 48px
     p
-      color: $textColorTwo
-      font-size: 14px
-      font-weight: 700
+      color: $textColorFour
+      font-size: 21px
+      font-weight: 500
   .userDropdown
     background: #fff
     border-radius: 4px

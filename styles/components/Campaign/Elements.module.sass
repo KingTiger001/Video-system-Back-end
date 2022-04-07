@@ -1,0 +1,241 @@
+@import '../../_variables.sass'
+
+.toolItem
+  .toolItemName
+    display: flex
+    align-items: center
+    margin-bottom: 31px
+    padding: 0 35px
+    cursor: pointer
+    user-select: none
+    span
+      position: relative
+      margin-left: 12px !important
+      &:after
+        position: absolute
+        content: ""
+        top: 8px
+        right: -14px
+        width: 0
+        height: 0
+        border: 3.5px solid transparent
+        border-color: #fff transparent transparent transparent
+    &.expand span::after
+      top: 4.5px
+      border-color: transparent transparent #fff transparent
+  .listItem
+    .textMain
+      padding: 0 35px
+      textarea, input
+        resize: none
+        width: 100%
+        height: 48px
+        padding: 12px 9px
+        font-weight: 700
+        font-size: 14px
+        background: #E8E8E8
+        border: 2px solid #444356
+        box-sizing: border-box
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1)
+        border-radius: 4px
+        margin-bottom: 24px
+        color: #393939
+        &.first
+          margin-bottom: 8px
+      .removeText
+        float: right
+        margin-bottom: 3px
+    &.focused
+      input, textarea
+        border: 2px solid $orangeColor
+  .toolItemAdd
+    width: 100%
+    align-items: center
+    display: flex
+    margin-bottom: 21px
+    margin-top: -12px
+    flex-direction: column
+  .styleOption
+    background: #444356
+    width: 100%
+    height: 37px
+    margin-bottom: 24px
+    display: flex
+    align-items: center
+    justify-content: space-between
+    padding: 0 3px
+    .labelControl
+      width: 92px
+      height: 29px
+      background: $textColorNine
+      font-weight: 600
+      font-size: 12px
+      display: flex
+      align-items: center
+      text-align: center
+      justify-content: center
+      color: #E8E8E8
+      cursor: default
+      width: 100%
+      max-width: 92px
+      &.selected
+        background: none
+    .presetBtn
+      width: 92px
+      height: 29px
+      background: $textColorNine
+      font-weight: 600
+      font-size: 12px
+      display: flex
+      align-items: center
+      text-align: center
+      justify-content: center
+      color: #E8E8E8
+      cursor: pointer
+      width: 100%
+      max-width: 92px
+      &.selected
+        background: none
+    .styleOptionItem
+      display: flex
+      justify-content: space-between
+      background: $textColorNine
+      height: 28px
+      & *
+        cursor: pointer
+      &.fontColor
+        width: 30px
+        display: flex
+        justify-content: center
+        align-items: center
+        .styleColor
+          width: 14px
+          height: 14px
+      &.fontFamily
+        width: 161px
+      &.fontSize
+        width: 39px
+      &.textStyle, &.textAlign
+        padding: 3px
+        display: flex
+        align-items: center
+        justify-content: space-between
+        .textOptionBtn
+          width: 19px
+          font-weight: 900
+          font-size: 13.875px
+          margin-bottom: 0
+          display: flex
+          justify-content: center
+          align-items: center
+          height: 100%
+          &.active
+            background: #393949
+          &.underlineTxt
+            font-weight: 400
+            text-decoration: underline
+  .toolItemContent
+    position: relative
+    &.logo
+      display: flex
+      align-items: end
+      flex-direction: row
+      justify-content: space-between
+      padding: 0 84px
+    label.logo
+      width: 90px
+      height: 86px
+      border: 1px dashed $orangeColor
+      cursor: pointer
+      display: -moz-box
+      display: flex
+      -moz-box-pack: center
+      overflow: hidden
+      position: relative
+      align-items: center
+      display: flex
+      justify-content: center
+      div
+        font-weight: 600
+        font-size: 6.95058px
+        text-align: center
+      .image
+        background-position: center
+        background-size: contain
+        background-repeat: no-repeat
+        width: 100%
+        height: 100%
+  .logoInput
+    height: 0px
+    overflow: hidden
+    opacity: 0
+    position: absolute
+    width: 0px
+    z-index: -1
+.placement
+  align-content: space-between
+  border-radius: 8px
+  display: grid
+  grid-template-columns: repeat(2, 25px)
+  height: 83px
+  width: 85px
+  justify-content: space-between
+  position: relative
+  & > div
+    cursor: pointer
+    height: 24px
+    width: 24px
+    border: 1px solid #FFFFFF
+    box-sizing: border-box
+    border-radius: 6px
+
+    &.selected
+      background: $orangeColor
+
+.toolLabel
+  font-size: 12px
+  font-weight: 400
+  margin-bottom: 13px
+  display: block
+  .center
+    text-align: center
+.toolSize
+  padding: 0 84px
+  margin-top: 24px
+  margin-bottom: 35px
+  .toolLabel
+    margin-bottom: 1px
+// .customSelect
+//   position: relative
+//   width: 100%
+.select
+  // -moz-appearance: none
+  // -webkit-appearance: none
+  // appearance: none
+  font-weight: 600
+  font-size: 13.875px
+  padding-inline:10px
+  width: 100%
+  background: $textColorNine
+  color: white
+  border: none
+  position: relative
+  // &:after
+  //   position: absolute
+  //   content: ""
+  //   top: 14px
+  //   right: 10px
+  //   width: 0
+  //   height: 0
+  //   border: 6px solid transparent
+  //   border-color: #fff transparent transparent transparent
+  option
+    background: $textColorNine
+    color: white
+    text-align: inherit
+    padding: 1px
+.toolItemOptionContent
+  position: absolute
+  z-index: 2
+  right: 0
+  top: 131px

@@ -1,5 +1,6 @@
 @import './_variables.sass'
-  
+@import "https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap"
+
 *, *:before, *:after
   box-sizing: border-box
   margin: 0
@@ -7,8 +8,8 @@
 
 html
   min-height: 100%
-  
-body, 
+
+body,
 #__next,
 .page
   min-height: 100vh
@@ -17,7 +18,7 @@ body
   background: #FFF
   color: #000
   font-display: swap
-  font-family: 'Inter', sans-serif
+  font-family: 'Roboto', sans-serif
   font-size: 14px
   overscroll-behavior-y: none
   -ms-text-size-adjust: 100%
@@ -43,7 +44,7 @@ ol
   list-style: none
 
 textarea
-  font-family: 'Inter', sans-serif
+  font-family: 'Roboto', sans-serif
 
 video:focus,
 input:focus,
@@ -63,7 +64,7 @@ input[type=checkbox]
   cursor: pointer
 
 .Toastify__toast-container
-  font-family: 'Inter', sans-serif
+  font-family: 'Roboto', sans-serif
   padding: 0
   right: 20px
   top: 20px
@@ -92,3 +93,6 @@ input[type=checkbox]
     background: $secondaryColor
   .peg
     box-shadow: 0 0 10px $secondaryColor, 0 0 5px $secondaryColor
+
+.input-range__label-container
+  display: none

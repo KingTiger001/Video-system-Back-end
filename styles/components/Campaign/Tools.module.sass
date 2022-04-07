@@ -1,5 +1,50 @@
 @import '../../_variables.sass'
 
+.Customize
+  display: grid
+  grid-template-columns: repeat(3, 33%)
+  flex-direction: row
+
+.styleColor
+  width: 14px
+  height: 14px
+  cursor: pointer
+
+.arrowUp
+  width: 0
+  height: 0
+  border-left: 4px solid transparent
+  border-right: 4px solid transparent
+  border-bottom: 4px solid white
+  cursor: pointer
+.arrowDown
+  width: 0
+  height: 0
+  border-left: 4px solid transparent
+  border-right: 4px solid transparent
+  border-top: 4px solid white
+  cursor: pointer
+
+
+.editTemplate
+  height: 37px
+  padding: 5px
+  display: flex
+  gap: 13px
+  background-color: #444356
+  border-radius: 3px
+  margin-bottom: 60px
+  &>div
+    width: 25%
+    height: 100%
+    background-color: #4B495F
+    color: white
+    display: flex
+    align-items: center
+    justify-content: center
+    font-weight: 500
+    padding: 3px
+
 .tools
   display: grid
   grid-auto-flow: column
@@ -12,13 +57,13 @@
   margin-bottom: 16px
 
 /**
-  *
-  *
-  *
-  *   TOOL LIST
-  *
-  *
-  */
+ *
+ *
+ *
+ *   TOOL LIST
+ *
+ *
+ */
 .toolList
   background: $primaryColor
   border-radius: 8px
@@ -28,7 +73,6 @@
   padding: 10px 0
   width: 80px
   box-shadow: 0px 5px 8px 0px rgba(0,0,0,0.3)
-
 
 .tool
   align-items: center
@@ -55,22 +99,21 @@
   box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.6)
   border-radius: .6rem
 
-
 /**
-  *
-  *
-  *
-  *   TOOL BOX
-  *
-  *
-  */
+ *
+ *
+ *
+ *   TOOL BOX
+ *
+ *
+ */
 .toolBox
-  background: #fff
-  border-radius: 8px
-  width: 470px
-  margin-left: 4px
   overflow: auto
   position: relative
+  width: 425px
+  background: rgba(76, 74, 96, 0.9)
+  border: 5px solid #444356
+  color: white
   & > div
     min-height: 100%
 
@@ -85,8 +128,8 @@
 .toolSection
   margin-bottom: 15px
 
-.spliter 
-  width: 50px 
+.spliter
+  width: 50px
   height: 2px
   background: #dadada
 
@@ -107,7 +150,6 @@
     img
       height: 1rem
 
-
 .toolTitle
   color: $textColorOne
   font-size: 16px
@@ -127,7 +169,7 @@
 .createScreenBtn
   border-radius: .6rem
   padding: 0 1rem
-  background: $purpleGradient
+  background: none
   display: flex
   height: 3rem
   align-items: center
@@ -152,7 +194,6 @@
     font-size: 14px
     font-weight: 500
     line-height: 13px
-
 
 .toolSubtitle
   align-items: center
@@ -181,7 +222,7 @@
   grid-gap: 8px
   line-height: 16px
   margin-bottom: 10px
-  margin-top: 30px   
+  margin-top: 30px
 
 .toolDescription
   color: #98A1AD
@@ -228,18 +269,16 @@
       transform: rotate(-45deg)
       -webkit-transform: rotate(-45deg)
 
-
 .toolShowColors
   color: $primaryColor
   display: flex
   align-items: center
-  cursor: pointer  
+  cursor: pointer
   padding-top: 7px
   font-size: 11px
   letter-spacing: 0.2px
   margin-bottom: 6px
   text-decoration: underline
-
 
 .toolLibrary
   display: grid
@@ -277,7 +316,6 @@
     border: 1px solid $primaryColor
   &.toolLibraryItemNotSelected
     border: 1px solid #e5e6da
-
 
 .toolLibraryItemEdit, .toolLibraryItemDelete
   cursor: pointer
@@ -335,10 +373,10 @@
   padding: 10px
   display: flex
   flex-direction: column
-  &>span    
+  &>span
     font-size: 12px
     padding: 7px
-    width:120px
+    width: 120px
     font-weight: 500
     &:hover
       background: #ecedee
@@ -384,20 +422,20 @@
   .unsuportedBrowser
     color: $textColorThree
     font-size: 13px
-    line-height: 18px 
+    line-height: 18px
     text-align: center
     border-radius: 5px
     padding: 5px
-    border : 1px solid $textColorThree
+    border: 1px solid $textColorThree
   .recordBtn
-    color: $white 
+    color: $white
     padding: 0 1rem
     flex-grow: 1
     display: flex
     flex-direction: row
     align-items: center
     justify-content: center
-    background: $purpleGradient 
+    background: none
     border-radius: .6rem
     width: 100%
     height: 3.1rem
@@ -407,7 +445,7 @@
       cursor: pointer
       transform: scale(.92)
   button, label
-    margin-top: 10px
+    // margin-top: 10px
     // width: 150px
     width: 100%
 
@@ -415,8 +453,8 @@
 .toolVideos
   display: grid
   grid-auto-rows: max-content
-  padding: 20px
-  
+  padding: 58px 0
+
 .videosList
   display: grid
   grid-gap: 12px
@@ -453,7 +491,6 @@
 
 // Tool "Start Screen" & "End Screen"
 .toolHelloScreen, .toolEndScreen,.toolItems
-  padding: 20px
   button
     margin-bottom: 10px
     width: 100%
@@ -482,7 +519,7 @@
 .networkSelect
   @extend .toolInput
 
-// Tool "Logo" 
+// Tool "Logo"
 .toolLogo
   padding: 20px
   .error
@@ -503,8 +540,6 @@
       width: 70%
     .placement
       width: calc(70% - 1rem)
-
-
 
 .logo
   align-items: center
@@ -540,13 +575,13 @@
       width: 30px
   .image
     width: 100%
-  
+
 .logoRecoSize
   color: $textColorThree
   font-size: 12px
 
 @keyframes rotating
-  from 
+  from
     transform: rotate(0deg)
   to
     transform: rotate(-360deg)
@@ -590,7 +625,6 @@
   box-shadow: none !important
   width: 100% !important
 
-
 // Tool Templates
 
 .toolItems
@@ -601,13 +635,10 @@
       display: flex
       flex-direction: row
       align-items: center
-      justify-content: space-between
-      background: rgba($primaryColor ,.6 )  
       border-radius: .6rem
       width: 100%
       height: 3.7rem
       margin: 1rem 0
-      transition: transform .4s cubic-bezier(.2,.81,.22,.83)
       &:hover
         cursor: pointer
         transform: scale(.92)
@@ -615,26 +646,30 @@
         color: $white
       img
         height: 2.5rem
-        width:2.5rem
+        width: 2.5rem
     .toolItemContent
+      height: 170px
+      width: 150px
       display: flex
-      padding: 1rem 
+      padding: 1rem
       flex-grow: 1
       flex-direction: column
       justify-content: center
-      // align-items: center
+      position: absolute
+      top: 40px
+      right: -30px
+      z-index: 5
       background: $white
       border-radius: .6rem
-      -webkit-box-shadow: 0px 7px 14px -8px rgba(0,0,0,0.6)
-      box-shadow: 0px 7px 14px -8px rgba(0,0,0,0.6)
     &.background
+      position: relative
       .toolItemContent
         padding: 0
       .toolItemName
-        background: $darkBlueGradient
+        background: none
     &.duration
       .toolItemName
-        background: $mauveGradient
+        background: none
     &.texts,&.links,&.save
       .toolItemContent
         .addTextBtn
@@ -644,7 +679,7 @@
         .addTextBtn,.addLinkBtn
           width: 100%
           height: 2.5rem
-          padding : 0.8rem 1rem
+          padding: 0.8rem 1rem
           border-radius: .4rem
           align-self: end
           cursor: pointer
@@ -712,7 +747,7 @@
                 padding: .2rem 0
                 justify-content: center
                 display: flex
-                width:33%
+                width: 33%
                 border-radius: 1rem
                 cursor: pointer
                 margin: .3rem .2rem
@@ -766,7 +801,6 @@
                       &:hover
                         border: inherit
                         transform: scale(.94)
-                      
 
                 .url
                   margin-top: 1rem
@@ -778,13 +812,12 @@
                     border: 1px solid $pinkLink
                     padding: .2rem 1rem
                     color: $textColorOne
-                
-  
+
     &.links
       .toolItemName
-        background: $pinkGradient
+        background: none
       .toolItemContent
-        border:1px solid $pinkLink
+        border: 1px solid $pinkLink
         .presetBtn
           &.selected
             background: $pinkLink!important
@@ -794,18 +827,18 @@
           background: rgba($pinkLink, 0.7)
     &.texts
       .toolItemName
-        background: $blueGradient
+        background: none
       .toolItemOption
         background: $blueText
         &:hover
           background: rgba($blueText, 0.7)
       .toolItemContent
-        border:1px solid $blueText
+        border: 1px solid $blueText
       .presetBtn
         border: 1px solid $blueText
     &.save
       .toolItemName
-        background: $purpleGradient
+        background: none
       .toolItemContent
         .subtitle
           color: $grey
@@ -850,7 +883,3 @@
               color: $grey
             &:hover
               transform: scale(.92)
-    
-    
-
-      

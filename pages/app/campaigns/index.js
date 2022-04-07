@@ -1,13 +1,13 @@
 import Head from "next/head";
 import Link from "next/link";
-import {useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {toast} from "react-toastify";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 import withAuth from "@/hocs/withAuth";
 import withAuthServerSideProps from "@/hocs/withAuthServerSideProps";
 
-import {mainAPI, mediaAPI} from "@/plugins/axios";
+import { mainAPI, mediaAPI } from "@/plugins/axios";
 import dayjs from "@/plugins/dayjs";
 
 import AppLayout from "@/layouts/AppLayout";
@@ -21,13 +21,14 @@ import Share from "@/components/Campaign/Share";
 
 import layoutStyles from "@/styles/layouts/App.module.sass";
 import styles from "@/styles/pages/app/campaigns.module.sass";
+import Button from "@/components/Button";
 
-const Campaigns = ({initialCampaignsDraft, initialCampaignsShared, me}) => {
+const Campaigns = ({ initialCampaignsDraft, initialCampaignsShared, me }) => {
     const dispatch = useDispatch();
     const popup = useSelector((state) => state.popup);
-    const hidePopup = () => dispatch({type: "HIDE_POPUP"});
+    const hidePopup = () => dispatch({ type: "HIDE_POPUP" });
     const showPopup = (popupProps) =>
-        dispatch({type: "SHOW_POPUP", ...popupProps});
+        dispatch({ type: "SHOW_POPUP", ...popupProps });
 
     const [campaignsDraft, setCampaignsDraft] = useState(initialCampaignsDraft);
     const [campaignsShared, setCampaignsShared] = useState(
@@ -40,10 +41,10 @@ const Campaigns = ({initialCampaignsDraft, initialCampaignsShared, me}) => {
     const [shareLoading, setShareLoading] = useState(null);
 
     const getCampaigns = async () => {
-        const {data: campaignsDraftUpdated} = await mainAPI.get(
+        const { data: campaignsDraftUpdated } = await mainAPI.get(
             "/users/me/campaigns?status=draft"
         );
-        const {data: campaignsSharedUpdated} = await mainAPI.get(
+        const { data: campaignsSharedUpdated } = await mainAPI.get(
             "/users/me/campaigns?status=shared"
         );
         setCampaignsDraft(campaignsDraftUpdated);
@@ -66,7 +67,7 @@ const Campaigns = ({initialCampaignsDraft, initialCampaignsShared, me}) => {
             return;
         }
         setPreviewLoading(campaign._id);
-        const {data: data} = await mainAPI.get(`/campaigns/${campaign._id}`);
+        const { data: data } = await mainAPI.get(`/campaigns/${campaign._id}`);
 
         onMerge(data)
             .then((res) => {
@@ -84,7 +85,7 @@ const Campaigns = ({initialCampaignsDraft, initialCampaignsShared, me}) => {
 
     const onMerge = async (campaign) => {
         try {
-            let {data} = await mediaAPI.post("/renderVideo", {
+            let { data } = await mediaAPI.post("/renderVideo", {
                 campaignId: campaign._id,
                 contents: campaign.contents,
             });
@@ -111,7 +112,7 @@ const Campaigns = ({initialCampaignsDraft, initialCampaignsShared, me}) => {
             return;
         }
         setShareLoading(campaign._id);
-        const {data: data} = await mainAPI.get(`/campaigns/${campaign._id}`);
+        const { data: data } = await mainAPI.get(`/campaigns/${campaign._id}`);
 
         onMerge(data)
             .then(() => {
@@ -126,45 +127,43 @@ const Campaigns = ({initialCampaignsDraft, initialCampaignsShared, me}) => {
             });
     };
 
-    const renderListHeader = ({draft = false}) => (
+    const renderListHeader = ({ draft = false }) => (
         <ListHeader
             className={`${styles.campaignsHeader} ${draft ? styles.draft : ""}`}
         >
-            <p>ID</p>
-            <p>Video name</p>
+            <p></p>
+            <p className={styles.firstHeader}>Video name</p>
             <p>Creation date</p>
             <p>Duration</p>
-            <p>Actions</p>
+            <p></p>
+            <p></p>
         </ListHeader>
     );
 
     const renderCampaign = (campaign = {}) => (
         <ListItem
-            className={`${styles.campaignsItem} ${
-                campaign.status === "draft" ? styles.draft : ""
-            }`}
+            className={`${styles.campaignsItem} ${campaign.status === "draft" ? styles.draft : ""
+                }`}
             empty={Object.keys(campaign).length > 0 ? false : true}
             key={campaign._id}
             renderActions={() => (
                 <div>
                     {campaign.status === "draft" && (
-                        <Link href={`/app/campaigns/${campaign._id}`}>
-                            <a>Edit</a>
-                        </Link>
+                        <Button color="orange" type="link" href={`/app/campaigns/${campaign._id}`} outline={false}>
+                            Edit
+                        </Button>
                     )}
                     {campaign.status === "draft" && (
-                        <button
-                            onClick={() => {
-                                handlePreviewMode(campaign);
-                            }}
-                        >
+                        <Button style={{ 'background': '#4C4A60' }} onClick={() => {
+                            handlePreviewMode(campaign);
+                        }}>
                             {previewLoading === campaign._id ? "Processing..." : "Preview"}
-                        </button>
+                        </Button>
                     )}
                     {campaign.status === "draft" && (
-                        <button onClick={() => checkBeforeStartShare(campaign)}>
+                        <Button color="primary" onClick={() => checkBeforeStartShare(campaign)}>
                             {shareLoading === campaign._id ? "Processing..." : "Share"}
-                        </button>
+                        </Button>
                     )}
                     {campaign.status === "shared" && (
                         <Link href={`/app/analytics?c=${campaign._id}`}>
@@ -174,7 +173,7 @@ const Campaigns = ({initialCampaignsDraft, initialCampaignsShared, me}) => {
                     {campaign.status === "shared" && (
                         <button
                             onClick={() =>
-                                showPopup({display: "DUPLICATE_CAMPAIGN", data: campaign})
+                                showPopup({ display: "DUPLICATE_CAMPAIGN", data: campaign })
                             }
                         >
                             Duplicate
@@ -191,7 +190,7 @@ const Campaigns = ({initialCampaignsDraft, initialCampaignsShared, me}) => {
                 <ul>
                     <li
                         onClick={() =>
-                            showPopup({display: "DELETE_CAMPAIGN", data: campaign})
+                            showPopup({ display: "DELETE_CAMPAIGN", data: campaign })
                         }
                     >
                         <p>Delete</p>
@@ -200,10 +199,12 @@ const Campaigns = ({initialCampaignsDraft, initialCampaignsShared, me}) => {
             )}
             renderEmpty={() => <p>No videos found.</p>}
         >
-            <p>
-                <b>#{campaign.uniqueId}</b>
+            <p className={styles.campaignImg}>
+                {(campaign.share && campaign.share.thumbnail) && (
+                    <img className={styles.img} src={campaign.share.thumbnail} />
+                )}
             </p>
-            <p>{campaign.name}</p>
+            <p className={styles.campaignName}>{campaign.name}</p>
             <p>
                 {dayjs(
                     campaign.status === "draft" ? campaign.createdAt : campaign.sentAt
@@ -217,7 +218,7 @@ const Campaigns = ({initialCampaignsDraft, initialCampaignsShared, me}) => {
     return (
         <AppLayout>
             <Head>
-                <title>Videos campaigns | FOMO</title>
+                <title>Library | FOMO</title>
             </Head>
 
             {popup.display === "DELETE_CAMPAIGN" && (
@@ -253,25 +254,28 @@ const Campaigns = ({initialCampaignsDraft, initialCampaignsShared, me}) => {
                         setCampaignShared(null);
                     }}
                     onCreateCampaignClicked={() => {
-                        showPopup({display: 'CREATE_CAMPAIGN'})
+                        showPopup({ display: 'CREATE_CAMPAIGN' })
+                    }}
+                    onPreviewClicked={async (campaign) => {
+                        handlePreviewMode(campaign)
                     }}
                 />
             )}
 
-            <div className={layoutStyles.container}>
-                <div className={layoutStyles.header}>
+            <div className={`${layoutStyles.container} ${layoutStyles.lib}`}>
+                {/* <div className={layoutStyles.header}>
                     <div className={layoutStyles.headerTop}>
                         <h1 className={layoutStyles.headerTitle}>My videos</h1>
                     </div>
-                </div>
+                </div> */}
 
                 {/*<p className={styles.videosDraftTitle}>Videos drafts</p>*/}
 
                 <div className={styles.campaigns}>
-                    {renderListHeader({draft: true})}
+                    {renderListHeader({ draft: true })}
                     <div className={styles.campaignsList}>
                         {campaignsDraft.length > 0 &&
-                        campaignsDraft.map((campaign) => renderCampaign(campaign))}
+                            campaignsDraft.map((campaign) => renderCampaign(campaign))}
                         {campaignsDraft.length <= 0 && renderCampaign()}
                     </div>
                 </div>
@@ -293,10 +297,10 @@ const Campaigns = ({initialCampaignsDraft, initialCampaignsShared, me}) => {
 
 export default withAuth(Campaigns);
 export const getServerSideProps = withAuthServerSideProps(async (ctx, user) => {
-    const {data: initialCampaignsDraft} = await mainAPI.get(
+    const { data: initialCampaignsDraft } = await mainAPI.get(
         "/users/me/campaigns?status=draft"
     );
-    const {data: initialCampaignsShared} = await mainAPI.get(
+    const { data: initialCampaignsShared } = await mainAPI.get(
         "/users/me/campaigns?status=shared"
     );
     return {

@@ -10,10 +10,10 @@
   grid-gap: 25px 10px
   padding: 50px 0
   margin: auto
-  max-width: 1080px
+  // max-width: 1153px
+  max-width: 84%
+  padding: 50px
   width: 100%
-      
-
 
 .title
   color: $textColorTwo
@@ -93,7 +93,13 @@
   grid-template-columns: repeat(4, 1fr)
   grid-column-start: 1
   grid-column-end: 13
-  
+  .share
+    background: #fff
+    border-radius: 4px
+    display: flex
+    align-items: center
+    justify-content: center
+
 .statsTitle
   color: $textColorTwo
   font-size: 24px
@@ -115,13 +121,12 @@
     grid-row: 1 / 3
 
 .campaigns
-  background: #fff
   border-radius: 4px
   display: grid
   grid-template-rows: auto auto 1fr auto
   height: 410px
   grid-column-start: 1
-  grid-column-end: 10
+  grid-column-end: 13
 
 .campaignsTitle
   color: $textColorTwo
@@ -130,13 +135,11 @@
   font-weight: 700
   letter-spacing: 0.2px
   margin-bottom: 15px
-  padding: 20px
-  &:after
-    background: $primaryColor
-    content: ''
-    height: 3px
-    margin-top: 14px
-    width: 130px
+  padding: 20px 0
+  &.campaignsTitleDb
+    grid-row: 1
+    grid-column-start: 1
+    grid-column-end: 5
 
 .campaignsHeader, .campaignsItem
   grid-template-columns: 60px repeat(4, 1fr) 90px
