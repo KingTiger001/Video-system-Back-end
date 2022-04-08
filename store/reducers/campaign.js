@@ -290,7 +290,7 @@ const reducer = (state = initialState, action) => {
          return {
             ...state,
             duration: action.data.length > 0 ? setVideoDuration * 1000 : 0,
-            contents: action.data,
+            contents: action.data.filter((v)=>v.type==="video"?v.video!==null:v.screen!==null),
          };
       case "SET_VIDEO_LIST":
          return {

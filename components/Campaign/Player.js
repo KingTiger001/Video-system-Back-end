@@ -371,7 +371,7 @@ const Player = () => {
                   ref={(newRef) => setRef(newRef)}
                   style={{
                      display: preview.show ? "none" : "flex",
-                     height: "auto",
+                     height: contents.length ? "100%" : "auto",
                      alignItems: "center",
                      justifyContent: "center",
                      overflow: "hidden",
@@ -416,7 +416,7 @@ const Player = () => {
                   </>
                ) : (
                   <p style={{ color: "white", textTransform: "capitalize" }}>
-                     {previewVideo && previewVideo.status}...
+                     {previewVideo && previewVideo.status}
                   </p>
                )}
             </div>

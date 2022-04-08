@@ -278,6 +278,10 @@
   padding: 0 11px
   // &.toolLibraryItemPreview
   //   border: 1px dashed $secondaryColor
+  & > p:nth-child(1)
+    width: 205px
+    overflow: hidden
+    text-overflow: ellipsis
   &.orangeBorder
     border: 1px solid $orangeColor
   &.toolLibraryItemSelected
@@ -546,7 +550,7 @@
 .networkSelect
   @extend .toolInput
 
-// Tool "Logo" 
+// Tool "Logo"
 .toolLogo
   padding: 20px
   .error

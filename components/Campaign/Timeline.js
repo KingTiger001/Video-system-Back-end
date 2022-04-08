@@ -174,17 +174,21 @@ const Timeline = ({ handlecreate }) => {
             onMouseMove={(e) => timelineDraggable && seekTo(e)}
             ref={ref}
          />
-         <span
-            className={styles.cursor}
-            style={{
-               left: `${(progression / duration) * 100}%`,
-            }}
-         >
-            <img
-               className={styles.cursor}
-               src="/assets/campaign/timeLineCursor.svg"
-            ></img>
-         </span>
+         <div className={styles.sensorContainer}>
+            <div>
+               <span
+                  className={styles.cursor}
+                  style={{
+                     left: `${(progression / duration) * 100}%`,
+                  }}
+               >
+                  <img
+                     className={styles.cursor}
+                     src="/assets/campaign/timeLineCursor.svg"
+                  ></img>
+               </span>
+            </div>
+         </div>
 
          <>
             <DragDropContext onDragEnd={handleOnDragEnd}>

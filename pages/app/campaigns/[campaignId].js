@@ -76,7 +76,9 @@ const Campaign = ({ me }) => {
    /* Record */
    const [displayVideoRecorder, showVideoRecorder] = useState(false);
 
-   const [screen, showScreen] = useState("CREATE");
+   const [screen, showScreen] = useState(
+      contents.length > 0 ? "MEDIA" : "CREATE"
+   );
    // const [displayPreview, showPreview] = useState(false);
 
    useEffect(() => {
@@ -588,7 +590,7 @@ const Campaign = ({ me }) => {
                         }}
                      >
                         <img src="/assets/campaign/library.svg"></img>
-                        <p>Choose from Media</p>
+                        <p>Choose from Library</p>
                      </td>
                      <td onClick={createTemplate}>
                         <img src="/assets/campaign/create_template.svg"></img>
@@ -605,7 +607,7 @@ const Campaign = ({ me }) => {
                      showPopup({
                         display: "UPLOAD_VIDEO",
                         data: file,
-                        from: "import",
+                        from: "record",
                      });
                      showVideoRecorder(false);
                   }}

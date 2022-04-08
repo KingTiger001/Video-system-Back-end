@@ -39,7 +39,7 @@ const SidebarLeftCreate = ({ screen, renderScreen }) => {
                <a className={`${styles.menu_item} ${styles.withTitle} `}>
                   <span className={`${styles.orange_border}`}></span>
                   <span className={`${styles.tooltip}`}>Dashboard</span>
-                  <img src="/assets/common/dashboard.png" />
+                  <img src={`/assets/common/dashboard.png`} />
                </a>
             </Link>
             <button

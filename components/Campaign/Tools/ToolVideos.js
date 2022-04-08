@@ -64,7 +64,7 @@ const ToolVideos = () => {
       const checkIfInContent = (element) => {
          return contents.some((content) => {
             if (content.type === "screen") return content._id === element._id;
-            return content.video._id === element._id;
+            return content.video && content.video._id === element._id;
          });
       };
       const uploads = videoList.filter((v) => {

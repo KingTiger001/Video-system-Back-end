@@ -124,7 +124,6 @@ const Dashboard = ({
             draft ? stylesCampains.draft : ""
          }`}
       >
-         <p></p>
          <p className={stylesCampains.firstHeader}>Video name</p>
          <p>Creation date</p>
          <p>Duration</p>
@@ -209,14 +208,6 @@ const Dashboard = ({
          )}
          renderEmpty={() => <p>No videos found.</p>}
       >
-         <p className={stylesCampains.campaignImg}>
-            {campaign.share && campaign.share.thumbnail && (
-               <img
-                  className={stylesCampains.img}
-                  src={campaign.share.thumbnail}
-               />
-            )}
-         </p>
          <p className={stylesCampains.campaignName}>{campaign.name}</p>
          <p>
             {dayjs(

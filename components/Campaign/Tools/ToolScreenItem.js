@@ -298,6 +298,7 @@ const ToolScreenItem = ({ vd, setShowContentTimeline, selected = false }) => {
                                  showPopup({
                                     display: "DELETE_VIDEO",
                                     data: vd.screen,
+                                    target: "screen",
                                  })
                               }
                            >

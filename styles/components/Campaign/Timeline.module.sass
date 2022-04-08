@@ -9,6 +9,15 @@
   position: relative
   user-select: none
 
+.sensorContainer
+  width: calc(100% - 44px)
+  position: absolute
+  & > div
+    position: relative
+    height: 30px
+    & > span
+      transition: left 50ms
+
 .progressionDrag
   position: absolute
   cursor: pointer
