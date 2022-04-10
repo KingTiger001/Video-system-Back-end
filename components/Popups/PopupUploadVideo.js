@@ -123,6 +123,7 @@ const PopupUploadVideo = ({ onDone, loading, type }) => {
          title={
             !isUploading && popup.from !== "import" ? "Save recorded video" : ""
          }
+         bgcolor="light"
       >
          {error && <p className={styles.error}>{error}</p>}
          {popup.from !== "import" && !isUploading && !isFinished && (

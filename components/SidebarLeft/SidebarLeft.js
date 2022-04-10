@@ -70,7 +70,7 @@ const SidebarLeft = () => {
                >
                   <span className={`${styles.orange_border}`}></span>
                   <span className={`${styles.tooltip}`}>Library</span>
-                  <img src="/assets/common/menu_lib.svg" />
+                  <img src={`/assets/common/${router.route==="/app/campaigns"?"menu_lib_orange":"menu_lib"}.svg`} />
                </a>
             </Link>
             {/* <Link href={'javascript:void(0);'} style={{ pointerEvents: 'none' }}>

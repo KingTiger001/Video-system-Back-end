@@ -283,11 +283,13 @@ const ToolVideoItem = ({ vd, setShowContentTimeline, selected = false }) => {
                      <div className={styles.dropdown} ref={dropdownRef}>
                         <ul>
                            <li
-                              onClick={() =>
-                                 showPopup({
-                                    display: "DELETE_VIDEO",
-                                    data: vd.video,
-                                 })
+                              onClick={() =>{
+                                          showPopup({
+                                             display: "DELETE_VIDEO",
+                                             data: vd.video,
+                                          });
+                                          showDropdown(false)
+                                       }
                               }
                            >
                               <p>Delete</p>

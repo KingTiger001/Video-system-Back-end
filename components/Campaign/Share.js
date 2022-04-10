@@ -736,7 +736,7 @@ const Share = ({ campaignId, onClose, onDone, me, onCreateCampaignClicked, onPre
                 'text/html': new Blob([`
                <ifram style="position: relative">
                   <div style="position: relative; display: inline-block;">
-                    <a href="https://app.myfomo.io/campaigns/${campaign?._id}?thumbnail=1">
+                    <a href="https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1">
                       <img
                         src="${campaign?.share?.thumbnail}"
                         width="230px"
@@ -745,7 +745,7 @@ const Share = ({ campaignId, onClose, onDone, me, onCreateCampaignClicked, onPre
                     </a>
                   </div>
                   <h4>
-                    <a href="https://app.myfomo.io/campaigns/${campaign?._id}?thumbnail=1">${campaign?.name}</a>
+                    <a href="https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1">${campaign?.name}</a>
                   </h4>
                 </ifram>
                 `], { type: "text/html" })
@@ -1034,7 +1034,7 @@ const Share = ({ campaignId, onClose, onDone, me, onCreateCampaignClicked, onPre
 
     const handleCopiedLink = () => {
         setCopied(true)
-        navigator.clipboard.writeText(`https://app.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`);
+        navigator.clipboard.writeText(`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`);
         setTimeout(() => {
             setCopied(false)
         }, 3000)
@@ -1359,7 +1359,7 @@ const Share = ({ campaignId, onClose, onDone, me, onCreateCampaignClicked, onPre
 
                                                     <LinkedinShareButton
                                                         disabled={!campaign}
-                                                        url={`https://app.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
+                                                        url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
                                                     >
                                                         <img className={styles.socialImg} src="/assets/socials/linkedin-icon.svg"
                                                             alt="facebook icon share" />
@@ -1367,7 +1367,7 @@ const Share = ({ campaignId, onClose, onDone, me, onCreateCampaignClicked, onPre
 
                                                     <TwitterShareButton
                                                         disabled={!campaign}
-                                                        url={`https://app.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
+                                                        url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
                                                     >
                                                         <img className={styles.socialImg} src="/assets/socials/twitter-icon.svg"
                                                             alt="facebook icon share" />
@@ -1375,7 +1375,7 @@ const Share = ({ campaignId, onClose, onDone, me, onCreateCampaignClicked, onPre
 
                                                     <FacebookShareButton
                                                         disabled={!campaign}
-                                                        url={`https://app.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
+                                                        url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
                                                     >
                                                         <img className={styles.socialImg} src="/assets/socials/facebook-icon.png"
                                                             alt="facebook icon share" />
@@ -1383,7 +1383,7 @@ const Share = ({ campaignId, onClose, onDone, me, onCreateCampaignClicked, onPre
 
                                                     <WhatsappShareButton
                                                         disabled={!campaign}
-                                                        url={`https://app.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
+                                                        url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
                                                     >
                                                         <img className={styles.socialImg} src="/assets/socials/whatsapp-icon.svg"
                                                             alt="facebook icon share" />

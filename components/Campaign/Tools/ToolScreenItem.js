@@ -294,12 +294,14 @@ const ToolScreenItem = ({ vd, setShowContentTimeline, selected = false }) => {
                      <div className={styles.dropdown} ref={dropdownRef}>
                         <ul>
                            <li
-                              onClick={() =>
-                                 showPopup({
-                                    display: "DELETE_VIDEO",
-                                    data: vd.screen,
-                                    target: "screen",
-                                 })
+                              onClick={() =>{
+                                          showPopup({
+                                             display: "DELETE_VIDEO",
+                                             data: vd.screen,
+                                             target: "screen",
+                                          });
+                                          showDropdown(false)
+                                       }
                               }
                            >
                               <p>Delete</p>

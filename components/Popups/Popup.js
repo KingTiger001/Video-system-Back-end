@@ -2,12 +2,12 @@ import { useDispatch } from 'react-redux'
 
 import styles from '../../styles/components/Popups/Popup.module.sass'
 
-const Popup = ({ allowBackdropClose = true, children, onClose = () => {}, showCloseIcon = true, title, width = 600 }) => {
+const Popup = ({ allowBackdropClose = true, children, onClose = () => {}, showCloseIcon = true, title, width = 600 ,bgcolor="dark"}) => {
   const dispatch = useDispatch()
   const hidePopup = () => dispatch({ type: 'HIDE_POPUP' })
 
   return (
-    <div className={styles.popup}>
+    <div className={`${styles.popup} ${bgcolor==="light"?styles.light:""}`}>
       <div
         onClick={() => {
           if (allowBackdropClose) {
@@ -18,7 +18,7 @@ const Popup = ({ allowBackdropClose = true, children, onClose = () => {}, showCl
         className={styles.background}
       />
       <div
-        className={styles.content}
+        className={`${styles.content}`}
         style={{ maxWidth: width }}
       >
         { showCloseIcon &&

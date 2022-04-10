@@ -76,9 +76,7 @@ const Campaign = ({ me }) => {
    /* Record */
    const [displayVideoRecorder, showVideoRecorder] = useState(false);
 
-   const [screen, showScreen] = useState(
-      contents.length > 0 ? "MEDIA" : "CREATE"
-   );
+   const [screen, showScreen] = useState(contents.length>0?"MEDIA":"CREATE");
    // const [displayPreview, showPreview] = useState(false);
 
    useEffect(() => {
