@@ -1,0 +1,24 @@
+.root {
+   display: flex;
+   gap: 10px;
+   margin-bottom: 27px;
+   max-width: 390px;
+   text-align: left;
+}
+
+.root input {
+   display: block;
+}
+.root input:checked:before {
+   background-color: #5b5fee;
+}
+
+.root label {
+   color: var(--secondColor);
+   font-size: 12px;
+   line-height: 16px;
+}
+
+.root a {
+   color: #5b5fee !important;
+}

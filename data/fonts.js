@@ -1,9 +1,9 @@
 export const textSizes = [
-   { value: 1, label: "1" },
-   { value: 2, label: "2" },
-   { value: 3, label: "3" },
-   { value: 4, label: "4" },
-   { value: 5, label: "5" },
+   { value: 28, label: "1" },
+   { value: 30, label: "2" },
+   { value: 32, label: "3" },
+   { value: 34, label: "4" },
+   { value: 38, label: "5" },
 ];
 
 export const textFamilies = [

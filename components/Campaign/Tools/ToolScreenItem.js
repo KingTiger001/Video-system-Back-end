@@ -20,6 +20,9 @@ const ToolScreenItem = ({ vd, setShowContentTimeline, selected = false }) => {
    const currentVideo = useSelector((state) => state.campaign.currentVideo);
    const preview = useSelector((state) => state.campaign.preview);
    const previewVideo = useSelector((state) => state.campaign.previewVideo);
+   const selectedContent = useSelector(
+      (state) => state.campaign.selectedContent
+   );
    const contents = useSelector((state) => state.campaign.contents);
 
    // Close click outside text style
@@ -40,14 +43,15 @@ const ToolScreenItem = ({ vd, setShowContentTimeline, selected = false }) => {
 
    const addToContents = (data) => {
       const array = contents.slice();
+      console.log("ADD ", data);
       array.push({
          _id: data._id,
          position: array.length,
          type: "screen",
          status: "done",
          screen: data.screen,
-         texts: [],
-         links: [],
+         texts: data.texts,
+         links: data.links,
       });
       return array;
    };
@@ -178,6 +182,10 @@ const ToolScreenItem = ({ vd, setShowContentTimeline, selected = false }) => {
          });
       }
 
+      // dispatch({
+      //    type: "SET_SELECTED_SCREEN",
+      //    data: "SCREEN",
+      // });
       dispatch({
          type: "SET_SELECTED_CONTENT",
          data: vd.screen,
@@ -216,14 +224,18 @@ const ToolScreenItem = ({ vd, setShowContentTimeline, selected = false }) => {
                previewVideo && previewVideo.name === vd.screen.screen.name
                   ? styles.toolLibraryItemPreview
                   : ""
-            } ${selected ? styles.orangeBorder : ""}`}
-            onClick={selected ? handleSelect : handleAddToTimeLine}
+            } ${
+               selected && selectedContent._id === vd.screen._id
+                  ? styles.orangeBorder
+                  : ""
+            }`}
+            onClick={selected ? handleSelect : undefined}
          >
             <p>{vd.screen.screen.name}</p>
             {vd.screen.status === "done" ? (
-               <p className={`${styles.screensItemStatus}`}>
-                  {vd.screen.metadata
-                     ? displayDuration(vd.screen.metadata.duration * 1000)
+               <p className={`${styles.videosItemStatus}`}>
+                  {vd.screen.screen.duration
+                     ? displayDuration(vd.screen.screen.duration * 1000)
                      : ""}
                </p>
             ) : (
@@ -294,15 +306,14 @@ const ToolScreenItem = ({ vd, setShowContentTimeline, selected = false }) => {
                      <div className={styles.dropdown} ref={dropdownRef}>
                         <ul>
                            <li
-                              onClick={() =>{
-                                          showPopup({
-                                             display: "DELETE_VIDEO",
-                                             data: vd.screen,
-                                             target: "screen",
-                                          });
-                                          showDropdown(false)
-                                       }
-                              }
+                              onClick={() => {
+                                 showPopup({
+                                    display: "DELETE_VIDEO",
+                                    data: vd.screen,
+                                    target: "screen",
+                                 });
+                                 showDropdown(false);
+                              }}
                            >
                               <p>Delete</p>
                            </li>

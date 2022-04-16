@@ -114,6 +114,12 @@
   background: rgba(76, 74, 96, 0.9)
   border: 5px solid #444356
   color: white
+  &::-webkit-scrollbar
+    width: 10px
+  &::-webkit-scrollbar-track
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3)
+  &::-webkit-scrollbar-thumb
+    background-color: darkgrey
   & > div
     min-height: 100%
 
@@ -176,6 +182,7 @@
   justify-content: space-between
   transition: transform .4s cubic-bezier(.2,.81,.22,.83)
   cursor: pointer
+  margin-bottom: 30px
   img
     filter: invert(1)
   span
@@ -197,7 +204,7 @@
 
 .toolSubtitle
   align-items: center
-  color: $textColorThree
+  color: white
   display: grid
   font-size: 14px
   font-weight: 700
@@ -310,6 +317,7 @@
   font-weight: 500
   padding: 10px 12px
   margin-right: 8px
+  color: #5F59F7
   &.toolLibraryItemPreview
     border: 1px dashed $secondaryColor
   &.toolLibraryItemSelected
@@ -454,6 +462,9 @@
   display: grid
   grid-auto-rows: max-content
   padding: 58px 0
+
+.editSection
+  padding: 0 35px
 
 .videosList
   display: grid

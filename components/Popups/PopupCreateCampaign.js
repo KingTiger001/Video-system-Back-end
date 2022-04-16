@@ -13,11 +13,13 @@ import Popup from "./Popup";
 //super-admin
 
 import styles from "@/styles/components/Popups/PopupCreateCampaign.module.sass";
+import useCampaign from "hooks/campaign";
 
 const PopupCreateCampaign = () => {
    const router = useRouter();
    const dispatch = useDispatch();
    const hidePopup = () => dispatch({ type: "HIDE_POPUP" });
+   const { create: createCampaign, remove } = useCampaign();
 
    const [loading, setLoading] = useState(false);
    const [name, setName] = useState(null);
@@ -25,17 +27,17 @@ const PopupCreateCampaign = () => {
    const create = async (e) => {
       e.preventDefault();
       if (!loading) {
-         try {
-            setLoading(true);
-            const { data: campaign } = await mainAPI.post("/campaigns", {
-               name,
-            });
-            router.push(`/app/campaigns/${campaign._id}`);
-            hidePopup();
-         } catch (err) {
-            setLoading(false);
-            console.log(err);
-         }
+         createCampaign(
+            name,
+            (campaign) => {
+               router.push(`/app/campaigns/${campaign._id}`);
+               hidePopup();
+            },
+            (err) => {
+               setLoading(false);
+               console.log(err);
+            }
+         );
       }
    };
 

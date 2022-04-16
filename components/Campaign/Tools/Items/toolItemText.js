@@ -13,6 +13,7 @@ import GoogleFontLoader from "react-google-font-loader";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import { textFamilies, textSizes } from "data/fonts";
+import { mainAPI } from "@/plugins/axios";
 // import TextVariables from "../../TextVariables";
 
 const RangeSliderContainer = styled.div`
@@ -72,14 +73,13 @@ const ToolItemText = () => {
    const contents = useSelector((state) => state.campaign.contents);
    const hidePopup = () => dispatch({ type: "HIDE_POPUP" });
 
-   const handleOnChange = (event, id) => {
+   const handleOnChange = async (event, id) => {
       const { value } = event.target;
       const obj = { ...selectedContent };
       const index = obj.texts.findIndex((text) => text._id === id);
       if (index !== -1) {
          obj.texts[index].value = value;
       }
-
       const indexArr = contents.findIndex(
          (content) => content._id === selectedContent._id
       );
@@ -91,16 +91,34 @@ const ToolItemText = () => {
             type: "SET_VIDEO",
             data: array,
          });
+         dispatch({
+         type: "DRAG_ITEM",
+         data: true,
+      });
       }
    };
 
-   const handleChangeSize = (value) => {
+   const handleOnBlur = async (event, id) => {
+      const { value } = event.target;
+      const obj = { ...selectedContent };
+      const index = obj.texts.findIndex((text) => text._id === id);
+      if (index !== -1) {
+         obj.texts[index].value = value;
+      }
+      if (obj.type === "screen")
+         await mainAPI.patch(`/templates/${obj._id}`, obj);
+   };
+
+   const handleChangeSize = async (value) => {
       const obj = { ...selectedContent };
       console.log(obj);
       const index = obj.texts.findIndex((text) => text._id === textFocused._id);
       if (index < 0) return;
       obj.texts[index].fontSize = value;
 
+      if (obj.type === "screen")
+         await mainAPI.patch(`/templates/${obj._id}`, obj);
+
       const indexArr = contents.findIndex(
          (content) => content._id === selectedContent._id
       );
@@ -111,13 +129,20 @@ const ToolItemText = () => {
          type: "SET_VIDEO",
          data: array,
       });
+      dispatch({
+         type: "DRAG_ITEM",
+         data: true,
+      });
    };
 
-   const handleChangeFont = (value) => {
+   const handleChangeFont = async (value) => {
       const obj = { ...selectedContent };
       const index = obj.texts.findIndex((text) => text._id === textFocused._id);
       obj.texts[index].fontFamily = value;
 
+      if (obj.type === "screen")
+         await mainAPI.patch(`/templates/${obj._id}`, obj);
+
       const indexArr = contents.findIndex(
          (content) => content._id === selectedContent._id
       );
@@ -128,9 +153,13 @@ const ToolItemText = () => {
          type: "SET_VIDEO",
          data: array,
       });
+      dispatch({
+         type: "DRAG_ITEM",
+         data: true,
+      });
    };
 
-   const toggleStyle = (type) => {
+   const toggleStyle = async (type) => {
       const obj = { ...selectedContent };
       const index = obj.texts.findIndex((text) => text._id === textFocused._id);
 
@@ -139,6 +168,9 @@ const ToolItemText = () => {
       if (target) obj.texts[index][type] = false;
       else obj.texts[index][type] = true;
 
+      if (obj.type === "screen")
+         await mainAPI.patch(`/templates/${obj._id}`, obj);
+
       const indexArr = contents.findIndex(
          (content) => content._id === selectedContent._id
       );
@@ -149,9 +181,13 @@ const ToolItemText = () => {
          type: "SET_VIDEO",
          data: array,
       });
+      dispatch({
+         type: "DRAG_ITEM",
+         data: true,
+      });
    };
 
-   const textAlign = (align) => {
+   const textAlign = async (align) => {
       const obj = { ...selectedContent };
       const index = obj.texts.findIndex((text) => text._id === textFocused._id);
 
@@ -162,15 +198,18 @@ const ToolItemText = () => {
       const position = obj.texts[index].position;
       switch (align) {
          case "right":
-            obj.texts[index].position = { x: 90 };
+            obj.texts[index].position = { x: 90, y: position.y };
             break;
          case "left":
-            obj.texts[index].position = { x: 10 };
+            obj.texts[index].position = { x: 10, y: position.y };
             break;
          case "center":
-            obj.texts[index].position = { x: 50 };
+            obj.texts[index].position = { x: 50, y: position.y };
             break;
       }
+
+      if (obj.type === "screen")
+         await mainAPI.patch(`/templates/${obj._id}`, obj);
 
       const indexArr = contents.findIndex(
          (content) => content._id === selectedContent._id
@@ -182,9 +221,13 @@ const ToolItemText = () => {
          type: "SET_VIDEO",
          data: array,
       });
+      dispatch({
+         type: "DRAG_ITEM",
+         data: true,
+      });
    };
 
-   const handleAddVariables = (value, id) => {
+   const handleAddVariables = async (value, id) => {
       const obj = { ...selectedContent };
       const index = obj.texts.findIndex((text) => text._id === id);
       if (index < 0) return;
@@ -202,7 +245,7 @@ const ToolItemText = () => {
       });
    };
 
-   const handleChangeColor = (value, id) => {
+   const handleChangeColor = async (value, id) => {
       const obj = { ...selectedContent };
       const index = obj.texts.findIndex((text) => text._id === id);
       if (index < 0) return;
@@ -214,13 +257,20 @@ const ToolItemText = () => {
       let array = contents.slice();
       array[indexArr] = obj;
 
+      if (obj.type === "screen")
+         await mainAPI.patch(`/templates/${obj._id}`, obj);
+
       dispatch({
          type: "SET_VIDEO",
          data: array,
       });
+      dispatch({
+         type: "DRAG_ITEM",
+         data: true,
+      });
    };
 
-   const handleRemove = (id) => {
+   const handleRemove = async (id) => {
       const obj = { ...selectedContent };
       const index = obj.texts.findIndex((text) => text._id === id);
       if (index < 0) return;
@@ -232,13 +282,20 @@ const ToolItemText = () => {
       let array = contents.slice();
       array[indexArr] = obj;
 
+      if (obj.type === "screen")
+         await mainAPI.patch(`/templates/${obj._id}`, obj);
+
       dispatch({
          type: "SET_VIDEO",
          data: array,
       });
+      dispatch({
+         type: "DRAG_ITEM",
+         data: true,
+      });
    };
 
-   const handleAdd = () => {
+   const handleAdd = async () => {
       const _id = new ObjectID().toString();
       const obj = { ...selectedContent, texts: selectedContent.texts || [] };
       const newText = {
@@ -251,6 +308,8 @@ const ToolItemText = () => {
       };
       setTextFocused(newText);
       obj.texts.push(newText);
+      if (obj.type === "screen")
+         await mainAPI.patch(`/templates/${obj._id}`, obj);
       dispatch({
          type: "SET_SELECTED_CONTENT",
          data: obj,
@@ -264,6 +323,13 @@ const ToolItemText = () => {
       }
       setShowContentTxt(!showContentTxt);
    };
+
+   useEffect(() => {
+      if (selectedContent.texts.length) {
+         setShowContentTxt(true);
+         setTextFocused(selectedContent.texts[0]);
+      }
+   }, [selectedContent]);
 
    const handleOptionSelect = (id, option) => {
       if (optionSelected.id === id && optionSelected.option === option) {
@@ -288,6 +354,10 @@ const ToolItemText = () => {
       dispatch({
          type: "SET_VIDEO",
          data: array,
+      });
+      dispatch({
+         type: "DRAG_ITEM",
+         data: true,
       });
    };
 
@@ -380,6 +450,9 @@ const ToolItemText = () => {
                   onChange={(e) => {
                      handleOnChange(e, text._id);
                   }}
+                  onBlur={(e) => {
+                     handleOnBlur(e, text._id);
+                  }}
                   value={text.value}
                   required
                />
@@ -438,7 +511,9 @@ const ToolItemText = () => {
                                           onChange={(e) =>
                                              handleChangeFont(e.target.value)
                                           }
+                                          value={textFocused.fontFamily}
                                           className={styles.select}
+                                          disabled={!textFocused}
                                        >
                                           {filterFontFamiles.map((f) => (
                                              <option value={f.value}>
@@ -454,6 +529,7 @@ const ToolItemText = () => {
                                           onChange={(e) => {
                                              handleChangeSize(e.target.value);
                                           }}
+                                          value={textFocused.fontSize}
                                           className={styles.select}
                                           disabled={!textFocused}
                                        >

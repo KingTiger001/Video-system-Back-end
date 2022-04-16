@@ -4,7 +4,7 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 import styles from "@/styles/components/Campaign/Timeline.module.sass";
 import TestDragnDrop from "./TestDragnDrop";
-import { getDataByType } from "@/hooks";
+import { getDataByType, handleProgression } from "@/hooks";
 import ContextMenu from "./ContextMenu";
 const grid = 5;
 const Timeline = ({ handlecreate }) => {
@@ -20,6 +20,9 @@ const Timeline = ({ handlecreate }) => {
    const contents = useSelector((state) => state.campaign.contents);
    const videosRef = useSelector((state) => state.campaign.videosRef);
    const currentVideo = useSelector((state) => state.campaign.currentVideo);
+   const selectedContent = useSelector(
+      (state) => state.campaign.selectedContent
+   );
    const videosOffset = useSelector((state) => state.campaign.videosOffset);
 
    const ref = useRef();
@@ -88,6 +91,10 @@ const Timeline = ({ handlecreate }) => {
                      videosRef[getVideoIndex(currentVideo)].pause();
                   }
                   dispatch({
+                     type: "SET_SELECTED_CONTENT",
+                     data: contents[i],
+                  });
+                  dispatch({
                      type: "SET_CURRENT_VIDEO",
                      data: i,
                   });
@@ -99,6 +106,10 @@ const Timeline = ({ handlecreate }) => {
             }
          }
       }
+      dispatch({
+         type: "SET_SELECTED_SCREEN",
+         data: "SCREEN",
+      });
       if (preview.show) {
          dispatch({ type: "HIDE_PREVIEW" });
       }
@@ -160,6 +171,74 @@ const Timeline = ({ handlecreate }) => {
       setContextMenuElem(null);
    };
 
+   const select = (type, vd) => {
+      const index = contents.findIndex((content) =>
+         type === "screen"
+            ? content._id === vd.screen._id
+            : type === "video" && content._id === vd.video._id
+      );
+      if (index !== -1) {
+         const position = contents[index].position;
+         const timePosition = videosOffset[position];
+
+         dispatch({
+            type: "SET_PROGRESSION",
+            data: timePosition * 1000 + 10,
+         });
+         handleProgression(
+            contents,
+            videosOffset,
+            timePosition * 1000 + 10,
+            dispatch,
+            videosRef,
+            currentVideo,
+            preview
+         );
+         if (type !== "screen") {
+            dispatch({ type: "HIDE_PREVIEW" });
+            dispatch({
+               type: "SET_CURRENT_OVERLAY",
+               data: index,
+            });
+         }
+      } else {
+         if (type !== "screen") {
+            dispatch({
+               type: "SET_CURRENT_OVERLAY",
+               data: -1,
+            });
+         }
+         dispatch({
+            type: "SHOW_PREVIEW",
+            data: {
+               element: "screen",
+               data: type === "screen" ? vd.screen : vd.video,
+            },
+         });
+         dispatch({
+            type: "SET_PREVIEW_VIDEO",
+            data: type === "screen" ? vd.screen : vd.video,
+         });
+      }
+
+      dispatch({
+         type: "SET_SELECTED_CONTENT",
+         data: type === "screen" ? vd.screen : vd.video,
+      });
+      dispatch({
+         type: "DISPLAY_ELEMENT",
+         data: "endScreen",
+      });
+      dispatch({
+         type: "SET_PREVIEW_END_SCREEN",
+         data: type === "screen" ? vd.screen : vd.video,
+      });
+      dispatch({
+         type: "SET_SELECTED_SCREEN",
+         data: "SCREEN",
+      });
+   };
+
    return (
       <div className={styles.timeline}>
          <span
@@ -213,7 +292,17 @@ const Timeline = ({ handlecreate }) => {
                                        onContextMenu={(e) =>
                                           handleContextMenu(e, elem)
                                        }
-                                       className={styles[elem.type]}
+                                       className={`${styles[elem.type]} ${
+                                          selectedContent &&
+                                          elem._id === selectedContent._id
+                                             ? styles.active
+                                             : ""
+                                       }`}
+                                       onClick={() =>
+                                          select(elem.type, {
+                                             [elem.type]: elem,
+                                          })
+                                       }
                                        ref={provided.innerRef}
                                        {...provided.draggableProps}
                                        {...provided.dragHandleProps}

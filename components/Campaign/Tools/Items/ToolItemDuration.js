@@ -4,6 +4,7 @@ import InputRange from "react-input-range";
 import dayjs from "@/plugins/dayjs";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import { mainAPI } from "@/plugins/axios";
 
 const RangeSliderContainer = styled.div`
    .input-range__track--active,
@@ -35,10 +36,13 @@ const ToolItemDuration = () => {
       return `${m < 10 ? `0${m}` : m}:${s < 10 ? `0${s}` : s}`;
    };
 
-   const handleChangeDuration = (value) => {
+   const handleChangeDuration = async (value) => {
       const duration = parseInt(value, 10);
       const obj = { ...selectedContent };
       obj.screen.duration = duration;
+
+      if (obj.type === "screen")
+         await mainAPI.patch(`/templates/${obj._id}`, obj);
 
       const indexArr = contents.findIndex(
          (content) => content._id === selectedContent._id

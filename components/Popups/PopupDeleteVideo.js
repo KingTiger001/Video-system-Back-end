@@ -39,17 +39,25 @@ const PopupDeleteVideo = ({ onDone }) => {
       }
    };
 
-   const deleteScreen = () => {
-      const data = templateList.filter((temp) => temp._id !== popup.data._id);
-      const contentsData = contents.filter(
-         (temp) => temp._id !== popup.data._id
-      );
-      dispatch({
-         type: "SET_TEMPLATE_LIST",
-         data,
-      });
-      dispatch({ type: "SET_VIDEO", data: contentsData });
-      onDone();
+   const deleteScreen = async () => {
+      try {
+         await mainAPI.delete(`/templates/${popup.data._id}`);
+         const data = templateList.filter(
+            (temp) => temp._id !== popup.data._id
+         );
+         const contentsData = contents.filter(
+            (temp) => temp._id !== popup.data._id
+         );
+         dispatch({
+            type: "SET_TEMPLATE_LIST",
+            data,
+         });
+         dispatch({ type: "SET_VIDEO", data: contentsData });
+         onDone();
+      } catch (err) {
+         setLoading(false);
+         console.log(err);
+      }
    };
 
    const label = popup.data.type === "screen" ? "screen" : "video";

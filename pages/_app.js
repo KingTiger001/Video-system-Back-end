@@ -13,7 +13,9 @@ import { useStore } from "@/store";
 
 import "react-toastify/dist/ReactToastify.min.css";
 import "@/styles/fonts.css";
+import "@/styles/index.css";
 import "@/styles/_globals.sass";
+
 import { textFamilies } from "data/fonts";
 import GoogleFontLoader from "react-google-font-loader";
 

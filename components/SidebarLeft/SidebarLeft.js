@@ -7,14 +7,21 @@ import styles from "../../styles/components/SidebarLeft/SidebarLeft.module.sass"
 import { toast } from "react-toastify";
 
 import Share from "@/components/Campaign/Share";
+import useCampaign from "hooks/campaign";
 
 const SidebarLeft = () => {
    const router = useRouter();
    const dispatch = useDispatch();
    const showPopup = (popupProps) =>
       dispatch({ type: "SHOW_POPUP", ...popupProps });
-
+   const { create: createCampaign, isLoading } = useCampaign();
    const [displayShare, showShare] = useState(false);
+
+   const handleCreateNewVideo = () => {
+      createCampaign("", (campaign) => {
+         router.push(`/app/campaigns/${campaign._id}`);
+      });
+   };
 
    return (
       <aside className={`menu ${styles.menu}`}>
@@ -55,10 +62,11 @@ const SidebarLeft = () => {
             </Link>
             <button
                className={`menu-item ${styles.menu_item} ${styles.new_video}`}
-               onClick={() => showPopup({ display: "CREATE_CAMPAIGN" })}
+               onClick={handleCreateNewVideo}
+               disabled={isLoading}
             >
                <span className={`${styles.orange_border}`}></span>
-               <span className={`${styles.tooltip}`}>New Video</span>
+               <span className={`${styles.tooltip}`}>New</span>
                <img src="/assets/common/videos-grey.svg" />
             </button>
             <Link href="/app/campaigns">
@@ -70,7 +78,13 @@ const SidebarLeft = () => {
                >
                   <span className={`${styles.orange_border}`}></span>
                   <span className={`${styles.tooltip}`}>Library</span>
-                  <img src={`/assets/common/${router.route==="/app/campaigns"?"menu_lib_orange":"menu_lib"}.svg`} />
+                  <img
+                     src={`/assets/common/${
+                        router.route === "/app/campaigns"
+                           ? "menu_lib_orange"
+                           : "menu_lib"
+                     }.svg`}
+                  />
                </a>
             </Link>
             {/* <Link href={'javascript:void(0);'} style={{ pointerEvents: 'none' }}>

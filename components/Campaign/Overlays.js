@@ -3,9 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import styles from "@/styles/components/Campaign/Player.module.sass";
 import { useState, useRef, useEffect } from "react";
 import { renderPresetElement } from "./Presets";
+import { textSizes } from "data/fonts";
 
-const offsetX = 15;
-const offsetY = 10;
+const offsetX = 1;
+const offsetY = 1;
 
 const Overlays = ({ playerRef }) => {
    const dispatch = useDispatch();
@@ -13,7 +14,14 @@ const Overlays = ({ playerRef }) => {
    const currentOverlay = useSelector((state) => state.campaign.currentOverlay);
 
    const convertToRelative = (fontSize) => {
-      return playerRef.getBoundingClientRect().width / (25 / fontSize);
+      switch (fontSize) {
+         case 0.5:
+            return textSizes[0];
+         case 1:
+            return textSizes[0];
+         default:
+            return fontSize;
+      }
    };
 
    const updateContents = (id, position, type) => {
@@ -25,12 +33,39 @@ const Overlays = ({ playerRef }) => {
             : obj.links.findIndex((link) => link._id === id);
       if (index < 0) return;
 
-      if (type === "link") obj.links[index].position = position;
-      else obj.texts[index].position = position;
+      if (type === "link") {
+         const linkPosition = obj.links[index].position;
+         if (
+            !(
+               position.x === 0 &&
+               position.y === 0 &&
+               position.x !== linkPosition.x &&
+               linkPosition.y !== position.y
+            )
+         ) {
+            obj.links[index].position = position;
+         }
+      } else {
+         const textPosition = obj.texts[index].position;
+         if (
+            !(
+               position.x === 0 &&
+               position.y === 0 &&
+               position.x !== textPosition.x &&
+               textPosition.y !== position.y
+            )
+         ) {
+            obj.texts[index].position = position;
+         }
+      }
 
       const indexArr = contents.findIndex((content) => content._id === obj._id);
       let array = contents.slice();
       array[indexArr] = obj;
+      dispatch({
+         type: "DRAG_ITEM",
+         data: true,
+      });
       dispatch({
          type: "SET_VIDEO",
          data: array,
@@ -39,7 +74,7 @@ const Overlays = ({ playerRef }) => {
 
    const renderElement = (elem, type) => {
       let obj = { ...elem };
-      obj.fontSize = convertToRelative(obj.fontSize);
+      obj.fontSize = convertToRelative(elem.fontSize);
 
       if (playerRef !== undefined)
          return (
@@ -168,13 +203,42 @@ const Draggable = ({ children, playerRef, defaultPosition, onMouseUp }) => {
       e.preventDefault();
    };
 
+   const calcPositionPersent = (x, y, element) => {
+      if (!element) return;
+      const container = document.getElementById("PlayerContainer");
+      const widthOfContainer = container.offsetWidth;
+      const heightOfContainer = container.offsetHeight;
+      const width = element.offsetWidth;
+      const height = element.offsetHeight;
+      const widthWithPresent = (width / widthOfContainer) * 100;
+      const heightWithPresent = (height / heightOfContainer) * 100;
+      const isBiggerThanX = offsetX + widthWithPresent / 2;
+      const isSmallerThanX = 100 - offsetX - widthWithPresent / 2;
+      const isBiggerThanY = offsetY + heightWithPresent / 2;
+      const isSmallerThanY = 100 - offsetY - heightWithPresent / 2;
+
+      return {
+         left: `${
+            isBiggerThanX > x
+               ? isBiggerThanX
+               : isSmallerThanX < x
+               ? isSmallerThanX
+               : x
+         }%`,
+         top: `${
+            isBiggerThanY > y
+               ? isBiggerThanY
+               : isSmallerThanY < y
+               ? isSmallerThanY
+               : y
+         }%`,
+      };
+   };
+
    return (
       <div
          ref={ref}
-         style={{
-            left: `${position.x}%`,
-            top: `${position.y}%`,
-         }}
+         style={calcPositionPersent(position.x, position.y, ref.current)}
          className={styles.draggable}
          // draggable
          // onDragEnd={handleDrag}

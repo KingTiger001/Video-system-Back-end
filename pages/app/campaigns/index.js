@@ -22,6 +22,7 @@ import Share from "@/components/Campaign/Share";
 import layoutStyles from "@/styles/layouts/App.module.sass";
 import styles from "@/styles/pages/app/campaigns.module.sass";
 import Button from "@/components/Button";
+import VideoImageThumbnail from "react-video-thumbnail-image";
 
 const Campaigns = ({ initialCampaignsDraft, initialCampaignsShared, me }) => {
    const dispatch = useDispatch();
@@ -131,6 +132,7 @@ const Campaigns = ({ initialCampaignsDraft, initialCampaignsShared, me }) => {
       <ListHeader
          className={`${styles.campaignsHeader} ${draft ? styles.draft : ""}`}
       >
+         <p>Video Image</p>
          <p className={styles.firstHeader}>Video name</p>
          <p>Creation date</p>
          <p>Duration</p>
@@ -215,7 +217,12 @@ const Campaigns = ({ initialCampaignsDraft, initialCampaignsShared, me }) => {
          )}
          renderEmpty={() => <p>No videos found.</p>}
       >
-         <p className={styles.campaignName}>{campaign.name}</p>
+         <p className={styles.videoImg}>
+            <img src={campaign.share.thumbnail} />
+         </p>
+         <p className={styles.campaignName}>
+            {campaign.name.length ? campaign.name : "No name"}
+         </p>
          <p>
             {dayjs(
                campaign.status === "draft"

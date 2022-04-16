@@ -100,8 +100,12 @@
     align-items: center
     box-sizing: border-box
     border-radius: 4px
+    & input
+      border-inline: none
+      border-radius: 0
     &::placeholder
-      color: #E8E8E8
+      color: #80808096
+      font-weight: 400
     &:focus
       outline: none
   img
@@ -129,8 +133,9 @@
 
 .container
   display: flex
-  height: calc(100vh - 150px)
+  height: 100vh
   min-height: 832px
+  padding-bottom: 135px
   // grid-auto-columns: 69px calc( 100% - 69px )
 .rightSide
   width: calc( 100% - 69px )

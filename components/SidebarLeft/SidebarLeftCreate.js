@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import styles from "../../styles/components/SidebarLeft/SidebarLeft.module.sass";
 import { toast } from "react-toastify";
@@ -13,9 +13,16 @@ const SidebarLeftCreate = ({ screen, renderScreen }) => {
    const dispatch = useDispatch();
    const showPopup = (popupProps) =>
       dispatch({ type: "SHOW_POPUP", ...popupProps });
+   const name = useSelector((state) => state.campaign.name);
 
    const [displayShare, showShare] = useState(false);
-
+   const handleClickDashboard = () => {
+      if (!name.length) {
+         return toast.error("Please enter video title.");
+      } else {
+         router.push("/app");
+      }
+   };
    return (
       <aside className={`menu ${styles.menu} ${styles.create}`}>
          {displayShare && (
@@ -35,22 +42,26 @@ const SidebarLeftCreate = ({ screen, renderScreen }) => {
             />
          )}
          <div className={`${styles.top_group}`}>
-            <Link href="/app">
+            <div onClick={handleClickDashboard}>
                <a className={`${styles.menu_item} ${styles.withTitle} `}>
                   <span className={`${styles.orange_border}`}></span>
-                  <span className={`${styles.tooltip}`}>Dashboard</span>
                   <img src={`/assets/common/dashboard.png`} />
                </a>
-            </Link>
+            </div>
             <button
                className={
                   `${styles.menu_item} ${styles.withTitle} ` +
                   (screen === "CREATE" ? styles.active : "")
                }
-               onClick={() => renderScreen("CREATE")}
+               onClick={() => {
+                  renderScreen("CREATE");
+                  dispatch({
+                     type: "SET_SELECTED_SCREEN",
+                     data: "CREATE",
+                  });
+               }}
             >
                <span className={`${styles.orange_border}`}></span>
-               <span className={`${styles.tooltip}`}>Create</span>
                <img
                   src={
                      "/assets/common/create" +
@@ -65,10 +76,15 @@ const SidebarLeftCreate = ({ screen, renderScreen }) => {
                   `${styles.menu_item} ${styles.withTitle} ` +
                   (screen === "MEDIA" ? styles.active : "")
                }
-               onClick={() => renderScreen("MEDIA")}
+               onClick={() => {
+                  renderScreen("MEDIA");
+                  dispatch({
+                     type: "SET_SELECTED_SCREEN",
+                     data: "MEDIA",
+                  });
+               }}
             >
                <span className={`${styles.orange_border}`}></span>
-               <span className={`${styles.tooltip}`}>Media</span>
                <img
                   src={
                      "/assets/common/media" +
@@ -83,10 +99,15 @@ const SidebarLeftCreate = ({ screen, renderScreen }) => {
                   `${styles.menu_item} ${styles.withTitle} ` +
                   (screen === "SCREEN" ? styles.active : "")
                }
-               onClick={() => renderScreen("SCREEN")}
+               onClick={() => {
+                  renderScreen("SCREEN");
+                  dispatch({
+                     type: "SET_SELECTED_SCREEN",
+                     data: "SCREEN",
+                  });
+               }}
             >
                <span className={`${styles.orange_border}`}></span>
-               <span className={`${styles.tooltip}`}>Elements</span>
                <img
                   src={
                      "/assets/common/elements" +

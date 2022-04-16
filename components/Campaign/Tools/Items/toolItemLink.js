@@ -7,6 +7,7 @@ import styled from "styled-components";
 import { ChromePicker } from "react-color";
 import { linkPresets } from "../../Presets";
 import InputRange from "react-input-range";
+import { mainAPI } from "@/plugins/axios";
 
 const RangeSliderContainer = styled.div`
    .input-range__track--active,
@@ -20,11 +21,11 @@ const RangeSliderContainer = styled.div`
 `;
 
 const textSizes = [
-   { value: 0.5, label: "1" },
-   { value: 1, label: "2" },
-   { value: 1.5, label: "3" },
-   { value: 2, label: "4" },
-   { value: 2.5, label: "5" },
+   { value: 28, label: "1" },
+   { value: 32, label: "2" },
+   { value: 36, label: "3" },
+   { value: 40, label: "4" },
+   { value: 44, label: "5" },
 ];
 
 const ToolItemText = () => {
@@ -46,7 +47,7 @@ const ToolItemText = () => {
    const contents = useSelector((state) => state.campaign.contents);
    const hidePopup = () => dispatch({ type: "HIDE_POPUP" });
 
-   const handleOnChange = (event, id) => {
+   const handleOnChange = async (event, id) => {
       const { value } = event.target;
       const obj = { ...selectedContent };
       const index = obj.links.findIndex((link) => link._id === linkFocused._id);
@@ -63,13 +64,30 @@ const ToolItemText = () => {
          type: "SET_VIDEO",
          data: array,
       });
+      dispatch({
+         type: "DRAG_ITEM",
+         data: true,
+      });
    };
 
-   const handleRemove = (id) => {
+   const handleOnBlur = async (event) => {
+      const { value } = event.target;
+      const obj = { ...selectedContent };
+      const index = obj.links.findIndex((link) => link._id === linkFocused._id);
+      if (index < 0) return;
+      obj.links[index].value = value;
+      if (obj.type === "screen")
+         await mainAPI.patch(`/templates/${obj._id}`, obj);
+   };
+
+   const handleRemove = async (id) => {
       const obj = { ...selectedContent };
       const index = obj.links.findIndex((link) => link._id === id);
       if (index < 0) return;
       obj.links.splice(index, 1);
+
+      if (obj.type === "screen")
+         await mainAPI.patch(`/templates/${obj._id}`, obj);
 
       const indexArr = contents.findIndex(
          (content) => content._id === selectedContent._id
@@ -81,9 +99,13 @@ const ToolItemText = () => {
          type: "SET_VIDEO",
          data: array,
       });
+      dispatch({
+         type: "DRAG_ITEM",
+         data: true,
+      });
    };
 
-   const handleAdd = () => {
+   const handleAdd = async () => {
       const _id = new ObjectID().toString();
       const obj = { ...selectedContent };
       const newLink = {
@@ -97,6 +119,10 @@ const ToolItemText = () => {
       };
       setLinkFocused(newLink);
       obj.links.push(newLink);
+
+      if (obj.type === "screen")
+         await mainAPI.patch(`/templates/${obj._id}`, obj);
+
       dispatch({
          type: "SET_SELECTED_CONTENT",
          data: obj,
@@ -111,6 +137,12 @@ const ToolItemText = () => {
       setShowContentLink(!showContentLink);
    };
 
+   useEffect(() => {
+      if (selectedContent.links.length) {
+         setShowContentLink(true);
+      }
+   }, [selectedContent]);
+
    const handleOptionSelect = (index, option) => {
       if (optionSelected.index === index && optionSelected.option === option) {
          setOptionSelected({ index: null, option: null });
@@ -119,7 +151,7 @@ const ToolItemText = () => {
       }
    };
 
-   const handleOnChangeUrl = (event, id) => {
+   const handleOnChangeUrl = async (event, id) => {
       const { value } = event.target;
       const obj = { ...selectedContent };
       const index = obj.links.findIndex((link) => link._id === id);
@@ -129,6 +161,10 @@ const ToolItemText = () => {
       const indexArr = contents.findIndex(
          (content) => content._id === selectedContent._id
       );
+
+      if (obj.type === "screen")
+         await mainAPI.patch(`/templates/${obj._id}`, obj);
+
       let array = contents.slice();
       array[indexArr] = obj;
 
@@ -136,9 +172,13 @@ const ToolItemText = () => {
          type: "SET_VIDEO",
          data: array,
       });
+      dispatch({
+         type: "DRAG_ITEM",
+         data: true,
+      });
    };
 
-   const handleChangeSize = (value, id) => {
+   const handleChangeSize = async (value, id) => {
       const obj = { ...selectedContent };
       const index = obj.links.findIndex((text) => text._id === id);
       if (index < 0) return;
@@ -147,6 +187,10 @@ const ToolItemText = () => {
       const indexArr = contents.findIndex(
          (content) => content._id === selectedContent._id
       );
+
+      if (obj.type === "screen")
+         await mainAPI.patch(`/templates/${obj._id}`, obj);
+
       let array = contents.slice();
       array[indexArr] = obj;
 
@@ -154,13 +198,20 @@ const ToolItemText = () => {
          type: "SET_VIDEO",
          data: array,
       });
+      dispatch({
+         type: "DRAG_ITEM",
+         data: true,
+      });
    };
 
-   const handleChangeColor = (value, id) => {
+   const handleChangeColor = async (value, id) => {
       const obj = { ...selectedContent };
       const index = obj.links.findIndex((links) => links._id === id);
       if (index < 0) return;
       obj.links[index].color = value;
+
+      if (obj.type === "screen")
+         await mainAPI.patch(`/templates/${obj._id}`, obj);
 
       const indexArr = contents.findIndex(
          (content) => content._id === selectedContent._id
@@ -171,6 +222,10 @@ const ToolItemText = () => {
       dispatch({
          type: "SET_VIDEO",
          data: array,
+      });
+      dispatch({
+         type: "DRAG_ITEM",
+         data: true,
       });
    };
 
@@ -189,6 +244,10 @@ const ToolItemText = () => {
       dispatch({
          type: "SET_VIDEO",
          data: array,
+      });
+      dispatch({
+         type: "DRAG_ITEM",
+         data: true,
       });
    };
 
@@ -322,6 +381,9 @@ const ToolItemText = () => {
                   onChange={(e) => {
                      handleOnChangeUrl(e, link._id);
                   }}
+                  onBlur={(e) => {
+                     handleOnBlur(e, link._id);
+                  }}
                   value={link.url}
                   required
                />
@@ -427,7 +489,7 @@ const ToolItemText = () => {
                }
             >
                <img src="/assets/campaign/timeline_add.svg" />
-               <span>Add call to action</span>
+               <span>Call to action</span>
             </div>
             {showContentLink && (
                <>

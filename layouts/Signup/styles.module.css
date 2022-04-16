@@ -1,0 +1,47 @@
+.root {
+   text-align: center;
+   width: 422px;
+}
+
+.title {
+   color: var(--secondColor);
+   font-size: 34.61px;
+   font-weight: 800;
+   margin-bottom: 10px;
+}
+
+.subtitle {
+   color: var(--secondColor);
+   font-size: 15px;
+   font-weight: 400;
+}
+
+.form {
+   margin-top: 39px;
+   margin-bottom: 90px;
+}
+
+.switchLogin {
+   color: var(--secondColor);
+   font-size: 16px;
+   letter-spacing: 0.2px;
+   line-height: 20px;
+   margin-bottom: 40px;
+   margin-top: 30px;
+   text-align: center;
+}
+.switchLogin a {
+   color: #5b5fee;
+   font-weight: 700;
+}
+.switchLogin a:hover {
+   text-decoration: underline;
+}
+
+.error {
+   background-color: #ff4949;
+   margin-block: 20px;
+   padding: 5px;
+   color: white;
+   border-radius: 4px;
+}

@@ -1,9 +1,9 @@
 @import '../../_variables'
 
 .campaignsHeader, .campaignsItem
-  grid-template-columns: 25% 16% 16% 25% 18%
+  grid-template-columns: 20% 18% 16% 16% 25% 18%
   &.draft
-    grid-template-columns: 25% 16% 16% 25% 18%
+    grid-template-columns: 20% 18% 16% 16% 25% 18%
 .campaignsHeader
   p
     font-weight: 500
@@ -16,6 +16,14 @@
     color: $previewColor
     &.firstHeader
       padding-left: 45px
+.videoImg
+  width: 54px
+  height: 30px
+  overflow: hidden
+  background-color: black
+  border: 1px solid #efeded
+  & img
+    width: 100%
 .campaignsItem
   p
     background: white

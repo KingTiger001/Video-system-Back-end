@@ -1,0 +1,35 @@
+.root {
+   width: 100%;
+   min-height: 100vh;
+   display: flex;
+}
+
+.leftSection {
+   width: 571px;
+   flex-basis: 571px;
+   max-width: 40%;
+   min-height: 100%;
+   background-color: var(--secondColor);
+   padding: 67px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+.leftSection img {
+   width: 436.29px;
+   max-width: 90%;
+}
+
+.content {
+   flex-grow: 1;
+   min-height: 100%;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   padding: 0 10%;
+}
+
+.content > div {
+   padding-top: 100px;
+}

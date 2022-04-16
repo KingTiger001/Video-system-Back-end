@@ -250,6 +250,7 @@
   .videoImg
     width: 54px
     height: 30px
+    overflow: hidden
     background-color: black
   // img
   //   cursor: pointer
@@ -283,9 +284,9 @@
     overflow: hidden
     text-overflow: ellipsis
   &.orangeBorder
-    border: 1px solid $orangeColor
+    border: 1px dashed $orangeColor
   &.toolLibraryItemSelected
-    border: 1px solid $primaryColor
+    border: 1px dashed $primaryColor
   &.toolLibraryItemNotSelected
     border: 1px solid #e5e6da
 
@@ -316,13 +317,12 @@
   width: 29px
   position: relative
   .dropdown
-    background: #fff
-    border-radius: 4px
+    background: #302E3D
     box-shadow: 0 5px 16px 0 rgba(24,59,86,0.13)
     position: absolute
     right: 0
     top: 30px
-    width: 145px
+    width: 60px
     z-index: 2
     li
       align-items: center
@@ -332,13 +332,14 @@
       grid-auto-flow: column
       grid-gap: 8px
       grid-auto-column: max-content
-      height: 45px
+      height: 24px
       padding: 0 16px
       &:last-child
         border-bottom: 0
       p
-        color: $textColorTwo
-        font-size: 12px
+        color: #E8E8E8 !important
+        font-size: 8px
+        font-weight: 800
 
 .toolLibraryItemOption
   cursor: pointer

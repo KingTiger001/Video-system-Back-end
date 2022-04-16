@@ -77,6 +77,7 @@ const initialState = {
    },
    endScreenList: [],
    hasChanges: false,
+   dragItem: false,
    helloScreen: {
       duration: 0,
    },
@@ -88,6 +89,7 @@ const initialState = {
       size: 60,
    },
    name: "",
+   withoutName: false,
    preview: {
       show: false,
       element: "video",
@@ -96,6 +98,7 @@ const initialState = {
    previewEndScreen: {},
    previewHelloScreen: {},
    previewVideo: {},
+   previewVideoOnly: {},
    progression: 0,
    timelineDraggable: false,
    tool: 0,
@@ -247,6 +250,16 @@ const reducer = (state = initialState, action) => {
             ...state,
             name: action.data,
          };
+      case "SET_PREVIEW_VIDEO_ONLY":
+         return {
+            ...state,
+            previewVideoOnly: action.data,
+         };
+      case "SET_WITHOUT_NAME":
+         return {
+            ...state,
+            withoutName: action.data,
+         };
       case "SET_PREVIEW_END_SCREEN":
          return {
             ...state,
@@ -266,6 +279,11 @@ const reducer = (state = initialState, action) => {
          return {
             ...state,
             templateList: action.data,
+         };
+      case "DRAG_ITEM":
+         return {
+            ...state,
+            dragItem: action.data,
          };
       case "SET_PROGRESSION":
          return {
@@ -290,7 +308,9 @@ const reducer = (state = initialState, action) => {
          return {
             ...state,
             duration: action.data.length > 0 ? setVideoDuration * 1000 : 0,
-            contents: action.data.filter((v)=>v.type==="video"?v.video!==null:v.screen!==null),
+            contents: action.data.filter((v) =>
+               v.type === "video" ? v.video !== null : v.screen !== null
+            ),
          };
       case "SET_VIDEO_LIST":
          return {

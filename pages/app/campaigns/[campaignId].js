@@ -2,7 +2,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import ContentEditable from "react-contenteditable";
+import EditableContent from "@/components/global/EditableContent";
 import { toast } from "react-toastify";
 import withAuthServerSideProps from "@/hocs/withAuthServerSideProps";
 
@@ -40,6 +40,7 @@ const Campaign = ({ me }) => {
    const hidePopup = () => dispatch({ type: "HIDE_POPUP" });
    const showPopup = (popupProps) =>
       dispatch({ type: "SHOW_POPUP", ...popupProps });
+   const inputNameRef = useRef();
 
    const campaign = useSelector((state) => state.campaign);
    const duration = useSelector((state) => state.campaign.duration);
@@ -53,10 +54,15 @@ const Campaign = ({ me }) => {
    const previewVideo = useSelector((state) => state.campaign.previewVideo);
    const videosOffset = useSelector((state) => state.campaign.videosOffset);
    const currentVideo = useSelector((state) => state.campaign.currentVideo);
+   const selectedContent = useSelector(
+      (state) => state.campaign.selectedContent
+   );
    const preview = useSelector((state) => state.campaign.preview);
    const hideTimeline = useSelector((state) => state.campaign.hideTimeline);
    const videosRef = useSelector((state) => state.campaign.videosRef);
    const templateList = useSelector((state) => state.campaign.templateList);
+   const dragItem = useSelector((state) => state.campaign.dragItem);
+   const selectedScreen = useSelector((state) => state.global.selectedScreen);
 
    const [displayMenu, showMenu] = useState(false);
    const [loadingPopup, setLoadingPopup] = useState({
@@ -76,15 +82,39 @@ const Campaign = ({ me }) => {
    /* Record */
    const [displayVideoRecorder, showVideoRecorder] = useState(false);
 
-   const [screen, showScreen] = useState(contents.length>0?"MEDIA":"CREATE");
+   const [screen, showScreen] = useState(
+      contents.length > 0 ? "MEDIA" : "CREATE"
+   );
    // const [displayPreview, showPreview] = useState(false);
 
    useEffect(() => {
-      if (preview && preview.element === "screen" && contents.length !== 0) {
+      if (
+         preview &&
+         preview.element === "screen" &&
+         !dragItem &&
+         contents.length !== 0
+      ) {
          console.log("Select Screen From Page", contents[contents.length - 1]);
-         selectScreen(contents[contents.length - 1], contents);
+         if (contents[contents.length - 1])
+            selectScreen(contents[contents.length - 1], contents);
+      }
+      if (dragItem) {
+         dispatch({
+            type: "DRAG_ITEM",
+            data: false,
+         });
       }
    }, [contents]);
+
+   useEffect(() => {
+      if (inputNameRef && inputNameRef.current && !name.length) {
+         inputNameRef.current.focus();
+      }
+   }, [inputNameRef]);
+
+   useEffect(() => {
+      if (selectedScreen) showScreen(selectedScreen);
+   }, [selectedScreen]);
 
    useEffect(() => {
       const handleClickOutside = (e) => {
@@ -141,6 +171,10 @@ const Campaign = ({ me }) => {
    }, [duration, endScreen, helloScreen, logo, name, contents, finalVideo]);
 
    const checkBeforeStartShare = () => {
+      if (!name.length) {
+         if (inputNameRef && inputNameRef.current) inputNameRef.current.focus();
+         return toast.error("Please enter video title.");
+      }
       if (contents.length <= 0) {
          return toast.error(
             "You need to add a video before sharing your campaign."
@@ -392,17 +426,21 @@ const Campaign = ({ me }) => {
         </div> */}
          <div className={styles.headerVideoTitle}>
             <div>
-               <ContentEditable
-                  onChange={(e) =>
-                     dispatch({ type: "SET_NAME", data: e.target.value })
-                  }
-                  onKeyDown={(e) => {
-                     if (e.key === "Enter") e.preventDefault();
-                  }}
-                  placeholder="Name your video here"
-                  html={name}
-                  className={styles.headerVideoInput}
-               />
+               <div className={styles.headerVideoInput}>
+                  <input
+                     type="text"
+                     onChange={(e) =>
+                        dispatch({ type: "SET_NAME", data: e.target.value })
+                     }
+                     onKeyDown={(e) => {
+                        if (e.key === "Enter") e.preventDefault();
+                     }}
+                     placeholder="Please enter video title"
+                     value={name}
+                     ref={inputNameRef}
+                     className={styles.headerVideoInput}
+                  />
+               </div>
                <img src="/assets/campaign/edit_title.svg" />
             </div>
          </div>
@@ -438,29 +476,24 @@ const Campaign = ({ me }) => {
       const id = new ObjectID();
       const template = {
          _id: id.toString(),
-         position: array.length,
+         position: contents.length,
          status: "done",
          type: "screen",
          screen: {
-            name: `screen${selectedScreens.length}`,
+            name: `Screen${templateList.length}`,
             background: { type: "color", color: "#9FE4FC" },
             duration: 3,
          },
          texts: [],
          links: [],
       };
-      array.push(template);
-      dispatch({ type: "SET_VIDEO", data: array });
-      dispatch({ type: "SET_TEMPLATE_LIST", data: array });
-      dispatch({ type: "CALC_VIDEOS_OFFSET", data: array });
-      dispatch({ type: "SET_VIDEOS_REF" });
-      dispatch({ type: "SET_PREVIEW_END_SCREEN", data: template });
-      dispatch({ type: "DISPLAY_ELEMENT", data: "endScreen" });
-      getVideos(true, true);
-      dispatch({
-         type: "SELECT_TOOL",
-         data: 2,
+      addTemplateToDatabase(template, () => {
+         dispatch({
+            type: "SET_TEMPLATE_LIST",
+            data: [...templateList, template],
+         });
       });
+      array.push(template);
       dispatch({
          type: "SHOW_PREVIEW",
          data: {
@@ -468,12 +501,36 @@ const Campaign = ({ me }) => {
             data: template,
          },
       });
+      dispatch({ type: "SET_VIDEO", data: array });
+      dispatch({ type: "CALC_VIDEOS_OFFSET", data: array });
+      dispatch({ type: "SET_VIDEOS_REF" });
+      dispatch({ type: "SET_PREVIEW_END_SCREEN", data: template });
+      dispatch({ type: "DISPLAY_ELEMENT", data: "endScreen" });
+      getVideos(true, true);
       dispatch({
          type: "SET_PREVIEW_VIDEO",
          data: template,
       });
-
+      dispatch({
+         type: "SELECT_TOOL",
+         data: 2,
+      });
       showScreen("SCREEN");
+      if (contents[contents.length - 1]) selectScreen(template, contents);
+   };
+
+   const addTemplateToDatabase = async (temp, callback) => {
+      try {
+         const { data: template } = await mainAPI.post("/templates", temp);
+         if (template && callback) callback(template);
+      } catch (err) {
+         const code = err.response && err.response.data;
+         if (code === "Upload.incorrectFiletype") {
+            setError(
+               "Incorrect file type, Please use an accepted format (webm, mp4, avi, mov)"
+            );
+         }
+      }
    };
 
    const uploadVideo = async (file) => {
@@ -683,10 +740,7 @@ const Campaign = ({ me }) => {
             </div>
          </div>
 
-         <div
-            className={styles.footer}
-            style={{ display: screen === "CREATE" ? "none" : "" }}
-         >
+         <div className={styles.footer}>
             <Timeline handlecreate={() => showScreen("CREATE")} />
          </div>
 
@@ -723,6 +777,7 @@ export const getServerSideProps = withAuthServerSideProps(
       const { data: campaign } = await mainAPI.get(
          `/campaigns/${params.campaignId}`
       );
+      const { data: templateList } = await mainAPI.get("/users/me/templates");
       const { data: videos } = await mainAPI.get("/users/me/videos");
       const { data: endScreenList } = await mainAPI.get("/users/me/endScreens");
       const { data: helloScreenList } = await mainAPI.get(
@@ -730,12 +785,21 @@ export const getServerSideProps = withAuthServerSideProps(
       );
       try {
          dispatch({
+            type: "SET_CAMPAIGN",
+            data: {
+               ...campaign,
+               contents: campaign.contents.map((c) => {
+                  return c.type === "screen" ? { ...c, status: "done" } : c;
+               }),
+            },
+         });
+         dispatch({
             type: "SET_VIDEO_LIST",
             data: videos,
          });
          dispatch({
             type: "SET_TEMPLATE_LIST",
-            data: campaign.templateList,
+            data: templateList,
          });
          dispatch({
             type: "SET_END_SCREEN_LIST",
@@ -744,10 +808,6 @@ export const getServerSideProps = withAuthServerSideProps(
          dispatch({
             type: "SET_HELLO_SCREEN_LIST",
             data: helloScreenList,
-         });
-         dispatch({
-            type: "SET_CAMPAIGN",
-            data: campaign,
          });
          dispatch({ type: "CALC_DURATION" });
          dispatch({ type: "CALC_VIDEOS_OFFSET", data: campaign.contents });

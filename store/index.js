@@ -7,6 +7,7 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import campaign from "./reducers/campaign";
 import popup from "./reducers/popup";
 import videoPlayer from "./reducers/videoPlayer";
+import global from "./reducers/global";
 
 let store;
 
@@ -15,6 +16,7 @@ function initStore(preloadedState = {}) {
       combineReducers({
          campaign,
          popup,
+         global,
          videoPlayer,
       }),
       preloadedState,

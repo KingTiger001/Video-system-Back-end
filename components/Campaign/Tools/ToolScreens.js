@@ -46,27 +46,30 @@ const ToolScreens = () => {
    const videosRef = useSelector((state) => state.campaign.videosRef);
 
    const videosOffset = useSelector((state) => state.campaign.videosOffset);
+   const templateList = useSelector((state) => state.campaign.templateList);
 
    const [selectedScreens, setSelectedScreens] = useState([]);
    const [unselectedScreens, setUnselectedScreens] = useState([]);
-   const [showEdit, setShowEdit] = useState(true);
+   const [showEdit, setShowEdit] = useState(false);
 
    useEffect(() => {
+      const checkIfInContent = (element) => {
+         return contents.some((content) => {
+            if (content.type === "screen") return content._id === element._id;
+            return content.video && content.video._id === element._id;
+         });
+      };
       const selected = contents.filter((obj) => obj.type === "screen");
-      const unSelected = endScreenList.filter(
-         (obj) =>
-            !contents.some(
-               (elem) => elem.type === "screen" && elem._id === obj._id
-            )
+      const screens = templateList.filter(
+         (c) => c.type === "screen" && !checkIfInContent(c)
       );
       setSelectedScreens(selected);
-      setUnselectedScreens(unSelected);
+      setUnselectedScreens(screens);
    }, [contents, endScreenList]);
 
    useEffect(() => {
-      if (selectedContent.length === 0) {
-         setShowEdit(false);
-      }
+      if (selectedContent && selectedContent.type === "screen")
+         setShowEdit(true);
    }, [selectedContent]);
 
    const selectScreen = (elem, array) => {
@@ -164,7 +167,7 @@ const ToolScreens = () => {
    const handleCreate = () => {
       const array = contents.slice();
       const id = new ObjectID();
-      array.push({
+      const template = {
          _id: id.toString(),
          position: array.length,
          type: "screen",
@@ -176,11 +179,30 @@ const ToolScreens = () => {
          },
          texts: [],
          links: [],
+      };
+      array.push(template);
+      addTemplateToDatabase(template, () => {
+         dispatch({
+            type: "SET_TEMPLATE_LIST",
+            data: [...templateList, template],
+         });
       });
       dispatch({ type: "SET_VIDEO", data: array });
       dispatch({ type: "CALC_VIDEOS_OFFSET", data: array });
       selectScreen(array[array.length - 1], array);
       setShowEdit(true);
+   };
+
+   const addTemplateToDatabase = async (temp, callback) => {
+      try {
+         const { data: template } = await mainAPI.post("/templates", temp);
+         if (template && callback) callback(template);
+      } catch (err) {
+         const code = err.response && err.response.data;
+         if (code === "Upload.incorrectFiletype") {
+            setError(err.message);
+         }
+      }
    };
 
    const addToContents = (data) => {
@@ -330,7 +352,11 @@ const ToolScreens = () => {
                   <div
                      className={styles.toolLibraryItemOption}
                      onClick={() =>
-                        showPopup({ display: "DELETE_SCREEN", data: obj })
+                        showPopup({
+                           display: "DELETE_VIDEO",
+                           data: obj,
+                           target: "screen",
+                        })
                      }
                   >
                      <div>
@@ -372,8 +398,10 @@ const ToolScreens = () => {
                   }}
                />
             )}
-            {!showEdit ? (
-               <>
+            {!showEdit &&
+            selectedContent &&
+            selectedContent.type !== "video" ? (
+               <div className={styles.editSection}>
                   <span className={styles.toolTitleSection}>
                      {/* <div onClick={closeToolbox} className={styles.backArrow}>
                 <img src="/assets/campaign/backArrow.svg" />{" "}
@@ -402,7 +430,7 @@ const ToolScreens = () => {
                   <div className={styles.videosList}>
                      {unselectedScreens.map((obj) => renderScreenItem(obj))}
                   </div>
-               </>
+               </div>
             ) : (
                <div className={styles.toolSection}>
                   {/* <span className={styles.toolTitleSection}>
@@ -418,7 +446,7 @@ const ToolScreens = () => {
             </span> */}
 
                   <div className={styles.toolItems}>
-                     {selectedContent.screen ? (
+                     {selectedContent && selectedContent.screen ? (
                         <>
                            <div className={styles.editTemplate}>
                               <div>Duration</div>

@@ -58,9 +58,6 @@ const ToolVideos = () => {
    const [showContentScreen, setShowContentScreen] = useState(true);
 
    useEffect(() => {
-      console.log("Screens From DB: ", campaign);
-   }, [campaign]);
-   useEffect(() => {
       const checkIfInContent = (element) => {
          return contents.some((content) => {
             if (content.type === "screen") return content._id === element._id;
@@ -85,7 +82,7 @@ const ToolVideos = () => {
    }, [contents, videoList, templateList]);
 
    useEffect(() => {
-      if (selectedContent.length === 0) {
+      if (!selectedContent) {
          setShowEdit(false);
       }
    }, [selectedContent]);

@@ -1,0 +1,8 @@
+:root {
+   --secondColor: #4c4a60;
+}
+
+* {
+   box-sizing: border-box !important;
+   outline: none;
+}

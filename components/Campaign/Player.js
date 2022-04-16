@@ -18,6 +18,7 @@ import { mainAPI } from "@/plugins/axios";
 
 const Player = () => {
    const dispatch = useDispatch();
+   const previewRef = useRef();
 
    const endScreen = useSelector((state) => state.campaign.endScreen);
    const duration = useSelector((state) => state.campaign.duration);
@@ -41,6 +42,7 @@ const Player = () => {
    //
 
    const [resume, setResume] = useState(false);
+   const [isPlayPreview, setIsPlayPreview] = useState(false);
    const [ref, setRef] = useState();
 
    useEffect(() => {
@@ -153,12 +155,20 @@ const Player = () => {
                data: i,
             });
             dispatch({
+               type: "SET_SELECTED_CONTENT",
+               data: contents[i],
+            });
+            dispatch({
                type: "SET_CURRENT_OVERLAY",
                data: i,
             });
          }
       }
       if (progression >= duration) {
+         dispatch({
+            type: "SET_SELECTED_CONTENT",
+            data: contents[0],
+         });
       } else if (
          !videosRef[getVideoIndex(currentVideo)]?.paused &&
          !isPlaying
@@ -292,6 +302,31 @@ const Player = () => {
    // useDebounce(updateProcessingVideo, 3000);
 
    // console.log(previewVideo)
+
+   const handlePlayVideo = async () => {
+      if (
+         preview.element === "video" &&
+         previewVideo.url &&
+         previewRef &&
+         previewRef.current
+      ) {
+         if (isPlayPreview) {
+            console.log("STOP");
+            previewRef.current.pause();
+            setIsPlayPreview(false);
+         } else {
+            console.log("PLAY");
+            previewRef.current.play();
+            setIsPlayPreview(true);
+         }
+      } else {
+         console.log("HI");
+         dispatch({ type: "HIDE_PREVIEW" });
+         dispatch({ type: isPlaying ? "PAUSE" : "PLAY" });
+         setResume(true);
+      }
+   };
+
    return (
       <div className={styles.player}>
          <div
@@ -326,6 +361,7 @@ const Player = () => {
                               controls={false}
                               height="100%"
                               width="100%"
+                              ref={previewRef}
                            >
                               <source
                                  src={previewVideo.url || contents.url}
@@ -376,6 +412,7 @@ const Player = () => {
                      justifyContent: "center",
                      overflow: "hidden",
                   }}
+                  id="PlayerContainer"
                >
                   {/* || !resume */}
                   {renderVideos()}
@@ -398,17 +435,17 @@ const Player = () => {
                (previewVideo.status == "done" ||
                   previewVideo.type === "screen") ? (
                   <>
-                     <p className={styles.progression}>
-                        {displayProgression()}
-                     </p>
+                     {!previewRef.current ? (
+                        <p className={styles.progression}>
+                           {displayProgression()}
+                        </p>
+                     ) : (
+                        ""
+                     )}
                      <img
-                        onClick={async () => {
-                           dispatch({ type: "HIDE_PREVIEW" });
-                           dispatch({ type: isPlaying ? "PAUSE" : "PLAY" });
-                           setResume(true);
-                        }}
+                        onClick={handlePlayVideo}
                         src={
-                           isPlaying
+                           isPlaying || isPlayPreview
                               ? "/assets/video/pause.svg"
                               : "/assets/video/play.svg"
                         }

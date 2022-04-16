@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
@@ -24,6 +24,7 @@ import styles from "@/styles/pages/app/dashboard.module.sass";
 import stylesCampains from "@/styles/pages/app/campaigns.module.sass";
 
 import PopupDeleteCampaign from "@/components/Popups/PopupDeleteCampaign";
+import VideoImageThumbnail from "react-video-thumbnail-image";
 
 const Dashboard = ({
    campaignsDraft = [],
@@ -124,102 +125,113 @@ const Dashboard = ({
             draft ? stylesCampains.draft : ""
          }`}
       >
+         <p>Video Image</p>
          <p className={stylesCampains.firstHeader}>Video name</p>
          <p>Creation date</p>
          <p>Duration</p>
-         <p></p>
-         <p></p>
       </ListHeader>
    );
 
-   const renderCampaignsItem = (campaign = {}) => (
-      <ListItem
-         className={`${stylesCampains.campaignsItem} ${
-            campaign.status === "draft" ? stylesCampains.draft : ""
-         }`}
-         empty={Object.keys(campaign).length > 0 ? false : true}
-         key={campaign._id}
-         renderActions={() => (
-            <div>
-               {campaign.status === "draft" && (
-                  <Button
-                     color="orange"
-                     type="link"
-                     href={`/app/campaigns/${campaign._id}`}
-                     outline={false}
-                  >
-                     Edit
-                  </Button>
-               )}
-               {campaign.status === "draft" && (
-                  <Button
-                     style={{ background: "#4C4A60" }}
-                     onClick={() => {
-                        handlePreviewMode(campaign);
-                     }}
-                  >
-                     {previewLoading === campaign._id
-                        ? "Processing..."
-                        : "Preview"}
-                  </Button>
-               )}
-               {campaign.status === "draft" && (
-                  <Button
-                     color="primary"
-                     onClick={() => checkBeforeStartShare(campaign)}
-                  >
-                     {shareLoading === campaign._id ? "Processing..." : "Share"}
-                  </Button>
-               )}
-               {campaign.status === "shared" && (
-                  <Link href={`/app/analytics?c=${campaign._id}`}>
-                     <a>Analytics</a>
-                  </Link>
-               )}
-               {campaign.status === "shared" && (
-                  <button
+   const renderCampaignsItem = (campaign = {}) => {
+      return (
+         <ListItem
+            className={`${stylesCampains.campaignsItem} ${
+               campaign.status === "draft" ? stylesCampains.draft : ""
+            }`}
+            empty={Object.keys(campaign).length > 0 ? false : true}
+            key={campaign._id}
+            renderActions={() => (
+               <div>
+                  {campaign.status === "draft" && (
+                     <Button
+                        color="orange"
+                        type="link"
+                        href={`/app/campaigns/${campaign._id}`}
+                        outline={false}
+                     >
+                        Edit
+                     </Button>
+                  )}
+                  {campaign.status === "draft" && (
+                     <Button
+                        style={{ background: "#4C4A60" }}
+                        onClick={() => {
+                           handlePreviewMode(campaign);
+                        }}
+                     >
+                        {previewLoading === campaign._id
+                           ? "Processing..."
+                           : "Preview"}
+                     </Button>
+                  )}
+                  {campaign.status === "draft" && (
+                     <Button
+                        color="primary"
+                        onClick={() => checkBeforeStartShare(campaign)}
+                     >
+                        {shareLoading === campaign._id
+                           ? "Processing..."
+                           : "Share"}
+                     </Button>
+                  )}
+                  {campaign.status === "shared" && (
+                     <Link href={`/app/analytics?c=${campaign._id}`}>
+                        <a>Analytics</a>
+                     </Link>
+                  )}
+                  {campaign.status === "shared" && (
+                     <button
+                        onClick={() =>
+                           showPopup({
+                              display: "DUPLICATE_CAMPAIGN",
+                              data: campaign,
+                           })
+                        }
+                     >
+                        Duplicate
+                     </button>
+                  )}
+                  {campaign.status === "shared" && (
+                     <a href={`/campaigns/${campaign._id}`} target="blank">
+                        Preview
+                     </a>
+                  )}
+               </div>
+            )}
+            renderDropdownActions={() => (
+               <ul>
+                  <li
                      onClick={() =>
                         showPopup({
-                           display: "DUPLICATE_CAMPAIGN",
+                           display: "DELETE_CAMPAIGN",
                            data: campaign,
                         })
                      }
                   >
-                     Duplicate
-                  </button>
-               )}
-               {campaign.status === "shared" && (
-                  <a href={`/campaigns/${campaign._id}`} target="blank">
-                     Preview
-                  </a>
-               )}
-            </div>
-         )}
-         renderDropdownActions={() => (
-            <ul>
-               <li
-                  onClick={() =>
-                     showPopup({ display: "DELETE_CAMPAIGN", data: campaign })
-                  }
-               >
-                  <p>Delete</p>
-               </li>
-            </ul>
-         )}
-         renderEmpty={() => <p>No videos found.</p>}
-      >
-         <p className={stylesCampains.campaignName}>{campaign.name}</p>
-         <p>
-            {dayjs(
-               campaign.status === "draft"
-                  ? campaign.createdAt
-                  : campaign.sentAt
-            ).format("MM/DD/YYYY")}
-         </p>
+                     <p>Delete</p>
+                  </li>
+               </ul>
+            )}
+            renderEmpty={() => <p>No videos found.</p>}
+         >
+            <p className={styles.videoImg}>
+               <img src={campaign.share.thumbnail} />
+            </p>
+            <p className={stylesCampains.campaignName}>
+               {campaign.name.length ? campaign.name : "No name"}
+            </p>
+            <p>
+               {dayjs(
+                  campaign.status === "draft"
+                     ? campaign.createdAt
+                     : campaign.sentAt
+               ).format("MM/DD/YYYY")}
+            </p>
 
-         <p>{displayDuration(campaign.duration)}</p>
-      </ListItem>
-   );
+            <p>{displayDuration(campaign.duration)}</p>
+         </ListItem>
+      );
+   };
 
    const onMerge = async (campaign) => {
       try {

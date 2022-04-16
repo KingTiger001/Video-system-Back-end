@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import styles from "@/styles/components/Campaign/ToolVideos.module.sass";
 import dayjs from "@/plugins/dayjs";
 import { getDataByType, handleProgression, useDebounce } from "@/hooks";
+import VideoImageThumbnail from "react-video-thumbnail-image";
+import VideoScreenshot from "@/components/global/VideoScreenshot";
 
 import { ObjectID } from "bson";
 
@@ -20,6 +22,9 @@ const ToolVideoItem = ({ vd, setShowContentTimeline, selected = false }) => {
    const currentVideo = useSelector((state) => state.campaign.currentVideo);
    const preview = useSelector((state) => state.campaign.preview);
    const previewVideo = useSelector((state) => state.campaign.previewVideo);
+   const selectedContent = useSelector(
+      (state) => state.campaign.selectedContent
+   );
    const contents = useSelector((state) => state.campaign.contents);
 
    // Close click outside text style
@@ -184,8 +189,49 @@ const ToolVideoItem = ({ vd, setShowContentTimeline, selected = false }) => {
       dispatch({ type: "HIDE_PREVIEW" });
       dispatch({ type: "SET_PREVIEW_VIDEO", data: vd.video });
       dispatch({ type: "SET_SELECTED_CONTENT", data: vd });
+      // dispatch({
+      //    type: "SET_SELECTED_SCREEN",
+      //    data: "SCREEN",
+      // });
    };
 
+   const addToPreview = () => {
+      const index = contents.findIndex((content) => content._id === vd._id);
+      if (index !== -1) {
+         const position = contents[index].position;
+         const timePosition = videosOffset[position];
+
+         dispatch({
+            type: "SET_PROGRESSION",
+            data: timePosition * 1000 + 10,
+         });
+         handleProgression(
+            contents,
+            videosOffset,
+            timePosition * 1000 + 10,
+            dispatch,
+            videosRef,
+            currentVideo,
+            preview
+         );
+         dispatch({ type: "HIDE_PREVIEW" });
+         dispatch({
+            type: "SET_CURRENT_OVERLAY",
+            data: index,
+         });
+      } else {
+         dispatch({
+            type: "SET_CURRENT_OVERLAY",
+            data: -1,
+         });
+         dispatch({
+            type: "SHOW_PREVIEW",
+            data: { element: "video", data: {} },
+         });
+         dispatch({ type: "SET_PREVIEW_VIDEO", data: vd.video });
+      }
+      dispatch({ type: "SET_PREVIEW_VIDEO", data: vd.video });
+   };
    return (
       <div
          key={vd.video._id}
@@ -198,14 +244,32 @@ const ToolVideoItem = ({ vd, setShowContentTimeline, selected = false }) => {
                : ""
          }`}
       >
-         <img className={styles.videoImg} src={vd.video.thumbnail}></img>
+         <div className={styles.videoImg}>
+            {/* <VideoScreenshot
+               video={vd.video.url}
+               width={54}
+               height={30}
+               onTakeScreenShot={(url) => console.log(url)}
+            /> */}
+            <VideoImageThumbnail
+               videoUrl={vd.video.url}
+               alt={vd.video.name}
+               width={54}
+               height={30}
+               cors={true}
+            />
+         </div>
          <div
             className={`${styles.toolLibraryItemName} ${
                previewVideo && previewVideo.name === vd.video.name
                   ? styles.toolLibraryItemPreview
                   : ""
-            } ${selected ? styles.orangeBorder : ""}`}
-            onClick={selected ? handleSelect : handleAddToTimeLine}
+            } ${
+               selected && selectedContent._id === vd._id
+                  ? styles.orangeBorder
+                  : ""
+            }`}
+            onClick={selected ? handleSelect : addToPreview}
          >
             <p>{vd.video.name}</p>
             {vd.video.status === "done" ? (
@@ -283,14 +347,13 @@ const ToolVideoItem = ({ vd, setShowContentTimeline, selected = false }) => {
                      <div className={styles.dropdown} ref={dropdownRef}>
                         <ul>
                            <li
-                              onClick={() =>{
-                                          showPopup({
-                                             display: "DELETE_VIDEO",
-                                             data: vd.video,
-                                          });
-                                          showDropdown(false)
-                                       }
-                              }
+                              onClick={() => {
+                                 showPopup({
+                                    display: "DELETE_VIDEO",
+                                    data: vd.video,
+                                 });
+                                 showDropdown(false);
+                              }}
                            >
                               <p>Delete</p>
                            </li>

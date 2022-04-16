@@ -1,3 +1,4 @@
+import { mainAPI } from "@/plugins/axios";
 import styles from "@/styles/components/Campaign/Tools.module.sass";
 import { useEffect, useRef, useState } from "react";
 import { ChromePicker } from "react-color";
@@ -27,9 +28,12 @@ const ToolItemBackground = () => {
       };
    }, [colorpickerRef]);
 
-   const handleChangeColor = (color) => {
+   const handleChangeColor = async (color) => {
       const obj = { ...selectedContent };
       obj.screen.background.color = color.hex;
+
+      if (obj.type === "screen")
+         await mainAPI.patch(`/templates/${obj._id}`, obj);
 
       const indexArr = contents.findIndex(
          (content) => content._id === selectedContent._id
