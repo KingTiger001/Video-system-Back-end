@@ -1,4 +1,4 @@
-import PopupDeleteLink from "@/components/Popups/PopupDeleteText";
+import PopupDeleteLink from "@/components/Popups/PopupDeleteLink";
 import styles from "@/styles/components/Campaign/Elements.module.sass";
 import { useEffect, useRef, useState } from "react";
 import { ObjectID } from "bson";
@@ -21,11 +21,11 @@ const RangeSliderContainer = styled.div`
 `;
 
 const textSizes = [
-   { value: 28, label: "1" },
-   { value: 32, label: "2" },
-   { value: 36, label: "3" },
-   { value: 40, label: "4" },
-   { value: 44, label: "5" },
+   { value: 20, label: "1" },
+   { value: 24, label: "2" },
+   { value: 28, label: "3" },
+   { value: 32, label: "4" },
+   { value: 36, label: "5" },
 ];
 
 const ToolItemText = () => {
@@ -59,14 +59,13 @@ const ToolItemText = () => {
       );
       let array = contents.slice();
       array[indexArr] = obj;
-
-      dispatch({
-         type: "SET_VIDEO",
-         data: array,
-      });
       dispatch({
          type: "DRAG_ITEM",
          data: true,
+      });
+      dispatch({
+         type: "SET_VIDEO",
+         data: array,
       });
    };
 
@@ -76,6 +75,8 @@ const ToolItemText = () => {
       const index = obj.links.findIndex((link) => link._id === linkFocused._id);
       if (index < 0) return;
       obj.links[index].value = value;
+      // Create Thumbnail
+      dispatch({ type: "SET_CREATE_TEMPLATE_THUMBNAIL", data: true });
       if (obj.type === "screen")
          await mainAPI.patch(`/templates/${obj._id}`, obj);
    };
@@ -94,15 +95,17 @@ const ToolItemText = () => {
       );
       let array = contents.slice();
       array[indexArr] = obj;
-
-      dispatch({
-         type: "SET_VIDEO",
-         data: array,
-      });
       dispatch({
          type: "DRAG_ITEM",
          data: true,
       });
+      dispatch({
+         type: "SET_VIDEO",
+         data: array,
+      });
+      
+            // Create Thumbnail
+      dispatch({ type: "SET_CREATE_TEMPLATE_THUMBNAIL", data: true });
    };
 
    const handleAdd = async () => {
@@ -112,7 +115,7 @@ const ToolItemText = () => {
          _id,
          value: "",
          url: "",
-         fontSize: 0.5, // Set default button size
+         fontSize: textSizes[0], // Set default button size
          color: "#898989",
          preset: 0,
          position: { x: 50, y: 50 },
@@ -128,6 +131,9 @@ const ToolItemText = () => {
          data: obj,
       });
       setShowContentLink(true);
+      
+            // Create Thumbnail
+      dispatch({ type: "SET_CREATE_TEMPLATE_THUMBNAIL", data: true });
    };
 
    const toggleAdd = (show = null) => {
@@ -138,7 +144,11 @@ const ToolItemText = () => {
    };
 
    useEffect(() => {
-      if (selectedContent.links.length) {
+      if (
+         selectedContent &&
+         selectedContent.links &&
+         selectedContent.links.length
+      ) {
          setShowContentLink(true);
       }
    }, [selectedContent]);
@@ -149,6 +159,17 @@ const ToolItemText = () => {
       } else {
          setOptionSelected({ index, option });
       }
+   };
+
+   const handleOnBlurUrl = async (event, id) => {
+      const { value } = event.target;
+      const obj = { ...selectedContent };
+      const index = obj.links.findIndex((link) => link._id === id);
+      if (index < 0) return;
+      obj.links[index].url = value;
+
+      if (obj.type === "screen")
+         await mainAPI.patch(`/templates/${obj._id}`, obj);
    };
 
    const handleOnChangeUrl = async (event, id) => {
@@ -162,19 +183,15 @@ const ToolItemText = () => {
          (content) => content._id === selectedContent._id
       );
 
-      if (obj.type === "screen")
-         await mainAPI.patch(`/templates/${obj._id}`, obj);
-
       let array = contents.slice();
       array[indexArr] = obj;
-
-      dispatch({
-         type: "SET_VIDEO",
-         data: array,
-      });
       dispatch({
          type: "DRAG_ITEM",
          data: true,
+      });
+      dispatch({
+         type: "SET_VIDEO",
+         data: array,
       });
    };
 
@@ -193,15 +210,17 @@ const ToolItemText = () => {
 
       let array = contents.slice();
       array[indexArr] = obj;
-
-      dispatch({
-         type: "SET_VIDEO",
-         data: array,
-      });
       dispatch({
          type: "DRAG_ITEM",
          data: true,
       });
+      dispatch({
+         type: "SET_VIDEO",
+         data: array,
+      });
+      
+            // Create Thumbnail
+      dispatch({ type: "SET_CREATE_TEMPLATE_THUMBNAIL", data: true });
    };
 
    const handleChangeColor = async (value, id) => {
@@ -218,14 +237,13 @@ const ToolItemText = () => {
       );
       let array = contents.slice();
       array[indexArr] = obj;
-
-      dispatch({
-         type: "SET_VIDEO",
-         data: array,
-      });
       dispatch({
          type: "DRAG_ITEM",
          data: true,
+      });
+      dispatch({
+         type: "SET_VIDEO",
+         data: array,
       });
    };
 
@@ -240,14 +258,13 @@ const ToolItemText = () => {
       );
       let array = contents.slice();
       array[indexArr] = obj;
-
-      dispatch({
-         type: "SET_VIDEO",
-         data: array,
-      });
       dispatch({
          type: "DRAG_ITEM",
          data: true,
+      });
+      dispatch({
+         type: "SET_VIDEO",
+         data: array,
       });
    };
 
@@ -445,6 +462,9 @@ const ToolItemText = () => {
                   onChange={(e) => {
                      handleOnChangeUrl(e, link._id);
                   }}
+                  onBlur={(e) => {
+                     handleOnBlurUrl(e, link._id);
+                  }}
                   value={link.url}
                />
             </div>
@@ -477,25 +497,29 @@ const ToolItemText = () => {
             <div
                className={`${styles.toolItemName} ${
                   showContentLink &&
+                  selectedContent &&
                   selectedContent.links &&
                   selectedContent.links.length > 0
                      ? styles.expand
                      : ""
                }`}
                onClick={
-                  selectedContent.links && selectedContent.links.length > 0
+                  selectedContent &&
+                  selectedContent.links &&
+                  selectedContent.links.length > 0
                      ? toggleAdd
                      : handleAdd
                }
             >
                <img src="/assets/campaign/timeline_add.svg" />
-               <span>Call to action</span>
+               <span>Add call to action</span>
             </div>
             {showContentLink && (
                <>
                   <div className={styles.toolItemContent}>
                      <div className={styles.listItems}>
-                        {selectedContent.links &&
+                        {selectedContent &&
+                           selectedContent.links &&
                            selectedContent.links.length > 0 && (
                               <>
                                  <div className={styles.toolItemOptions}>
@@ -549,6 +573,7 @@ const ToolItemText = () => {
                                                    linkFocused._id
                                                 );
                                              }}
+                                             value={linkFocused.fontSize}
                                              disabled={!linkFocused}
                                           >
                                              {textSizes.map((f) => (
@@ -589,7 +614,8 @@ const ToolItemText = () => {
                                  </div>
                               </>
                            )}
-                        {selectedContent.links &&
+                        {selectedContent &&
+                        selectedContent.links &&
                         selectedContent.links.length > 0
                            ? selectedContent.links.map((link, i) =>
                                 renderLink(link, i)
@@ -605,7 +631,9 @@ const ToolItemText = () => {
                         </div>
                      )}
                   </div>
-                  {selectedContent.links && selectedContent.links.length > 0 ? (
+                  {selectedContent &&
+                  selectedContent.links &&
+                  selectedContent.links.length > 0 ? (
                      <div className={styles.toolItemAdd} onClick={handleAdd}>
                         <img src="/assets/campaign/addTextOrange.svg" />
                      </div>

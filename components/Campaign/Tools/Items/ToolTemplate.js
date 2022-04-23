@@ -143,6 +143,7 @@ const ToolTemplate = ({ me }) => {
       const array = contents.slice();
       const id = new ObjectID();
       array.push({
+         ...data,
          _id: id.toString(),
          position: array.length,
          type: "screen",

@@ -24,7 +24,7 @@ import styles from "@/styles/pages/app/dashboard.module.sass";
 import stylesCampains from "@/styles/pages/app/campaigns.module.sass";
 
 import PopupDeleteCampaign from "@/components/Popups/PopupDeleteCampaign";
-import VideoImageThumbnail from "react-video-thumbnail-image";
+import CampaignListItem from "@/components/global/ListItem";
 
 const Dashboard = ({
    campaignsDraft = [],
@@ -125,7 +125,6 @@ const Dashboard = ({
             draft ? stylesCampains.draft : ""
          }`}
       >
-         <p>Video Image</p>
          <p className={stylesCampains.firstHeader}>Video name</p>
          <p>Creation date</p>
          <p>Duration</p>
@@ -134,14 +133,10 @@ const Dashboard = ({
 
    const renderCampaignsItem = (campaign = {}) => {
       return (
-         <ListItem
-            className={`${stylesCampains.campaignsItem} ${
-               campaign.status === "draft" ? stylesCampains.draft : ""
-            }`}
-            empty={Object.keys(campaign).length > 0 ? false : true}
-            key={campaign._id}
-            renderActions={() => (
-               <div>
+         <CampaignListItem
+            campaign={campaign}
+            renderActions={
+               <>
                   {campaign.status === "draft" && (
                      <Button
                         color="orange"
@@ -196,9 +191,9 @@ const Dashboard = ({
                         Preview
                      </a>
                   )}
-               </div>
-            )}
-            renderDropdownActions={() => (
+               </>
+            }
+            renderDropdownActions={
                <ul>
                   <li
                      onClick={() =>
@@ -211,27 +206,49 @@ const Dashboard = ({
                      <p>Delete</p>
                   </li>
                </ul>
-            )}
-            renderEmpty={() => <p>No videos found.</p>}
-         >
-            <p className={styles.videoImg}>
-               <img src={campaign.share.thumbnail} />
-            </p>
-            <p className={stylesCampains.campaignName}>
-               {campaign.name.length ? campaign.name : "No name"}
-            </p>
-            <p>
-               {dayjs(
-                  campaign.status === "draft"
-                     ? campaign.createdAt
-                     : campaign.sentAt
-               ).format("MM/DD/YYYY")}
-            </p>
-
-            <p>{displayDuration(campaign.duration)}</p>
-         </ListItem>
+            }
+         />
       );
    };
+
+   // <ListItem
+   //          className={`${stylesCampains.campaignsItem} ${
+   //             campaign.status === "draft" ? stylesCampains.draft : ""
+   //          }`}
+   //          empty={Object.keys(campaign).length > 0 ? false : true}
+   //          key={campaign._id}
+   //          renderActions={() => (
+
+   //          )}
+   //          renderDropdownActions={() => (
+   //             <ul>
+   //                <li
+   //                   onClick={() =>
+   //                      showPopup({
+   //                         display: "DELETE_CAMPAIGN",
+   //                         data: campaign,
+   //                      })
+   //                   }
+   //                >
+   //                   <p>Delete</p>
+   //                </li>
+   //             </ul>
+   //          )}
+   //          renderEmpty={() => <p>No videos found.</p>}
+   //       >
+   //          <p className={stylesCampains.campaignName}>
+   //             {campaign.name.length ? campaign.name : "No name"}
+   //          </p>
+   //          <p>
+   //             {dayjs(
+   //                campaign.status === "draft"
+   //                   ? campaign.createdAt
+   //                   : campaign.sentAt
+   //             ).format("MM/DD/YYYY")}
+   //          </p>
+
+   //          <p>{displayDuration(campaign.duration)}</p>
+   //       </ListItem>
 
    const onMerge = async (campaign) => {
       try {
@@ -373,12 +390,15 @@ const Dashboard = ({
             <div className={styles.campaignsAndButtons}>
                <div className={styles.campaigns}>
                   <p className={styles.campaignsTitle}>Library</p>
-                  {renderCampaignsHeader({ draft: true })}
-                  <div className={stylesCampains.campaignsList}>
-                     {campaignsDraftList.length > 0 &&
-                        campaignsDraftList.map((campaign) =>
-                           renderCampaignsItem(campaign)
-                        )}
+                  <div className={styles.campaignsListContainer}>
+                     {renderCampaignsHeader({ draft: true })}
+                     <div className={stylesCampains.campaignsList}>
+                        {campaignsDraftList.length > 0 &&
+                           campaignsDraftList.map((campaign) => {
+                              console.log(campaign);
+                              return renderCampaignsItem(campaign);
+                           })}
+                     </div>
                   </div>
                   {/* <div className={styles.campaignsFooter}>
               <Link href="/app/campaigns">

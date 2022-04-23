@@ -1,16 +1,16 @@
 @import '../_common.sass'
 @import '../_variables.sass'
-  
+
 .campaign
-  background: #F3F7F9
+  background: #444356
   min-height: 100vh
 
 .header
-  background: #fff
-  box-shadow: 0 2px 15px 0 rgba(0,0,0,0.05)
-  height: 90px
+  background: #444356
+  height: 70px
   position: relative
   z-index: 2
+  padding: 24px
   & > .container
     @extend .container
     align-items: center
@@ -20,15 +20,20 @@
     grid-gap: 40px
     justify-content: space-between
 
+.logo
+  height: 24px
+  & img
+    height: 100%
+
 .content
   margin: 0px auto
-  max-width: 800px
+  max-width: 1007px
   padding: 50px 20px
 
 .title
-  color: $textColorOne
-  fotn-size: 36px
-  font-weight: 700
+  color: white !important
+  fotn-size: 27.61px !important
+  font-weight: 800
   letter-spacing: 0.2px
   line-height: 44px
   margin-bottom: 20px

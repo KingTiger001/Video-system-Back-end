@@ -106,6 +106,7 @@ const initialState = {
    contents: [],
    videoList: [],
    templateList: [],
+   createThumbnail: false,
    videoRef: {},
    videosRef: [],
    currentVideo: -1,
@@ -259,6 +260,11 @@ const reducer = (state = initialState, action) => {
          return {
             ...state,
             withoutName: action.data,
+         };
+      case "SET_CREATE_TEMPLATE_THUMBNAIL":
+         return {
+            ...state,
+            createThumbnail: action.data,
          };
       case "SET_PREVIEW_END_SCREEN":
          return {

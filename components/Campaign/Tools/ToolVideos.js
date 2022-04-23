@@ -223,7 +223,7 @@ const ToolVideos = () => {
                   </div>
                   {showContentTimeline && (
                      <div className={styles.videosList}>
-                        {timelineVideos.map((vd) =>
+                        {timelineVideos.map((vd, i) =>
                            vd.type === "video" ? (
                               <ToolVideoItem
                                  key={vd.video._id}
@@ -233,6 +233,7 @@ const ToolVideos = () => {
                               />
                            ) : (
                               <ToolScreenItem
+                                 key={i}
                                  vd={{ screen: vd }}
                                  setShowContentTimeline={setShowContentTimeline}
                                  selected={true}
@@ -289,8 +290,9 @@ const ToolVideos = () => {
                   </div>
                   {showContentScreen && (
                      <div className={styles.videosList}>
-                        {templates.map((vd) => (
+                        {templates.map((vd, i) => (
                            <ToolScreenItem
+                              key={i}
                               vd={{ screen: vd }}
                               setShowContentTimeline={setShowContentTimeline}
                            />

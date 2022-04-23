@@ -51,9 +51,14 @@ const ToolItemDuration = () => {
       array[indexArr] = obj;
 
       dispatch({
+         type: "DRAG_ITEM",
+         data: true,
+      });
+      dispatch({
          type: "SET_VIDEO",
          data: array,
       });
+      dispatch({ type: "CALC_VIDEOS_OFFSET", data: array });
    };
 
    function increase() {

@@ -3,8 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import styles from "@/styles/components/Campaign/ToolVideos.module.sass";
 import dayjs from "@/plugins/dayjs";
 import { getDataByType, handleProgression, useDebounce } from "@/hooks";
-import VideoImageThumbnail from "react-video-thumbnail-image";
-import VideoScreenshot from "@/components/global/VideoScreenshot";
 
 import { ObjectID } from "bson";
 
@@ -245,19 +243,7 @@ const ToolVideoItem = ({ vd, setShowContentTimeline, selected = false }) => {
          }`}
       >
          <div className={styles.videoImg}>
-            {/* <VideoScreenshot
-               video={vd.video.url}
-               width={54}
-               height={30}
-               onTakeScreenShot={(url) => console.log(url)}
-            /> */}
-            <VideoImageThumbnail
-               videoUrl={vd.video.url}
-               alt={vd.video.name}
-               width={54}
-               height={30}
-               cors={true}
-            />
+            <img src={vd.video.thumbnail} alt={vd.video.name} />
          </div>
          <div
             className={`${styles.toolLibraryItemName} ${

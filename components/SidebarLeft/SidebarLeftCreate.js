@@ -7,18 +7,28 @@ import styles from "../../styles/components/SidebarLeft/SidebarLeft.module.sass"
 import { toast } from "react-toastify";
 
 import Share from "@/components/Campaign/Share";
+import useCampaign from "hooks/campaign";
 
 const SidebarLeftCreate = ({ screen, renderScreen }) => {
    const router = useRouter();
+   const { campaignId } = router.query;
    const dispatch = useDispatch();
+   const { remove: removeCampaign } = useCampaign();
    const showPopup = (popupProps) =>
       dispatch({ type: "SHOW_POPUP", ...popupProps });
    const name = useSelector((state) => state.campaign.name);
+   const contents = useSelector((state) => state.campaign.contents);
 
    const [displayShare, showShare] = useState(false);
    const handleClickDashboard = () => {
-      if (!name.length) {
-         return toast.error("Please enter video title.");
+      if (!name.length && !contents.length) {
+         removeCampaign(
+            campaignId,
+            () => router.push("/app"),
+            (err) => toast.error(err.message)
+         );
+      } else if (!name.length && contents.length) {
+         toast.error("Please enter video title.");
       } else {
          router.push("/app");
       }

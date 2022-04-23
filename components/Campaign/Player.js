@@ -15,6 +15,8 @@ import Placeholder from "./Placeholder";
 import Overlays from "./Overlays";
 import OverlaysStatic from "./OverlaysVideoPlayer";
 import { mainAPI } from "@/plugins/axios";
+import useGenerateThumbnail from "hooks/useGenerateThumbnail";
+import { uploadThumbnailFile } from "utils";
 
 const Player = () => {
    const dispatch = useDispatch();
@@ -22,10 +24,16 @@ const Player = () => {
 
    const endScreen = useSelector((state) => state.campaign.endScreen);
    const duration = useSelector((state) => state.campaign.duration);
+   const selectedContent = useSelector(
+      (state) => state.campaign.selectedContent
+   );
    const helloScreen = useSelector((state) => state.campaign.helloScreen);
    const isPlaying = useSelector((state) => state.campaign.isPlaying);
    const logo = useSelector((state) => state.campaign.logo);
    const preview = useSelector((state) => state.campaign.preview);
+   const createThumbnailRedux = useSelector(
+      (state) => state.campaign.createThumbnail
+   );
 
    const previewVideo = useSelector((state) => state.campaign.previewVideo);
    const progression = useSelector((state) => state.campaign.progression);
@@ -44,6 +52,7 @@ const Player = () => {
    const [resume, setResume] = useState(false);
    const [isPlayPreview, setIsPlayPreview] = useState(false);
    const [ref, setRef] = useState();
+   const { generateTemplateThumbnail } = useGenerateThumbnail();
 
    useEffect(() => {
       setResume(
@@ -74,6 +83,44 @@ const Player = () => {
       if (count < 0) count = 0;
       return count;
    };
+
+   useEffect(() => {
+      // Upload Thumbnail For Template
+      (async () => {
+         if (
+            createThumbnailRedux &&
+            ref &&
+            selectedContent &&
+            selectedContent.type === "screen"
+         ) {
+            dispatch({ type: "SET_CREATE_TEMPLATE_THUMBNAIL", data: false });
+            const { thumbnail } = await generateTemplateThumbnail(
+               "PlayerContainer"
+            );
+            const { url } = await uploadThumbnailFile(thumbnail);
+            await mainAPI.patch(`/templates/${selectedContent._id}`, {
+               ...selectedContent,
+               thumbnail: url,
+            });
+            const array = contents.slice();
+            const indexOfTemplate = array.findIndex(
+               (i) => i._id === selectedContent._id
+            );
+            array[indexOfTemplate] = {
+               ...array[indexOfTemplate],
+               thumbnail: url,
+            };
+            dispatch({
+               type: "DRAG_ITEM",
+               data: true,
+            });
+            dispatch({
+               type: "SET_VIDEO",
+               data: array,
+            });
+         }
+      })();
+   }, [createThumbnailRedux, ref, selectedContent]);
 
    useEffect(() => {
       const handleSeeking = () =>
@@ -243,6 +290,10 @@ const Player = () => {
       let array = contents.slice();
       array[indexArr] = obj;
       dispatch({
+         type: "DRAG_ITEM",
+         data: true,
+      });
+      dispatch({
          type: "SET_VIDEO",
          data: array,
       });
@@ -320,7 +371,6 @@ const Player = () => {
             setIsPlayPreview(true);
          }
       } else {
-         console.log("HI");
          dispatch({ type: "HIDE_PREVIEW" });
          dispatch({ type: isPlaying ? "PAUSE" : "PLAY" });
          setResume(true);
@@ -338,7 +388,7 @@ const Player = () => {
                overflow: "visible",
             }}
          >
-            <div ref={playerRef} className={styles.video}>
+            <div ref={playerRef} className={styles.video} id="player-id">
                {preview.show ? (
                   <div>
                      {preview.element === "record" && (
@@ -351,6 +401,7 @@ const Player = () => {
                               contents={[preview.data]}
                               playerWidth={playerWidth}
                               activeContent={0}
+                              containerRef={playerRef.current}
                            />
                         </>
                      )}

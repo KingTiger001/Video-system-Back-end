@@ -14,7 +14,6 @@ export const textPresets = [0];
 export const linkPresets = [0, 1, 2, 3, 4];
 
 export const renderPresetElement = (elem, type) => {
-   console.log(elem.preset);
    if (type === "text") {
       switch (elem.preset) {
          case 1:

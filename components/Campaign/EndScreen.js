@@ -109,6 +109,10 @@ const EndScreen = ({ contact, data = {} }) => {
       let array = contents.slice();
       array[indexArr] = obj;
       dispatch({
+         type: "DRAG_ITEM",
+         data: true,
+      });
+      dispatch({
          type: "SET_VIDEO",
          data: array,
       });

@@ -490,7 +490,7 @@ const Campaign = ({ me }) => {
       addTemplateToDatabase(template, () => {
          dispatch({
             type: "SET_TEMPLATE_LIST",
-            data: [...templateList, template],
+            data: [template, ...templateList],
          });
       });
       array.push(template);
@@ -505,6 +505,10 @@ const Campaign = ({ me }) => {
       dispatch({ type: "CALC_VIDEOS_OFFSET", data: array });
       dispatch({ type: "SET_VIDEOS_REF" });
       dispatch({ type: "SET_PREVIEW_END_SCREEN", data: template });
+
+      // Create Thumbnail
+      dispatch({ type: "SET_CREATE_TEMPLATE_THUMBNAIL", data: true });
+
       dispatch({ type: "DISPLAY_ELEMENT", data: "endScreen" });
       getVideos(true, true);
       dispatch({

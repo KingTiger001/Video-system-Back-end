@@ -32,9 +32,16 @@ const RangeSliderContainer = styled.div`
 const ToolItemText = () => {
    // States
    const [filterFontFamiles, setFilterFontFamiles] = useState(textFamilies);
+   const [bold, setBold] = useState(false);
+   const [italic, setItalic] = useState(false);
+   const [underline, setUnderline] = useState(false);
+   const [left, setLeft] = useState(false);
+   const [center, setCenter] = useState(false);
+   const [right, setRight] = useState(false);
 
    const textareaRef = useRef(null);
    const colorpickerRef = useRef(null);
+
    useEffect(() => {
       function handleClickOutside(event) {
          if (
@@ -57,7 +64,7 @@ const ToolItemText = () => {
       dispatch({ type: "SHOW_POPUP", ...popupProps });
 
    const txtColor = "#898989";
-   const txtSize = 1;
+   const txtSize = textSizes[0];
 
    const [textFocused, setTextFocused] = useState(false);
    const [showContentTxt, setShowContentTxt] = useState(false);
@@ -65,6 +72,40 @@ const ToolItemText = () => {
       index: null,
       option: null,
    });
+
+   useEffect(() => {
+      if (textFocused) {
+         setBold(textFocused.bold);
+         setItalic(textFocused.italic);
+         setUnderline(textFocused.underline);
+         setAlign(textFocused.textAlign);
+      }
+   }, [textFocused, textFocused.position]);
+
+   const setAlign = (align) => {
+      switch (align) {
+         case "right":
+            setRight(true);
+            setLeft(false);
+            setCenter(false);
+            break;
+         case "left":
+            setRight(false);
+            setLeft(true);
+            setCenter(false);
+            break;
+         case "center":
+            setRight(false);
+            setLeft(false);
+            setCenter(true);
+            break;
+         case "reset":
+            setRight(false);
+            setLeft(false);
+            setCenter(false);
+            break;
+      }
+   };
 
    const popup = useSelector((state) => state.popup);
    const selectedContent = useSelector(
@@ -88,13 +129,13 @@ const ToolItemText = () => {
       if (indexArr !== -1) {
          array[indexArr] = obj;
          dispatch({
+            type: "DRAG_ITEM",
+            data: true,
+         });
+         dispatch({
             type: "SET_VIDEO",
             data: array,
          });
-         dispatch({
-         type: "DRAG_ITEM",
-         data: true,
-      });
       }
    };
 
@@ -105,8 +146,12 @@ const ToolItemText = () => {
       if (index !== -1) {
          obj.texts[index].value = value;
       }
+
       if (obj.type === "screen")
          await mainAPI.patch(`/templates/${obj._id}`, obj);
+
+      // Create Thumbnail
+      dispatch({ type: "SET_CREATE_TEMPLATE_THUMBNAIL", data: true });
    };
 
    const handleChangeSize = async (value) => {
@@ -116,23 +161,22 @@ const ToolItemText = () => {
       if (index < 0) return;
       obj.texts[index].fontSize = value;
 
-      if (obj.type === "screen")
-         await mainAPI.patch(`/templates/${obj._id}`, obj);
-
       const indexArr = contents.findIndex(
          (content) => content._id === selectedContent._id
       );
       let array = contents.slice();
       array[indexArr] = obj;
-
-      dispatch({
-         type: "SET_VIDEO",
-         data: array,
-      });
       dispatch({
          type: "DRAG_ITEM",
          data: true,
       });
+      dispatch({
+         type: "SET_VIDEO",
+         data: array,
+      });
+
+      if (obj.type === "screen")
+         await mainAPI.patch(`/templates/${obj._id}`, obj);
    };
 
    const handleChangeFont = async (value) => {
@@ -148,15 +192,17 @@ const ToolItemText = () => {
       );
       let array = contents.slice();
       array[indexArr] = obj;
-
-      dispatch({
-         type: "SET_VIDEO",
-         data: array,
-      });
       dispatch({
          type: "DRAG_ITEM",
          data: true,
       });
+      dispatch({
+         type: "SET_VIDEO",
+         data: array,
+      });
+
+      // Create Thumbnail
+      dispatch({ type: "SET_CREATE_TEMPLATE_THUMBNAIL", data: true });
    };
 
    const toggleStyle = async (type) => {
@@ -165,8 +211,33 @@ const ToolItemText = () => {
 
       const target = obj.texts[index][type];
 
-      if (target) obj.texts[index][type] = false;
-      else obj.texts[index][type] = true;
+      if (target) {
+         obj.texts[index][type] = false;
+         switch (type) {
+            case "bold":
+               setBold(false);
+               break;
+            case "italic":
+               setItalic(false);
+               break;
+            case "underline":
+               setUnderline(false);
+               break;
+         }
+      } else {
+         obj.texts[index][type] = true;
+         switch (type) {
+            case "bold":
+               setBold(true);
+               break;
+            case "italic":
+               setItalic(true);
+               break;
+            case "underline":
+               setUnderline(true);
+               break;
+         }
+      }
 
       if (obj.type === "screen")
          await mainAPI.patch(`/templates/${obj._id}`, obj);
@@ -176,15 +247,17 @@ const ToolItemText = () => {
       );
       let array = contents.slice();
       array[indexArr] = obj;
-
-      dispatch({
-         type: "SET_VIDEO",
-         data: array,
-      });
       dispatch({
          type: "DRAG_ITEM",
          data: true,
       });
+      dispatch({
+         type: "SET_VIDEO",
+         data: array,
+      });
+
+      // Create Thumbnail
+      dispatch({ type: "SET_CREATE_TEMPLATE_THUMBNAIL", data: true });
    };
 
    const textAlign = async (align) => {
@@ -199,13 +272,18 @@ const ToolItemText = () => {
       switch (align) {
          case "right":
             obj.texts[index].position = { x: 90, y: position.y };
+            setAlign("right");
             break;
          case "left":
             obj.texts[index].position = { x: 10, y: position.y };
+            setAlign("left");
             break;
          case "center":
             obj.texts[index].position = { x: 50, y: position.y };
+            setAlign("center");
             break;
+         default:
+            setAlign("reset");
       }
 
       if (obj.type === "screen")
@@ -218,13 +296,16 @@ const ToolItemText = () => {
       array[indexArr] = obj;
 
       dispatch({
-         type: "SET_VIDEO",
-         data: array,
-      });
-      dispatch({
          type: "DRAG_ITEM",
          data: true,
       });
+      dispatch({
+         type: "SET_VIDEO",
+         data: array,
+      });
+
+      // Create Thumbnail
+      dispatch({ type: "SET_CREATE_TEMPLATE_THUMBNAIL", data: true });
    };
 
    const handleAddVariables = async (value, id) => {
@@ -239,6 +320,10 @@ const ToolItemText = () => {
       let array = contents.slice();
       array[indexArr] = obj;
 
+      dispatch({
+         type: "DRAG_ITEM",
+         data: true,
+      });
       dispatch({
          type: "SET_VIDEO",
          data: array,
@@ -261,13 +346,16 @@ const ToolItemText = () => {
          await mainAPI.patch(`/templates/${obj._id}`, obj);
 
       dispatch({
-         type: "SET_VIDEO",
-         data: array,
-      });
-      dispatch({
          type: "DRAG_ITEM",
          data: true,
       });
+      dispatch({
+         type: "SET_VIDEO",
+         data: array,
+      });
+
+      // Create Thumbnail
+      dispatch({ type: "SET_CREATE_TEMPLATE_THUMBNAIL", data: true });
    };
 
    const handleRemove = async (id) => {
@@ -286,13 +374,16 @@ const ToolItemText = () => {
          await mainAPI.patch(`/templates/${obj._id}`, obj);
 
       dispatch({
-         type: "SET_VIDEO",
-         data: array,
-      });
-      dispatch({
          type: "DRAG_ITEM",
          data: true,
       });
+      dispatch({
+         type: "SET_VIDEO",
+         data: array,
+      });
+
+      // Create Thumbnail
+      dispatch({ type: "SET_CREATE_TEMPLATE_THUMBNAIL", data: true });
    };
 
    const handleAdd = async () => {
@@ -308,6 +399,7 @@ const ToolItemText = () => {
       };
       setTextFocused(newText);
       obj.texts.push(newText);
+
       if (obj.type === "screen")
          await mainAPI.patch(`/templates/${obj._id}`, obj);
       dispatch({
@@ -315,6 +407,9 @@ const ToolItemText = () => {
          data: obj,
       });
       setShowContentTxt(true);
+
+      // Create Thumbnail
+      dispatch({ type: "SET_CREATE_TEMPLATE_THUMBNAIL", data: true });
    };
 
    const toggleAdd = (show = null) => {
@@ -325,7 +420,11 @@ const ToolItemText = () => {
    };
 
    useEffect(() => {
-      if (selectedContent.texts.length) {
+      if (
+         selectedContent &&
+         selectedContent.texts &&
+         selectedContent.texts.length
+      ) {
          setShowContentTxt(true);
          setTextFocused(selectedContent.texts[0]);
       }
@@ -352,12 +451,12 @@ const ToolItemText = () => {
       array[indexArr] = obj;
 
       dispatch({
-         type: "SET_VIDEO",
-         data: array,
-      });
-      dispatch({
          type: "DRAG_ITEM",
          data: true,
+      });
+      dispatch({
+         type: "SET_VIDEO",
+         data: array,
       });
    };
 
@@ -482,13 +581,16 @@ const ToolItemText = () => {
             <div
                className={`${styles.toolItemName} ${
                   showContentTxt &&
+                  selectedContent &&
                   selectedContent.links &&
                   selectedContent.links.length > 0
                      ? styles.expand
                      : ""
                }`}
                onClick={
-                  selectedContent.texts && selectedContent.texts.length > 0
+                  selectedContent &&
+                  selectedContent.texts &&
+                  selectedContent.texts.length > 0
                      ? toggleAdd
                      : handleAdd
                }
@@ -500,12 +602,14 @@ const ToolItemText = () => {
                <>
                   <div className={styles.toolItemContent}>
                      <div className={styles.listItems}>
-                        {selectedContent.texts &&
+                        {selectedContent &&
+                           selectedContent.texts &&
                            selectedContent.texts.length > 0 && (
                               <div className={styles.toolItemOptions}>
                                  <div className={styles.styleOption}>
                                     <div
                                        className={`${styles.styleOptionItem} ${styles.fontFamily}`}
+                                       style={{width:"initial"}}
                                     >
                                        <select
                                           onChange={(e) =>
@@ -532,6 +636,7 @@ const ToolItemText = () => {
                                           value={textFocused.fontSize}
                                           className={styles.select}
                                           disabled={!textFocused}
+                                          style={{width:"55px"}}
                                        >
                                           {textSizes.map((f) => (
                                              <option value={f.value}>
@@ -545,13 +650,17 @@ const ToolItemText = () => {
                                     >
                                        <button
                                           onClick={() => toggleStyle("bold")}
-                                          className={styles.textOptionBtn}
+                                          className={`${styles.textOptionBtn} ${
+                                             bold ? styles.active : ""
+                                          }`}
                                        >
                                           B
                                        </button>
                                        <button
                                           onClick={() => toggleStyle("italic")}
-                                          className={styles.textOptionBtn}
+                                          className={`${styles.textOptionBtn} ${
+                                             italic ? styles.active : ""
+                                          }`}
                                        >
                                           /
                                        </button>
@@ -559,7 +668,9 @@ const ToolItemText = () => {
                                           onClick={() =>
                                              toggleStyle("underline")
                                           }
-                                          className={`${styles.textOptionBtn} ${styles.underlineTxt}`}
+                                          className={`${styles.textOptionBtn} ${
+                                             styles.underlineTxt
+                                          } ${underline ? styles.active : ""}`}
                                        >
                                           U
                                        </button>
@@ -570,10 +681,7 @@ const ToolItemText = () => {
                                        <button
                                           onClick={() => textAlign("left")}
                                           className={`${styles.textOptionBtn} ${
-                                             textFocused.position &&
-                                             textFocused.position.x === 10
-                                                ? styles.active
-                                                : ""
+                                             left ? styles.active : ""
                                           }`}
                                        >
                                           <img src="/assets/campaign/alignLeft.svg"></img>
@@ -581,10 +689,7 @@ const ToolItemText = () => {
                                        <button
                                           onClick={() => textAlign("center")}
                                           className={`${styles.textOptionBtn} ${
-                                             textFocused.position &&
-                                             textFocused.position.x === 50
-                                                ? styles.active
-                                                : ""
+                                             center ? styles.active : ""
                                           }`}
                                        >
                                           <img src="/assets/campaign/alignCenter.svg"></img>
@@ -592,10 +697,7 @@ const ToolItemText = () => {
                                        <button
                                           onClick={() => textAlign("right")}
                                           className={`${styles.textOptionBtn} ${
-                                             textFocused.position &&
-                                             textFocused.position.x === 90
-                                                ? styles.active
-                                                : ""
+                                             right ? styles.active : ""
                                           }`}
                                        >
                                           <img src="/assets/campaign/alignRight.svg"></img>
@@ -627,7 +729,8 @@ const ToolItemText = () => {
                                  </div>
                               </div>
                            )}
-                        {selectedContent.texts &&
+                        {selectedContent &&
+                        selectedContent.texts &&
                         selectedContent.texts.length > 0
                            ? selectedContent.texts.map((text, i) =>
                                 renderText(text, i)
@@ -648,7 +751,9 @@ const ToolItemText = () => {
               <img src={"/assets/common/addRounded.svg"} />
             </div> */}
                   </div>
-                  {selectedContent.texts && selectedContent.texts.length > 0 ? (
+                  {selectedContent &&
+                  selectedContent.texts &&
+                  selectedContent.texts.length > 0 ? (
                      <div className={styles.toolItemAdd} onClick={handleAdd}>
                         <img src="/assets/campaign/addTextOrange.svg" />
                      </div>

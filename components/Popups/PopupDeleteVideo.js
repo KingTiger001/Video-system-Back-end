@@ -60,7 +60,7 @@ const PopupDeleteVideo = ({ onDone }) => {
       }
    };
 
-   const label = popup.data.type === "screen" ? "screen" : "video";
+   const label = popup.data.type === "screen" ? "screen" : "media";
    return (
       <Popup title={`Delete a ${label}`}>
          <div className={styles.body}>

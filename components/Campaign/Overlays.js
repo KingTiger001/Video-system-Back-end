@@ -4,6 +4,7 @@ import styles from "@/styles/components/Campaign/Player.module.sass";
 import { useState, useRef, useEffect } from "react";
 import { renderPresetElement } from "./Presets";
 import { textSizes } from "data/fonts";
+import { calcPositionPersent } from "utils";
 
 const offsetX = 1;
 const offsetY = 1;
@@ -12,17 +13,6 @@ const Overlays = ({ playerRef }) => {
    const dispatch = useDispatch();
    const contents = useSelector((state) => state.campaign.contents);
    const currentOverlay = useSelector((state) => state.campaign.currentOverlay);
-
-   const convertToRelative = (fontSize) => {
-      switch (fontSize) {
-         case 0.5:
-            return textSizes[0];
-         case 1:
-            return textSizes[0];
-         default:
-            return fontSize;
-      }
-   };
 
    const updateContents = (id, position, type) => {
       const obj = { ...contents[currentOverlay] };
@@ -73,28 +63,22 @@ const Overlays = ({ playerRef }) => {
    };
 
    const renderElement = (elem, type) => {
-      let obj = { ...elem };
-      obj.fontSize = convertToRelative(elem.fontSize);
-
-      if (playerRef !== undefined)
-         return (
-            <Draggable
-               key={obj._id}
-               playerRef={playerRef}
-               defaultPosition={obj.position}
-               onMouseUp={(position) => updateContents(obj._id, position, type)}
+      return (
+         <Draggable
+            key={elem._id}
+            playerRef={playerRef}
+            defaultPosition={elem.position}
+            onMouseUp={(position) => updateContents(elem._id, position, type)}
+         >
+            <div
+               className={
+                  type === "text" ? styles.textDraggable : styles.linkDraggable
+               }
             >
-               <div
-                  className={
-                     type === "text"
-                        ? styles.textDraggable
-                        : styles.linkDraggable
-                  }
-               >
-                  {renderPresetElement(obj, type)}
-               </div>
-            </Draggable>
-         );
+               {renderPresetElement(elem, type)}
+            </div>
+         </Draggable>
+      );
    };
    if (currentOverlay !== -1 && contents[currentOverlay]) {
       return (
@@ -203,42 +187,17 @@ const Draggable = ({ children, playerRef, defaultPosition, onMouseUp }) => {
       e.preventDefault();
    };
 
-   const calcPositionPersent = (x, y, element) => {
-      if (!element) return;
-      const container = document.getElementById("PlayerContainer");
-      const widthOfContainer = container.offsetWidth;
-      const heightOfContainer = container.offsetHeight;
-      const width = element.offsetWidth;
-      const height = element.offsetHeight;
-      const widthWithPresent = (width / widthOfContainer) * 100;
-      const heightWithPresent = (height / heightOfContainer) * 100;
-      const isBiggerThanX = offsetX + widthWithPresent / 2;
-      const isSmallerThanX = 100 - offsetX - widthWithPresent / 2;
-      const isBiggerThanY = offsetY + heightWithPresent / 2;
-      const isSmallerThanY = 100 - offsetY - heightWithPresent / 2;
-
-      return {
-         left: `${
-            isBiggerThanX > x
-               ? isBiggerThanX
-               : isSmallerThanX < x
-               ? isSmallerThanX
-               : x
-         }%`,
-         top: `${
-            isBiggerThanY > y
-               ? isBiggerThanY
-               : isSmallerThanY < y
-               ? isSmallerThanY
-               : y
-         }%`,
-      };
-   };
-
    return (
       <div
          ref={ref}
-         style={calcPositionPersent(position.x, position.y, ref.current)}
+         style={calcPositionPersent(
+            offsetX,
+            offsetY,
+            position.x,
+            position.y,
+            ref.current,
+            playerRef
+         )}
          className={styles.draggable}
          // draggable
          // onDragEnd={handleDrag}

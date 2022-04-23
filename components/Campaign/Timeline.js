@@ -128,6 +128,10 @@ const Timeline = ({ handlecreate }) => {
       data.map((elem, i) => {
          elem.position = i;
       });
+      dispatch({
+         type: "DRAG_ITEM",
+         data: true,
+      });
       dispatch({ type: "SET_VIDEO", data });
       dispatch({ type: "CALC_VIDEOS_OFFSET", data });
       dispatch({ type: "SET_VIDEOS_REF" });

@@ -429,6 +429,7 @@ const VideoPlayer = ({
                contents={contents}
                activeContent={0}
                playerWidth={width}
+               containerRef={playerRef.current}
             />
          );
       }
@@ -456,7 +457,6 @@ const VideoPlayer = ({
          >
             <video
                className={styles.videoElement}
-               height="100%"
                width="100%"
                key={finalVideo.url}
                onCanPlay={() => setShowDivPlayButton(true)}
@@ -477,6 +477,7 @@ const VideoPlayer = ({
                   contents={contents}
                   activeContent={activeContent}
                   playerWidth={width}
+                  containerRef={playerRef.current}
                />
             )}
 

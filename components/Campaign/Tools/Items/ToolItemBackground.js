@@ -42,9 +42,16 @@ const ToolItemBackground = () => {
       array[indexArr] = obj;
 
       dispatch({
+         type: "DRAG_ITEM",
+         data: true,
+      });
+      dispatch({
          type: "SET_VIDEO",
          data: array,
       });
+      
+            // Create Thumbnail
+      dispatch({ type: "SET_CREATE_TEMPLATE_THUMBNAIL", data: true });
    };
 
    return (

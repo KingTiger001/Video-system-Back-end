@@ -1,140 +1,161 @@
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 
 import styles from "@/styles/components/Campaign/Player.module.sass";
-import {useEffect, useState} from "react";
-import {renderPresetElement} from "./Presets";
+import { useEffect, useRef, useState } from "react";
+import { renderPresetElement } from "./Presets";
+import { calcPositionPersent } from "utils";
 
-import {mainAPI} from "@/plugins/axios";
+import { mainAPI } from "@/plugins/axios";
 
-const Overlays = ({contact, contents, activeContent, playerWidth, fromPlayer}) => {
-    const router = useRouter();
+const Overlays = ({
+   contact,
+   contents,
+   activeContent,
+   playerWidth,
+   fromPlayer,
+   containerRef,
+}) => {
+   const router = useRouter();
+   const offsetX = 1;
+   const offsetY = 1;
 
-    const createLinkAnalytic = (linkId) => {
-        const campaignId = router.query.campaignId;
-        const contactId = router.query.c;
-        mainAPI.post(
-            `/analytics/${campaignId}/clickedLink?c=${contactId}&l=${linkId}`
-        );
-    };
-    const replaceVariables = (text) => {
-        if (!contact) {
-            return text;
-        }
-        const matches = text.match(/(?:\{\{)(.*?)(?:\}\})/gi);
-        if (!matches || matches.length <= 0) {
-            return text;
-        }
-        matches.map((match) => {
-            text = text.replace(match, contact[match.replace(/{|}/g, "")] || "");
-        });
-        return text;
-    };
+   const createLinkAnalytic = (linkId) => {
+      const campaignId = router.query.campaignId;
+      const contactId = router.query.c;
+      mainAPI.post(
+         `/analytics/${campaignId}/clickedLink?c=${contactId}&l=${linkId}`
+      );
+   };
+   const replaceVariables = (text) => {
+      if (!contact) {
+         return text;
+      }
+      const matches = text.match(/(?:\{\{)(.*?)(?:\}\})/gi);
+      if (!matches || matches.length <= 0) {
+         return text;
+      }
+      matches.map((match) => {
+         text = text.replace(match, contact[match.replace(/{|}/g, "")] || "");
+      });
+      return text;
+   };
 
-    const convertToUrl = (url) => {
-        // return url;
-        return url.includes("https://") || url.includes("http://")
-            ? url
-            : `https://${url}`;
-    };
+   const convertToUrl = (url) => {
+      // return url;
+      return url.includes("https://") || url.includes("http://")
+         ? url
+         : `https://${url}`;
+   };
 
-    const convertToRelative = (fontSize) => {
-        return playerWidth / (25 / fontSize);
-    };
+   const [isMobile, setIsMobile] = useState(false);
 
-    const [isMobile, setIsMobile] = useState(false);
+   useEffect(() => {
+      if (
+         navigator &&
+         /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+            navigator.userAgent
+         )
+      ) {
+         // console.log("user agent is mobile");
+         setIsMobile(true);
+      } else {
+         // console.log("user agent is not mobile");
+         setIsMobile(false);
+      }
+   }, []);
 
-    useEffect(() => {
-        if (navigator && (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))) {
-            // console.log("user agent is mobile");
-            setIsMobile(true);
-        } else {
-            // console.log("user agent is not mobile");
-            setIsMobile(false);
-        }
-    });
+   const renderElement = (elem, type) => {
+      let obj = { ...elem };
+      obj.value = replaceVariables(obj.value);
 
-
-    const renderElement = (elem, type) => {
-        let obj = {...elem};
-        obj.value = replaceVariables(obj.value);
-        obj.fontSize = convertToRelative(obj.fontSize);
-        return (
+      return (
+         <Dragable
+            position={elem.position}
+            onClick={() =>
+               type === "link"
+                  ? obj.url.length
+                     ? window.open(convertToUrl(obj.url), "_blank")
+                     : "" && createLinkAnalytic(obj._id)
+                  : null
+            }
+         >
             <div
-                onClick={() =>
-                    type === "link"
-                        ? window.open(convertToUrl(obj.url), "_blank") &&
-                        createLinkAnalytic(obj._id)
-                        : null
-                }
-                key={obj._id}
-                style={{
-                    left: `${obj.position.x}%`,
-                    top: `${obj.position.y}%`,
-                    position: "absolute",
-                    // transform: (obj.fontSize>60)? "translate(-46%, -43%)": "translate(-50%,-50%)",
-                    transform: "translate(-50%,-50%)",
-                    //width: (obj.fontSize>60 || isMobile)? "100%": "",
-                    //textAlign: (obj.fontSize>60 || isMobile)? "center": "",
-                    zIndex: 1,
-                    textAlign: 'center',
-                    width: '100%',
-                }}
+               className={
+                  type === "text" ? styles.textDraggable : styles.linkDraggable
+               }
             >
-                <div
-                    className={
-                        type === "text" ? styles.textDraggable : styles.linkDraggable
-                    }
-                >
-                    {renderPresetElement(obj, type)}
-                </div>
+               {renderPresetElement(obj, type)}
             </div>
-        );
-    };
+         </Dragable>
+      );
+   };
 
-    if (fromPlayer) {
-        return (
-            <div
-                className="xxxx"
-                style={{
-                    width: "100%",
-                    height: "100%",
-                    position: "relative",
-                    background: contents[0].screen.background.color,
-                }}
-            >
+   const Dragable = ({ children, position: defaultPosition, ...rest }) => {
+      const ref = useRef();
+      const [position, setPosition] = useState({ x: 0, y: 0 });
 
-                {contents[activeContent].texts.map((text) =>
-                    renderElement(text, "text")
-                )}
-                {contents[activeContent].links.map((link) =>
-                    renderElement(link, "link")
-                )}
-            </div>
+      useEffect(() => {
+         setPosition(defaultPosition);
+      }, [defaultPosition]);
 
-        )
-    }
-    if (
-        !fromPlayer
-        &&
-        activeContent !== -1 &&
-        contents[activeContent] &&
-        Object.keys(contents[activeContent]).length > 0
-    ) {
+      return (
+         <div
+            ref={ref}
+            style={calcPositionPersent(
+               offsetX,
+               offsetY,
+               position.x,
+               position.y,
+               ref.current,
+               containerRef
+            )}
+            className={styles.draggable}
+            {...rest}
+         >
+            {children}
+         </div>
+      );
+   };
 
-
-        return (
-            <>
-                {contents[activeContent].texts.map((text) =>
-                    renderElement(text, "text")
-                )}
-                {contents[activeContent].links.map((link) =>
-                    renderElement(link, "link")
-                )}
-            </>
-        );
-    } else {
-        return null;
-    }
+   if (fromPlayer) {
+      return (
+         <div
+            className="xxxx"
+            style={{
+               width: "100%",
+               height: "100%",
+               position: "relative",
+               background: contents[0].screen.background.color,
+            }}
+         >
+            {contents[activeContent].texts.map((text) =>
+               renderElement(text, "text")
+            )}
+            {contents[activeContent].links.map((link) =>
+               renderElement(link, "link")
+            )}
+         </div>
+      );
+   }
+   if (
+      !fromPlayer &&
+      activeContent !== -1 &&
+      contents[activeContent] &&
+      Object.keys(contents[activeContent]).length > 0
+   ) {
+      return (
+         <>
+            {contents[activeContent].texts.map((text) =>
+               renderElement(text, "text")
+            )}
+            {contents[activeContent].links.map((link) =>
+               renderElement(link, "link")
+            )}
+         </>
+      );
+   } else {
+      return null;
+   }
 };
 
 export default Overlays;

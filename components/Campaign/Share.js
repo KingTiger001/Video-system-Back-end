@@ -26,6 +26,9 @@ import {
    TwitterShareButton,
    WhatsappShareButton,
 } from "react-share";
+import { uploadThumbnailFile } from "utils";
+import useCampaign from "hooks/campaign";
+import { useRouter } from "next/router";
 
 const providers = {
    GOOGLE: "GOOGLE",
@@ -363,6 +366,9 @@ const Share = ({
    const formDetailsRef = useRef(null);
    const textareaMessageRef = useRef(null);
    const variablesPopupRef = useRef(null);
+
+   const { create: createCampaign } = useCampaign();
+   const router = useRouter();
 
    const msalInstance = new PublicClientApplication(msalConfig);
    const [sendVia, setSendVia] = useState({
@@ -710,13 +716,9 @@ const Share = ({
 
    const uploadThumbnail = async (file) => {
       setThumbnailFile(file);
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("folder", "thumbnails");
-      formData.append("width", 800);
       try {
          setThumbnailLoading(true);
-         const { data: url } = await mediaAPI.post("/images", formData);
+         const { url } = await uploadThumbnailFile(file);
          if (campaign.share && campaign.share.thumbnail) {
             await mediaAPI.delete("/", {
                data: {
@@ -767,6 +769,11 @@ const Share = ({
          return false;
       }
    }
+   const handleCreateVideo = () => {
+      createCampaign("", (campaign) => {
+         location.replace(`/app/campaigns/${campaign._id}`);
+      });
+   };
 
    const setToClipboard = () => {
       const data = [
@@ -776,7 +783,7 @@ const Share = ({
                   `
                <ifram style="position: relative">
                   <div style="position: relative; display: inline-block;">
-                    <a href="https://app.myfomo.io/campaigns/${campaign?._id}?thumbnail=1">
+                    <a href="https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1">
                       <img
                         src="${campaign?.share?.thumbnail}"
                         width="230px"
@@ -785,7 +792,7 @@ const Share = ({
                     </a>
                   </div>
                   <h4>
-                    <a href="https://app.myfomo.io/campaigns/${campaign?._id}?thumbnail=1">${campaign?.name}</a>
+                    <a href="https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1">${campaign?.name}</a>
                   </h4>
                 </ifram>
                 `,
@@ -1084,7 +1091,7 @@ const Share = ({
    const handleCopiedLink = () => {
       setCopied(true);
       navigator.clipboard.writeText(
-         `https://app.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`
+         `https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`
       );
       setTimeout(() => {
          setCopied(false);
@@ -1455,11 +1462,7 @@ const Share = ({
                               <div
                                  className={styles.createVideo}
                                  style={{}}
-                                 onClick={() => {
-                                    onClose();
-                                    hidePopup();
-                                    onCreateCampaignClicked();
-                                 }}
+                                 onClick={handleCreateVideo}
                               >
                                  <img src="/assets/common/videos.svg" />
                               </div>
@@ -1559,7 +1562,7 @@ const Share = ({
                                     >
                                        <LinkedinShareButton
                                           disabled={!campaign}
-                                          url={`https://app.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
+                                          url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
                                        >
                                           <img
                                              className={styles.socialImg}
@@ -1570,7 +1573,7 @@ const Share = ({
 
                                        <TwitterShareButton
                                           disabled={!campaign}
-                                          url={`https://app.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
+                                          url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
                                        >
                                           <img
                                              className={styles.socialImg}
@@ -1581,7 +1584,7 @@ const Share = ({
 
                                        <FacebookShareButton
                                           disabled={!campaign}
-                                          url={`https://app.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
+                                          url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
                                        >
                                           <img
                                              className={styles.socialImg}
@@ -1592,7 +1595,7 @@ const Share = ({
 
                                        <WhatsappShareButton
                                           disabled={!campaign}
-                                          url={`https://app.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
+                                          url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
                                        >
                                           <img
                                              className={styles.socialImg}

@@ -70,6 +70,7 @@ const ToolScreens = () => {
    useEffect(() => {
       if (selectedContent && selectedContent.type === "screen")
          setShowEdit(true);
+      else setShowEdit(false);
    }, [selectedContent]);
 
    const selectScreen = (elem, array) => {
@@ -212,6 +213,7 @@ const ToolScreens = () => {
       const texts = data.texts.length > 0 ? data.texts : [];
       const links = data.links.length > 0 ? data.links : [];
       array.push({
+         ...data,
          _id: id,
          position: array.length,
          type: "screen",
@@ -398,9 +400,7 @@ const ToolScreens = () => {
                   }}
                />
             )}
-            {!showEdit &&
-            selectedContent &&
-            selectedContent.type !== "video" ? (
+            {!showEdit && !selectedContent ? (
                <div className={styles.editSection}>
                   <span className={styles.toolTitleSection}>
                      {/* <div onClick={closeToolbox} className={styles.backArrow}>
@@ -424,7 +424,9 @@ const ToolScreens = () => {
                      Timeline
                   </p>
                   <div className={styles.videosList}>
-                     {selectedScreens.map((obj) => renderScreenItem(obj))}
+                     {contents.length
+                        ? selectedScreens.map((obj) => renderScreenItem(obj))
+                        : ""}
                   </div>
                   <p className={styles.toolSubtitle}>Library</p>
                   <div className={styles.videosList}>

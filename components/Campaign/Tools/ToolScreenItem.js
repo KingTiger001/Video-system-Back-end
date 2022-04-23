@@ -45,6 +45,7 @@ const ToolScreenItem = ({ vd, setShowContentTimeline, selected = false }) => {
       const array = contents.slice();
       console.log("ADD ", data);
       array.push({
+         ...data,
          _id: data._id,
          position: array.length,
          type: "screen",
@@ -200,6 +201,46 @@ const ToolScreenItem = ({ vd, setShowContentTimeline, selected = false }) => {
       });
    };
 
+   const handelPreview = () => {
+      const index = contents.findIndex(
+         (content) => content._id === vd.screen._id
+      );
+      if (index !== -1) {
+         const position = contents[index].position;
+         const timePosition = videosOffset[position];
+
+         dispatch({
+            type: "SET_PROGRESSION",
+            data: timePosition * 1000 + 10,
+         });
+         handleProgression(
+            contents,
+            videosOffset,
+            timePosition * 1000 + 10,
+            dispatch,
+            videosRef,
+            currentVideo,
+            preview
+         );
+         dispatch({ type: "HIDE_PREVIEW" });
+      } else {
+         dispatch({
+            type: "SHOW_PREVIEW",
+            data: { element: "screen", data: vd.screen },
+         });
+         dispatch({ type: "SET_PREVIEW_VIDEO", data: vd.screen });
+      }
+
+      dispatch({
+         type: "DISPLAY_ELEMENT",
+         data: "endScreen",
+      });
+      dispatch({
+         type: "SET_PREVIEW_END_SCREEN",
+         data: vd.screen,
+      });
+   };
+
    return (
       <div
          key={vd.screen._id}
@@ -211,14 +252,20 @@ const ToolScreenItem = ({ vd, setShowContentTimeline, selected = false }) => {
                : ""
          }`}
       >
-         <div
-            className={styles.screenImg}
-            style={{
-               backgroundColor: vd.screen.screen.background.color,
-               height: "30px",
-               width: "54px",
-            }}
-         ></div>
+         {vd.screen.thumbnail ? (
+            <div className={styles.videoImg}>
+               <img src={vd.screen.thumbnail} alt={vd.screen.name} />
+            </div>
+         ) : (
+            <div
+               className={styles.screenImg}
+               style={{
+                  backgroundColor: vd.screen.screen.background.color,
+                  height: "30px",
+                  width: "54px",
+               }}
+            ></div>
+         )}
          <div
             className={`${styles.toolLibraryItemName} ${
                previewVideo && previewVideo.name === vd.screen.screen.name
@@ -229,7 +276,7 @@ const ToolScreenItem = ({ vd, setShowContentTimeline, selected = false }) => {
                   ? styles.orangeBorder
                   : ""
             }`}
-            onClick={selected ? handleSelect : undefined}
+            onClick={selected ? handleSelect : handelPreview}
          >
             <p>{vd.screen.screen.name}</p>
             {vd.screen.status === "done" ? (

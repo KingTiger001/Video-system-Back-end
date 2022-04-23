@@ -23,6 +23,7 @@ import layoutStyles from "@/styles/layouts/App.module.sass";
 import styles from "@/styles/pages/app/campaigns.module.sass";
 import Button from "@/components/Button";
 import VideoImageThumbnail from "react-video-thumbnail-image";
+import CampaignListItem from "@/components/global/ListItem";
 
 const Campaigns = ({ initialCampaignsDraft, initialCampaignsShared, me }) => {
    const dispatch = useDispatch();
@@ -132,7 +133,6 @@ const Campaigns = ({ initialCampaignsDraft, initialCampaignsShared, me }) => {
       <ListHeader
          className={`${styles.campaignsHeader} ${draft ? styles.draft : ""}`}
       >
-         <p>Video Image</p>
          <p className={styles.firstHeader}>Video name</p>
          <p>Creation date</p>
          <p>Duration</p>
@@ -142,14 +142,10 @@ const Campaigns = ({ initialCampaignsDraft, initialCampaignsShared, me }) => {
    );
 
    const renderCampaign = (campaign = {}) => (
-      <ListItem
-         className={`${styles.campaignsItem} ${
-            campaign.status === "draft" ? styles.draft : ""
-         }`}
-         empty={Object.keys(campaign).length > 0 ? false : true}
-         key={campaign._id}
-         renderActions={() => (
-            <div>
+      <CampaignListItem
+         campaign={campaign}
+         renderActions={
+            <>
                {campaign.status === "draft" && (
                   <Button
                      color="orange"
@@ -202,37 +198,23 @@ const Campaigns = ({ initialCampaignsDraft, initialCampaignsShared, me }) => {
                      Preview
                   </a>
                )}
-            </div>
-         )}
-         renderDropdownActions={() => (
+            </>
+         }
+         renderDropdownActions={
             <ul>
                <li
                   onClick={() =>
-                     showPopup({ display: "DELETE_CAMPAIGN", data: campaign })
+                     showPopup({
+                        display: "DELETE_CAMPAIGN",
+                        data: campaign,
+                     })
                   }
                >
                   <p>Delete</p>
                </li>
             </ul>
-         )}
-         renderEmpty={() => <p>No videos found.</p>}
-      >
-         <p className={styles.videoImg}>
-            <img src={campaign.share.thumbnail} />
-         </p>
-         <p className={styles.campaignName}>
-            {campaign.name.length ? campaign.name : "No name"}
-         </p>
-         <p>
-            {dayjs(
-               campaign.status === "draft"
-                  ? campaign.createdAt
-                  : campaign.sentAt
-            ).format("MM/DD/YYYY")}
-         </p>
-
-         <p>{displayDuration(campaign.duration)}</p>
-      </ListItem>
+         }
+      />
    );
 
    return (

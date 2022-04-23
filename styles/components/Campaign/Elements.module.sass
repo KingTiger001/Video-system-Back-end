@@ -43,8 +43,11 @@
         &.first
           margin-bottom: 8px
       .removeText
+        width: 8px
+        height: 8px
         float: right
-        margin-bottom: 3px
+        margin-bottom: 5px
+        cursor: pointer
     &.focused
       input, textarea
         border: 2px solid $orangeColor
@@ -61,6 +64,7 @@
     height: 37px
     margin-bottom: 24px
     display: flex
+    gap: 5px
     align-items: center
     justify-content: space-between
     padding: 0 3px
@@ -98,6 +102,7 @@
         background: none
     .styleOptionItem
       display: flex
+      gap: 3px
       justify-content: space-between
       background: $textColorNine
       height: 28px
@@ -191,7 +196,13 @@
 
     &.selected
       background: $orangeColor
+.logoImage
+  display: flex
+  flex-direction: column-reverse
+  align-items: flex-end
 
+.logoRemove
+  cursor: pointer
 .toolLabel
   font-size: 12px
   font-weight: 400
@@ -239,3 +250,10 @@
   z-index: 2
   right: 0
   top: 131px
+
+.removeText
+   width: 8px
+   height: 8px
+   float: right
+   margin-bottom: 5px
+   cursor: pointer

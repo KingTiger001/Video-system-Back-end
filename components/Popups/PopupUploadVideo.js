@@ -9,6 +9,8 @@ import Popup from "./Popup";
 
 import styles from "@/styles/components/Popups/PopupUploadVideo.module.sass";
 import { useDebounce } from "@/hooks";
+import { uploadThumbnailFile } from "utils";
+import useGenerateThumbnail from "hooks/useGenerateThumbnail";
 
 const PopupUploadVideo = ({ onDone, loading, type }) => {
    const dispatch = useDispatch();
@@ -21,6 +23,7 @@ const PopupUploadVideo = ({ onDone, loading, type }) => {
    const [uploadProgress, setUploadProgress] = useState(0);
    const [videoName, setVideoName] = useState(null);
    const [video, setVideo] = useState(null);
+   const { generateVideoThumbnail } = useGenerateThumbnail();
 
    const upload = async (e = false) => {
       if (e) {
@@ -36,6 +39,11 @@ const PopupUploadVideo = ({ onDone, loading, type }) => {
       try {
          setError("");
          setIsUploading(true);
+
+         // Upload Thumbnail
+         const { thumbnail } = await generateVideoThumbnail(popup.data);
+         const { url } = await uploadThumbnailFile(thumbnail);
+
          // create a video
          const { data: video } = await mainAPI.post("/videos", {
             name:
@@ -43,6 +51,7 @@ const PopupUploadVideo = ({ onDone, loading, type }) => {
                   ? popup.data.name.split(".")[0]
                   : videoName,
             status: "uploading",
+            thumbnail: url,
             type,
          });
 
