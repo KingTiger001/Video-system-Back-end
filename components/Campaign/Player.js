@@ -47,6 +47,7 @@ const Player = () => {
    const videosRef = useSelector((state) => state.campaign.videosRef);
    const currentVideo = useSelector((state) => state.campaign.currentVideo);
    const videosOffset = useSelector((state) => state.campaign.videosOffset);
+   const templateList = useSelector((state) => state.campaign.templateList);
    //
 
    const [resume, setResume] = useState(false);
@@ -103,13 +104,23 @@ const Player = () => {
                thumbnail: url,
             });
             const array = contents.slice();
-            const indexOfTemplate = array.findIndex(
-               (i) => i._id === selectedContent._id
-            );
-            array[indexOfTemplate] = {
-               ...array[indexOfTemplate],
+            const temp = {
+               ...selectedContent,
                thumbnail: url,
             };
+
+            const indexOfTemplate = array.findIndex((i) => i._id === temp._id);
+
+            array[indexOfTemplate] = temp;
+
+            const templates = templateList.slice();
+            const indexOfTemplateFromList = templates.findIndex(
+               (i) => i._id === temp._id
+            );
+            if (indexOfTemplateFromList === -1) {
+               templates.unshift(temp);
+            } else templates[indexOfTemplateFromList] = temp;
+
             dispatch({
                type: "DRAG_ITEM",
                data: true,
@@ -117,6 +128,10 @@ const Player = () => {
             dispatch({
                type: "SET_VIDEO",
                data: array,
+            });
+            dispatch({
+               type: "SET_TEMPLATE_LIST",
+               data: templates,
             });
          }
       })();
@@ -398,7 +413,7 @@ const Player = () => {
                         <>
                            <EndScreen data={preview.data} />
                            <OverlaysStatic
-                              contents={[preview.data]}
+                              contents={preview.data}
                               playerWidth={playerWidth}
                               activeContent={0}
                               containerRef={playerRef.current}

@@ -29,6 +29,7 @@ import {
 import { uploadThumbnailFile } from "utils";
 import useCampaign from "hooks/campaign";
 import { useRouter } from "next/router";
+import useShareThumbnail from "hooks/useShareThumbnail";
 
 const providers = {
    GOOGLE: "GOOGLE",
@@ -368,6 +369,7 @@ const Share = ({
    const variablesPopupRef = useRef(null);
 
    const { create: createCampaign } = useCampaign();
+   const { deleteThumbnail } = useShareThumbnail();
    const router = useRouter();
 
    const msalInstance = new PublicClientApplication(msalConfig);
@@ -783,7 +785,7 @@ const Share = ({
                   `
                <ifram style="position: relative">
                   <div style="position: relative; display: inline-block;">
-                    <a href="https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1">
+                    <a href="https://app.myfomo.io/campaigns/${campaign?._id}?thumbnail=1">
                       <img
                         src="${campaign?.share?.thumbnail}"
                         width="230px"
@@ -792,7 +794,7 @@ const Share = ({
                     </a>
                   </div>
                   <h4>
-                    <a href="https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1">${campaign?.name}</a>
+                    <a href="https://app.myfomo.io/campaigns/${campaign?._id}?thumbnail=1">${campaign?.name}</a>
                   </h4>
                 </ifram>
                 `,
@@ -1091,7 +1093,7 @@ const Share = ({
    const handleCopiedLink = () => {
       setCopied(true);
       navigator.clipboard.writeText(
-         `https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`
+         `https://app.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`
       );
       setTimeout(() => {
          setCopied(false);
@@ -1106,6 +1108,23 @@ const Share = ({
       const m = t.minutes();
       const s = t.seconds();
       return `${m < 10 ? `0${m}` : m}:${s < 10 ? `0${s}` : s}`;
+   };
+
+   const handleRemoveThumbnail = () => {
+      if (campaign.share || campaign.share.thumbnail) {
+         deleteThumbnail(
+            campaign,
+            campaignId,
+            campaign.share.thumbnail,
+            (campaignUpdated) =>
+               setCampaign({
+                  ...campaign,
+                  share: {
+                     ...campaignUpdated.share,
+                  },
+               })
+         );
+      } else toast.error("No Thumbnail Exist");
    };
 
    const renderCampaign = (cp, key) => {
@@ -1241,43 +1260,56 @@ const Share = ({
                                                 preview of your video
                                              </p>
                                           </div>
-                                          <label
-                                             className={
-                                                styles.uploadThumbnailArea
-                                             }
-                                             htmlFor="thumbnail"
-                                          >
+                                          <div>
+                                          {campaign.share && campaign.share.thumbnail?(
+                                             <p
+                                                className={styles.deleteIcon}
+                                                onClick={handleRemoveThumbnail}
+                                             >
                                              <img
-                                                src={
-                                                   !campaign.share ||
-                                                   !campaign.share.thumbnail
-                                                      ? "/assets/campaign/upload_new.svg"
-                                                      : campaign.share.thumbnail
-                                                }
-                                                className={
-                                                   campaign.share &&
-                                                   campaign.share.thumbnail
-                                                      ? styles.thumbnailSecStyle
-                                                      : ""
-                                                }
+                                                className={styles.removeText}
+                                                src="/assets/campaign/removeThumbnail.svg"
                                              />
+                                              </p>):""}
+                                             <label
+                                                className={
+                                                   styles.uploadThumbnailArea
+                                                }
+                                                htmlFor="thumbnail"
+                                             >
+                                                <img
+                                                   src={
+                                                      !campaign.share ||
+                                                      !campaign.share.thumbnail
+                                                         ? "/assets/campaign/upload_new.svg"
+                                                         : campaign.share
+                                                              .thumbnail
+                                                   }
+                                                   className={
+                                                      campaign.share &&
+                                                      campaign.share.thumbnail
+                                                         ? styles.thumbnailSecStyle
+                                                         : ""
+                                                   }
+                                                />
 
-                                             {!thumbnailLoading &&
-                                                (!campaign.share ||
-                                                   !campaign.share
-                                                      .thumbnail) && (
-                                                   <p
-                                                      className={
-                                                         styles.uploadThumbnailAreaText
-                                                      }
-                                                   >
-                                                      Upload image
-                                                   </p>
+                                                {!thumbnailLoading &&
+                                                   (!campaign.share ||
+                                                      !campaign.share
+                                                         .thumbnail) && (
+                                                      <p
+                                                         className={
+                                                            styles.uploadThumbnailAreaText
+                                                         }
+                                                      >
+                                                         Upload image
+                                                      </p>
+                                                   )}
+                                                {thumbnailLoading && (
+                                                   <p>Downloading...</p>
                                                 )}
-                                             {thumbnailLoading && (
-                                                <p>Downloading...</p>
-                                             )}
-                                          </label>
+                                             </label>
+                                          </div>
                                           <input
                                              accept="image/*"
                                              id="thumbnail"
@@ -1374,7 +1406,7 @@ const Share = ({
                                                          onCreateCampaignClicked();
                                                       }}
                                                    >
-                                                      New Video
+                                                      New
                                                    </Button>
                                                 )}
                                              </div>
@@ -1562,7 +1594,7 @@ const Share = ({
                                     >
                                        <LinkedinShareButton
                                           disabled={!campaign}
-                                          url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
+                                          url={`https://app.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
                                        >
                                           <img
                                              className={styles.socialImg}
@@ -1573,7 +1605,7 @@ const Share = ({
 
                                        <TwitterShareButton
                                           disabled={!campaign}
-                                          url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
+                                          url={`https://app.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
                                        >
                                           <img
                                              className={styles.socialImg}
@@ -1584,7 +1616,7 @@ const Share = ({
 
                                        <FacebookShareButton
                                           disabled={!campaign}
-                                          url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
+                                          url={`https://app.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
                                        >
                                           <img
                                              className={styles.socialImg}
@@ -1595,7 +1627,7 @@ const Share = ({
 
                                        <WhatsappShareButton
                                           disabled={!campaign}
-                                          url={`https://test.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
+                                          url={`https://app.myfomo.io/campaigns/${campaign?._id}?thumbnail=1`}
                                        >
                                           <img
                                              className={styles.socialImg}

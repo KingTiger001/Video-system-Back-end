@@ -282,54 +282,65 @@ const Timeline = ({ handlecreate }) => {
                         ref={provided.innerRef}
                         {...provided.droppableProps}
                      >
-                        {contents.map((elem, i) => {
-                           const infos = getDataByType(elem);
+                        <div className={styles.timelineContainer}>
+                           {contents.map((elem, i) => {
+                              const infos = getDataByType(elem);
 
-                           return (
-                              <Draggable
-                                 key={i}
-                                 draggableId={`draggable-${i}`}
-                                 index={i}
-                              >
-                                 {(provided, snapshot) => (
-                                    <div
-                                       onContextMenu={(e) =>
-                                          handleContextMenu(e, elem)
-                                       }
-                                       className={`${styles[elem.type]} ${
-                                          selectedContent &&
-                                          elem._id === selectedContent._id
-                                             ? styles.active
-                                             : ""
-                                       }`}
-                                       onClick={() =>
-                                          select(elem.type, {
-                                             [elem.type]: elem,
-                                          })
-                                       }
-                                       ref={provided.innerRef}
-                                       {...provided.draggableProps}
-                                       {...provided.dragHandleProps}
-                                       style={{
-                                          width: `${
-                                             ((infos.duration * 1000) /
-                                                duration) *
-                                             100
-                                          }%`,
-                                          ...provided.draggableProps.style,
-                                          backgroundColor:
-                                             elem.type === "screen"
-                                                ? elem.screen.background.color
-                                                : undefined,
-                                       }}
-                                    >
-                                       <p>{infos.name}</p>
-                                    </div>
-                                 )}
-                              </Draggable>
-                           );
-                        })}
-                        {provided.placeholder}
+                              return (
+                                 <Draggable
+                                    key={i}
+                                    draggableId={`draggable-${i}`}
+                                    index={i}
+                                 >
+                                    {(provided, snapshot) => (
+                                       <div
+                                          onContextMenu={(e) =>
+                                             handleContextMenu(e, elem)
+                                          }
+                                          onClick={() =>
+                                             select(elem.type, {
+                                                [elem.type]: elem,
+                                             })
+                                          }
+                                          ref={provided.innerRef}
+                                          {...provided.draggableProps}
+                                          {...provided.dragHandleProps}
+                                          style={{
+                                             paddingRight: "15px",
+                                             width: `${
+                                                ((infos.duration * 1000) /
+                                                   duration) *
+                                                100
+                                             }%`,
+                                             display: "inline-block",
+                                          }}
+                                       >
+                                          <div
+                                             className={`${styles[elem.type]} ${
+                                                selectedContent &&
+                                                elem._id === selectedContent._id
+                                                   ? styles.active
+                                                   : ""
+                                             }`}
+                                             style={{
+                                                ...provided.draggableProps
+                                                   .style,
+                                                backgroundColor:
+                                                   elem.type === "screen"
+                                                      ? elem.screen.background
+                                                           .color
+                                                      : undefined,
+                                             }}
+                                          >
+                                             <p>{infos.name}</p>
+                                          </div>
+                                       </div>
+                                    )}
+                                 </Draggable>
+                              );
+                           })}
+                           {provided.placeholder}
+                        </div>
                         {contents.length > 0 && (
                            <button
                               className={styles.newButton}

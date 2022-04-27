@@ -64,6 +64,11 @@ const Overlays = ({
       }
    }, []);
 
+   useEffect(() => {
+      console.count("Render22");
+      console.log(contents);
+   }, [contents]);
+
    const renderElement = (elem, type) => {
       let obj = { ...elem };
       obj.value = replaceVariables(obj.value);
@@ -98,6 +103,10 @@ const Overlays = ({
          setPosition(defaultPosition);
       }, [defaultPosition]);
 
+      useEffect(() => {
+         console.count("Render00");
+      }, []);
+
       return (
          <div
             ref={ref}
@@ -124,33 +133,27 @@ const Overlays = ({
             style={{
                width: "100%",
                height: "100%",
-               position: "relative",
-               background: contents[0].screen.background.color,
+               position: "absolute",
+               inset: 0,
+               zIndex: 1,
+               background: contents.screen.background.color,
             }}
          >
-            {contents[activeContent].texts.map((text) =>
-               renderElement(text, "text")
-            )}
-            {contents[activeContent].links.map((link) =>
-               renderElement(link, "link")
-            )}
+            {contents.texts.map((text) => renderElement(text, "text"))}
+            {contents.links.map((link) => renderElement(link, "link"))}
          </div>
       );
    }
    if (
       !fromPlayer &&
       activeContent !== -1 &&
-      contents[activeContent] &&
-      Object.keys(contents[activeContent]).length > 0
+      contents &&
+      Object.keys(contents).length > 0
    ) {
       return (
          <>
-            {contents[activeContent].texts.map((text) =>
-               renderElement(text, "text")
-            )}
-            {contents[activeContent].links.map((link) =>
-               renderElement(link, "link")
-            )}
+            {contents.texts.map((text) => renderElement(text, "text"))}
+            {contents.links.map((link) => renderElement(link, "link"))}
          </>
       );
    } else {
@@ -158,4 +161,4 @@ const Overlays = ({
    }
 };
 
-export default Overlays;
+export default React.memo(Overlays);

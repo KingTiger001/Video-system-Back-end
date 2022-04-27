@@ -66,7 +66,7 @@ const SidebarLeft = () => {
                disabled={isLoading}
             >
                <span className={`${styles.orange_border}`}></span>
-               <span className={`${styles.tooltip}`}>New</span>
+               <span className={`${styles.tooltip}`}>New Video</span>
                <img src="/assets/common/videos-grey.svg" />
             </button>
             <Link href="/app/campaigns">

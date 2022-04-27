@@ -44,6 +44,7 @@ const VideoPlayer = ({
 
    const [autoPlayFlag, setAutoPlayFlag] = useState(false);
    const [replay, setReplay] = useState(false);
+   const [reset, setReset] = useState(false);
    const [showPlayButton, setShowPlayButton] = useState(false);
    const [showDivPlayButton, setShowDivPlayButton] = useState(
       fromPreview ? true : false
@@ -181,8 +182,13 @@ const VideoPlayer = ({
 
    const restart = () => {
       setReplay(false);
-      dispatch({ type: "videoPlayer/SET_PROGRESSION", data: 0 });
-      setTimeout(playOrPause, 1200);
+      seekTo(0);
+      setReset(true);
+      dispatch({
+         type: "videoPlayer/SET_ACTIVE_CONTENT",
+         data: 0,
+      });
+      playOrPause();
    };
 
    const tryToPlayVideo = () => {
@@ -210,6 +216,10 @@ const VideoPlayer = ({
          dispatch({ type: "videoPlayer/SET_DURATION", data: 0 });
       };
    }, []);
+
+   useEffect(() => {
+      console.count("Render77", activeContent);
+   }, [activeContent]);
 
    const videoRefCb = useCallback(
       (node) => {
@@ -245,9 +255,9 @@ const VideoPlayer = ({
       return `${m < 10 ? `0${m}` : m}:${s < 10 ? `0${s}` : s}`;
    };
 
-   const seekTo = (e) => {
+   const seekTo = (pos) => {
       const rect = timelineRef.current.getBoundingClientRect();
-      const position = e.clientX - rect.left;
+      const position = pos - rect.left;
       const seekProgression =
          (position / timelineRef.current.offsetWidth) * duration;
       const progression =
@@ -309,50 +319,19 @@ const VideoPlayer = ({
                   position: " absolute",
                   top: " 50%",
                   left: " 50%",
-                  width: " 16%",
+                  width: "130px",
                   margin: " -8%",
                   border: " 2px solid transparent",
                   borderRadius: " 50%",
                   padding: " 0",
                   overflow: " hidden",
-                  background: " none",
+                  background: "rgb(37 32 32 / 60%)",
                   pointerEvents: " none",
                   zIndex: " 99",
                }}
                tabIndex="0"
                type="button"
             >
-               <div
-                  style={{
-                     position: " absolute",
-                     width: " 100%",
-                     height: " 100%",
-                     borderRadius: " 50%",
-                     top: " 0",
-                     zIndex: " 1",
-                     opacity: " 0.65",
-                     transition: " opacity 0.2s",
-                     backgroundColor: "rgb(46, 46, 46)",
-                  }}
-               />
-               <div
-                  style={{
-                     backgroundImage: `url(${
-                        data?.share?.thumbnail ?? "/assets/video/play-icon.png"
-                     })`,
-                     filter: "blur(1.2vmin)",
-                     width: "666.6666666666666%",
-                     height: "100vh",
-                     position: "absolute",
-                     left: "50%",
-                     top: "50%",
-                     backgroundSize: "contain",
-                     backgroundPosition: "center",
-                     backgroundRepeat: "no-repeat",
-                     transform: "translate(-50%, -50%)",
-                     opacity: "1",
-                  }}
-               />
                <svg
                   style={{
                      position: "absolute",
@@ -426,7 +405,7 @@ const VideoPlayer = ({
             <Overlays
                fromPlayer={true}
                contact={contact}
-               contents={contents}
+               contents={contents[0]}
                activeContent={0}
                playerWidth={width}
                containerRef={playerRef.current}
@@ -445,7 +424,7 @@ const VideoPlayer = ({
             dispatch({ type: "videoPlayer/VOLUME_DRAGGABLE", data: false });
          }}
          onMouseMove={(e) => {
-            timelineDraggable && seekTo(e);
+            timelineDraggable && seekTo(e.clientX);
             volumeDraggable && setVolume(e);
          }}
       >
@@ -465,7 +444,6 @@ const VideoPlayer = ({
                src={finalVideo.url}
                //poster={thumbnail? data.share.thumbnail : ''}
             />
-
             {!thumbnail && renderFirstScreen()}
             {thumbnail && share?.thumbnail === null && renderFirstScreen()}
             {thumbnail && share?.thumbnail === undefined && renderFirstScreen()}
@@ -474,8 +452,7 @@ const VideoPlayer = ({
             {width > 0 && (
                <Overlays
                   contact={contact}
-                  contents={contents}
-                  activeContent={activeContent}
+                  contents={contents[activeContent]}
                   playerWidth={width}
                   containerRef={playerRef.current}
                />
@@ -497,7 +474,7 @@ const VideoPlayer = ({
             <div className={styles.controls}>
                <div
                   className={styles.timeline}
-                  onClick={(e) => seekTo(e)}
+                  onClick={(e) => seekTo(e.clientX)}
                   onMouseDown={(e) =>
                      dispatch({
                         type: "videoPlayer/TIMELINE_DRAGGABLE",
@@ -510,7 +487,7 @@ const VideoPlayer = ({
                         data: false,
                      })
                   }
-                  onMouseMove={(e) => timelineDraggable && seekTo(e)}
+                  onMouseMove={(e) => timelineDraggable && seekTo(e.clientX)}
                   ref={timelineRef}
                >
                   <div className={styles.timelineDuration}>
@@ -583,3 +560,4 @@ const VideoPlayer = ({
 };
 
 export default VideoPlayer;
+
