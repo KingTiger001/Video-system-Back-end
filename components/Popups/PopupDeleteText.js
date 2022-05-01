@@ -9,7 +9,7 @@ const PopupDeleteText = ({ onDelete }) => {
    const dispatch = useDispatch();
    const hidePopup = () => dispatch({ type: "HIDE_POPUP" });
    return (
-      <Popup title="Delete a text">
+      <Popup title="Delete text">
          <div className={styles.body}>
             <p>Are you sure you want to delete this text?</p>
          </div>

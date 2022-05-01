@@ -68,8 +68,22 @@ const ToolItemDuration = () => {
       handleChangeDuration(selectedContent.screen.duration - 1);
    }
    return (
-      <div className={`${styles.toolItem}`} style={{ position: "relative" }}>
-         <div style={{ display: "flex" }}>
+      <div
+         className={`${styles.toolItem}`}
+         style={{
+            position: "relative",
+            width: "100%",
+            paddingInline: "15px 10px",
+         }}
+      >
+         <div
+            style={{
+               display: "flex",
+               width: "100%",
+               justifyContent: "space-between",
+               alignItems: "center",
+            }}
+         >
             {selectedContent.screen ? (
                <p>{selectedContent.screen.duration} sec</p>
             ) : (

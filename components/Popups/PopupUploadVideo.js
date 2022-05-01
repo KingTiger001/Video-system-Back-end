@@ -170,6 +170,16 @@ const PopupUploadVideo = ({ onDone, loading, type }) => {
                <div className={styles.progressBar}>
                   <span style={{ width: `${uploadProgress}%` }} />
                </div>
+               
+                  <img
+                     style={{ position: "absolute", right: 0, top: 0, color: "red" }}
+                  
+                     onClick={() => {
+                     hidePopup()
+                     }}
+                     src="/assets/common/close.svg"
+                  />
+        
                <p className={styles.progressNumber}>Converting video</p>
                <img
                   className={styles.progressIcon}

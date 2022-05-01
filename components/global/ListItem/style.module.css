@@ -24,6 +24,7 @@
 }
 .image img {
    height: 100%;
+   width: 100%;
 }
 .image > div {
    width: 100%;
@@ -95,8 +96,8 @@
 }
 
 .dropdown {
-   height: 24px;
-   width: 60px;
+   height: 28px;
+   width: 70px;
    background: #4c4a60;
    border-radius: 4px;
    box-shadow: 0 5px 16px 0 rgba(24, 59, 86, 0.13);
@@ -104,7 +105,7 @@
    right: 0px;
    top: calc(100% + 5px);
    color: #e8e8e8 !important;
-   font-size: 8px;
+   font-size: 11px;
    display: flex;
    align-items: center;
    justify-content: center;

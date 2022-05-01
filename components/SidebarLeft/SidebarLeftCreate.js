@@ -18,6 +18,10 @@ const SidebarLeftCreate = ({ screen, renderScreen }) => {
       dispatch({ type: "SHOW_POPUP", ...popupProps });
    const name = useSelector((state) => state.campaign.name);
    const contents = useSelector((state) => state.campaign.contents);
+   const selectedContent = useSelector(
+      (state) => state.campaign.selectedContent
+   );
+   const selectedScreen = useSelector((state) => state.global.selectedScreen);
 
    const [displayShare, showShare] = useState(false);
    const handleClickDashboard = () => {
@@ -31,6 +35,26 @@ const SidebarLeftCreate = ({ screen, renderScreen }) => {
          toast.error("Please enter video title.");
       } else {
          router.push("/app");
+      }
+   };
+
+   const handleClickElementsTab = () => {
+      if (
+         selectedScreen === "SCREEN" &&
+         selectedContent &&
+         selectedContent.type !== "screen"
+      ) {
+         renderScreen("");
+         dispatch({
+            type: "SET_SELECTED_SCREEN",
+            data: null,
+         });
+      } else {
+         renderScreen("SCREEN");
+         dispatch({
+            type: "SET_SELECTED_SCREEN",
+            data: "SCREEN",
+         });
       }
    };
    return (
@@ -109,13 +133,7 @@ const SidebarLeftCreate = ({ screen, renderScreen }) => {
                   `${styles.menu_item} ${styles.withTitle} ` +
                   (screen === "SCREEN" ? styles.active : "")
                }
-               onClick={() => {
-                  renderScreen("SCREEN");
-                  dispatch({
-                     type: "SET_SELECTED_SCREEN",
-                     data: "SCREEN",
-                  });
-               }}
+               onClick={handleClickElementsTab}
             >
                <span className={`${styles.orange_border}`}></span>
                <img

@@ -185,7 +185,7 @@ const Campaign = ({ campaign }) => {
          </Head>
 
          <div className={styles.header}>
-            <Link href="/app">
+            <Link href="https://app.myfomo.io/">
                <a className={styles.logo}>
                   <img src="/assets/common/dashboard-orange.png" />
                </a>

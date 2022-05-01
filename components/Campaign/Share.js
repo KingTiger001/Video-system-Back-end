@@ -1459,7 +1459,7 @@ const Share = ({
                                           </div>
                                        </div>
                                        <div className={styles.previewFooter}>
-                                          <button
+                                          {/* <button
                                              onClick={() => {
                                                 onClose();
                                                 hidePopup();
@@ -1468,7 +1468,7 @@ const Share = ({
                                              className={styles.previewButton}
                                           >
                                              Preview
-                                          </button>
+                                          </button> */}
                                        </div>
                                     </div>
                                  ) : (
@@ -1521,7 +1521,11 @@ const Share = ({
                                           className={
                                              copied
                                                 ? styles.buttonLinkSuccess
-                                                : styles.buttonLink
+                                                : styles.buttonLink,
+
+                                                campaign
+                                                ? styles.buttonLink
+                                                : styles.buttonUnSelected
                                           }
                                           onClick={handleCopiedLink}
                                        >
@@ -1540,7 +1544,11 @@ const Share = ({
                                           className={
                                              copiedWithThumbnail
                                                 ? styles.buttonLinkSuccess
-                                                : styles.buttonLinkWithThumb
+                                                : styles.buttonLinkWithThumb,
+
+                                                campaign
+                                                ? styles.buttonLinkWithThumb
+                                                : styles.buttonUnSelected
                                           }
                                           onClick={
                                              handleCopiedLinkWithThumbnail

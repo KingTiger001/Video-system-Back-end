@@ -2,7 +2,7 @@ import styles from "@/styles/components/Campaign/Placeholder.module.sass";
 import React from "react";
 
 const tips = {
-  /*record: {
+ /*  record: {
     image: "/assets/campaign/record.svg",
     description: "Start a campaign !",
   },
@@ -22,7 +22,7 @@ const tips = {
   logo: {
     image: "/assets/campaign/toolLogo.svg",
     description: `Don't forget to add your logo !`,
-  },*/
+  }, */
 };
 
 // placeholder view in case user have no video or screens

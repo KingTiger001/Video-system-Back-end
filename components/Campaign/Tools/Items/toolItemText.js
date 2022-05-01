@@ -37,6 +37,7 @@ const ToolItemText = () => {
    const [underline, setUnderline] = useState(false);
    const [left, setLeft] = useState(false);
    const [center, setCenter] = useState(false);
+   const [centerCenter, setCenterCenter] = useState(false);
    const [right, setRight] = useState(false);
 
    const textareaRef = useRef(null);
@@ -88,21 +89,31 @@ const ToolItemText = () => {
             setRight(true);
             setLeft(false);
             setCenter(false);
+            setCenterCenter(false);
             break;
          case "left":
             setRight(false);
             setLeft(true);
             setCenter(false);
+            setCenterCenter(false);
             break;
          case "center":
             setRight(false);
             setLeft(false);
             setCenter(true);
+            setCenterCenter(false);
+            break;
+         case "center-center":
+            setRight(false);
+            setLeft(false);
+            setCenter(false);
+            setCenterCenter(true);
             break;
          case "reset":
             setRight(false);
             setLeft(false);
             setCenter(false);
+            setCenterCenter(false);
             break;
       }
    };
@@ -281,6 +292,10 @@ const ToolItemText = () => {
          case "center":
             obj.texts[index].position = { x: 50, y: position.y };
             setAlign("center");
+            break;
+         case "center-center":
+            obj.texts[index].position = { x: 50, y: 50 };
+            setAlign("center-center");
             break;
          default:
             setAlign("reset");
@@ -609,7 +624,7 @@ const ToolItemText = () => {
                                  <div className={styles.styleOption}>
                                     <div
                                        className={`${styles.styleOptionItem} ${styles.fontFamily}`}
-                                       style={{width:"initial"}}
+                                       style={{ width: "initial" }}
                                     >
                                        <select
                                           onChange={(e) =>
@@ -636,7 +651,7 @@ const ToolItemText = () => {
                                           value={textFocused.fontSize}
                                           className={styles.select}
                                           disabled={!textFocused}
-                                          style={{width:"55px"}}
+                                          style={{ width: "55px" }}
                                        >
                                           {textSizes.map((f) => (
                                              <option value={f.value}>
@@ -702,9 +717,16 @@ const ToolItemText = () => {
                                        >
                                           <img src="/assets/campaign/alignRight.svg"></img>
                                        </button>
-                                       <button className={styles.textOptionBtn}>
+                                       {/* <button
+                                          onClick={() =>
+                                             textAlign("center-center")
+                                          }
+                                          className={`${styles.textOptionBtn} ${
+                                             centerCenter ? styles.active : ""
+                                          }`}
+                                       >
                                           <img src="/assets/campaign/alignJustify.svg"></img>
-                                       </button>
+                                       </button> */}
                                     </div>
                                     <div
                                        className={`${styles.styleOptionItem} ${styles.fontColor}`}
