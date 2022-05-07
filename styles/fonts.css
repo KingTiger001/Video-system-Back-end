@@ -45,3 +45,10 @@ aside.SidebarLeft_menu__2ijQO .SidebarLeft_menu_item__1koPn:first-child img {
 .campaign_content__Y9Cy2 {
    padding: 15px 20px 15px 20px !important;
 }
+
+
+@media (max-width: 768px){
+button.VideoPlayer_buttonPlayCustom__TD-zu {
+    width: 52px !important;
+}
+}

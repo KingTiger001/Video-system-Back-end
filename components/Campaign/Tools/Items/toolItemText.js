@@ -37,7 +37,7 @@ const ToolItemText = () => {
    const [underline, setUnderline] = useState(false);
    const [left, setLeft] = useState(false);
    const [center, setCenter] = useState(false);
-   const [centerCenter, setCenterCenter] = useState(false);
+   const [justified, setJustified] = useState(false);
    const [right, setRight] = useState(false);
 
    const textareaRef = useRef(null);
@@ -89,31 +89,31 @@ const ToolItemText = () => {
             setRight(true);
             setLeft(false);
             setCenter(false);
-            setCenterCenter(false);
+            setJustified(false);
             break;
          case "left":
             setRight(false);
             setLeft(true);
             setCenter(false);
-            setCenterCenter(false);
+            setJustified(false);
             break;
          case "center":
             setRight(false);
             setLeft(false);
             setCenter(true);
-            setCenterCenter(false);
+            setJustified(false);
             break;
-         case "center-center":
+         case "justify":
             setRight(false);
             setLeft(false);
             setCenter(false);
-            setCenterCenter(true);
+            setJustified(true);
             break;
          case "reset":
             setRight(false);
             setLeft(false);
             setCenter(false);
-            setCenterCenter(false);
+            setJustified(false);
             break;
       }
    };
@@ -274,6 +274,7 @@ const ToolItemText = () => {
    const textAlign = async (align) => {
       const obj = { ...selectedContent };
       const index = obj.texts.findIndex((text) => text._id === textFocused._id);
+      obj.texts[index].textAlign = align;
 
       // const target = obj.texts[index].textAlign;
 
@@ -283,19 +284,23 @@ const ToolItemText = () => {
       switch (align) {
          case "right":
             obj.texts[index].position = { x: 90, y: position.y };
+            obj.texts[index].textAlignLast = 'unset';
             setAlign("right");
             break;
          case "left":
             obj.texts[index].position = { x: 10, y: position.y };
+            obj.texts[index].textAlignLast = 'unset';
             setAlign("left");
             break;
          case "center":
             obj.texts[index].position = { x: 50, y: position.y };
+            obj.texts[index].textAlignLast = 'unset';
             setAlign("center");
             break;
-         case "center-center":
+         case "justify":
             obj.texts[index].position = { x: 50, y: 50 };
-            setAlign("center-center");
+            obj.texts[index].textAlignLast = 'justify';
+            setAlign("justify");
             break;
          default:
             setAlign("reset");
@@ -408,6 +413,8 @@ const ToolItemText = () => {
          _id,
          value: "",
          fontSize: txtSize,
+         textAlign: 'center',
+         textAlignLast: 'unset',
          color: txtColor,
          preset: 0,
          position: { x: 50, y: 50 },
@@ -719,10 +726,10 @@ const ToolItemText = () => {
                                        </button>
                                        {/* <button
                                           onClick={() =>
-                                             textAlign("center-center")
+                                             textAlign("justify")
                                           }
                                           className={`${styles.textOptionBtn} ${
-                                             centerCenter ? styles.active : ""
+                                             justified ? styles.active : ""
                                           }`}
                                        >
                                           <img src="/assets/campaign/alignJustify.svg"></img>

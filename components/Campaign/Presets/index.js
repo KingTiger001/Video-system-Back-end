@@ -59,6 +59,7 @@ export const renderPresetElement = (elem, type) => {
                      fontStyle: elem.italic ? "italic" : "normal",
                      textDecoration: elem.underline ? "underline" : "none",
                      textAlign: elem.textAlign,
+                     textAlignLast: elem.textAlignLast,
                      display: "inline-block",
                      color: elem.color,
                   }}
