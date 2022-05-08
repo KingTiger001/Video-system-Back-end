@@ -50,5 +50,11 @@ aside.SidebarLeft_menu__2ijQO .SidebarLeft_menu_item__1koPn:first-child img {
 @media (max-width: 768px){
 button.VideoPlayer_buttonPlayCustom__TD-zu {
     width: 52px !important;
+   }
+/* .Player_draggable__1FRPz p{
+    font-size: 0.6rem !important;    
+   } */
 }
+.VideoPlayer_coverImageVid__1KiYg {
+    width: 100%;
 }

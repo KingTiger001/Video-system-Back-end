@@ -63,7 +63,7 @@ export const Preset = styled.div`
 const TextPreset1 = ({ value, color, fontSize }) => {
   return (
     <Preset>
-      <p style={{ fontSize: `${fontSize}px`, color: color }} className="popout">
+      <p style={{ fontSize: `${fontSize}vmin`, color: color }} className="popout">
         <span dangerouslySetInnerHTML={{ __html: `${value.replace(/(\r\n|\n|\r)/gm, "<br>")}` }}></span>
       </p>
     </Preset>

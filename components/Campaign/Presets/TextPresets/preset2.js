@@ -40,7 +40,7 @@ const TextPreset2 = ({ value, color, fontSize }) => {
           </filter>
         </svg>
 
-        <span style={{ color, fontSize: `${fontSize}px` }} filter-content="5" dangerouslySetInnerHTML={{ __html: `${value.replace(/(\r\n|\n|\r)/gm, "<br>")}` }}>
+        <span style={{ color, fontSize: `${fontSize}vmin` }} filter-content="5" dangerouslySetInnerHTML={{ __html: `${value.replace(/(\r\n|\n|\r)/gm, "<br>")}` }}>
         </span>
       </>
     </Preset>

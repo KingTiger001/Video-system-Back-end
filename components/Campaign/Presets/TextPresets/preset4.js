@@ -18,7 +18,7 @@ const TextPreset4 = ({ value, color, fontSize }) => {
   return (
     <Preset>
       <h1>
-        <div style={{ color, fontSize: `${fontSize}px` }} className="goo" dangerouslySetInnerHTML={{ __html: `${value.replace(/(\r\n|\n|\r)/gm, "<br>")}` }}>
+        <div style={{ color, fontSize: `${fontSize}vmin` }} className="goo" dangerouslySetInnerHTML={{ __html: `${value.replace(/(\r\n|\n|\r)/gm, "<br>")}` }}>
        
         </div>
       </h1>

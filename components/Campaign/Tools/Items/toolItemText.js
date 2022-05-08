@@ -724,7 +724,7 @@ const ToolItemText = () => {
                                        >
                                           <img src="/assets/campaign/alignRight.svg"></img>
                                        </button>
-                                       {/* <button
+                                       <button
                                           onClick={() =>
                                              textAlign("justify")
                                           }
@@ -733,7 +733,7 @@ const ToolItemText = () => {
                                           }`}
                                        >
                                           <img src="/assets/campaign/alignJustify.svg"></img>
-                                       </button> */}
+                                       </button>
                                     </div>
                                     <div
                                        className={`${styles.styleOptionItem} ${styles.fontColor}`}
