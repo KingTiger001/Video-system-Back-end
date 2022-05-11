@@ -406,32 +406,32 @@ const ToolScreens = () => {
                      {/* <div onClick={closeToolbox} className={styles.backArrow}>
                 <img src="/assets/campaign/backArrow.svg" />{" "}
               </div> */}
-                     {/* <p className={styles.toolTitle}>Screen</p> */}
+                     <p className={styles.toolTitle}>Screen</p>
                   </span>
 
-                 {/*  <div
+                  <div
                      onClick={handleCreate}
                      className={styles.createScreenBtn}
                   >
                      <span>Create</span>
                      <img src={"/assets/common/add.svg"} />
-                  </div> */}
+                  </div>
 
-                  {/* <p
+                  <p
                      style={{ marginTop: "14px" }}
                      className={styles.toolSubtitle}
                   >
                      Timeline
-                  </p> */}
+                  </p>
                   <div className={styles.videosList}>
                      {contents.length
                         ? selectedScreens.map((obj) => renderScreenItem(obj))
                         : ""}
                   </div>
-                 {/*  <p className={styles.toolSubtitle}>Library</p>
+                  <p className={styles.toolSubtitle}>Library</p>
                   <div className={styles.videosList}>
                      {unselectedScreens.map((obj) => renderScreenItem(obj))}
-                  </div> */}
+                  </div>
                </div>
             ) : (
                <div className={styles.toolSection}>

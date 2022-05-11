@@ -47,8 +47,40 @@ aside.SidebarLeft_menu__2ijQO .SidebarLeft_menu_item__1koPn:first-child img {
 }
 
 
+
+
+
+
+
+
+.Player_playerWrap__3gm98 {
+    width: 100% !important;
+    max-width: 967px !important;
+    height: 557px !important;
+}
 @media (max-width: 768px){
 button.VideoPlayer_buttonPlayCustom__TD-zu {
     width: 52px !important;
+   }
+   .Player_textDraggable__1iF_u p  {
+    font-size: 1.2rem  !important;
+   }
+   .Player_linkDraggable__3pslz p {
+    font-size: 0.9rem  !important;
+     Padding: 0.5rem 0.6rem !important;
+   }
+.Player_linkDraggable__3pslz button{
+    padding: 0.7rem 0.5rem !important;
+    font-size: 0.7rem !important;
+  }
+ .Player_linkDraggable__3pslz a{
+    padding: 0.7rem 0.5rem !important;
+    font-size: 0.7rem !important;
+  }
 }
+.VideoPlayer_coverImageVid__1KiYg {
+    width: 100%;
+}
+.Player_draggable__1FRPz {
+    padding-right: 2%;
 }
