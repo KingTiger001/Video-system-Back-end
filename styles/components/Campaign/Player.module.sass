@@ -19,15 +19,13 @@
 .video
   background: #000
   width: 100%
-  padding-top: 56.25%
+  height: 499px
   justify-self: center
   position: relative
+  font-size: 20px
   & > div
     height: 100%
-    width: 100%
     background-color: #5d5b6f
-    position: absolute
-    top: 0
     video
       position: absolute
       left: 0
@@ -43,8 +41,10 @@
 .textDraggable
   cursor: grab!important
   color: #fff
-  font-size: 1.5rem
+  font-size: 16px
   word-wrap: break-word
+  @media screen and (max-width: 780px)
+    font-size: 5px
 
 .linkDraggable
   display: inline-block
@@ -56,6 +56,9 @@
     padding: .5rem 1rem
     border-radius: .4rem
     font-size: 1.5rem
+    @media screen and (max-width: 780px)
+      padding: .2rem .7rem
+      font-size: .5rem
 
 .overlaySection
   // margin: 2rem
@@ -72,11 +75,11 @@
   text-align: center
 
 .draggable
-  position: absolute
-  display: inline-block
-  transform: translate(-50%,-50%)
-  width: max-content
-  max-width: 100%
+    position: absolute
+    display: inline-block
+    transform: translate(-50%,-50%)
+    width: max-content
+    max-width: 100%
 
 .controls
   width: 100%

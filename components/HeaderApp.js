@@ -110,7 +110,7 @@ const HeaderApp = () => {
                      className={styles.userName}
                      onClick={() => showUserMenu(!displayUserMenu)}
                   >
-                     <p>{me.firstName}</p>
+                     {/* <p>{me.firstName}</p> */}
                      <img src="/assets/common/profile_dark.svg" />
                      {/* <img src={`/assets/common/${displayUserMenu ? 'expandLess' : 'expandMore'}.svg`} /> */}
                   </div>

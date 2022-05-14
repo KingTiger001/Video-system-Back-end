@@ -1,86 +1,82 @@
 @font-face {
-   font-family: "hk_groteskbold";
-   src: url("../public/fonts/hk-grotesk/hkgrotesk-bold-webfont.woff2")
-         format("woff2"),
-      url("../public/fonts/hk-grotesk/hkgrotesk-bold-webfont.woff")
-         format("woff");
-   font-weight: normal;
-   font-style: normal;
+  font-family: "hk_groteskbold";
+  src: url("../public/fonts/hk-grotesk/hkgrotesk-bold-webfont.woff2")
+      format("woff2"),
+    url("../public/fonts/hk-grotesk/hkgrotesk-bold-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
 }
 
 @font-face {
-   font-family: "Source Code Pro";
-   src: url("../public/fonts/source-code-pro/SourceCodePro-Light.ttf")
-      format("truetype");
-   font-weight: normal;
-   font-style: normal;
+  font-family: "Source Code Pro";
+  src: url("../public/fonts/source-code-pro/SourceCodePro-Light.ttf")
+    format("truetype");
+  font-weight: normal;
+  font-style: normal;
 }
 aside.SidebarLeft_menu__2ijQO .SidebarLeft_menu_item__1koPn:first-child img {
-   width: 69px !important;
+  width: 69px !important;
 }
 .Popup_content__2yz2v {
-   background: #312e3d !important;
-   color: #fff !important;
+  background: #312e3d !important;
+  color: #fff !important;
 }
 .Popup_content__2yz2v .Popup_title__2Sulg {
-   color: #fff !important;
+  color: #fff !important;
 }
 .Popup_content__2yz2v .Button_button__1Es5o.Button_primaryColor__5GB68 {
-   background: #444356 !important;
-   border-color: #444356 !important;
-   color: #fff !important;
+  background: #444356 !important;
+  border-color: #444356 !important;
+  color: #fff !important;
 }
 .Popup_content__2yz2v
-   .Button_button__1Es5o.Button_outline__3G65n.Button_primaryColor__5GB68 {
-   border-color: #ffffff !important;
-   color: #202021 !important;
-   background: #fff !important;
+  .Button_button__1Es5o.Button_outline__3G65n.Button_primaryColor__5GB68 {
+  border-color: #ffffff !important;
+  color: #202021 !important;
+  background: #fff !important;
 }
 ._campaignId__footer__1MXqG {
-   position: fixed;
-   left: 0;
-   bottom: 0;
-   width: 100%;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
 }
 .campaign_content__Y9Cy2 {
-   padding: 15px 20px 15px 20px !important;
+  padding: 15px 20px 15px 20px !important;
 }
-
-
-
-
-
-
-
 
 .Player_playerWrap__3gm98 {
-    width: 100% !important;
-    max-width: 967px !important;
-    height: 557px !important;
+  width: 100% !important;
+  max-width: 967px !important;
+  height: 557px !important;
 }
-@media (max-width: 768px){
-button.VideoPlayer_buttonPlayCustom__TD-zu {
+@media (max-width: 768px) {
+  button.VideoPlayer_buttonPlayCustom__TD-zu {
     width: 52px !important;
-   }
-   .Player_textDraggable__1iF_u p  {
+  }
+  .VideoPlayer_videoElement__3wEU9 {
+    object-fit: cover;
+    width: 100% !important;
+  }
+  /* .Player_textDraggable__1iF_u p  {
     font-size: 1.2rem  !important;
-   }
-   .Player_linkDraggable__3pslz p {
-    font-size: 0.9rem  !important;
-     Padding: 0.5rem 0.6rem !important;
-   }
-.Player_linkDraggable__3pslz button{
+   } */
+  /* .Player_linkDraggable__3pslz p {
+    font-size: 0.9rem !important;
+    padding: 0.5rem 0.6rem !important;
+  } */
+  /* .Player_linkDraggable__3pslz button {
     padding: 0.7rem 0.5rem !important;
     font-size: 0.7rem !important;
   }
- .Player_linkDraggable__3pslz a{
+  .Player_linkDraggable__3pslz a {
     padding: 0.7rem 0.5rem !important;
     font-size: 0.7rem !important;
-  }
+  } */
 }
 .VideoPlayer_coverImageVid__1KiYg {
-    width: 100%;
+  width: 100%;
 }
 .Player_draggable__1FRPz {
-    padding-right: 2%;
+  padding-right: 2%;
 }
