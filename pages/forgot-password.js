@@ -1,55 +1,57 @@
-import Head from 'next/head'
-import Link from 'next/link'
-import { useState } from 'react'
+import Head from "next/head";
+import Link from "next/link";
+import { useState } from "react";
 
-import { mainAPI } from '@/plugins/axios'
+import { mainAPI } from "@/plugins/axios";
 
-import AuthLayout from '@/layouts/AuthLayout'
-import Button from '@/components/Button'
-import Input from '@/components/Input'
+import AuthLayout from "@/layouts/Auth";
+import Button from "@/components/Button";
+import Input from "@/components/Input";
 
-import styles from '@/styles/layouts/Auth.module.sass'
+import styles from "@/styles/layouts/Auth.module.sass";
 
 const ForgotPassword = () => {
-  const [email, setEmail] = useState('')
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [success, setSuccess] = useState('')
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState("");
 
   const forgotPassword = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (!loading) {
-      setError('')
-      setLoading(true)
+      setError("");
+      setLoading(true);
       try {
-        await mainAPI.post('/auth/password', { email })
-        setEmail(null)
-        setSuccess('You\'ll receive an email soon with a confirmation link.')
+        await mainAPI.post("/auth/password", { email });
+        setEmail(null);
+        setSuccess("You'll receive an email soon with a confirmation link.");
         setTimeout(() => {
-          setSuccess('')
-        }, 5000)
+          setSuccess("");
+        }, 5000);
       } catch (err) {
-        const code = err.response && err.response.data
-        if (code === 'Auth.password.forgot.notFound') {
-          setError('No user found with this email address.')
+        const code = err.response && err.response.data;
+        if (code === "Auth.password.forgot.notFound") {
+          setError("No user found with this email address.");
         } else {
-          setError('An error occurred.')
+          setError("An error occurred.");
         }
-        console.log(err)
+        console.log(err);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
-  }
+  };
 
   return (
-    <AuthLayout>
+    <AuthLayout logo="/assets/common/dashboard-orange.png">
       <Head>
         <title>Forgot password | FOMO</title>
       </Head>
 
       <h1 className={styles.title}>Forgot password</h1>
-      <h2 className={styles.subtitle}>Enter your email to get a reset password link.</h2>
+      <h2 className={styles.subtitle}>
+        Enter your email to get a reset password link.
+      </h2>
 
       <form onSubmit={forgotPassword}>
         <div>
@@ -60,12 +62,9 @@ const ForgotPassword = () => {
             required
           />
         </div>
-        { error && <p className={styles.error}>{error}</p> }
-        { success && <p className={styles.success}>{success}</p> }
-        <Button
-          loading={loading}
-          width="100%"
-        >
+        {error && <p className={styles.error}>{error}</p>}
+        {success && <p className={styles.success}>{success}</p>}
+        <Button color="orange" loading={loading} width="100%">
           Send
         </Button>
       </form>
@@ -73,7 +72,7 @@ const ForgotPassword = () => {
         <a className={styles.link}>Back to log in</a>
       </Link>
     </AuthLayout>
-  )
-}
+  );
+};
 
-export default ForgotPassword
+export default ForgotPassword;

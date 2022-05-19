@@ -9,8 +9,23 @@
   width: 100%
   cursor: pointer
   font-size: 20px
+  position: relative
   @media screen and (max-width: 780px)
     font-size: 6px
+
+.fullScreenVideo
+  width: 100vw
+  height: 100vh
+  position: absolute
+  left: 0
+  top: 0
+  z-index: 9999
+
+.fullScreenVideo .player
+  height: 100% !important
+
+.videoPlayer:hover .controls
+  opacity: 1
 
 .player
   border-bottom: 0
@@ -80,7 +95,38 @@
   margin: auto
   padding: 20px 10%
   width: 100%
-  background: black
+  background: transparent
+  position: absolute
+  bottom: 0
+  transition: all 0.3s ease-in-out
+  z-index: 99999
+  @media screen and (max-width: 768px)
+    padding: 20px 13%
+
+.notFullScreenVideo .controls
+  opacity: 0
+
+.fullScreenVideo .controls
+  opacity: 1
+
+.fullScreenVideo .controls.hidden
+  opacity: 0
+
+.fullScreenVideo .controls.hidden:hover
+  opacity: 1 !important
+
+.pausedControls
+  opacity: 1 !important
+
+.expandIcon
+  color: #fff
+  width: 20px
+  position: absolute
+  right: 30px
+  top: 55px
+  @media screen and (max-width: 768px)
+    right: 18px
+    top: 65px
 
 .timeline
   align-content: center
@@ -189,6 +235,10 @@
 
 .coverImageVidContainer
   text-align: center
+
+.fullScreenVideo .buttonPlayCustom
+  @media screen and (min-device-width: 768px)
+    transform: translate(50%, 50%)
 
 .buttonPlayCustom:after
   content: ''
