@@ -57,6 +57,8 @@ const VideoPlayer = ({
   const playerRef = useRef();
   const timelineRef = useRef();
   const volumeRef = useRef();
+  const videoContainer = useRef();
+  const firstUpdate = useRef(true);
   const { height, width } = useVideoResize({
     ref: playerRef,
     autoHeight: true,
@@ -453,6 +455,47 @@ const VideoPlayer = ({
     debounce: 500,
   });
 
+  useEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
+    } else {
+      try {
+        if (fullScreen) {
+          if (
+            /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+              navigator.userAgent
+            )
+          ) {
+            if (videoContainer.current.requestFullscreen) {
+              videoContainer.current.requestFullscreen();
+            } else if (videoContainer.current.webkitRequestFullScreen) {
+              videoContainer.current.webkitRequestFullScreen();
+            } else if (videoContainer.current.mozRequestFullScreen) {
+              videoContainer.current.mozRequestFullScreen();
+            }
+
+            screen.orientation
+              .lock("landscape")
+              .then(function () {
+                console.log("locked to landscape");
+              })
+              .catch(function (error) {
+                console.error(error);
+              });
+          }
+        } else {
+          if (document.fullscreenElement) {
+            document.exitFullscreen();
+            screen.orientation.unlock();
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, [fullScreen]);
+
   console.log("share", share?.thumbnail);
 
   return (
@@ -468,6 +511,7 @@ const VideoPlayer = ({
         timelineDraggable && seekTo(e.clientX);
         volumeDraggable && setVolume(e);
       }}
+      ref={videoContainer}
     >
       <div
         className={styles.player}
