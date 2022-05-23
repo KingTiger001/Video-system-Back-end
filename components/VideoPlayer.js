@@ -547,10 +547,10 @@ const VideoPlayer = ({
         {showPlayButton && <PlayButton />}
         {!showDivPlayButton && (
           <div className={styles.playButton}>
-            <img
+           {/*  <img
               className={styles.loadingImg}
               src="/assets/common/loading.gif"
-            ></img>
+            ></img> */}
           </div>
         )}
       </div>
