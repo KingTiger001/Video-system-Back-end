@@ -469,10 +469,12 @@ const VideoPlayer = ({
           ) {
             if (videoContainer.current.requestFullscreen) {
               videoContainer.current.requestFullscreen();
-            } else if (videoContainer.current.webkitRequestFullScreen) {
-              videoContainer.current.webkitRequestFullScreen();
-            } else if (videoContainer.current.mozRequestFullScreen) {
-              videoContainer.current.mozRequestFullScreen();
+            } else if (videoContainer.current.webkitRequestFullscreen) {
+              videoContainer.current.webkitRequestFullscreen();
+            } else if (videoContainer.current.mozRequestFullscreen) {
+              videoContainer.current.mozRequestFullscreen();
+            } else if (videoContainer.current.msRequestFullscreen) {
+              videoContainer.current.msRequestFullscreen();
             }
 
             screen.orientation
