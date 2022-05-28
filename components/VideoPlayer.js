@@ -477,14 +477,25 @@ const VideoPlayer = ({
               videoContainer.current.msRequestFullscreen();
             }
 
-            screen.orientation
-              .lock("landscape")
-              .then(function () {
-                console.log("locked to landscape");
-              })
-              .catch(function (error) {
-                console.error(error);
-              });
+            try {
+              screen.orientation
+                .lock("landscape")
+                .then(function () {
+                  console.log("locked to landscape");
+                })
+                .catch(function (error) {
+                  console.error(error);
+                });
+            } catch (e) {
+              screen.orientation
+                .lock("landscape-primary")
+                .then(function () {
+                  console.log("locked to landscape");
+                })
+                .catch(function (error) {
+                  console.error(error);
+                });
+            }
           }
         } else {
           if (document.fullscreenElement) {
