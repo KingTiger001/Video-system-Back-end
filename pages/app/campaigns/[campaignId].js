@@ -536,6 +536,8 @@ const Campaign = ({ me }) => {
 
   const uploadVideo = async (file) => {
     try {
+      const { user } = await mainAPI.get("/users/me");
+
       // create a video
       const { data: video } = await mainAPI.post("/videos", {
         name: file.name.split(".")[0],
@@ -547,6 +549,10 @@ const Campaign = ({ me }) => {
       formData.append("file", file);
       formData.append("folder", "videos");
       formData.append("videoId", video._id);
+      formData.append("userID", user._id);
+
+      console.log("file size: ", file.size);
+
       await mediaAPI.post("/videos", formData, {
         onUploadProgress: function (progressEvent) {
           const totalLength = progressEvent.lengthComputable
