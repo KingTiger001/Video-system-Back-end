@@ -11,61 +11,64 @@ import styles from "@/styles/components/Popups/PopupUploadVideo.module.sass";
 import { useDebounce } from "@/hooks";
 import { uploadThumbnailFile } from "utils";
 import useGenerateThumbnail from "hooks/useGenerateThumbnail";
+import { toast } from "react-toastify";
 
 const PopupUploadVideo = ({ onDone, loading, type }) => {
-   const dispatch = useDispatch();
-   const hidePopup = () => dispatch({ type: "HIDE_POPUP" });
-   const popup = useSelector((state) => state.popup);
+  const dispatch = useDispatch();
+  const hidePopup = () => dispatch({ type: "HIDE_POPUP" });
+  const popup = useSelector((state) => state.popup);
 
-   const [error, setError] = useState("");
-   const [isFinished, setIsFinished] = useState(false);
-   const [isUploading, setIsUploading] = useState(false);
-   const [uploadProgress, setUploadProgress] = useState(0);
-   const [videoName, setVideoName] = useState(null);
-   const [video, setVideo] = useState(null);
-   const { generateVideoThumbnail } = useGenerateThumbnail();
+  const [error, setError] = useState("");
+  const [isFinished, setIsFinished] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [videoName, setVideoName] = useState(null);
+  const [video, setVideo] = useState(null);
+  const { generateVideoThumbnail } = useGenerateThumbnail();
 
-   const upload = async (e = false) => {
-      if (e) {
-         e.preventDefault();
-      }
+  const upload = async (e = false) => {
+    if (e) {
+      e.preventDefault();
+    }
 
-      if (popup.from === "import" && !loading.show) {
-         onDone(video, popup.data);
-         setIsFinished(true);
-         hidePopup();
-      }
+    if (popup.from === "import" && !loading.show) {
+      onDone(video, popup.data);
+      setIsFinished(true);
+      hidePopup();
+    }
+
+    try {
+      setError("");
+      setIsUploading(true);
+
+      // Upload Thumbnail
+      const { user } = await mainAPI.get("/users/me");
+      const { thumbnail } = await generateVideoThumbnail(popup.data);
+      const { url } = await uploadThumbnailFile(thumbnail);
+
+      // create a video
+      const { data: video } = await mainAPI.post("/videos", {
+        name:
+          popup.from === "import" ? popup.data.name.split(".")[0] : videoName,
+        status: "uploading",
+        thumbnail: url,
+        type,
+        size: popup.data.size,
+      });
+
+      setVideo(video);
+
+      // upload for encoding
+      const formData = new FormData();
+      formData.append("file", popup.data);
+      formData.append("folder", "videos");
+      formData.append("videoId", video._id);
+      formData.append("userID", user._id);
 
       try {
-         setError("");
-         setIsUploading(true);
-
-         // Upload Thumbnail
-         const { thumbnail } = await generateVideoThumbnail(popup.data);
-         const { url } = await uploadThumbnailFile(thumbnail);
-
-         // create a video
-         const { data: video } = await mainAPI.post("/videos", {
-            name:
-               popup.from === "import"
-                  ? popup.data.name.split(".")[0]
-                  : videoName,
-            status: "uploading",
-            thumbnail: url,
-            type,
-         });
-
-         setVideo(video);
-
-         // upload for encoding
-         const formData = new FormData();
-         formData.append("file", popup.data);
-         formData.append("folder", "videos");
-         formData.append("videoId", video._id);
-         try {
-            const rsp = await mediaAPI.post(
-               "/videos",
-               formData /* , {
+        const rsp = await mediaAPI.post(
+          "/videos",
+          formData /* , {
           onUploadProgress: function (progressEvent) {
             const totalLength = progressEvent.lengthComputable
               ? progressEvent.total
@@ -78,123 +81,128 @@ const PopupUploadVideo = ({ onDone, loading, type }) => {
             );
           },
         } */
-            );
-         } catch (err) {
-            setError("Network Error.");
-            setIsUploading(false);
-            return false;
-         }
-         await mainAPI.patch(`/videos/${video._id}`, {
-            status: "waiting",
-         });
-         // onDone();
-         // setIsFinished(true);
-         // hidePopup();
+        );
       } catch (err) {
-         const code = err.response && err.response.data;
-         if (code === "Upload.incorrectFiletype") {
-            setError(
-               "Incorrect file type, Please use an accepted format (webm, mp4, avi, mov)"
-            );
-         }
-      } finally {
-         // setIsUploading(false);
-         // setUploadProgress(0);
+        setError("Network Error.");
+        setIsUploading(false);
+        return false;
       }
-   };
-
-   const updateProcessingVideos = async () => {
-      if (video) {
-         const { data } = await mainAPI(`/videos/${video._id}`);
-         setUploadProgress(data.statusProgress);
-         setVideo(data);
-         if (data.status === "done") {
-            setIsUploading(false);
-            onDone(data);
-            setIsFinished(true);
-            hidePopup();
-         }
+      await mainAPI.patch(`/videos/${video._id}`, {
+        status: "waiting",
+      });
+      // onDone();
+      // setIsFinished(true);
+      // hidePopup();
+    } catch (err) {
+      const code = err.response && err.response.data;
+      if (code === "Upload.incorrectFiletype") {
+        setError(
+          "Incorrect file type, Please use an accepted format (webm, mp4, avi, mov)"
+        );
       }
-   };
 
-   useDebounce(updateProcessingVideos, 4000);
+      toast.error(err.response.data);
+      setIsUploading(false);
+      setUploadProgress(0);
+      hidePopup();
+    } finally {
+      // setIsUploading(false);
+      // setUploadProgress(0);
+    }
+  };
 
-   useEffect(() => {
-      if (popup.from === "import" && !isUploading) {
-         upload();
+  const updateProcessingVideos = async () => {
+    if (video) {
+      const { data } = await mainAPI(`/videos/${video._id}`);
+      setUploadProgress(data.statusProgress);
+      setVideo(data);
+      if (data.status === "done") {
+        setIsUploading(false);
+        onDone(data);
+        setIsFinished(true);
+        hidePopup();
       }
-   }, []);
+    }
+  };
 
-   return (
-      <Popup
-         allowBackdropClose={false}
-         showCloseIcon={false}
-         title={
-            !isUploading && popup.from !== "import" ? "Save recorded video" : ""
-         }
-         bgcolor="light"
-      >
-         {error && <p className={styles.error}>{error}</p>}
-         {popup.from !== "import" && !isUploading && !isFinished && (
-            <form onSubmit={upload} className={styles.form}>
-               {/* {popup.from === "recorder" && (
+  useDebounce(updateProcessingVideos, 4000);
+
+  useEffect(() => {
+    console.log(popup.data.size);
+    if (popup.from === "import" && !isUploading) {
+      upload();
+    }
+  }, []);
+
+  return (
+    <Popup
+      allowBackdropClose={false}
+      showCloseIcon={false}
+      title={
+        !isUploading && popup.from !== "import" ? "Save recorded video" : ""
+      }
+      bgcolor="light"
+    >
+      {error && <p className={styles.error}>{error}</p>}
+      {popup.from !== "import" && !isUploading && !isFinished && (
+        <form onSubmit={upload} className={styles.form}>
+          {/* {popup.from === "recorder" && (
             <p className={styles.message}>
               You just recorded a video. To save the video give it a name.
             </p>
           )} */}
-               <Input
-                  onChange={(e) => setVideoName(e.target.value)}
-                  style={{
-                     height: "37.48px",
-                     background: "#F4F7F9",
-                     border: "1.24944px solid rgba(76, 74, 96, 0.5)",
-                     borderRadius: "4.99777px",
-                     fontWeight: "400",
-                     fontSize: "16.2428px",
-                     marginBottom: "19px",
-                     letterSpacing: "-0.0124944px",
-                     color: "rgba(45, 71, 94, 0.7)",
-                  }}
-                  placeholder="Video Name"
-                  type="text"
-                  required
-               />
-               <button className={styles.save}>Save</button>
-               <p onClick={() => hidePopup()} className={styles.cancel}>
-                  Cancel
-               </p>
-            </form>
-         )}
-         {isUploading && !isFinished && (
-            <div className={`${styles.progress} ${styles.loading}`}>
-               <div className={styles.progressBar}>
-                  <span style={{ width: `${uploadProgress}%` }} />
-               </div>
-               
-                  <img
-                     style={{ position: "absolute", right: 0, top: 0, color: "red" }}
-                  
-                     onClick={() => {
-                     hidePopup()
-                     }}
-                     src="/assets/common/close.svg"
-                  />
-        
-               <p className={styles.progressNumber}>Converting video</p>
-               <img
-                  className={styles.progressIcon}
-                  src="/assets/campaign/uploading.svg"
-               />
-            </div>
-         )}
-         {/* {!isUploading && isFinished && (
+          <Input
+            onChange={(e) => setVideoName(e.target.value)}
+            style={{
+              height: "37.48px",
+              background: "#F4F7F9",
+              border: "1.24944px solid rgba(76, 74, 96, 0.5)",
+              borderRadius: "4.99777px",
+              fontWeight: "400",
+              fontSize: "16.2428px",
+              marginBottom: "19px",
+              letterSpacing: "-0.0124944px",
+              color: "rgba(45, 71, 94, 0.7)",
+            }}
+            placeholder="Video Name"
+            type="text"
+            required
+          />
+          <button className={styles.save}>Save</button>
+          <p onClick={() => hidePopup()} className={styles.cancel}>
+            Cancel
+          </p>
+        </form>
+      )}
+      {isUploading && !isFinished && (
+        <div className={`${styles.progress} ${styles.loading}`}>
+          <div className={styles.progressBar}>
+            <span style={{ width: `${uploadProgress}%` }} />
+          </div>
+
+          <img
+            style={{ position: "absolute", right: 0, top: 0, color: "red" }}
+            onClick={() => {
+              hidePopup();
+            }}
+            src="/assets/common/close.svg"
+          />
+
+          <p className={styles.progressNumber}>Converting video</p>
+          <img
+            className={styles.progressIcon}
+            src="/assets/campaign/uploading.svg"
+          />
+        </div>
+      )}
+      {/* {!isUploading && isFinished && (
         <div className={styles.finish}>
           <p>Your video has been uploaded</p>
           <Button onClick={hidePopup}>Ok</Button>
         </div>
       )} */}
-      </Popup>
-   );
+    </Popup>
+  );
 };
 
 export default PopupUploadVideo;
