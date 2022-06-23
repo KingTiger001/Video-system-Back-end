@@ -54,7 +54,7 @@ const Login = () => {
   return (
     <AuthLayout>
       <Head>
-        <title>Reset password | FOMO</title>
+        <title>Reset password | SEEMEE</title>
       </Head>
 
       <h1 className={styles.title}>Reset password</h1>

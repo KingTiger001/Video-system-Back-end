@@ -482,7 +482,7 @@ const Share = ({
       }
       setCampaign(campaign);
       setFormDetails({
-         from: `${_FROM} via FOMO`,
+         from: `${_FROM} via SEEMEE`,
          message: campaign.share ? campaign.share.message : "",
          subject: campaign.share ? campaign.share.subject : "",
       });

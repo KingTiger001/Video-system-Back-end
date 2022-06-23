@@ -36,7 +36,7 @@ const SignupConfirmation = () => {
   return (
     <SignupLayout>
       <Head>
-        <title>Sign up | FOMO</title>
+        <title>Sign up | SEEMEE</title>
       </Head>
 
       <h1 className={styles.title}>Email confirmation</h1>

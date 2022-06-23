@@ -54,9 +54,10 @@ export const SignupForm = () => {
                   required
                />
                <CheckBox
-                  label="I am 18 years old or older, I agree to My FOMO’s"
+                  label="I am 18 years old or older, I agree to My SEEMEE’s"
                   link="Terms & Conditions and Privacy Policy"
-                  href="/"
+                  href="https://www.seemee.io/terms-conditions/"
+                  target="_blank"
                   onChange={(e) => setPrivacyPolicy(e.target.value)}
                />
                <Button

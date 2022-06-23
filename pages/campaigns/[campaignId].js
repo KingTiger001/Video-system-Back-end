@@ -114,7 +114,7 @@ const Campaign = ({ campaign }) => {
          <Head>
             <title>
                {campaign.user.firstName} from {campaign.user.company} sent you a
-               video message | FOMO
+               video message | SEEMEE
             </title>
             {/*<meta name="msapplication-TileImage" content={campaign?.share?.thumbnail}/>*/}
             {/*<meta property="og:site_name" content="FOMO"/>*/}

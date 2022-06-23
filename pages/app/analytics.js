@@ -248,7 +248,7 @@ const Analytics = ({ initialAnalytics,
     return (
     <AppLayout>
       <Head>
-        <title>Analytics | FOMO</title>
+        <title>Analytics | SEEMEE</title>
       </Head>
 
       {/*  <div className={styles.campaignsListContainer}>*/}

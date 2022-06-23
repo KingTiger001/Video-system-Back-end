@@ -1,6 +1,6 @@
 import styles from "./styles.module.css";
 
-const AuthLayout = ({ children, logo = "/logo-signup.png" }) => {
+const AuthLayout = ({ children, logo = "/assets/common/dashboard-orange.png" }) => {
    return (
       <main className={styles.root}>
          <div className={styles.leftSection}>

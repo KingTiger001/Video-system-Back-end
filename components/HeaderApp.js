@@ -71,7 +71,7 @@ const HeaderApp = () => {
                )}
                {router.route === "/app/campaigns" && <p>Library</p>}
                {router.route === "/app/upgrade" && (
-                  <p>Upgrade your My Fomo plan</p>
+                  <p>Upgrade your My SEEMEE plan</p>
                )}
                {/* {
             router.route === '/app' &&

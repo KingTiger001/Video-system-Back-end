@@ -16,7 +16,7 @@ const Login = () => {
    return (
       <AuthLayout logo="/assets/common/dashboard-orange.png">
          <Head>
-            <title>Login | FOMO</title>
+            <title>Login | SEEMEE</title>
          </Head>
          <LoginForm />
       </AuthLayout>

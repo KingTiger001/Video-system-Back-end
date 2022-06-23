@@ -277,7 +277,7 @@ const Checkout = () => {
             padding: '21px 39px'
         }}>
             <Head>
-                <title>Checkout | FOMO</title>
+                <title>Checkout | SEEMEE</title>
             </Head>
 
             <div style={{
@@ -287,11 +287,11 @@ const Checkout = () => {
                 gap: '110px',
                 marginBottom: '68px',
             }}>
-                <img src='/assets/socials/myfomo_logopurple.svg' width='30px' height='30px'/>
+                <img src='/assets/common/dashboard-orange.png' width='48.4px' height='27.4px'/>
                 <h2 style={{
                     fontSize: '26px',
                     color: '#4C4A60'
-                }}>Upgrade to MyFomo Business</h2>
+                }}>Upgrade to SEEMEE Business</h2>
             </div>
 
             <div className={layoutStyles.container}>
@@ -384,7 +384,7 @@ const Checkout = () => {
                                 display: 'inline-flex',
                                 alignItems: 'center',
                                 fontSize: '12px'
-                            }}>I accept the <a href='https://www.myfomo.io/terms-conditions' target='_blank' style={{
+                            }}>I accept the <a href='https://www.seemee.io/terms-conditions/' target='_blank' style={{
                                 color: '#5B5FEE',
                             }}> &nbsp;Terms & Conditions</a>
                             </p>

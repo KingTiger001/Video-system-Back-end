@@ -220,7 +220,7 @@ const Campaigns = ({ initialCampaignsDraft, initialCampaignsShared, me }) => {
    return (
       <AppLayout>
          <Head>
-            <title>Library | FOMO</title>
+            <title>Library | SEEMEE</title>
          </Head>
 
          {popup.display === "DELETE_CAMPAIGN" && (

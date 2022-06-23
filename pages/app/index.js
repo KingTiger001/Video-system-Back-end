@@ -288,7 +288,7 @@ const Dashboard = ({
   return (
     <AppLayout>
       <Head>
-        <title>Dashboard | FOMO</title>
+        <title>Dashboard | SEEMEE</title>
       </Head>
 
       <div className={styles.container}>

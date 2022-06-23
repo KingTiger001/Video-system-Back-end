@@ -63,7 +63,7 @@ const Account = ({ me }) => {
   return (
     <AppLayout>
       <Head>
-        <title>Account | FOMO</title>
+        <title>Account | SEEMEE</title>
       </Head>
 
       <AccountLayout>

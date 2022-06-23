@@ -17,7 +17,7 @@ const Upgrade = ({initialCampaignsDraft, initialCampaignsShared, me}) => {
     return (
         <AppLayout>
             <Head>
-                <title>Upgrade | FOMO</title>
+                <title>Upgrade | SEEMEE</title>
             </Head>
 
             <div className={layoutStyles.container}>

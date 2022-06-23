@@ -9,7 +9,7 @@ export default function SignupLayout({ children }) {
             <div>
                {children}
                <p className={styles.termsOfService}>
-                  By signing up, you agree to FOMO’s Terms of Use and Privacy
+                  By signing up, you agree to SEEMEE’s Terms of Use and Privacy
                   Policy.
                </p>
             </div>

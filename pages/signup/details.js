@@ -8,7 +8,7 @@ const SignupDetails = () => {
    return (
       <AuthLayout>
          <Head>
-            <title>Sign up | FOMO</title>
+            <title>Sign up | SEEMEE</title>
          </Head>
          <SignupFormDetails />
       </AuthLayout>

@@ -183,7 +183,7 @@ const Contacts = ({ initialContacts, me }) => {
   return (
     <AppLayout>
       <Head>
-        <title>Contacts | FOMO</title>
+        <title>Contacts | SEEMEE</title>
       </Head>
       {popup.display === "CONTACT_LIST_CREATE" && (
         <PopupContactListCreate

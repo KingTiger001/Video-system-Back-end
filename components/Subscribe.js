@@ -241,7 +241,7 @@ const Subscribe = ({ onClose, onDone, me: meProps }) => {
       />
       <div className={styles.box}>
         <div className={styles.header}>
-          <p className={styles.headerTitle}>Subscribe to FOMO</p>
+          <p className={styles.headerTitle}>Subscribe to SEEMEE</p>
           <img
             onClick={() => {
               if (!checkoutLoading) {
@@ -340,7 +340,7 @@ const Subscribe = ({ onClose, onDone, me: meProps }) => {
                 className={styles.stepThreeLogo}
                 src="/logo-circle.svg"
               />
-              <p className={styles.stepThreeTitle}>Welcome to FOMO</p>
+              <p className={styles.stepThreeTitle}>Welcome to SEEMEE</p>
               <p className={styles.stepThreeText}>Your payment has been processed.</p>
               <Button
                 onClick={() => {

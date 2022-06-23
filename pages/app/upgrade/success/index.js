@@ -18,7 +18,7 @@ const SuccessPage = () => {
       width: '100vw'
   }}>
       <Head>
-          <title>Checkout | FOMO</title>
+          <title>Checkout | SEEMEE</title>
       </Head>
 
       <div style={{

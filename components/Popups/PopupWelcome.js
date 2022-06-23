@@ -24,9 +24,9 @@ const PopupWelcome = ({ onClose }) => {
       width={445}
     >
       <div className={styles.content}>
-        <p className={styles.title}>Happy to see you<br/>on Fomo 😃🚀</p>
+        <p className={styles.title}>Happy to see you<br/>on SEEMEE 😃🚀</p>
         <p className={styles.text}>
-          Vous êtes sur le point de commencer l’aventure Fomo ! Nous t’invitons à entamer une des étapes ci-dessous !
+          Vous êtes sur le point de commencer l’aventure SEEMEE ! Nous t’invitons à entamer une des étapes ci-dessous !
           <br/><br/>
           Vous n’êtes pas obligé de les faires de suite, mais elle te permettront de découvrir et d’apprendre à utiliser l’interface !
         </p>

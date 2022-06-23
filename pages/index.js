@@ -28,7 +28,7 @@ const Index = () => {
   return (
     <div className={styles.homepage}>
       <Head>
-        <title>FOMO</title>
+        <title>SEEMEE</title>
       </Head>
 
       <main className={styles.main}>
@@ -43,7 +43,7 @@ const Index = () => {
             }`}
           >
             <div className={styles.container}>
-              <img src="/logo.svg" alt="Logo FOMO" className={styles.logo} />
+              <img src="/logo.svg" alt="Logo SEEMEE" className={styles.logo} />
               <nav className={styles.headerMenu}>
                 <LinkScroll
                   to="solution"
@@ -51,7 +51,7 @@ const Index = () => {
                   offset={-50}
                   duration={500}
                 >
-                  Why FOMO?
+                  Why SEEMEE?
                 </LinkScroll>
                 <LinkScroll
                   to="product"
@@ -117,7 +117,7 @@ const Index = () => {
               <div className={styles.engageScreenshotHidden}>
                 <img
                   src="/assets/home/engageScreenshot.webp"
-                  alt="Screenshot dashboard FOMO"
+                  alt="Screenshot dashboard SEEMEE"
                 />
               </div>
             </div>
@@ -224,7 +224,7 @@ const Index = () => {
                   src="/assets/home/productOval.svg"
                 />
                 <img
-                  alt="Screenshot dashboard FOMO"
+                  alt="Screenshot dashboard SEEMEE"
                   className={styles.productScreenshot}
                   src="/assets/home/productVisual.png"
                 />
@@ -241,7 +241,7 @@ const Index = () => {
                 src="/assets/home/stepsOval.svg"
               />
               <img
-                alt="Screenshot dashboard FOMO"
+                alt="Screenshot dashboard SEEMEE"
                 className={styles.stepsVisualScreenshot}
                 src="/assets/home/stepsVisual.png"
               />
@@ -333,7 +333,7 @@ const Index = () => {
           <div>
             <img
               src="/logo.svg"
-              alt="Logo FOMO"
+              alt="Logo SEEMEE"
               className={styles.footerLogo}
             />
           </div>

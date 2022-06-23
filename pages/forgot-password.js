@@ -45,7 +45,7 @@ const ForgotPassword = () => {
   return (
     <AuthLayout logo="/assets/common/dashboard-orange.png">
       <Head>
-        <title>Forgot password | FOMO</title>
+        <title>Forgot password | SEEMEE</title>
       </Head>
 
       <h1 className={styles.title}>Forgot password</h1>

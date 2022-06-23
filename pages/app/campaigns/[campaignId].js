@@ -682,7 +682,7 @@ const Campaign = ({ me }) => {
   return (
     <div className={styles.dashboardCampaign} ref={ref}>
       <Head>
-        <title>Edit my video campaign | FOMO</title>
+        <title>Edit my video campaign | SEEMEE</title>
       </Head>
 
       {popup.display === "UPLOAD_VIDEO" && (
