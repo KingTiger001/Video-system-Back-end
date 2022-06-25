@@ -96,7 +96,7 @@ const Plans = ({ className, renderAction }) => {
                            </span>
                         </p>
                      </div>
-                   {/*   <ul className={styles.planDetails}>
+                     <ul className={styles.planDetails}>
                         {product.metadata.features.split(",").map((feature) => (
                            <li className={styles.planDetailsItem} key={feature}>
                               <img
@@ -112,7 +112,7 @@ const Plans = ({ className, renderAction }) => {
                               </p>
                            </li>
                         ))}
-                     </ul> */}
+                     </ul>
                      {/*<span style={{*/}
                      {/*    fontSize: '9px',*/}
                      {/*    lineHeight: '8px',*/}
