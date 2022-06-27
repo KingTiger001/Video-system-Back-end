@@ -27,6 +27,7 @@ const Plans = ({ className, renderAction }) => {
          );
          const { data: prices } = await mainAPI.get("/subscriptions/prices");
          const productsOrdered = products.data
+            .filter((p) => p.name !== "Pro") // TODO: remove this line to reactivate Pro plan
             .map((product) => ({
                ...product,
                price: prices.data.find((price) => price.product === product.id),
@@ -64,7 +65,7 @@ const Plans = ({ className, renderAction }) => {
    return products.length > 0 ? (
       <ul className={`${className} ${styles.plansList}`}>
          {products
-            .filter((p) => p.name !== "Pro") // TODO: remove this line to reactivate Pro plan
+
             .map((product) => (
                <li
                   className={
@@ -96,8 +97,9 @@ const Plans = ({ className, renderAction }) => {
                            </span>
                         </p>
                      </div>
-                     <ul className={styles.planDetails}>
-                        {product.metadata.features.split(",").map((feature) => (
+
+                    <ul className={styles.planDetails}>
+                     {product.metadata.features ? (product.metadata.features.split(",").map((feature) => (
                            <li className={styles.planDetailsItem} key={feature}>
                               <img
                                  src={`/assets/home/${
@@ -111,8 +113,12 @@ const Plans = ({ className, renderAction }) => {
                                     feature.slice(1)}
                               </p>
                            </li>
-                        ))}
-                     </ul>
+                        ))) : (
+                            <li></li>
+                        )
+                        }
+                         </ul>
+
                      {/*<span style={{*/}
                      {/*    fontSize: '9px',*/}
                      {/*    lineHeight: '8px',*/}
