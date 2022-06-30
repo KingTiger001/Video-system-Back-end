@@ -12,6 +12,7 @@ import { useDebounce } from "@/hooks";
 import { uploadThumbnailFile } from "utils";
 import useGenerateThumbnail from "hooks/useGenerateThumbnail";
 import { toast } from "react-toastify";
+import Link from "next/link";
 
 const PopupUploadVideo = ({ onDone, loading, type }) => {
   const dispatch = useDispatch();
@@ -101,7 +102,28 @@ const PopupUploadVideo = ({ onDone, loading, type }) => {
         );
       }
 
-      toast.error(err.response.data);
+      toast.error(
+          <div>
+            <p style={{
+              textAlign: "center",
+              marginBottom: "10px",
+              marginTop: "5px"
+            }}
+            >{err.response.data}</p>
+            <Button
+                style={{
+                  marginBottom: "5px",
+                  marginTop: "5px"
+                }}
+                color="primary"
+                type="link"
+                href={'/app/upgrade'}
+                outline={false}
+            >
+              Upgrade
+            </Button>
+          </div>
+    );
       setIsUploading(false);
       setUploadProgress(0);
       hidePopup();
