@@ -188,7 +188,7 @@ const Plans = ({ className, renderAction }) => {
                   </li>
                </ul>
 
-               <Button href="mailto:contact@myfomo.io" type="link" width={160}>
+               <Button className={styles.planButton} href="mailto:contact@seemee.io" type="link" width={160}>
                   Contact Sales
                </Button>
             </div>
