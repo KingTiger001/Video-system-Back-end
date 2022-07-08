@@ -79,9 +79,9 @@ const Plans = ({ className, renderAction }) => {
                   <div className={styles.planContent}>
                      <p className={styles.planTitle}>
                         <img
-                           src="/assets/socials/myfomo_logoorange.svg"
-                           width="19px"
-                           height="26px"
+                           src="/assets/common/dashboard-orange-icon.png"
+                           width="40px"
+                           height="29px"
                         />
                         {product.name}
                      </p>
@@ -160,9 +160,9 @@ const Plans = ({ className, renderAction }) => {
             <div className={styles.planContent}>
                <p className={styles.planTitle}>
                   <img
-                     src="/assets/socials/myfomo_logopurple.svg"
-                     width="19px"
-                     height="26px"
+                      src="/assets/common/dashboard-purple.png"
+                      width="40px"
+                      height="29px"
                   />
                   Entreprise
                </p>

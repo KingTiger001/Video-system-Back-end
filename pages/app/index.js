@@ -126,8 +126,8 @@ const Dashboard = ({
       }`}
     >
       <p className={stylesCampains.firstHeader}>Video name</p>
-      <p>Creation date</p>
       <p>Duration</p>
+      <p>Creation date</p>
     </ListHeader>
   );
 

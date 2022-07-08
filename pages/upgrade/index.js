@@ -23,7 +23,7 @@ const Upgrade = ({initialCampaignsDraft, initialCampaignsShared, me}) => {
             </Head>
 
             <div className={layoutStyles.container}>
-                <b>Upgrade your My SEEMEE plan</b>
+                <b>Upgrade your SEEMEE plan</b>
                 <div style={{
                     marginTop: '50px'
                 }}>
