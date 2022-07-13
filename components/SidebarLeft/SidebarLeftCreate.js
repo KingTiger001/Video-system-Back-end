@@ -129,7 +129,7 @@ const SidebarLeftCreate = ({ screen, renderScreen }) => {
             </button>
             <p className={`${styles.menu_title}`}>Media</p>
             <button
-                disabled = {(screen === "CREATE")}
+                //disabled = {(screen === "CREATE" || screen === "MEDIA" )}
                className={
                   `${styles.menu_item} ${styles.withTitle} ` +
                   (screen === "SCREEN" ? styles.active : "")

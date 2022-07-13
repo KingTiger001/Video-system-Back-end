@@ -400,12 +400,13 @@ const ToolScreens = () => {
                   }}
                />
             )}
-            {!showEdit && !selectedContent ? (
+            {!showEdit && !selectedContent ? (''<
+                    {/*
                <div className={styles.editSection}>
                   <span className={styles.toolTitleSection}>
                      {/* <div onClick={closeToolbox} className={styles.backArrow}>
                 <img src="/assets/campaign/backArrow.svg" />{" "}
-              </div> */}
+              </div>
                      <p className={styles.toolTitle}>Screen</p>
                   </span>
 
@@ -432,7 +433,7 @@ const ToolScreens = () => {
                   <div className={styles.videosList}>
                      {unselectedScreens.map((obj) => renderScreenItem(obj))}
                   </div>
-               </div>
+               </div>*/}
             ) : (
                <div className={styles.toolSection}>
                   {/* <span className={styles.toolTitleSection}>
