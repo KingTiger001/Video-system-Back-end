@@ -129,6 +129,7 @@ const SidebarLeftCreate = ({ screen, renderScreen }) => {
             </button>
             <p className={`${styles.menu_title}`}>Media</p>
             <button
+                disabled = {(screen === "CREATE")}
                className={
                   `${styles.menu_item} ${styles.withTitle} ` +
                   (screen === "SCREEN" ? styles.active : "")
@@ -137,6 +138,7 @@ const SidebarLeftCreate = ({ screen, renderScreen }) => {
             >
                <span className={`${styles.orange_border}`}></span>
                <img
+
                   src={
                      "/assets/common/elements" +
                      (screen === "SCREEN" ? "Orange" : "") +
