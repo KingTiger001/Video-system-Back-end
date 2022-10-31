@@ -7,7 +7,7 @@
 
 ## Déployer en production
 
-- Se placer à la racine du projet et build avec la commande suivante: `docker build -f config/dockerfiles/dockerfile.production -t registry.gitlab.com/m981/saas:<tag> . && docker push registry.gitlab.com/m981/saas:<tag>`
+- Se placer à la racine du projet et build avec la commande suivante: `docker build -f config/dockerfiles/dockerfile.production -t registry.gitlab.com/m981/saas:1.3.2 . && docker push registry.gitlab.com/m981/saas:1.3.2`
 - Se connecter au serveur `ssh -i "fomo.pem" ec2-user@ec2-52-2-27-188.compute-1.amazonaws.com`
 - Editer le fichier docker-compose.yml (`nano docker-compose.yml`)
 - Mettre à jour les versions des projets modifiés et sauvegarder

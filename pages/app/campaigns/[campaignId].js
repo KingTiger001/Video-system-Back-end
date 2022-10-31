@@ -471,53 +471,92 @@ const Campaign = ({ me }) => {
     const selectedScreens = contents.filter((obj) => obj.type === "screen");
     const array = contents.slice();
     const id = new ObjectID();
-    const template = {
-      _id: id.toString(),
-      position: contents.length,
-      status: "done",
-      type: "screen",
-      screen: {
-        name: `Screen${templateList.length}`,
-        background: { type: "color", color: "#9FE4FC" },
-        duration: 3,
-      },
-      texts: [],
-      links: [],
-    };
-    addTemplateToDatabase(template, () => {
-      dispatch({
-        type: "SET_TEMPLATE_LIST",
-        data: [template, ...templateList],
+    if (checkuser()) {
+      toast.error(
+        <div>
+          <p
+            style={{
+              textAlign: "center",
+              marginBottom: "10px",
+              marginTop: "5px",
+            }}
+          >
+            Create Templates to personalize your video project and give more
+            information:{" "}
+          </p>
+          <Button
+            style={{
+              marginBottom: "5px",
+              marginTop: "5px",
+            }}
+            color="primary"
+            type="link"
+            href={"/app/upgrade"}
+            outline={false}
+          >
+            Upgrade
+          </Button>
+        </div>
+      );
+    } else {
+      const template = {
+        _id: id.toString(),
+        position: contents.length,
+        status: "done",
+        type: "screen",
+        screen: {
+          name: `Screen${templateList.length}`,
+          background: { type: "color", color: "#9FE4FC" },
+          duration: 3,
+        },
+        texts: [],
+        links: [],
+      };
+      addTemplateToDatabase(template, () => {
+        dispatch({
+          type: "SET_TEMPLATE_LIST",
+          data: [template, ...templateList],
+        });
       });
-    });
-    array.push(template);
-    dispatch({
-      type: "SHOW_PREVIEW",
-      data: {
-        element: "screen",
+      array.push(template);
+      dispatch({
+        type: "SHOW_PREVIEW",
+        data: {
+          element: "screen",
+          data: template,
+        },
+      });
+      dispatch({ type: "SET_VIDEO", data: array });
+      dispatch({ type: "CALC_VIDEOS_OFFSET", data: array });
+      dispatch({ type: "SET_VIDEOS_REF" });
+      dispatch({ type: "SET_PREVIEW_END_SCREEN", data: template });
+
+      // Create Thumbnail
+      dispatch({ type: "SET_CREATE_TEMPLATE_THUMBNAIL", data: true });
+
+      dispatch({ type: "DISPLAY_ELEMENT", data: "endScreen" });
+      getVideos(true, true);
+      dispatch({
+        type: "SET_PREVIEW_VIDEO",
         data: template,
-      },
-    });
-    dispatch({ type: "SET_VIDEO", data: array });
-    dispatch({ type: "CALC_VIDEOS_OFFSET", data: array });
-    dispatch({ type: "SET_VIDEOS_REF" });
-    dispatch({ type: "SET_PREVIEW_END_SCREEN", data: template });
+      });
+      dispatch({
+        type: "SELECT_TOOL",
+        data: 2,
+      });
+      showScreen("SCREEN");
+      if (contents[contents.length - 1]) selectScreen(template, contents);
+    }
+  };
 
-    // Create Thumbnail
-    dispatch({ type: "SET_CREATE_TEMPLATE_THUMBNAIL", data: true });
-
-    dispatch({ type: "DISPLAY_ELEMENT", data: "endScreen" });
-    getVideos(true, true);
-    dispatch({
-      type: "SET_PREVIEW_VIDEO",
-      data: template,
-    });
-    dispatch({
-      type: "SELECT_TOOL",
-      data: 2,
-    });
-    showScreen("SCREEN");
-    if (contents[contents.length - 1]) selectScreen(template, contents);
+  const checkuser = async () => {
+    const userinfo = await mainAPI.get("/users/me");
+    const user = JSON.parse(userinfo.request.response);
+    if (user.role === "user") {
+      return true;
+    } else {
+      return false;
+    }
   };
 
   const addTemplateToDatabase = async (temp, callback) => {

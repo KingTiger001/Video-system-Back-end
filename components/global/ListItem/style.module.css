@@ -38,7 +38,7 @@
    height: 100%;
    padding: 13px 10px 13px 45px;
    display: grid;
-   grid-template-columns: 30% 20% 20% 30%;
+   grid-template-columns: 20% 20% 20% 20% 20%;
    align-items: center;
    position: relative;
 }

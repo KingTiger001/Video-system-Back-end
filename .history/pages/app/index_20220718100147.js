@@ -302,7 +302,9 @@ const Dashboard = ({
 
       <div className={styles.container}>
         {/* <h1 className={styles.title}>Hello {me.firstName}</h1> */}
-       
+        {(!me.emailConfirmed || contactsCount <= 0) && (
+         
+        )}
 
         {displayShare && (
           <Share

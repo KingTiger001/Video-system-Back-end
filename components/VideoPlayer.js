@@ -12,6 +12,8 @@ import Logo from "@/components/Campaign/Logo";
 import styles from "@/styles/components/VideoPlayer.module.sass";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExpand, faCompress } from "@fortawesome/free-solid-svg-icons";
+import { mainAPI } from "@/plugins/axios";
+import axios from "axios";
 
 const helloScreen = { duration: 0 }; // need to remove, only here temporary to fix bug
 const endScreen = { duration: 0 }; // need to remove, only here temporary to fix bug
@@ -23,6 +25,7 @@ const VideoPlayer = ({
   onPause = () => {},
   onPlay = () => {},
   thumbnail,
+  campaignId = "",
 }) => {
   const dispatch = useDispatch();
   const { logo, finalVideo, contents, share } = data;
@@ -366,7 +369,13 @@ const VideoPlayer = ({
     );
   };
 
+  const watchVideo = async () => {
+    const { data } = await axios.get("https://api.ipify.org/?format=json");
+    await mainAPI.get(`/campaigns/watch/${campaignId}/${data.ip}`);
+  };
+
   const PlayButton = () => {
+    watchVideo();
     return thumbnail ? (
       <div className={styles.coverImageVidContainer}>
         <img
@@ -560,7 +569,7 @@ const VideoPlayer = ({
         {showPlayButton && <PlayButton />}
         {!showDivPlayButton && (
           <div className={styles.playButton}>
-           {/*  <img
+            {/*  <img
               className={styles.loadingImg}
               src="/assets/common/loading.gif"
             ></img> */}

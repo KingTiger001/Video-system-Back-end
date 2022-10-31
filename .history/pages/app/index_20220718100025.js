@@ -302,7 +302,47 @@ const Dashboard = ({
 
       <div className={styles.container}>
         {/* <h1 className={styles.title}>Hello {me.firstName}</h1> */}
-       
+        {(!me.emailConfirmed || contactsCount <= 0) && (
+          
+            <p className={styles.welcomeTitle}>Welcome to your dasboard !</p>
+            {/*<p className={styles.welcomeSubtitle}>*/}
+            {/*  To send your first video campaign, you will have to:*/}
+            {/*</p>*/}
+            <ul className={styles.welcomeList}>
+              {!me.emailConfirmed && (
+                <li className={styles.welcomeListItem}>
+                  <div>
+                    <span />
+                  </div>
+                  <p className={styles.welcomeVerify}>
+                    Verify your email address
+                  </p>
+                  <span>
+                    We sent an email with a confirmation link to your email
+                    address. In order to complete the sign-up process, please
+                    click on the confirmation link. If you didn't receive it,{" "}
+                    <a onClick={sendEmailConfirmation}>
+                      click here to resend activation link
+                    </a>
+                  </span>
+                </li>
+              )}
+              {/*{contactsCount <= 0 && (*/}
+              {/*  <li className={styles.welcomeListItem}>*/}
+              {/*    <div>*/}
+              {/*      <span />*/}
+              {/*    </div>*/}
+              {/*    <Link href="/app/contacts">*/}
+              {/*      <p className={styles.welcomeContact}>*/}
+              {/*        Import your first contacts*/}
+              {/*      </p>*/}
+              {/*    </Link>*/}
+              {/*    <span>You can import your contacts now or later.</span>*/}
+              {/*  </li>*/}
+              {/*)}*/}
+            </ul>
+          </div>
+        )}
 
         {displayShare && (
           <Share

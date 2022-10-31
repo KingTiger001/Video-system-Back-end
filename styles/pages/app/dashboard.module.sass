@@ -10,7 +10,6 @@
   grid-gap: 25px 10px
   padding: 50px 0
   margin: auto
-  // max-width: 1153px
   max-width: 84%
   padding: 50px
   width: 100%
@@ -36,7 +35,7 @@
   padding: 30px
 
 .welcomeTitle
-  color: #4C4A60
+  color: #DCDCDC
   font-size: 30px
   font-weight: 700
   letter-spacing: 0.2px
@@ -53,6 +52,7 @@
   display: grid
   grid-gap: 30px
 
+
 .welcomeListItem
   display: grid
   grid-template-columns: 50px 1fr
@@ -68,7 +68,7 @@
       height: 10px
       width: 10px
   .welcomeVerify
-    color: #4C4A60
+    color: #DCDCDC
     font-size: 16px
     font-weight: 500
     line-height: 20px
@@ -76,7 +76,7 @@
     grid-column: 2
     margin-bottom: 4px
   .welcomeContact
-    color: $primaryColor
+    color: #DCDCDC
     cursor: pointer
     font-size: 16px
     font-weight: 700
@@ -85,7 +85,7 @@
     grid-column: 2
     margin-bottom: 4px
   span
-    color: #4C4A60
+    color: #DCDCDC
     font-size: 16px
     letter-spacing: 0.1px
     grid-column: 2
@@ -96,16 +96,163 @@
 
 .stats
   display: grid
-  grid-gap: 10px
-  grid-template-columns: repeat(4, 1fr)
   grid-column-start: 1
-  grid-column-end: 13
-  .share
-    //background: #fff
-    border-radius: 4px
+  grid-column-end: 16
+  .stateTable
     display: flex
-    align-items: center
-    justify-content: center
+    .tables
+      grid-column-start: 1
+      grid-column-end: 1
+      background: rgba(76, 74, 96, 0.9)
+      border-radius: 2px
+      display: flex
+      padding-bottom: 37px
+      min-width: 100%
+      .perfVideo
+        padding: 50px 20px 20px 100px
+        margin-top: 20px
+        max-width: 35%
+        .perfTitle
+          font-weight: 700
+          font-size: 19px
+          line-height: 8px
+          letter-spacing: 0.99px
+          text-transform: capitalize
+          color: #DCDCDC
+          margin-bottom: 50px
+          text-align: center
+        .perfVideoTitle
+          font-size: 15px
+          font-weight: 600
+          line-height: 8px
+          letter-spacing: -0.01px
+          text-transform: capitalize
+          color: #DCDCDC
+          justify-content: center
+          display: flex
+          margin-top: 10px
+      .statsShape
+        margin-left: 100px
+        margin-top: 35px
+        display: flex
+        flex-direction: row
+        justify-content: center
+        align-self: center
+        .statsShape1
+          align-self: center
+          width: 163.62px
+          height: 58.03px
+          background: #444356
+          border-radius: 42px
+          transform: matrix(0, -1, 1, 0.01, 0, 0)
+          .number
+            font-weight: 800
+            font-size: 22px
+            color: #FF5C00
+            rotate: 90deg
+            position: relative
+            top: 14px
+            display: grid
+            justify-content: center
+          .text
+            font-weight: 600
+            font-size: 12px
+            line-height: 8px
+            color: #FF5C00
+            rotate: 90deg
+            position: relative
+            display: grid
+            justify-content: center
+            right: 40px
+            top: 0px
+        .statsShape2
+          align-self: center
+          width: 99px
+          height: 99px
+          background: #4B495F
+          border-radius: 50px
+          border: 8.36196px solid #444356
+          .number
+            font-weight: 800
+            font-size: 22px
+            color: #FF5C00
+            position: relative
+            top: 25px
+            display: grid
+            justify-content: center
+          .text
+            font-weight: 600
+            font-size: 12px
+            line-height: 8px
+            color: #FF5C00
+            position: relative
+            display: grid
+            justify-content: center
+            top: 74px
+        .statsShape3
+          margin-left: 42px
+          align-self: center
+          width: 99px
+          height: 99px
+          background: #5D5B6F
+          border-radius: 50px
+          border: 8.36196px solid #5D5B6F
+          .number
+            font-weight: 800
+            font-size: 22px
+            color: #FF5C00
+            position: relative
+            top: 25px
+            display: grid
+            justify-content: center
+          .text
+            font-weight: 600
+            font-size: 12px
+            line-height: 8px
+            color: #FF5C00
+            position: relative
+            display: grid
+            -moz-box-pack: center
+            justify-content: center
+            bottom: -76px
+            right: 0px
+    .tables2
+      grid-column-start: 8
+      grid-column-end: 16
+      background: rgba(76, 74, 96, 0.9)
+      border-radius: 2px
+      display: grid
+      padding-bottom: 37px
+      margin-left: 10px
+      min-width: 15%
+      .title
+        font-weight: 800
+        font-size: 19px
+        line-height: 8px
+        letter-spacing: 0.99px
+        color: #DCDCDC
+        text-align: center
+        margin-top: 50px
+      .totalViews
+        position: relative
+        right: -29px
+        text-align: center
+        margin-top: 15px
+        .number
+          font-weight: 800
+          font-size: 40px
+          line-height: 8px
+          letter-spacing: 0.99px
+          text-transform: capitalize
+          color: #DCDCDC
+        .text
+          font-weight: 600
+          font-size: 12px
+          line-height: 8px
+          letter-spacing: -0.01px
+          text-transform: capitalize
+          color: #DCDCDC
+
 
 .statsTitle
   color: $textColorTwo
@@ -136,11 +283,16 @@
   grid-column-end: 13
 
 .campaignsTitle
-  color: #4C4A60
-  display: grid
-  font-size: 24px
-  font-weight: 700
-  letter-spacing: 0.2px
+  font-style: normal
+  font-weight: 900
+  font-size: 28px
+  line-height: 8px
+  display: flex
+  align-items: center
+  text-align: center
+  letter-spacing: -0.01px
+  text-transform: capitalize
+  color: #DCDCDC
   margin-bottom: 15px
   padding: 20px 0
   &.campaignsTitleDb
